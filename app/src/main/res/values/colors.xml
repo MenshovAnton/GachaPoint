@@ -2,10 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="accent">#2f3957</color>
+    <color name="accent">#263657</color>
     <color name="checked">#4CAF50</color>
     <color name="missed">#BA2525</color>
-    <color name="grey">#575A6B</color>
+    <color name="grey">#484777</color>
     <color name="light_grey">#f3edf7</color>
     <color name="check">#4f6ba1</color>
 </resources>

@@ -276,60 +276,75 @@
                 app:layout_constraintTop_toBottomOf="@+id/wishIcon"
                 app:layout_constraintVertical_bias="0.097" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/blessingOfTheWelkinMoonSelectButton"
+            <TextView
+                android:id="@+id/yearHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/filler"
+                android:textColor="@color/check"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/previousMonth"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintStart_toEndOf="@+id/monthHeader"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <HorizontalScrollView
+                android:id="@+id/subTypes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/accent"
-                android:text="@string/genshin"
-                android:textColor="@color/white"
-                android:textSize="16sp"
+                android:scrollbars="none"
                 app:layout_constraintBottom_toTopOf="@+id/addSubButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.04"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/monthHeader"
-                app:layout_constraintVertical_bias="0.0"
-                app:strokeWidth="5dp" />
+                app:layout_constraintVertical_bias="0.0">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/starRailSpecialPassSelectButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:backgroundTint="@color/accent"
-                android:text="@string/hsr"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/addSubButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/blessingOfTheWelkinMoonSelectButton"
-                app:layout_constraintTop_toBottomOf="@+id/monthHeader"
-                app:layout_constraintVertical_bias="0.0"
-                app:strokeWidth="5dp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/interKnotMembershipSelectButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/accent"
-                android:backgroundTintMode="screen"
-                android:text="@string/zzz"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/addSubButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/starRailSpecialPassSelectButton"
-                app:layout_constraintTop_toBottomOf="@+id/monthHeader"
-                app:layout_constraintVertical_bias="0.0"
-                app:strokeWidth="5dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/blessingOfTheWelkinMoonSelectButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:backgroundTint="@color/accent"
+                        android:text="@string/genshin"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:strokeWidth="5dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/starRailSpecialPassSelectButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:backgroundTint="@color/accent"
+                        android:text="@string/hsr"
+                        android:textSize="16sp"
+                        app:strokeWidth="5dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/interKnotMembershipSelectButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:backgroundTint="@color/accent"
+                        android:backgroundTintMode="screen"
+                        android:text="@string/zzz"
+                        android:textSize="16sp"
+                        app:strokeWidth="5dp" />
+                </LinearLayout>
+            </HorizontalScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

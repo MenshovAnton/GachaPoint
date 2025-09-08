@@ -18,13 +18,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HoyoSubsTrakcer"
         tools:targetApi="31">
+        <activity
+            android:name=".SplashScreenActivity"
+            android:exported="false" />
+
         <service
             android:name=".AlarmHelper"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
+
         <receiver
             android:name=".Notification"
             android:permission="Notifications" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ public class HomeFragment extends Fragment {
     MainActivity mainActivity;
     TextView subsCounterView;
     static ConstraintLayout constraintLayout;
+    HorizontalScrollView scrollView;
 
     ImageView previousMonthButton;
     ImageView nextMonthButton;
@@ -44,13 +46,16 @@ public class HomeFragment extends Fragment {
     MaterialButton starRailSpecialPassSelectButton;
     MaterialButton interKnotMembershipSelectButton;
 
-    public Calendar calendar;
+    public static Calendar calendar;
+    private static HomeFragment instance;
 
     public int toDayOfMonth;
     public static int toDayOfYear;
+    public static int year;
     public static int missesDays;
     public static int claimsDays;
     public static int selectedMonth;
+    public static int selectedYear;
     public static int subsCount;
 
     public final int WISHES_COST = 160;
@@ -68,6 +73,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mainActivity = MainActivity.mainActivity;
+        instance = this;
 
         missesDays = 0;
         claimsDays = 0;
@@ -77,8 +83,10 @@ public class HomeFragment extends Fragment {
         toDayMonth.substring(0, 1).toUpperCase();
 
         selectedMonth = LocalDate.now().getMonth().getValue();
+        selectedYear = LocalDate.now().getYear();
         toDayOfMonth = LocalDate.now().getDayOfMonth();
         toDayOfYear = LocalDate.now().getDayOfYear();
+        year = LocalDate.now().getYear();
 
         calendar = new Calendar(MainActivity.context, MainActivity.mainActivity);
 
@@ -106,6 +114,7 @@ public class HomeFragment extends Fragment {
         blessingOfTheWelkinMoonSelectButton = view.findViewById(R.id.blessingOfTheWelkinMoonSelectButton);
         starRailSpecialPassSelectButton = view.findViewById(R.id.starRailSpecialPassSelectButton);
         interKnotMembershipSelectButton = view.findViewById(R.id.interKnotMembershipSelectButton);
+        scrollView = view.findViewById(R.id.subTypes);
 
         return view;
     }
@@ -119,7 +128,7 @@ public class HomeFragment extends Fragment {
         calendar.updateCalendar();
         calendar.drawCalendar();
 
-        setMonthHeader(selectedMonth);
+        setHeader(selectedMonth, year);
         calculateStats();
 
         checkButton.setOnClickListener(this::onCheckClick);
@@ -172,17 +181,22 @@ public class HomeFragment extends Fragment {
         textView.setTextColor(getColor(MainActivity.context, R.color.white));
         textView.setGravity(Gravity.CENTER);
 
-        if (date.id == toDayOfYear - 1 && selectedMonth == LocalDate.now().getMonth().getValue()) {
+        if (date.dayOfYear == toDayOfYear && selectedMonth == LocalDate.now().getMonth().getValue() && selectedYear == LocalDate.now().getYear()) {
             imageView.setImageResource(R.drawable.background_date_today);
         } else {
             imageView.setImageResource(R.drawable.background_date);
+        }
+
+        if (date.status == 0 && date.subDaysRemaining > 0) {
+            textView.setTextColor(getColor(MainActivity.context, R.color.check));
         }
 
         if ((date.status == 1 || date.status == 3) && date.month == selectedMonth) {
             textView.setTextColor(getColor(MainActivity.context, R.color.checked));
         }
 
-        if ((date.status == 0 || date.status == 2) && date.id != toDayOfYear - 1 && date.subDaysRemaining != 0 && date.id < toDayOfYear && date.month == selectedMonth) {
+        if ((date.status == 0 || date.status == 2) && date.id < toDayOfYear && date.subDaysRemaining != 0
+                && date.month == selectedMonth) {
             textView.setTextColor(getColor(MainActivity.context, R.color.missed));
         }
 
@@ -203,6 +217,7 @@ public class HomeFragment extends Fragment {
         String claimWishesText = String.valueOf(claimPrimogemsCount / WISHES_COST);
         String missedWishesText = String.valueOf(missedPrimogemsCount / WISHES_COST);
 
+        assert getView() != null;
         TextView claimPrimogems = getView().findViewById(R.id.cliamsGemsCounter);
         claimPrimogems.setText(claimPrimogemsText);
 
@@ -233,14 +248,18 @@ public class HomeFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    public void setMonthHeader(int month) {
-        TextView header = getView().findViewById(R.id.monthHeader);
+    public void setHeader(int month, int year) {
+        assert getView() != null;
+        TextView monthHeader = getView().findViewById(R.id.monthHeader);
         Month monthObj = Month.of(month);
 
-        Locale locale = Locale.forLanguageTag("ru");
-        String print = monthObj.getDisplayName(TextStyle.FULL_STANDALONE, locale);
+        TextView yearHeader = getView().findViewById(R.id.yearHeader);
 
-        header.setText(print.substring(0, 1).toUpperCase() + print.substring(1));
+        Locale locale = Locale.forLanguageTag("ru");
+        String printMonth = monthObj.getDisplayName(TextStyle.FULL_STANDALONE, locale);
+
+        monthHeader.setText(printMonth.substring(0, 1).toUpperCase() + printMonth.substring(1));
+        yearHeader.setText(String.valueOf(year));
     }
 
     public void onAddClick(View view)
@@ -300,25 +319,35 @@ public class HomeFragment extends Fragment {
         selectedMonth = LocalDate.now().getMonth().getValue();
         calendar.removeCalendar(constraintLayout);
         calendar.drawCalendar();
-        setMonthHeader(selectedMonth);
+        setHeader(selectedMonth, year);
     }
 
     public void onPreviousMonthClick(View view) {
         if (selectedMonth != 1) {
             selectedMonth--;
-            calendar.removeCalendar(constraintLayout);
-            calendar.drawCalendar();
-            setMonthHeader(selectedMonth);
+        } else {
+            if (selectedYear > calendar.dateArray[0].year) {
+                selectedMonth = 12;
+                selectedYear--;
+            }
         }
+        calendar.removeCalendar(constraintLayout);
+        calendar.drawCalendar();
+        setHeader(selectedMonth, selectedYear);
     }
 
     public void onNextMonthClick(View view) {
         if (selectedMonth != 12) {
             selectedMonth++;
-            calendar.removeCalendar(constraintLayout);
-            calendar.drawCalendar();
-            setMonthHeader(selectedMonth);
+        } else {
+            if (selectedYear < calendar.dateArray[Calendar.init_days - 1].year) {
+                selectedMonth = 1;
+                selectedYear++;
+            }
         }
+        calendar.removeCalendar(constraintLayout);
+        calendar.drawCalendar();
+        setHeader(selectedMonth, selectedYear);
     }
 
     public void onMoonClick(View view) {
@@ -345,5 +374,12 @@ public class HomeFragment extends Fragment {
         interKnotMembershipSelectButton.setStrokeColorResource(R.color.accent);
 
         view.setStrokeColorResource(R.color.check);
+    }
+
+    public static void update() {
+        calendar.removeCalendar(constraintLayout);
+        calendar.updateCalendar();
+        calendar.drawCalendar();
+        instance.calculateStats();
     }
 }

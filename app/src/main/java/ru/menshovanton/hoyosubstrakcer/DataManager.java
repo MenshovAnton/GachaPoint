@@ -1,15 +1,15 @@
 package ru.menshovanton.hoyosubstrakcer;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 public class DataManager {
+
     static void writeDB(Context context, Date[] dateArray, int start, int stop) {
         for (int i = start; i < stop + start; i++) {
-            MainActivity.dbHelper.updateValue(i, dateArray[i].dayOfMonth, dateArray[i].month, dateArray[i].status, dateArray[i].subDaysRemaining);
+            MainActivity.dbHelper.updateValue(i, dateArray[i].dayOfMonth, dateArray[i].dayOfYear, dateArray[i].month,
+                    dateArray[i].year, dateArray[i].status, dateArray[i].subDaysRemaining);
         }
     }
 
@@ -20,15 +20,17 @@ public class DataManager {
             return null;
         }
 
-        Date[] array = new Date[365];
+        Date[] array = new Date[Calendar.init_days];
 
-        for (int i = 0; i <= 363; i++) {
+        for (int i = 0; i < Calendar.init_days; i++) {
             array[i] = new Date(
                     i,
                     getDayById(i, cursor),
+                    getDayOfYearById(i, cursor),
                     getStatusById(i, cursor),
                     getSubDaysRemainingById(i, cursor),
-                    getMonthById(i, cursor));
+                    getMonthById(i, cursor),
+                    getYearById(i, cursor));
         }
 
         cursor.close();
@@ -48,6 +50,18 @@ public class DataManager {
     }
 
     @SuppressLint("Range")
+    public static int getDayOfYearById(int id, Cursor cursor) {
+        int day = 1;
+
+        if (cursor.moveToFirst()) {
+            cursor.moveToPosition(id);
+            day = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_DAY_YEAR));
+        }
+
+        return day;
+    }
+
+    @SuppressLint("Range")
     public static int getMonthById(int id, Cursor cursor) {
         int month = 1;
 
@@ -57,6 +71,18 @@ public class DataManager {
         }
 
         return month;
+    }
+
+    @SuppressLint("Range")
+    public static int getYearById(int id, Cursor cursor) {
+        int year = 1;
+
+        if (cursor.moveToFirst()) {
+            cursor.moveToPosition(id);
+            year = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_YEAR));
+        }
+
+        return year;
     }
 
     @SuppressLint("Range")
@@ -103,6 +129,16 @@ public class DataManager {
         }
 
         return days;
+    }
+
+
+    public enum DataTypes {
+        dayOfMonth,
+        dayOfYear,
+        month,
+        year,
+        status,
+        sdr
     }
 
     private static class DataItems {

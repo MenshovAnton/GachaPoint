@@ -31,9 +31,9 @@
     <string name="nav_settings">Настройки</string>
     <string name="nav_info">О приложении</string>
 
-    <string name="genshin">Genshin</string>
-    <string name="hsr">HSR</string>
-    <string name="zzz">ZZZ</string>
+    <string name="genshin">Genshin Impact</string>
+    <string name="hsr">Honkai Star Rail</string>
+    <string name="zzz">Zenless Zone Zero</string>
 
     <string name="blessing_of_the_welkin_moon_checked">✅ Луна</string>
     <string name="star_rail_special_pass_checked">✅ Пропуск</string>

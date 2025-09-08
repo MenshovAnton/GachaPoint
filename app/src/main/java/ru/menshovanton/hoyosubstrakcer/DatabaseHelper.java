@@ -18,7 +18,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_DAY = "day";
+    public static final String COLUMN_DAY_YEAR = "dayyear";
     public static final String COLUMN_MONTH = "month";
+    public static final String COLUMN_YEAR = "year";
     public static final String COLUMN_STATUSGENSHIN = "statusgenshin";
     public static final String COLUMN_DRGENSHIN = "drgenshin";
     public static final String COLUMN_STATUSHSR = "statushsr";
@@ -35,7 +37,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String createTableQuery = "CREATE TABLE " + TABLE_NAME + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_DAY + " INTEGER, " +
+                COLUMN_DAY_YEAR + " INTEGER, " +
                 COLUMN_MONTH + " INTEGER, " +
+                COLUMN_YEAR + " INTEGER, " +
                 COLUMN_STATUSGENSHIN + " INTEGER, " +
                 COLUMN_DRGENSHIN + " INTEGER, " +
                 COLUMN_STATUSHSR + " INTEGER, " +
@@ -51,11 +55,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void updateValue(int id, int day, int month, int status, int subDaysRemaining) {
+    public void updateValue(int id, int day, int dayOfYear, int month, int year, int status, int subDaysRemaining) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_DAY, day);
+        values.put(COLUMN_DAY_YEAR, dayOfYear);
         values.put(COLUMN_MONTH, month);
+        values.put(COLUMN_YEAR, year);
 
         switch (MainActivity.subType) {
             case 0:

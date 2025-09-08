@@ -148,8 +148,20 @@ public class MainActivity extends AppCompatActivity {
         return dbFile.exists();
     }
 
-    public void onDestroy() {
-        super.onDestroy();
-        //dbHelper.close();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // TODO: При выходе на передний план спустя день не обновляется календарь
+
+        HomeFragment.update();
+    }
+
+    public void updateDbHelper() {
+        dbHelper = new DatabaseHelper(getApplicationContext());
+
+        if (!isDatabaseExists(this)) {
+            dbHelper.getWritableDatabase();
+        }
     }
 }
