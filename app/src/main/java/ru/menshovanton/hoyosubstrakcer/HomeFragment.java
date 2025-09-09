@@ -340,7 +340,7 @@ public class HomeFragment extends Fragment {
         if (selectedMonth != 12) {
             selectedMonth++;
         } else {
-            if (selectedYear < calendar.dateArray[Calendar.init_days - 1].year) {
+            if (selectedYear < calendar.dateArray[Calendar.calendarSize - 1].year) {
                 selectedMonth = 1;
                 selectedYear++;
             }

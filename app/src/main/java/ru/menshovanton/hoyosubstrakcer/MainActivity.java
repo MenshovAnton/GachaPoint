@@ -4,12 +4,13 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
+import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -39,6 +40,13 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 123;
 
     public static DatabaseHelper dbHelper;
+
+    private static final String PREF_FILE = "Settings";
+    public static final String PREF_ALARM_HOURS = "Alarm Hours";
+    public static final String PREF_ALARM_MINUTES = "Alarm Minutes";
+    public static final String PREF_NOTIFICATIONS = "Enable notifications";
+    public static final String PREF_CALENDAR_SIZE = "Calendar size";
+    SharedPreferences settings;
 
     private final NavigationBarView.OnItemSelectedListener onItemSelectedListener
             = new NavigationBarView.OnItemSelectedListener() {
@@ -113,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
         context = this;
         mainActivity = MainActivity.this;
 
+        settings = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
+
         startService(new Intent(this, AlarmHelper.class));
     }
 
@@ -157,11 +167,43 @@ public class MainActivity extends AppCompatActivity {
         HomeFragment.update();
     }
 
-    public void updateDbHelper() {
-        dbHelper = new DatabaseHelper(getApplicationContext());
+    public static void showMessage(Context context, String message) {
+        Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
+        toast.show();
+    }
 
-        if (!isDatabaseExists(this)) {
-            dbHelper.getWritableDatabase();
+    public void saveIntPreference(String key, int value) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
+    public int getIntPreference(String key) {
+        int defValue;
+        if (key.equals(PREF_ALARM_HOURS)) {
+            defValue = 12;
+        } else {
+            defValue = 0;
+        }
+
+        try {
+            return settings.getInt(key, defValue);
+        } catch (Exception e) {
+            return defValue;
+        }
+    }
+
+    public void saveBooleanPreference(String key, boolean value) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    public boolean getBooleanPreference(String key) {
+        try {
+            return settings.getBoolean(key, true);
+        } catch (Exception e) {
+            return true;
         }
     }
 }

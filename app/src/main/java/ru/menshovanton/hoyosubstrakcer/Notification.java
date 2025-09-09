@@ -21,13 +21,17 @@ public class Notification extends BroadcastReceiver {
     private static final String CHANNEL_ID = "Оповещения";
 
     public static int subsCount = 0;
-    public static boolean allowNotifications = true;
+    public static boolean allowNotifications;
+
+    private MainActivity mainActivity = MainActivity.mainActivity;
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     @SuppressLint("ScheduleExactAlarm")
     @Override
     public void onReceive(Context context, Intent intent) {
         if (subsCount > 0 && allowNotifications) {
+            allowNotifications = mainActivity.getBooleanPreference(MainActivity.PREF_NOTIFICATIONS);
+
             CharSequence name = "Оповещения";
             String description = "Высылает напоминания о сборе наград.";
             int importance = NotificationManager.IMPORTANCE_HIGH;

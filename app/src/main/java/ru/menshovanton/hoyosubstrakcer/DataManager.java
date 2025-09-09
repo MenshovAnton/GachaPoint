@@ -20,9 +20,9 @@ public class DataManager {
             return null;
         }
 
-        Date[] array = new Date[Calendar.init_days];
+        Date[] array = new Date[Calendar.calendarSize];
 
-        for (int i = 0; i < Calendar.init_days; i++) {
+        for (int i = 0; i < Calendar.calendarSize; i++) {
             array[i] = new Date(
                     i,
                     getDayById(i, cursor),

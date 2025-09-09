@@ -11,23 +11,27 @@ public class Calendar {
     public TextView[] dateViewArray;
     public ImageView[] dateBackArray;
     public Context context;
-    public MainActivity mainActivity;
+    public static MainActivity mainActivity;
     public DataManager dataManager;
 
-    public static int init_days = 730; // 2 years
+    public static int calendarSize;
 
     Calendar(Context context, MainActivity mainActivity) {
         this.context = context;
-        this.mainActivity = mainActivity;
+        Calendar.mainActivity = mainActivity;
+
+        calendarSize = mainActivity.getIntPreference(MainActivity.PREF_CALENDAR_SIZE);
+
 
         Date[] date = DataManager.readDB(context);
         if (date != null) {
-            if (date[init_days - 1].year == HomeFragment.year) {
-                init_days += 365;
-                dateArray = new Date[init_days];
+            if (date[calendarSize - 1].year == HomeFragment.year) {
+                calendarSize += 365;
+                dateArray = new Date[calendarSize];
                 System.arraycopy(date, 0, dateArray, 0, date.length);
                 System.arraycopy(addYear(context, HomeFragment.year + 1), 0, dateArray, date.length, 365);
                 DataManager.writeDB(context, dateArray, 0, dateArray.length);
+                mainActivity.saveIntPreference(MainActivity.PREF_CALENDAR_SIZE, calendarSize);
             } else {
                 dateArray = date;
             }
@@ -35,12 +39,12 @@ public class Calendar {
             dateArray = initialization(context, HomeFragment.year);
         }
 
-        dateViewArray = new TextView[init_days];
+        dateViewArray = new TextView[calendarSize];
         for (int i = 0; i < dateViewArray.length; i++) {
             dateViewArray[i] = new TextView(context);
         }
 
-        dateBackArray = new ImageView[init_days];
+        dateBackArray = new ImageView[calendarSize];
         for (int i = 0; i < dateBackArray.length; i++) {
             dateBackArray[i] = new ImageView(context);
         }
@@ -61,7 +65,7 @@ public class Calendar {
 
         int daysOfYearForMonth = getDaysOfYearForMonth(HomeFragment.selectedMonth);
 
-        for (int i = 0; i < init_days; i++) {
+        for (int i = 0; i < calendarSize; i++) {
             if (dateArray[i].status == 0 && dateArray[i].subDaysRemaining > 0 && dateArray[i].dayOfYear < HomeFragment.toDayOfYear - 1) {
                 HomeFragment.missesDays++;
             }
@@ -151,7 +155,12 @@ public class Calendar {
     }
 
     public static Date[] initialization(Context context, int srcYear) {
-        Date[] array = new Date[init_days];
+        MainActivity.showMessage(context, "Инициализация календаря. Это может занять некоторое время!");
+
+        calendarSize = 730;
+        mainActivity.saveIntPreference(MainActivity.PREF_CALENDAR_SIZE, calendarSize);
+
+        Date[] array = new Date[calendarSize];
         int day = 0;
         int dayOfYear = 0;
         int month = 1;
@@ -181,10 +190,12 @@ public class Calendar {
     }
 
     public static Date[] addYear(Context context, int year) {
+        MainActivity.showMessage(context, "Обновление календаря. Это может занять некоторое время!");
+
         Date[] array = new Date[365];
         int day = 0;
         int month = 1;
-        int id = init_days;
+        int id = calendarSize;
         for (int i = 0; i < array.length; i++) {
             day++;
             id++;

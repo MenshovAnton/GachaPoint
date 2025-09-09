@@ -20,6 +20,8 @@ public class AlarmHelper extends Service {
     public static int alarmHour = 12;
     public static int alarmMinute = 0;
 
+    public MainActivity mainActivity = MainActivity.mainActivity;
+
     @Override
     public IBinder onBind(Intent intent) {
         throw new UnsupportedOperationException("Not yet implemented");
@@ -27,6 +29,9 @@ public class AlarmHelper extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        alarmHour = mainActivity.getIntPreference(MainActivity.PREF_ALARM_HOURS);
+        alarmMinute = mainActivity.getIntPreference(MainActivity.PREF_ALARM_MINUTES);
+
         setDailyAlarm(MainActivity.context);
         return Service.START_STICKY;
     }

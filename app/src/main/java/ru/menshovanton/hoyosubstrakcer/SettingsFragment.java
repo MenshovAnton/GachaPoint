@@ -26,6 +26,8 @@ public class SettingsFragment extends Fragment {
 
     ImageView edit;
 
+    MainActivity mainActivity = MainActivity.mainActivity;
+
     public SettingsFragment() {}
 
     public static SettingsFragment newInstance() {
@@ -33,9 +35,7 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -55,7 +55,7 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         notificationsSwitch.setOnCheckedChangeListener(this::onCheckedChange);
-        notificationsSwitch.setChecked(Notification.allowNotifications);
+        notificationsSwitch.setChecked(mainActivity.getBooleanPreference(MainActivity.PREF_NOTIFICATIONS));
 
         edit.setOnClickListener(this::showTimePicker);
 
@@ -63,6 +63,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void onCheckedChange(CompoundButton compoundButton, boolean b) {
+        mainActivity.saveBooleanPreference(MainActivity.PREF_NOTIFICATIONS, b);
         Notification.allowNotifications = b;
     }
 
@@ -72,7 +73,12 @@ public class SettingsFragment extends Fragment {
                 (view1, hourOfDay, minute) -> {
                     AlarmHelper.alarmHour = hourOfDay;
                     AlarmHelper.alarmMinute = minute;
+
+                    mainActivity.saveIntPreference(MainActivity.PREF_ALARM_HOURS, hourOfDay);
+                    mainActivity.saveIntPreference(MainActivity.PREF_ALARM_MINUTES, minute);
+
                     updateTimeDisplay();
+
                     AlarmHelper.cancelAlarm(MainActivity.context);
                     AlarmHelper.setDailyAlarm(MainActivity.context);
                 },
@@ -83,9 +89,13 @@ public class SettingsFragment extends Fragment {
         dialog.show();
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void updateTimeDisplay() {
         hourTextView.setText(String.valueOf(AlarmHelper.alarmHour));
-        minuteTextView.setText(String.valueOf(AlarmHelper.alarmMinute));
+        if (AlarmHelper.alarmMinute < 9) {
+            minuteTextView.setText("0" + AlarmHelper.alarmMinute);
+        } else {
+            minuteTextView.setText(String.valueOf(AlarmHelper.alarmMinute));
+        }
     }
 }
