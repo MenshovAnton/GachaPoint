@@ -1,9 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Base.Theme.HoyoSubsTrakcer" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="background">@color/grey</item>
+        <item name="android:windowBackground">@color/background_night</item>
         <item name="android:textColor">@color/white</item>
         <item name="fontFamily">@font/genshin_font</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="itemTextColor">@drawable/bottom_navigation_text_selector_night</item>
         <item name="itemIconTint">@drawable/bottom_navigation_selector_night</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:timePickerStyle">@style/TimePickerStyleNight</item>
+        <item name="bottomNavigationStyle">@style/BottomNavBarNightStyle</item>
+        <item name="progressBarStyle">@style/ProgressBar</item>
+        <item name="bottomSheetStyle">@style/CalendarMenuStyleNight</item>
+        <item name="android:trackTint">@color/check</item>
     </style>
 </resources>

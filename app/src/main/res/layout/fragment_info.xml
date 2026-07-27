@@ -12,13 +12,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/backToSettings"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/arrow_previous" />
+
+        <Button
+            android:id="@+id/review"
+            android:layout_width="240dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/accent"
+            android:backgroundTintMode="screen"
+            android:text="@string/review"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/block4"
+            app:layout_constraintVertical_bias="0.0" />
+
         <TextView
             android:id="@+id/header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:text="@string/nav_info"
-            android:textSize="34sp"
+            android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,11 +58,11 @@
 
         <TextView
             android:id="@+id/block1"
-            android:layout_width="300dp"
+            android:layout_width="380dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/description"
-            android:textSize="16sp"
+            android:textAlignment="viewStart"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,11 +71,10 @@
 
         <TextView
             android:id="@+id/block2"
-            android:layout_width="300dp"
+            android:layout_width="380dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/copyright_info"
-            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,11 +83,10 @@
 
         <TextView
             android:id="@+id/block3"
-            android:layout_width="300dp"
+            android:layout_width="380dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/dev_info"
-            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,11 +95,10 @@
 
         <TextView
             android:id="@+id/block4"
-            android:layout_width="300dp"
+            android:layout_width="380dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/feedback_info"
-            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -3,4 +3,51 @@
     <style name="customIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/accent</item>
     </style>
+    <style name="TimePickerStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:timePickerMode">clock</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:headerBackground">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:numbersTextColor">@color/black</item>
+        <item name="android:numbersInnerTextColor">@color/nav_bar_background_night</item>
+        <item name="android:numbersSelectorColor">@color/check</item>
+        <item name="android:numbersBackgroundColor">@color/white</item>
+        <item name="android:colorControlNormal">@color/accent</item>
+        <item name="android:colorControlActivated">@color/check</item>
+        <item name="colorOnPrimary">@color/accent</item>
+        <item name="colorButtonNormal">@color/accent</item>
+    </style>
+    <style name="TimePickerStyleNight" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:timePickerMode">clock</item>
+        <item name="android:background">@color/grey</item>
+        <item name="android:headerBackground">@color/grey</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:numbersTextColor">@color/white</item>
+        <item name="android:numbersInnerTextColor">@color/light_grey</item>
+        <item name="android:numbersSelectorColor">@color/check</item>
+        <item name="android:numbersBackgroundColor">@color/accent</item>
+        <item name="android:colorControlNormal">@color/accent</item>
+        <item name="android:colorControlActivated">@color/check</item>
+        <item name="colorOnPrimary">@color/accent</item>
+        <item name="colorButtonNormal">@color/accent</item>
+    </style>
+    <style name="BottomNavBarNightStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="backgroundTint">@color/nav_bar_background_night</item>
+    </style>
+    <style name="BottomNavBarStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="backgroundTint">@color/white</item>
+    </style>
+    <style name="ProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressTint">@color/accent</item>
+        <item name="android:progressBackgroundTint">@color/white</item>
+        <item name="android:minHeight">10dp</item>
+    </style>
+    <style name="CalendarMenuStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="CalendarMenuStyleNight" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

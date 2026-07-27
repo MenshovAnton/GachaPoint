@@ -1,18 +1,20 @@
-package ru.menshovanton.hoyosubstrakcer;
+package ru.menshovanton.gachapoint;
 
 public class Date {
     public int id;
     public int dayOfMonth;
     public int dayOfYear;
+    public int dayOfWeek;
     public int year;
     public int status;
     public int subDaysRemaining;
     public int month;
 
-    Date(int id, int dayOfMonth, int dayOfYear, int status, int subDaysRemaining, int month, int year) {
+    Date(int id, int dayOfMonth, int dayOfYear, int dayOfWeek, int status, int subDaysRemaining, int month, int year) {
         this.id = id;
         this.dayOfMonth = dayOfMonth;
         this.dayOfYear = dayOfYear;
+        this.dayOfWeek = dayOfWeek;
         this.status = status;
         this.subDaysRemaining = subDaysRemaining;
         this.month = month;

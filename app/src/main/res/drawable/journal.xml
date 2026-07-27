@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <path
+        android:fillColor="#fff"
+        android:strokeColor="#fff"
+        android:strokeWidth="2"
+        android:strokeMiterLimit="100"
+        android:name="Прямоугольник 4"
+        android:pathData="m157 54h160.7v369.9h-160.7c-22.1 0 -40 -17.9 -40 -40v-289.9c0 -22.1 17.9 -40 40 -40z" />
+    <path
+        android:fillColor="#fff"
+        android:strokeColor="#fff"
+        android:strokeWidth="2"
+        android:strokeMiterLimit="100"
+        android:name="Прямоугольник 5"
+        android:pathData="m347.1 54h7.9c22.1 0 40 17.9 40 40v289.9c0 22.1 -17.9 40 -40 40h-7.9v-369.9z" />
+    <path
+        android:fillColor="#fff"
+        android:strokeColor="#fff"
+        android:strokeWidth="2"
+        android:strokeMiterLimit="100"
+        android:name="Прямоугольник 3"
+        android:pathData="m155.5 359.2h37.1c5.5 0 10 4.5 10 10v74.8c0 5.5 -4.5 10 -10 10h-37.1c-5.5 0 -10 -4.5 -10 -10v-74.8c0 -5.5 4.5 -10 10 -10z" />
+</vector>

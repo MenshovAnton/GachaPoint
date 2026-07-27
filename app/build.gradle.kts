@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "ru.menshovanton.hoyosubstrakcer"
+    namespace = "ru.menshovanton.gachapoint"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "ru.menshovanton.hoyosubstrakcer"
+        applicationId = "ru.menshovanton.gachapoint"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -38,6 +38,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.gson)
+    implementation("androidx.core:core-splashscreen:1.0.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

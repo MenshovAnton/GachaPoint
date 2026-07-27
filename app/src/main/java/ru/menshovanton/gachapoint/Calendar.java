@@ -1,42 +1,55 @@
-package ru.menshovanton.hoyosubstrakcer;
+package ru.menshovanton.gachapoint;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 public class Calendar {
     public Date[] dateArray;
     public TextView[] dateViewArray;
     public ImageView[] dateBackArray;
     public Context context;
-    public static MainActivity mainActivity;
+    @SuppressLint("StaticFieldLeak")
+    public static SplashScreen splashScreen;
+    @SuppressLint("StaticFieldLeak")
+    public static Calendar calendar;
+    private static Preferences preferences;
     public DataManager dataManager;
 
     public static int calendarSize;
 
-    Calendar(Context context, MainActivity mainActivity) {
+    public static int year = LocalDate.now().getYear();
+
+    Calendar(Context context, SplashScreen splashScreen) {
         this.context = context;
-        Calendar.mainActivity = mainActivity;
+        Calendar.splashScreen = splashScreen;
+        preferences = new Preferences(splashScreen);
 
-        calendarSize = mainActivity.getIntPreference(MainActivity.PREF_CALENDAR_SIZE);
-
+        calendarSize = preferences.getIntPreference(Preferences.CALENDAR_SIZE);
 
         Date[] date = DataManager.readDB(context);
         if (date != null) {
-            if (date[calendarSize - 1].year == HomeFragment.year) {
+            if (date[calendarSize - 1].year == year) {
                 calendarSize += 365;
                 dateArray = new Date[calendarSize];
                 System.arraycopy(date, 0, dateArray, 0, date.length);
-                System.arraycopy(addYear(context, HomeFragment.year + 1), 0, dateArray, date.length, 365);
+                System.arraycopy(addYear(context, year + 1), 0, dateArray, date.length, 365);
                 DataManager.writeDB(context, dateArray, 0, dateArray.length);
-                mainActivity.saveIntPreference(MainActivity.PREF_CALENDAR_SIZE, calendarSize);
+                preferences.saveIntPreference(Preferences.CALENDAR_SIZE, calendarSize);
             } else {
                 dateArray = date;
             }
         } else {
-            dateArray = initialization(context, HomeFragment.year);
+            dateArray = initialization(context, year);
         }
 
         dateViewArray = new TextView[calendarSize];
@@ -46,8 +59,12 @@ public class Calendar {
 
         dateBackArray = new ImageView[calendarSize];
         for (int i = 0; i < dateBackArray.length; i++) {
-            dateBackArray[i] = new ImageView(context);
+            ImageView imageView = new ImageView(context);
+            imageView.setId(View.generateViewId());
+            dateBackArray[i] = imageView;
         }
+
+        calendar = this;
     }
 
     public void updateCalendar() {
@@ -59,44 +76,45 @@ public class Calendar {
     }
 
     public void drawCalendar() {
-        int margin = 1200;
-        int topMargin = 400;
+        int margin = 0;
+        int topMargin = 0;
         int j = 0;
+        int line = 1;
 
-        int daysOfYearForMonth = getDaysOfYearForMonth(HomeFragment.selectedMonth);
+        int daysOfYearForMonth = getDaysOfYearForMonth(TrackerFragment.selectedMonth);
 
         for (int i = 0; i < calendarSize; i++) {
-            if (dateArray[i].status == 0 && dateArray[i].subDaysRemaining > 0 && dateArray[i].dayOfYear < HomeFragment.toDayOfYear - 1) {
-                HomeFragment.missesDays++;
+            if (dateArray[i].status == 0 && dateArray[i].subDaysRemaining > 0 && dateArray[i].dayOfYear < TrackerFragment.toDayOfYear - 1) {
+                TrackerFragment.missesDays++;
             }
 
-            if (dateArray[i].status == 1 && dateArray[i].subDaysRemaining > 0 && dateArray[i].dayOfYear < HomeFragment.toDayOfYear - 1) {
-                HomeFragment.claimsDays++;
+            if (dateArray[i].status == 1 && dateArray[i].subDaysRemaining > 0 && dateArray[i].dayOfYear < TrackerFragment.toDayOfYear - 1) {
+                TrackerFragment.claimsDays++;
             }
 
-            if (i >= daysOfYearForMonth && i < daysOfYearForMonth + getDaysOfMonth(HomeFragment.selectedMonth)) {
+            if (i >= daysOfYearForMonth && i < daysOfYearForMonth + getDaysOfMonth(TrackerFragment.selectedMonth)) {
                 if (j == 7) {
-                    topMargin = topMargin + 150;
-                    margin = 1200;
+                    topMargin = topMargin + 140;
+                    margin = 0;
                     j = 0;
                 }
-                if (j <= 3) {
-                    margin = margin - 300;
-                    HomeFragment.createView(dateArray[i], dateViewArray[i], dateBackArray[i], 0, margin, topMargin);
-                } else {
-                    margin = margin + 300;
-                    HomeFragment.createView(dateArray[i], dateViewArray[i], dateBackArray[i], margin, 0, topMargin);
+                if (dateArray[i].dayOfWeek > 1 && line == 1) {
+                    margin = dateArray[i].dayOfWeek * 140 - 140;
+                    j = dateArray[i].dayOfWeek - 1;
                 }
+                TrackerFragment.createView(dateArray[i], dateViewArray[i], dateBackArray[i], margin, 0, topMargin);
+                margin += 140;
                 j++;
+                line++;
             }
         }
 
-        if (HomeFragment.missesDays > 0) {
-            HomeFragment.missesDays++;
+        if (TrackerFragment.missesDays > 0) {
+            TrackerFragment.missesDays++;
         }
 
-        if (dateArray[HomeFragment.toDayOfYear - 1].status == 1) {
-            HomeFragment.claimsDays++;
+        if (dateArray[TrackerFragment.toDayOfYear - 1].status == 1) {
+            TrackerFragment.claimsDays++;
         }
     }
 
@@ -146,8 +164,8 @@ public class Calendar {
         for (int i = 1; i < month; i++) {
             num += getDaysOfMonth(i);
         }
-        if (HomeFragment.selectedYear > HomeFragment.year) {
-            for (int i = 1; i <= HomeFragment.selectedYear - HomeFragment.year; i++) {
+        if (TrackerFragment.selectedYear > year) {
+            for (int i = 1; i <= TrackerFragment.selectedYear - year; i++) {
                 num += 365;
             }
         }
@@ -155,33 +173,41 @@ public class Calendar {
     }
 
     public static Date[] initialization(Context context, int srcYear) {
-        MainActivity.showMessage(context, "Инициализация календаря. Это может занять некоторое время!");
+        //MainActivity.showMessage(context, "Инициализация календаря. Это может занять некоторое время!");
 
         calendarSize = 730;
-        mainActivity.saveIntPreference(MainActivity.PREF_CALENDAR_SIZE, calendarSize);
+        preferences.saveIntPreference(Preferences.CALENDAR_SIZE, calendarSize);
 
         Date[] array = new Date[calendarSize];
         int day = 0;
         int dayOfYear = 0;
+        int dayOfWeek = getDayOfWeek(srcYear, 1, 1);
         int month = 1;
         int year = srcYear;
+
         for (int i = 0; i < array.length; i++) {
             day++;
+            dayOfWeek++;
             dayOfYear++;
+            if (dayOfWeek > 7) {
+                dayOfWeek = 1;
+            }
             if (dayOfYear > 365) {
                 day = 0;
                 dayOfYear = 0;
                 month = 1;
                 year++;
+                dayOfWeek = getDayOfWeek(year, 1, 1);
                 i--;
             } else {
                 if (day > getDaysOfMonth(month)) {
                     month++;
                     day = 0;
                     dayOfYear--;
+                    dayOfWeek = getDayOfWeek(year, month, 1);
                     i--;
                 } else {
-                    array[i] = new Date(i, day, dayOfYear, 0, 0, month, year);
+                    array[i] = new Date(i, day, dayOfYear, dayOfWeek, 0, 0, month, year);
                 }
             }
         }
@@ -189,24 +215,48 @@ public class Calendar {
         return array;
     }
 
+    private static int getDayOfWeek(int year, int month, int day) {
+        LocalDate date = LocalDate.of(year, month, day);
+        Locale langRu = new Locale("ru");
+
+        DayOfWeek num = date.getDayOfWeek();
+        String str = num.getDisplayName(TextStyle.FULL, langRu);
+
+        return num.getValue() - 1;
+    }
+
     public static Date[] addYear(Context context, int year) {
-        MainActivity.showMessage(context, "Обновление календаря. Это может занять некоторое время!");
+        //MainActivity.showMessage(context, "Обновление календаря. Это может занять некоторое время!");
 
         Date[] array = new Date[365];
         int day = 0;
+        int dayOfWeek = getDayOfWeek(year, 1, 1);
         int month = 1;
         int id = calendarSize;
         for (int i = 0; i < array.length; i++) {
             day++;
+            dayOfWeek++;
             id++;
+            if (dayOfWeek > 7) {
+                dayOfWeek = 1;
+            }
             if (day >= getDaysOfMonth(month)) {
                 month++;
                 day = 0;
                 i--;
+                dayOfWeek = getDayOfWeek(year, month, 1);
             } else {
-                array[i] = new Date(id, day, i, 0, 0, month, year);
+                array[i] = new Date(id, day, i, dayOfWeek, 0, 0, month, year);
             }
         }
         return array;
+    }
+
+    public int getSubDaysRemaining(int dayOfYear) {
+        return this.dateArray[dayOfYear - 1].subDaysRemaining;
+    }
+
+    public int getStatus(int dayOfYear) {
+        return this.dateArray[dayOfYear - 1].status;
     }
 }

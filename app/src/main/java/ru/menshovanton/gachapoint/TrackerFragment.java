@@ -1,11 +1,15 @@
-package ru.menshovanton.hoyosubstrakcer;
+package ru.menshovanton.gachapoint;
 
 import static androidx.core.content.ContextCompat.getColor;
+import static ru.menshovanton.gachapoint.Calendar.splashScreen;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import android.os.Vibrator;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -16,38 +20,47 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-public class HomeFragment extends Fragment {
+public class TrackerFragment extends Fragment {
 
     MainActivity mainActivity;
     TextView subsCounterView;
     static ConstraintLayout constraintLayout;
-    HorizontalScrollView scrollView;
+    @SuppressLint("StaticFieldLeak")
+    static TableLayout tableLayout;
+    HorizontalScrollView subTypesLine;
 
     ImageView previousMonthButton;
     ImageView nextMonthButton;
 
     Button checkButton;
-    Button addButton;
+    public static Button addButton;
+    ImageButton moreButton;
 
     MaterialButton blessingOfTheWelkinMoonSelectButton;
     MaterialButton starRailSpecialPassSelectButton;
     MaterialButton interKnotMembershipSelectButton;
 
+    public static TextView tagMonday;
+    public static TextView tagTuesday;
+    public static TextView tagWednesday;
+    public static TextView tagThursday;
+    public static TextView tagFriday;
+    public static TextView tagSaturday;
+    public static TextView tagSunday;
+
+
     public static Calendar calendar;
-    private static HomeFragment instance;
+    public static TrackerFragment instance;
+    Preferences settings;
 
     public int toDayOfMonth;
     public static int toDayOfYear;
@@ -62,10 +75,11 @@ public class HomeFragment extends Fragment {
     public final int PRIMOGEMS_PER_DAY = 90;
     public final int SUMMARY_CLAIM = 2700;
 
-    public HomeFragment() {}
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+    public TrackerFragment() {}
+
+    public static TrackerFragment newInstance() {
+        return new TrackerFragment();
     }
 
     @Override
@@ -74,6 +88,7 @@ public class HomeFragment extends Fragment {
 
         mainActivity = MainActivity.mainActivity;
         instance = this;
+        settings = new Preferences(mainActivity);
 
         missesDays = 0;
         claimsDays = 0;
@@ -88,33 +103,44 @@ public class HomeFragment extends Fragment {
         toDayOfYear = LocalDate.now().getDayOfYear();
         year = LocalDate.now().getYear();
 
-        calendar = new Calendar(MainActivity.context, MainActivity.mainActivity);
+//        calendar = new Calendar(MainActivity.context, MainActivity.mainActivity);
+        calendar = new Calendar(splashScreen, splashScreen);
 
-        if (calendar.dateArray[toDayOfYear - 1].subDaysRemaining == 0) { subsCount = 0; }
-        else if (calendar.dateArray[toDayOfYear - 1].subDaysRemaining <= 30) { subsCount = 1; }
-        else if (calendar.dateArray[toDayOfYear - 1].subDaysRemaining <= 60) { subsCount = 2;}
-        else if (calendar.dateArray[toDayOfYear - 1].subDaysRemaining <= 90) { subsCount = 3; }
-        else if (calendar.dateArray[toDayOfYear - 1].subDaysRemaining <= 120) { subsCount = 4; }
-        else if (calendar.dateArray[toDayOfYear - 1].subDaysRemaining <= 150) { subsCount = 5; }
-        else if (calendar.dateArray[toDayOfYear - 1].subDaysRemaining <= 180) { subsCount = 6; }
+        if (calendar.getSubDaysRemaining(toDayOfYear) == 0) { subsCount = 0; }
+        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 30) { subsCount = 1; }
+        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 60) { subsCount = 2;}
+        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 90) { subsCount = 3; }
+        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 120) { subsCount = 4; }
+        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 150) { subsCount = 5; }
+        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 180) { subsCount = 6; }
 
         Notification.subsCount = subsCount;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_tracker, container, false);
 
         subsCounterView = view.findViewById(R.id.subsCount);
-        constraintLayout = view.findViewById(R.id.constraint);
-        checkButton = view.findViewById(R.id.checkDayButton);
-        addButton = view.findViewById(R.id.addSubButton);
+        constraintLayout = view.findViewById(R.id.calendarArea);
+        checkButton = view.findViewById(R.id.checkButton);
+        //addButton = view.findViewById(R.id.checkButton);
+        moreButton = view.findViewById(R.id.moreButton);
         previousMonthButton = view.findViewById(R.id.previousMonth);
         nextMonthButton = view.findViewById(R.id.nextMonth);
         blessingOfTheWelkinMoonSelectButton = view.findViewById(R.id.blessingOfTheWelkinMoonSelectButton);
         starRailSpecialPassSelectButton = view.findViewById(R.id.starRailSpecialPassSelectButton);
         interKnotMembershipSelectButton = view.findViewById(R.id.interKnotMembershipSelectButton);
-        scrollView = view.findViewById(R.id.subTypes);
+        subTypesLine = view.findViewById(R.id.subTypesLine);
+        tagMonday = view.findViewById(R.id.tagMonday);
+        tagTuesday = view.findViewById(R.id.tagTuesday);
+        tagWednesday = view.findViewById(R.id.tagWednesday);
+        tagThursday = view.findViewById(R.id.tagThursday);
+        tagFriday = view.findViewById(R.id.tagFriday);
+        tagSaturday = view.findViewById(R.id.tagSaturday);
+        tagSunday = view.findViewById(R.id.tagSunday);
+
+        subTypesLine.post(() -> subTypesLine.scrollTo(MainActivity.subTypeScrollX, 0));
 
         return view;
     }
@@ -129,15 +155,17 @@ public class HomeFragment extends Fragment {
         calendar.drawCalendar();
 
         setHeader(selectedMonth, year);
-        calculateStats();
+        calculateStatistics();
 
         checkButton.setOnClickListener(this::onCheckClick);
-        addButton.setOnClickListener(this::onAddClick);
+        moreButton.setOnClickListener(this::showMoreMenu);
         previousMonthButton.setOnClickListener(this::onPreviousMonthClick);
         nextMonthButton.setOnClickListener(this::onNextMonthClick);
         blessingOfTheWelkinMoonSelectButton.setOnClickListener(this::onMoonClick);
         starRailSpecialPassSelectButton.setOnClickListener(this::onPassClick);
         interKnotMembershipSelectButton.setOnClickListener(this::onInterknotClick);
+
+        subTypesLine.setOnScrollChangeListener(this::onScrollSubTypes);
 
         ImageView gemIcon = view.findViewById(R.id.gemIcon);
         TextView subsCountTitle = view.findViewById(R.id.subsCountHeader);
@@ -169,13 +197,15 @@ public class HomeFragment extends Fragment {
         ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(120, 120);
         layoutParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
         layoutParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
-        layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+        layoutParams.topToBottom = R.id.calendarFiller;
         layoutParams.leftMargin = leftMargin;
         layoutParams.rightMargin = rightMargin;
         layoutParams.topMargin = topMargin;
+        layoutParams.horizontalBias = 0;
+        layoutParams.verticalBias = 0;
 
         textView.setText(String.valueOf(date.dayOfMonth));
-        textView.setTextSize(24);
+        textView.setTextSize(20);
         Typeface typeface = ResourcesCompat.getFont(MainActivity.context, R.font.genshin_font);
         textView.setTypeface(typeface);
         textView.setTextColor(getColor(MainActivity.context, R.color.white));
@@ -204,7 +234,7 @@ public class HomeFragment extends Fragment {
         constraintLayout.addView(textView, layoutParams);
     }
 
-    public void calculateStats() {
+    public void calculateStatistics() {
         int missedPrimogemsCount = missesDays * PRIMOGEMS_PER_DAY;
         int claimPrimogemsCount = claimsDays * PRIMOGEMS_PER_DAY;
         int laterPrimogemsCount = SUMMARY_CLAIM * subsCount - claimPrimogemsCount - missedPrimogemsCount;
@@ -241,10 +271,48 @@ public class HomeFragment extends Fragment {
         laterWishes.setText(laterWishesText);
     }
 
-    public void updateSubscribes() {
-        for (int i = 0; i < calendar.dateArray[toDayOfYear - 1].subDaysRemaining; i++) {
-            calendar.dateArray[toDayOfYear + i].subDaysRemaining = calendar.dateArray[toDayOfYear + i - 1].subDaysRemaining - 1;
+    enum UpdActions {
+        Add,
+        Delete
+    }
+
+    public void updateSubscribes(UpdActions action) {
+        switch (action) {
+            case Add:
+                for (int i = 0; i < calendar.getSubDaysRemaining(toDayOfYear); i++) {
+                    calendar.dateArray[toDayOfYear + i].subDaysRemaining = calendar.dateArray[toDayOfYear + i - 1].subDaysRemaining - 1;
+                }
+                break;
+            case Delete:
+                if (calendar.getSubDaysRemaining(toDayOfYear) > 30) {
+                    for (int i = 0; i < calendar.getSubDaysRemaining(toDayOfYear); i++) {
+                        calendar.dateArray[toDayOfYear + i].subDaysRemaining = calendar.dateArray[toDayOfYear + i - 1].subDaysRemaining - 1;
+                    }
+                } else {
+                    for (int i = 30; i >= 0; i--) {
+                        calendar.dateArray[toDayOfYear + i].subDaysRemaining = 0;
+                    }
+                }
+                break;
         }
+
+    }
+
+    public void updateCalendar() {
+        int length;
+        if (calendar.getSubDaysRemaining(toDayOfYear) > 30) {
+            length = calendar.dateArray[toDayOfYear - 1].subDaysRemaining;
+        } else {
+            length = 30;
+        }
+
+        calculateStatistics();
+        DataManager.writeDB(MainActivity.context, calendar.dateArray, LocalDate.now().getDayOfYear() - 1, length);
+        selectedMonth = LocalDate.now().getMonth().getValue();
+        calendar.removeCalendar(constraintLayout);
+        //calendar.updateCalendar();
+        calendar.drawCalendar();
+        setHeader(selectedMonth, year);
     }
 
     @SuppressLint("SetTextI18n")
@@ -265,7 +333,7 @@ public class HomeFragment extends Fragment {
     public void onAddClick(View view)
     {
         if (subsCount <= 6) {
-            if (calendar.dateArray[toDayOfYear - 1].subDaysRemaining == 0)
+            if (calendar.getSubDaysRemaining(toDayOfYear) == 0)
             {
                 subsCount = 1;
                 for (int i = 0; i < toDayOfYear - 1; i++) {
@@ -288,38 +356,60 @@ public class HomeFragment extends Fragment {
                 calendar.dateArray[toDayOfYear - 1].subDaysRemaining += 30;
             }
 
-            updateSubscribes();
-            Toast.makeText(MainActivity.mainActivity, getString(R.string.add_sub), Toast.LENGTH_SHORT).show();
-            onCheckClick(view);
+            updateSubscribes(UpdActions.Add);
+            //Toast.makeText(MainActivity.mainActivity, getString(R.string.add_sub), Toast.LENGTH_SHORT).show();
+            check();
+            updateCalendar();
 
             Notification.subsCount = subsCount;
 
-            mainActivity.updateLayout(HomeFragment.newInstance());
+            mainActivity.updateFragment(TrackerFragment.newInstance());
         }
         else
         {   Toast.makeText(MainActivity.mainActivity, getString(R.string.subs_limit), Toast.LENGTH_SHORT).show(); }
         subsCounterView.setText(String.valueOf(subsCount));
+        mainActivity.closeCalendarMenu();
+    }
+
+    public void onDelClick(View view) {
+        if (subsCount > 0) {
+            cancelCheck();
+
+            subsCount--;
+            calendar.dateArray[toDayOfYear - 1].subDaysRemaining -= 30;
+
+            updateSubscribes(UpdActions.Delete);
+            updateCalendar();
+            Toast.makeText(MainActivity.mainActivity, getString(R.string.del_sub), Toast.LENGTH_SHORT).show();
+
+            Notification.subsCount = subsCount;
+        }
+        else
+        {   Toast.makeText(MainActivity.mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show(); }
+        subsCounterView.setText(String.valueOf(subsCount));
+        mainActivity.closeCalendarMenu();
+    }
+
+    public void check() {
+        calendar.dateArray[toDayOfYear - 1].status = 1;
+        claimsDays++;
     }
 
     public void onCheckClick(View view)
     {
-        if (calendar.dateArray[toDayOfYear - 1].status == 1)
-        {   Toast.makeText(MainActivity.mainActivity, getString(R.string.already_cheked), Toast.LENGTH_SHORT).show();  }
-        else if (calendar.dateArray[toDayOfYear - 1].subDaysRemaining == 0)
-        {   Toast.makeText(MainActivity.mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();    }
+        if (calendar.getStatus(toDayOfYear) == 1)
+        {   Toast.makeText(getActivity(), getString(R.string.already_cheked), Toast.LENGTH_SHORT).show();  }
+        else if (calendar.getSubDaysRemaining(toDayOfYear) == 0)
+        {   Toast.makeText(getActivity(), getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();    }
         else
         {
-            calendar.dateArray[toDayOfYear - 1].status = 1;
-            Toast.makeText(MainActivity.mainActivity, getString(R.string.check_today), Toast.LENGTH_SHORT).show();
+            check();
+            Toast.makeText(getActivity(), getString(R.string.check_today), Toast.LENGTH_SHORT).show();
             claimsDays++;
         }
 
-        calculateStats();
-        DataManager.writeDB(MainActivity.context, calendar.dateArray, LocalDate.now().getDayOfYear() - 1, calendar.dateArray[toDayOfYear - 1].subDaysRemaining);
-        selectedMonth = LocalDate.now().getMonth().getValue();
-        calendar.removeCalendar(constraintLayout);
-        calendar.drawCalendar();
-        setHeader(selectedMonth, year);
+        Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(10);
     }
 
     public void onPreviousMonthClick(View view) {
@@ -350,22 +440,22 @@ public class HomeFragment extends Fragment {
         setHeader(selectedMonth, selectedYear);
     }
 
-    public void onMoonClick(View view) {
+    private void onMoonClick(View view) {
         MainActivity.subType = 0;
         changeCheckedTab(blessingOfTheWelkinMoonSelectButton);
-        mainActivity.updateLayout(HomeFragment.newInstance());
+        mainActivity.updateFragment(TrackerFragment.newInstance());
     }
 
-    public void onPassClick(View view) {
+    private void onPassClick(View view) {
         MainActivity.subType = 1;
         changeCheckedTab(starRailSpecialPassSelectButton);
-        mainActivity.updateLayout(HomeFragment.newInstance());
+        mainActivity.updateFragment(TrackerFragment.newInstance());
     }
 
-    public void onInterknotClick(View view) {
+    private void onInterknotClick(View view) {
         MainActivity.subType = 2;
         changeCheckedTab(interKnotMembershipSelectButton);
-        mainActivity.updateLayout(HomeFragment.newInstance());
+        mainActivity.updateFragment(TrackerFragment.newInstance());
     }
 
     private void changeCheckedTab(MaterialButton view) {
@@ -376,10 +466,52 @@ public class HomeFragment extends Fragment {
         view.setStrokeColorResource(R.color.check);
     }
 
-    public static void update() {
-        calendar.removeCalendar(constraintLayout);
-        calendar.updateCalendar();
-        calendar.drawCalendar();
-        instance.calculateStats();
+    private void onScrollSubTypes(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+        MainActivity.subTypeScrollX = scrollX;
+    }
+
+    private void showMoreMenu(View view) {
+        mainActivity.showCalendarMenu();
+    }
+
+    public void recoveryMissDay(View view) {
+        if (calendar.getStatus(toDayOfYear - 1) == 1)
+        {   Toast.makeText(MainActivity.mainActivity, getString(R.string.not_miss_day), Toast.LENGTH_SHORT).show();  }
+        else if (calendar.getSubDaysRemaining(toDayOfYear - 1) == 0)
+        {   Toast.makeText(MainActivity.mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();    }
+        else
+        {
+            calendar.dateArray[toDayOfYear - 2].status = 1;
+            Toast.makeText(MainActivity.mainActivity, getString(R.string.check_today), Toast.LENGTH_SHORT).show();
+            claimsDays++;
+        }
+
+        updateCalendar();
+        mainActivity.closeCalendarMenu();
+    }
+
+    public void cancelCheck() {
+        calendar.dateArray[toDayOfYear - 1].status = 0;
+        claimsDays--;
+    }
+
+    public void onCancelCheck(View view){
+        if (calendar.getStatus(toDayOfYear) == 0)
+        {   Toast.makeText(MainActivity.mainActivity, getString(R.string.not_check_today), Toast.LENGTH_SHORT).show();  }
+        else if (calendar.getSubDaysRemaining(toDayOfYear) == 0)
+        {   Toast.makeText(MainActivity.mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();    }
+        else
+        {
+            cancelCheck();
+            Toast.makeText(MainActivity.mainActivity, getString(R.string.cancel_check_today), Toast.LENGTH_SHORT).show();
+        }
+
+        updateCalendar();
+        mainActivity.closeCalendarMenu();
+    }
+
+    public void createDataBaseBackup(View view) {
+        DatabaseHelper.createDataBaseBackup(view);
+        mainActivity.closeCalendarMenu();
     }
 }

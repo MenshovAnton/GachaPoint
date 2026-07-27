@@ -1,4 +1,4 @@
-package ru.menshovanton.hoyosubstrakcer;
+package ru.menshovanton.gachapoint;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,15 +8,15 @@ public class DataManager {
 
     static void writeDB(Context context, Date[] dateArray, int start, int stop) {
         for (int i = start; i < stop + start; i++) {
-            MainActivity.dbHelper.updateValue(i, dateArray[i].dayOfMonth, dateArray[i].dayOfYear, dateArray[i].month,
+            SplashScreen.dbHelper.updateValue(i, dateArray[i].dayOfMonth, dateArray[i].dayOfYear, dateArray[i].dayOfWeek, dateArray[i].month,
                     dateArray[i].year, dateArray[i].status, dateArray[i].subDaysRemaining);
         }
     }
 
     public static Date[] readDB(Context context) {
-        Cursor cursor = MainActivity.dbHelper.getValue();
+        Cursor cursor = SplashScreen.dbHelper.getValue();
 
-        if (MainActivity.dbHelper.isDatabaseEmpty()) {
+        if (SplashScreen.dbHelper.isDatabaseEmpty()) {
             return null;
         }
 
@@ -27,6 +27,7 @@ public class DataManager {
                     i,
                     getDayById(i, cursor),
                     getDayOfYearById(i, cursor),
+                    getDayOfWeekById(i, cursor),
                     getStatusById(i, cursor),
                     getSubDaysRemainingById(i, cursor),
                     getMonthById(i, cursor),
@@ -56,6 +57,18 @@ public class DataManager {
         if (cursor.moveToFirst()) {
             cursor.moveToPosition(id);
             day = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_DAY_YEAR));
+        }
+
+        return day;
+    }
+
+    @SuppressLint("Range")
+    public static int getDayOfWeekById(int id, Cursor cursor) {
+        int day = 1;
+
+        if (cursor.moveToFirst()) {
+            cursor.moveToPosition(id);
+            day = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_DAY_WEEK));
         }
 
         return day;

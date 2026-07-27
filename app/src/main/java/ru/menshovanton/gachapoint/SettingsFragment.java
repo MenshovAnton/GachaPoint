@@ -1,9 +1,10 @@
-package ru.menshovanton.hoyosubstrakcer;
+package ru.menshovanton.gachapoint;
 
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -11,15 +12,16 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
+
+import java.io.IOException;
 
 public class SettingsFragment extends Fragment {
 
     TextView hourTextView;
     TextView minuteTextView;
+
+    Button dbBackupButton;
+    Button infoButton;
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch notificationsSwitch;
@@ -27,6 +29,8 @@ public class SettingsFragment extends Fragment {
     ImageView edit;
 
     MainActivity mainActivity = MainActivity.mainActivity;
+    Preferences preferences = new Preferences(mainActivity);
+    DatabaseHelper dbHelper = new DatabaseHelper(mainActivity);
 
     public SettingsFragment() {}
 
@@ -37,7 +41,6 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
-    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
@@ -46,6 +49,8 @@ public class SettingsFragment extends Fragment {
         hourTextView = view.findViewById(R.id.hourTextView);
         minuteTextView = view.findViewById(R.id.minutesTextView);
         edit = view.findViewById(R.id.editTime);
+        dbBackupButton = view.findViewById(R.id.dbBackupButton);
+        infoButton = view.findViewById(R.id.infoButton);
 
         return view;
     }
@@ -55,15 +60,17 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         notificationsSwitch.setOnCheckedChangeListener(this::onCheckedChange);
-        notificationsSwitch.setChecked(mainActivity.getBooleanPreference(MainActivity.PREF_NOTIFICATIONS));
+        notificationsSwitch.setChecked(preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS));
 
         edit.setOnClickListener(this::showTimePicker);
+        dbBackupButton.setOnClickListener(DatabaseHelper::createDataBaseBackup);
+        infoButton.setOnClickListener(this::onInfoButton);
 
         updateTimeDisplay();
     }
 
     private void onCheckedChange(CompoundButton compoundButton, boolean b) {
-        mainActivity.saveBooleanPreference(MainActivity.PREF_NOTIFICATIONS, b);
+        preferences.saveBooleanPreference(Preferences.ALLOW_NOTIFICATIONS, b);
         Notification.allowNotifications = b;
     }
 
@@ -74,8 +81,8 @@ public class SettingsFragment extends Fragment {
                     AlarmHelper.alarmHour = hourOfDay;
                     AlarmHelper.alarmMinute = minute;
 
-                    mainActivity.saveIntPreference(MainActivity.PREF_ALARM_HOURS, hourOfDay);
-                    mainActivity.saveIntPreference(MainActivity.PREF_ALARM_MINUTES, minute);
+                    preferences.saveIntPreference(Preferences.ALARM_HOURS, hourOfDay);
+                    preferences.saveIntPreference(Preferences.ALARM_MINUTES, minute);
 
                     updateTimeDisplay();
 
@@ -97,5 +104,9 @@ public class SettingsFragment extends Fragment {
         } else {
             minuteTextView.setText(String.valueOf(AlarmHelper.alarmMinute));
         }
+    }
+
+    private void onInfoButton(View view) {
+        MainActivity.mainActivity.updateFragment(InfoFragment.newInstance());
     }
 }

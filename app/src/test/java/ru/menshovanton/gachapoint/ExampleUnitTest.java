@@ -1,4 +1,4 @@
-package ru.menshovanton.hoyosubstrakcer;
+package ru.menshovanton.gachapoint;
 
 import org.junit.Test;
 

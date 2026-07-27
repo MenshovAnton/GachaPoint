@@ -1,17 +1,23 @@
-package ru.menshovanton.hoyosubstrakcer;
+package ru.menshovanton.gachapoint;
 
 import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
+
+import static ru.menshovanton.gachapoint.MainActivity.mainActivity;
+import static ru.menshovanton.gachapoint.SplashScreen.dbHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+import android.os.Environment;
+import android.view.View;
+import android.widget.Toast;
 
-import java.io.File;
+import java.io.*;
+import java.nio.channels.FileChannel;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
     public static final String DATABASE_NAME = "gachamanager.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "calendar";
@@ -19,6 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_DAY = "day";
     public static final String COLUMN_DAY_YEAR = "dayyear";
+    public static final String COLUMN_DAY_WEEK = "dayweek";
     public static final String COLUMN_MONTH = "month";
     public static final String COLUMN_YEAR = "year";
     public static final String COLUMN_STATUSGENSHIN = "statusgenshin";
@@ -27,6 +34,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DRHSR = "drhsr";
     public static final String COLUMN_STATUSZZZ = "statuszzz";
     public static final String COLUMN_DRZZZ = "drzzz";
+
+    public int test = 1;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,6 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_DAY + " INTEGER, " +
                 COLUMN_DAY_YEAR + " INTEGER, " +
+                COLUMN_DAY_WEEK + " INTEGER, " +
                 COLUMN_MONTH + " INTEGER, " +
                 COLUMN_YEAR + " INTEGER, " +
                 COLUMN_STATUSGENSHIN + " INTEGER, " +
@@ -55,11 +65,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void updateValue(int id, int day, int dayOfYear, int month, int year, int status, int subDaysRemaining) {
+    public void updateValue(int id, int day, int dayOfYear, int dayOfWeek, int month, int year, int status, int subDaysRemaining) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_DAY, day);
         values.put(COLUMN_DAY_YEAR, dayOfYear);
+        values.put(COLUMN_DAY_WEEK, dayOfWeek);
         values.put(COLUMN_MONTH, month);
         values.put(COLUMN_YEAR, year);
 
@@ -122,5 +133,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         //db.close();
         return isEmpty;
+    }
+
+    private static String getDatabasePath() {
+        return mainActivity.getDatabasePath(DATABASE_NAME).getPath();
+    }
+
+    public static void databaseBackup() throws IOException {
+        String inFileName = getDatabasePath();
+        String outFileName = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS)+"/GachaPoint/gachapoint.db";
+
+        File dbFile = new File(inFileName);
+        File backupFile = new File(outFileName);
+
+        if (!backupFile.getParentFile().exists()) {
+            backupFile.getParentFile().mkdirs();
+        }
+
+        FileChannel inChannel = new FileInputStream(dbFile).getChannel();
+        FileChannel outChannel = new FileOutputStream(backupFile).getChannel();
+
+        try {
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+        } finally {
+            if (inChannel != null) {
+                inChannel.close();
+            }
+            if (outChannel != null) {
+                outChannel.close();
+            }
+        }
+    }
+
+    public static void createDataBaseBackup(View view) {
+        try {
+            databaseBackup();
+            Toast toast = Toast.makeText(mainActivity, "Данные успешно выгружены!",Toast.LENGTH_LONG);
+            toast.show();
+        } catch (IOException e) {
+            Toast toast = Toast.makeText(mainActivity, "Ошибка экспорта!",Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 }

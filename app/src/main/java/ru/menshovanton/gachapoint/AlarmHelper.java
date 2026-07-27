@@ -1,4 +1,4 @@
-package ru.menshovanton.hoyosubstrakcer;
+package ru.menshovanton.gachapoint;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -21,6 +21,7 @@ public class AlarmHelper extends Service {
     public static int alarmMinute = 0;
 
     public MainActivity mainActivity = MainActivity.mainActivity;
+    Preferences preferences = new Preferences(mainActivity);
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -29,8 +30,8 @@ public class AlarmHelper extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        alarmHour = mainActivity.getIntPreference(MainActivity.PREF_ALARM_HOURS);
-        alarmMinute = mainActivity.getIntPreference(MainActivity.PREF_ALARM_MINUTES);
+        alarmHour = preferences.getIntPreference(Preferences.ALARM_HOURS);
+        alarmMinute = preferences.getIntPreference(Preferences.ALARM_MINUTES);
 
         setDailyAlarm(MainActivity.context);
         return Service.START_STICKY;

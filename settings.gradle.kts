@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "HoyoSubsTrakcer"
+rootProject.name = "GachaPoint"
 include(":app")
