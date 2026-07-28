@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/dialog_background">
@@ -20,7 +22,7 @@
                 android:textColor="@color/check"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="5dp"
-                android:textSize="25dp"/>
+                android:textSize="25sp"/>
 
     </LinearLayout>
 
@@ -30,20 +32,22 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="10dp"
+            tools:ignore="UseCompoundDrawables">
 
         <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
                 android:src="@drawable/plus"
-                app:tint="@color/check"/>
+                app:tint="@color/check"
+                tools:ignore="ContentDescription" />
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_button_text"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:textSize="16sp"/>
 
     </LinearLayout>
@@ -53,20 +57,22 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="10dp"
+            tools:ignore="UseCompoundDrawables">
 
         <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
                 android:src="@drawable/minus"
-                app:tint="@color/check"/>
+                app:tint="@color/check"
+                tools:ignore="ContentDescription" />
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/del_button_text"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:textSize="16sp"/>
 
     </LinearLayout>
@@ -77,12 +83,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            tools:ignore="UseCompoundDrawables">
 
         <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
+                android:importantForAccessibility="no"
                 android:src="@drawable/backup"
                 app:tint="@color/check"/>
 
@@ -90,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/db_settings_backup_button"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:textSize="16sp"/>
 
     </LinearLayout>
@@ -110,7 +118,7 @@
                 android:textColor="@color/check"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="5dp"
-                android:textSize="25dp"/>
+                android:textSize="25sp"/>
 
     </LinearLayout>
 
@@ -120,12 +128,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            tools:ignore="UseCompoundDrawables">
 
         <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
+                android:importantForAccessibility="no"
                 android:src="@drawable/right_arrow"
                 app:tint="@color/check"/>
 
@@ -133,7 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/change_status_button_text"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:textSize="16sp"/>
 
     </LinearLayout>
@@ -146,12 +156,14 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="10dp"
-            android:paddingBottom="50dp">
+            android:paddingBottom="50dp"
+            tools:ignore="UseCompoundDrawables">
 
         <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
+                android:importantForAccessibility="no"
                 android:src="@drawable/cross"
                 app:tint="@color/check"/>
 
@@ -159,7 +171,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel_button_text"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:textSize="16sp"/>
 
     </LinearLayout>

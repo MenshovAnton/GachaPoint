@@ -1,9 +1,6 @@
 package ru.menshovanton.gachapoint;
 
-import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
-
 import static ru.menshovanton.gachapoint.MainActivity.mainActivity;
-import static ru.menshovanton.gachapoint.SplashScreen.dbHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -16,6 +13,8 @@ import android.widget.Toast;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
     public static final String DATABASE_NAME = "gachamanager.db";
@@ -139,40 +138,32 @@ public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
         return mainActivity.getDatabasePath(DATABASE_NAME).getPath();
     }
 
-    public static void databaseBackup() throws IOException {
+    public static void exportDataBase() throws IOException {
         String inFileName = getDatabasePath();
         String outFileName = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS)+"/GachaPoint/gachapoint.db";
+                Environment.DIRECTORY_DOCUMENTS)+"/GachaPoint/subs.db";
 
         File dbFile = new File(inFileName);
         File backupFile = new File(outFileName);
 
-        if (!backupFile.getParentFile().exists()) {
+        if (!Objects.requireNonNull(backupFile.getParentFile()).exists()) {
             backupFile.getParentFile().mkdirs();
         }
 
-        FileChannel inChannel = new FileInputStream(dbFile).getChannel();
-        FileChannel outChannel = new FileOutputStream(backupFile).getChannel();
-
-        try {
+        try (FileChannel inChannel = FileChannel.open(dbFile.toPath(), StandardOpenOption.READ);
+             FileChannel outChannel = FileChannel.open(backupFile.toPath(), StandardOpenOption.WRITE,
+                     StandardOpenOption.CREATE)) {
             inChannel.transferTo(0, inChannel.size(), outChannel);
-        } finally {
-            if (inChannel != null) {
-                inChannel.close();
-            }
-            if (outChannel != null) {
-                outChannel.close();
-            }
         }
     }
 
-    public static void createDataBaseBackup(View view) {
+    public static void createExport(View view) {
         try {
-            databaseBackup();
+            exportDataBase();
             Toast toast = Toast.makeText(mainActivity, "Данные успешно выгружены!",Toast.LENGTH_LONG);
             toast.show();
         } catch (IOException e) {
-            Toast toast = Toast.makeText(mainActivity, "Ошибка экспорта!",Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(mainActivity, "Ошибка экспорта! " + e.getLocalizedMessage(),Toast.LENGTH_LONG);
             toast.show();
         }
     }

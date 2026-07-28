@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.time.DayOfWeek;
@@ -102,7 +103,7 @@ public class Calendar {
                     margin = dateArray[i].dayOfWeek * 140 - 140;
                     j = dateArray[i].dayOfWeek - 1;
                 }
-                TrackerFragment.createView(dateArray[i], dateViewArray[i], dateBackArray[i], margin, 0, topMargin);
+                TrackerFragment.createView(dateArray[i], dateViewArray[i], dateBackArray[i], margin, topMargin);
                 margin += 140;
                 j++;
                 line++;
@@ -181,7 +182,7 @@ public class Calendar {
         Date[] array = new Date[calendarSize];
         int day = 0;
         int dayOfYear = 0;
-        int dayOfWeek = getDayOfWeek(srcYear, 1, 1);
+        int dayOfWeek = getDayOfWeek(srcYear, 1);
         int month = 1;
         int year = srcYear;
 
@@ -197,14 +198,14 @@ public class Calendar {
                 dayOfYear = 0;
                 month = 1;
                 year++;
-                dayOfWeek = getDayOfWeek(year, 1, 1);
+                dayOfWeek = getDayOfWeek(year, 1);
                 i--;
             } else {
                 if (day > getDaysOfMonth(month)) {
                     month++;
                     day = 0;
                     dayOfYear--;
-                    dayOfWeek = getDayOfWeek(year, month, 1);
+                    dayOfWeek = getDayOfWeek(year, month);
                     i--;
                 } else {
                     array[i] = new Date(i, day, dayOfYear, dayOfWeek, 0, 0, month, year);
@@ -215,8 +216,8 @@ public class Calendar {
         return array;
     }
 
-    private static int getDayOfWeek(int year, int month, int day) {
-        LocalDate date = LocalDate.of(year, month, day);
+    private static int getDayOfWeek(int year, int month) {
+        LocalDate date = LocalDate.of(year, month, 1);
         Locale langRu = new Locale("ru");
 
         DayOfWeek num = date.getDayOfWeek();
@@ -225,12 +226,13 @@ public class Calendar {
         return num.getValue() - 1;
     }
 
+    @NonNull
     public static Date[] addYear(Context context, int year) {
         //MainActivity.showMessage(context, "Обновление календаря. Это может занять некоторое время!");
 
         Date[] array = new Date[365];
         int day = 0;
-        int dayOfWeek = getDayOfWeek(year, 1, 1);
+        int dayOfWeek = getDayOfWeek(year, 1);
         int month = 1;
         int id = calendarSize;
         for (int i = 0; i < array.length; i++) {
@@ -244,7 +246,7 @@ public class Calendar {
                 month++;
                 day = 0;
                 i--;
-                dayOfWeek = getDayOfWeek(year, month, 1);
+                dayOfWeek = getDayOfWeek(year, month);
             } else {
                 array[i] = new Date(id, day, i, dayOfWeek, 0, 0, month, year);
             }

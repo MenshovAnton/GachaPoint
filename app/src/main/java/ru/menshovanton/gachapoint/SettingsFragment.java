@@ -13,8 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.IOException;
-
 public class SettingsFragment extends Fragment {
 
     TextView hourTextView;
@@ -63,7 +61,7 @@ public class SettingsFragment extends Fragment {
         notificationsSwitch.setChecked(preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS));
 
         edit.setOnClickListener(this::showTimePicker);
-        dbBackupButton.setOnClickListener(DatabaseHelper::createDataBaseBackup);
+        dbBackupButton.setOnClickListener(DatabaseHelper::createExport);
         infoButton.setOnClickListener(this::onInfoButton);
 
         updateTimeDisplay();

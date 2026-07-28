@@ -12,11 +12,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.io.File;
-import java.io.Serializable;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashScreen extends AppCompatActivity {
     public static DatabaseHelper dbHelper;
+    @SuppressLint("StaticFieldLeak")
     public static Calendar calendar;
     SplashScreen splashScreen;
 
@@ -50,7 +50,6 @@ public class SplashScreen extends AppCompatActivity {
         calendar = new Calendar(splashScreen, splashScreen);
 
         Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-        //intent.putExtra("Calendar", (Serializable) calendar);
         startActivity(intent);
         finish();
     }

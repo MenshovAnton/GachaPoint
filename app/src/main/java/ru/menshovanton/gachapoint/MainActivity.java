@@ -35,6 +35,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -117,12 +118,6 @@ public class MainActivity extends AppCompatActivity {
             checkAndRequestPermissions();
         }
 
-        dbHelper = new DatabaseHelper(getApplicationContext());
-
-//        if (!isDatabaseExists(this)) {
-//            dbHelper.getWritableDatabase();
-//        }
-
         loadFragment(TrackerFragment.newInstance());
         loadFragment(HomeFragment.newInstance());
 
@@ -169,17 +164,6 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
     }
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        try {
-//            dbHelper.createDatabaseBackup();
-//        } catch (IOException e) {
-//            Toast toast = Toast.makeText(mainActivity, "Не удалось создать резервную копию!",Toast.LENGTH_LONG);
-//            toast.show();
-//        }
-//    }
-
     private WeakReference<Dialog> calendarMenuRef;
 
     @SuppressLint("SetTextI18n")
@@ -207,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         layoutCancelCheck.setOnClickListener(trackerFragment::onCancelCheck);
 
         dialog.show();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }

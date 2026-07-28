@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 
 import android.os.Vibrator;
+import android.util.TypedValue;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +24,6 @@ import android.view.ViewGroup;
 
 import com.google.android.material.button.MaterialButton;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
@@ -42,6 +42,7 @@ public class TrackerFragment extends Fragment {
     ImageView nextMonthButton;
 
     Button checkButton;
+    @SuppressLint("StaticFieldLeak")
     public static Button addButton;
     ImageButton moreButton;
 
@@ -49,18 +50,29 @@ public class TrackerFragment extends Fragment {
     MaterialButton starRailSpecialPassSelectButton;
     MaterialButton interKnotMembershipSelectButton;
 
+    @SuppressLint("StaticFieldLeak")
     public static TextView tagMonday;
+    @SuppressLint("StaticFieldLeak")
     public static TextView tagTuesday;
+    @SuppressLint("StaticFieldLeak")
     public static TextView tagWednesday;
+    @SuppressLint("StaticFieldLeak")
     public static TextView tagThursday;
+    @SuppressLint("StaticFieldLeak")
     public static TextView tagFriday;
+    @SuppressLint("StaticFieldLeak")
     public static TextView tagSaturday;
+    @SuppressLint("StaticFieldLeak")
     public static TextView tagSunday;
 
 
+    @SuppressLint("StaticFieldLeak")
     public static Calendar calendar;
+    @SuppressLint("StaticFieldLeak")
     public static TrackerFragment instance;
     Preferences settings;
+
+    static View view;
 
     public int toDayOfMonth;
     public static int toDayOfYear;
@@ -119,7 +131,7 @@ public class TrackerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tracker, container, false);
+        view = inflater.inflate(R.layout.fragment_tracker, container, false);
 
         subsCounterView = view.findViewById(R.id.subsCount);
         constraintLayout = view.findViewById(R.id.calendarArea);
@@ -193,13 +205,13 @@ public class TrackerFragment extends Fragment {
         }
     }
 
-    public static void createView(Date date, TextView textView, ImageView imageView, int leftMargin, int rightMargin, int topMargin) {
+    public static void createView(Date date, TextView textView, ImageView imageView, int leftMargin, int topMargin) {
         ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(120, 120);
         layoutParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
         layoutParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
         layoutParams.topToBottom = R.id.calendarFiller;
         layoutParams.leftMargin = leftMargin;
-        layoutParams.rightMargin = rightMargin;
+        layoutParams.rightMargin = 0;
         layoutParams.topMargin = topMargin;
         layoutParams.horizontalBias = 0;
         layoutParams.verticalBias = 0;
@@ -271,7 +283,7 @@ public class TrackerFragment extends Fragment {
         laterWishes.setText(laterWishesText);
     }
 
-    enum UpdActions {
+    public enum UpdActions {
         Add,
         Delete
     }
@@ -408,7 +420,7 @@ public class TrackerFragment extends Fragment {
             claimsDays++;
         }
 
-        Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(10);
     }
 
@@ -511,7 +523,7 @@ public class TrackerFragment extends Fragment {
     }
 
     public void createDataBaseBackup(View view) {
-        DatabaseHelper.createDataBaseBackup(view);
+        DatabaseHelper.createExport(view);
         mainActivity.closeCalendarMenu();
     }
 }

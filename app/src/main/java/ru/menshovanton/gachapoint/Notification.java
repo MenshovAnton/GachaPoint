@@ -23,8 +23,8 @@ public class Notification extends BroadcastReceiver {
     public static int subsCount = 0;
     public static boolean allowNotifications = true;
 
-    private MainActivity mainActivity = MainActivity.mainActivity;
-    Preferences preferences = new Preferences(mainActivity);
+    private final MainActivity MAIN_ACTIVITY = MainActivity.mainActivity;
+    Preferences preferences = new Preferences(MAIN_ACTIVITY);
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     @SuppressLint("ScheduleExactAlarm")

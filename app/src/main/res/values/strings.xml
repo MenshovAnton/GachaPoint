@@ -88,4 +88,9 @@
 
     <string name="fast_header">Быстрые действия</string>
     <string name="review">Обратная связь</string>
+
+    <string name="wip">В разработке…</string>
+
+    <string name="logo">Логотип</string>
+    <string name="time">:</string>
 </resources>
