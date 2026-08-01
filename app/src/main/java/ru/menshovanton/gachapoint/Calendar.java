@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -78,58 +77,6 @@ public class Calendar {
             return;
         }
         dateArray = date;
-    }
-
-    public void drawCalendar() {
-        int margin = 0;
-        int topMargin = 0;
-        int j = 0;
-        int line = 1;
-
-        int daysOfYearForMonth = getDaysOfYearForMonth(TrackerFragment.selectedMonth);
-
-        for (int i = 0; i < calendarSize; i++) {
-            if (dateArray[i].status == 0 && dateArray[i].subDaysRemaining > 0 && dateArray[i].dayOfYear < TrackerFragment.toDayOfYear - 1) {
-                TrackerFragment.missesDays++;
-            }
-
-            if (dateArray[i].status == 1 && dateArray[i].subDaysRemaining > 0 && dateArray[i].dayOfYear < TrackerFragment.toDayOfYear - 1) {
-                TrackerFragment.claimsDays++;
-            }
-
-            if (i >= daysOfYearForMonth && i < daysOfYearForMonth + getDaysOfMonth(TrackerFragment.selectedMonth)) {
-                if (j == 7) {
-                    topMargin = topMargin + 140;
-                    margin = 0;
-                    j = 0;
-                }
-                if (dateArray[i].dayOfWeek > 1 && line == 1) {
-                    margin = dateArray[i].dayOfWeek * 140 - 140;
-                    j = dateArray[i].dayOfWeek - 1;
-                }
-                TrackerFragment.createView(dateArray[i], dateViewArray[i], dateBackArray[i], margin, topMargin);
-                margin += 140;
-                j++;
-                line++;
-            }
-        }
-
-        if (TrackerFragment.missesDays > 0) {
-            TrackerFragment.missesDays++;
-        }
-
-        if (dateArray[TrackerFragment.toDayOfYear - 1].status == 1) {
-            TrackerFragment.claimsDays++;
-        }
-    }
-
-    public void removeCalendar(ConstraintLayout constraintLayout) {
-        for (TextView textView : dateViewArray) {
-            constraintLayout.removeView(textView);
-        }
-        for (ImageView imageView : dateBackArray) {
-            constraintLayout.removeView(imageView);
-        }
     }
 
     public enum Months {

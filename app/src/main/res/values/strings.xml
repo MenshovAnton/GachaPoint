@@ -70,6 +70,7 @@
     <string name="active_subs_null">У вас нет активных подписок</string>
     <string name="not_miss_day">Вчера вы уже отмечались</string>
     <string name="not_check_today">Сегодня вы еще не отмечались</string>
+    <string name="impossible_cancel_sub">Подписку можно удалить только в день добавления!</string>
 
     <string name="calendar_mon">Пн</string>
     <string name="calendar_tue">Вт</string>

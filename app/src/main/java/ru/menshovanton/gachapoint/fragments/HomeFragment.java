@@ -1,5 +1,7 @@
 package ru.menshovanton.gachapoint.fragments;
 
+import static ru.menshovanton.gachapoint.Calendar.splashScreen;
+
 import android.os.Bundle;
 import android.widget.HorizontalScrollView;
 import androidx.annotation.NonNull;
@@ -8,12 +10,16 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 
+import ru.menshovanton.gachapoint.Statistic;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.Preferences;
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.helpers.CalendarHelper;
 
 public class HomeFragment extends Fragment {
     MainActivity mainActivity;
@@ -22,9 +28,12 @@ public class HomeFragment extends Fragment {
     MaterialButton honkaiStarRail;
     MaterialButton zenlessZoneZero;
 
+    TextView subsCounterView;
+
     HorizontalScrollView scrollView;
 
     Preferences settings;
+    CalendarHelper calendarHelper;
 
     public HomeFragment() {}
     public static HomeFragment newInstance() {
@@ -36,6 +45,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mainActivity = MainActivity.mainActivity;
         settings = new Preferences(mainActivity);
+        calendarHelper = new CalendarHelper(splashScreen);
     }
 
     @Override
@@ -46,6 +56,7 @@ public class HomeFragment extends Fragment {
         genshinImpact = view.findViewById(R.id.genshinImpact);
         honkaiStarRail = view.findViewById(R.id.honkai);
         zenlessZoneZero = view.findViewById(R.id.zenless);
+        subsCounterView = view.findViewById(R.id.subsCountHome);
         scrollView = view.findViewById(R.id.gameTypeChangerHome);
 
         scrollView.post(() -> scrollView.scrollTo(MainActivity.subTypeScrollX, 0));
@@ -63,14 +74,31 @@ public class HomeFragment extends Fragment {
 
         scrollView.setOnScrollChangeListener(this::onScrollChange);
 
+        ImageView gemIcon = view.findViewById(R.id.gemIconHome);
+        TextView subsCountTitle = view.findViewById(R.id.subsCountHeaderHome);
+        ImageView wishIcon = view.findViewById(R.id.wishIconHome);
+
+        calendarHelper.calculate();
+        setStatistics();
+        subsCounterView.setText(String.valueOf(calendarHelper.subsCount));
+
         switch (MainActivity.subType) {
             case 0:
+                gemIcon.setImageResource(R.drawable.primogem);
+                wishIcon.setImageResource(R.drawable.intertwined_fate);
+                subsCountTitle.setText(R.string.blessing_of_the_welkin_moon_count_header);
                 changeCheckedTab(genshinImpact);
                 break;
             case 1:
+                gemIcon.setImageResource(R.drawable.stellar_jade);
+                wishIcon.setImageResource(R.drawable.star_rail_special_pass);
+                subsCountTitle.setText(R.string.star_rail_special_pass_count_header);
                 changeCheckedTab(honkaiStarRail);
                 break;
             case 2:
+                gemIcon.setImageResource(R.drawable.polychrome);
+                wishIcon.setImageResource(R.drawable.encrypted_master_tape);
+                subsCountTitle.setText(R.string.inter_knot_member_count_header);
                 changeCheckedTab(zenlessZoneZero);
                 break;
         }
@@ -104,5 +132,42 @@ public class HomeFragment extends Fragment {
 
     private void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
         MainActivity.subTypeScrollX = scrollX;
+    }
+
+    public void setStatistics() {
+        Statistic statistic = calendarHelper.getStatistic();
+
+        int laterPrimogemsCount = statistic.laterGemsCount;
+        int laterWishesCount = statistic.laterWishesCount;
+
+        String laterPrimogemsText = "0";
+        String laterWishesText = "0";
+        String claimPrimogemsText = String.valueOf(statistic.claimGemsCount);
+        String missedPrimogemsText = String.valueOf(statistic.missedGemsCount);
+        String claimWishesText = String.valueOf(statistic.missedWishesCount);
+        String missedWishesText = String.valueOf(statistic.missedWishesCount);
+
+        assert getView() != null;
+        TextView claimPrimogems = getView().findViewById(R.id.cliamsGemsCounterHome);
+        claimPrimogems.setText(claimPrimogemsText);
+
+        TextView missedPrimogems = getView().findViewById(R.id.missGemsCounterHome);
+        missedPrimogems.setText(missedPrimogemsText);
+
+        TextView claimWishes = getView().findViewById(R.id.claimWishesCounterHome);
+        claimWishes.setText(claimWishesText);
+
+        TextView missedWishes = getView().findViewById(R.id.missWishesCounterHome);
+        missedWishes.setText(missedWishesText);
+
+        TextView laterPrimogems = getView().findViewById(R.id.laterGemsCounterHome);
+        if (laterPrimogemsCount > 0 && calendarHelper.claimsDays > 0)
+        {   laterPrimogemsText = String.valueOf(laterPrimogemsCount);   }
+        laterPrimogems.setText(laterPrimogemsText);
+
+        TextView laterWishes = getView().findViewById(R.id.laterWishesCounterHome);
+        if (laterPrimogemsCount > 0 && calendarHelper.claimsDays > 0)
+        {   laterWishesText = String.valueOf(laterWishesCount); }
+        laterWishes.setText(laterWishesText);
     }
 }
