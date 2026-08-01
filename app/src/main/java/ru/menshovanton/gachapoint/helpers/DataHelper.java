@@ -1,12 +1,17 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.helpers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 
-public class DataManager {
+import ru.menshovanton.gachapoint.Calendar;
+import ru.menshovanton.gachapoint.Date;
+import ru.menshovanton.gachapoint.activities.MainActivity;
+import ru.menshovanton.gachapoint.activities.SplashScreen;
 
-    static void writeDB(Context context, Date[] dateArray, int start, int stop) {
+public class DataHelper {
+
+    public static void writeDB(Context context, Date[] dateArray, int start, int stop) {
         for (int i = start; i < stop + start; i++) {
             SplashScreen.dbHelper.updateValue(i, dateArray[i].dayOfMonth, dateArray[i].dayOfYear, dateArray[i].dayOfWeek, dateArray[i].month,
                     dateArray[i].year, dateArray[i].status, dateArray[i].subDaysRemaining);

@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.helpers;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,7 +11,13 @@ import android.os.IBinder;
 
 import androidx.annotation.RequiresPermission;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
+
+import ru.menshovanton.gachapoint.Notification;
+import ru.menshovanton.gachapoint.Preferences;
+import ru.menshovanton.gachapoint.activities.MainActivity;
 
 public class AlarmHelper extends Service {
     private static final String TAG = "AlarmHelper";
@@ -50,18 +56,19 @@ public class AlarmHelper extends Service {
         Intent intent = new Intent(context, Notification.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, alarmHour);
-        calendar.set(Calendar.MINUTE, alarmMinute);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime alarm = LocalDateTime.of(
+                now.getYear(), now.getMonth(), now.getDayOfMonth(),
+                alarmHour, alarmMinute, 0, 0
+        );
 
-        if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        if (!alarm.isAfter(now)) {
+            alarm = alarm.plusDays(1);
         }
 
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        long alarmMillis = alarm.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmMillis, pendingIntent);
     }
 
     public static void cancelAlarm(Context context) {

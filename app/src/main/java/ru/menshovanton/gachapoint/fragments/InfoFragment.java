@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.fragments;
 
 import android.os.Bundle;
 
@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import ru.menshovanton.gachapoint.activities.MainActivity;
+import ru.menshovanton.gachapoint.R;
 
 public class InfoFragment extends Fragment {
 

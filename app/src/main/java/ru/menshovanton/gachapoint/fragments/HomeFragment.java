@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.fragments;
 
 import android.os.Bundle;
 import android.widget.HorizontalScrollView;
@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.button.MaterialButton;
+
+import ru.menshovanton.gachapoint.activities.MainActivity;
+import ru.menshovanton.gachapoint.Preferences;
+import ru.menshovanton.gachapoint.R;
 
 public class HomeFragment extends Fragment {
     MainActivity mainActivity;

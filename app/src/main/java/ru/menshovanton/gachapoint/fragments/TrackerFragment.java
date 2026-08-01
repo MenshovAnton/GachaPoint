@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.fragments;
 
 import static androidx.core.content.ContextCompat.getColor;
 import static ru.menshovanton.gachapoint.Calendar.splashScreen;
@@ -9,7 +9,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 
 import android.os.Vibrator;
-import android.util.TypedValue;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +27,15 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.Locale;
+
+import ru.menshovanton.gachapoint.Calendar;
+import ru.menshovanton.gachapoint.helpers.DataHelper;
+import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
+import ru.menshovanton.gachapoint.Date;
+import ru.menshovanton.gachapoint.activities.MainActivity;
+import ru.menshovanton.gachapoint.Notification;
+import ru.menshovanton.gachapoint.Preferences;
+import ru.menshovanton.gachapoint.R;
 
 public class TrackerFragment extends Fragment {
 
@@ -319,7 +327,7 @@ public class TrackerFragment extends Fragment {
         }
 
         calculateStatistics();
-        DataManager.writeDB(MainActivity.context, calendar.dateArray, LocalDate.now().getDayOfYear() - 1, length);
+        DataHelper.writeDB(MainActivity.context, calendar.dateArray, LocalDate.now().getDayOfYear() - 1, length);
         selectedMonth = LocalDate.now().getMonth().getValue();
         calendar.removeCalendar(constraintLayout);
         //calendar.updateCalendar();

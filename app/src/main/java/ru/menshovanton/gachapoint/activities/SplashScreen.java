@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,6 +12,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.io.File;
+
+import ru.menshovanton.gachapoint.Calendar;
+import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
+import ru.menshovanton.gachapoint.R;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashScreen extends AppCompatActivity {

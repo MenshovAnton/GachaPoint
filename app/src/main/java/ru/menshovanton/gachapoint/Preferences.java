@@ -3,6 +3,9 @@ package ru.menshovanton.gachapoint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import ru.menshovanton.gachapoint.activities.MainActivity;
+import ru.menshovanton.gachapoint.activities.SplashScreen;
+
 public class Preferences {
     private static final String PREF_FILE = "Settings";
     public static final String ALARM_HOURS = "Alarm Hours";
@@ -17,7 +20,7 @@ public class Preferences {
         settings = splashScreen.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
     }
 
-    Preferences(MainActivity mainActivity) {
+    public Preferences(MainActivity mainActivity) {
         settings = mainActivity.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
     }
 

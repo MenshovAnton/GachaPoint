@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
@@ -12,6 +12,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import ru.menshovanton.gachapoint.helpers.AlarmHelper;
+import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
+import ru.menshovanton.gachapoint.activities.MainActivity;
+import ru.menshovanton.gachapoint.Notification;
+import ru.menshovanton.gachapoint.Preferences;
+import ru.menshovanton.gachapoint.R;
 
 public class SettingsFragment extends Fragment {
 

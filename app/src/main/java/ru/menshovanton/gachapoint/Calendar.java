@@ -14,6 +14,10 @@ import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
+import ru.menshovanton.gachapoint.activities.SplashScreen;
+import ru.menshovanton.gachapoint.fragments.TrackerFragment;
+import ru.menshovanton.gachapoint.helpers.DataHelper;
+
 public class Calendar {
     public Date[] dateArray;
     public TextView[] dateViewArray;
@@ -24,27 +28,27 @@ public class Calendar {
     @SuppressLint("StaticFieldLeak")
     public static Calendar calendar;
     private static Preferences preferences;
-    public DataManager dataManager;
+    public DataHelper dataHelper;
 
     public static int calendarSize;
 
     public static int year = LocalDate.now().getYear();
 
-    Calendar(Context context, SplashScreen splashScreen) {
+    public Calendar(Context context, SplashScreen splashScreen) {
         this.context = context;
         Calendar.splashScreen = splashScreen;
         preferences = new Preferences(splashScreen);
 
         calendarSize = preferences.getIntPreference(Preferences.CALENDAR_SIZE);
 
-        Date[] date = DataManager.readDB(context);
+        Date[] date = DataHelper.readDB(context);
         if (date != null) {
             if (date[calendarSize - 1].year == year) {
                 calendarSize += 365;
                 dateArray = new Date[calendarSize];
                 System.arraycopy(date, 0, dateArray, 0, date.length);
                 System.arraycopy(addYear(context, year + 1), 0, dateArray, date.length, 365);
-                DataManager.writeDB(context, dateArray, 0, dateArray.length);
+                DataHelper.writeDB(context, dateArray, 0, dateArray.length);
                 preferences.saveIntPreference(Preferences.CALENDAR_SIZE, calendarSize);
             } else {
                 dateArray = date;
@@ -69,7 +73,7 @@ public class Calendar {
     }
 
     public void updateCalendar() {
-        Date[] date = DataManager.readDB(context);
+        Date[] date = DataHelper.readDB(context);
         if (date == null) {
             return;
         }
@@ -212,7 +216,7 @@ public class Calendar {
                 }
             }
         }
-        DataManager.writeDB(context, array, 0, array.length);
+        DataHelper.writeDB(context, array, 0, array.length);
         return array;
     }
 

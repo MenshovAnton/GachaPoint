@@ -1,6 +1,6 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.helpers;
 
-import static ru.menshovanton.gachapoint.MainActivity.mainActivity;
+import static ru.menshovanton.gachapoint.activities.MainActivity.mainActivity;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,6 +15,8 @@ import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.file.StandardOpenOption;
 import java.util.Objects;
+
+import ru.menshovanton.gachapoint.activities.MainActivity;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
     public static final String DATABASE_NAME = "gachamanager.db";

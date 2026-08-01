@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -36,6 +36,14 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import ru.menshovanton.gachapoint.helpers.AlarmHelper;
+import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
+import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.fragments.HomeFragment;
+import ru.menshovanton.gachapoint.fragments.JournalFragment;
+import ru.menshovanton.gachapoint.fragments.SettingsFragment;
+import ru.menshovanton.gachapoint.fragments.TrackerFragment;
 
 public class MainActivity extends AppCompatActivity {
 

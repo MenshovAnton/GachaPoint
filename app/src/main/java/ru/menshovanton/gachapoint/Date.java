@@ -10,7 +10,7 @@ public class Date {
     public int subDaysRemaining;
     public int month;
 
-    Date(int id, int dayOfMonth, int dayOfYear, int dayOfWeek, int status, int subDaysRemaining, int month, int year) {
+    public Date(int id, int dayOfMonth, int dayOfYear, int dayOfWeek, int status, int subDaysRemaining, int month, int year) {
         this.id = id;
         this.dayOfMonth = dayOfMonth;
         this.dayOfYear = dayOfYear;

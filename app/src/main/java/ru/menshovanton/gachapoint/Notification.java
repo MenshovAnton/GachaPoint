@@ -16,6 +16,9 @@ import androidx.core.app.NotificationManagerCompat;
 
 import java.util.Objects;
 
+import ru.menshovanton.gachapoint.activities.MainActivity;
+import ru.menshovanton.gachapoint.helpers.AlarmHelper;
+
 public class Notification extends BroadcastReceiver {
     private static final int NOTIFY_ID = 101;
     private static final String CHANNEL_ID = "Оповещения";
