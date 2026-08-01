@@ -1,6 +1,4 @@
-<p align="center">
-    [English](/README.md) | [Русский](/README.ru.md)
-</p>
+[English](/README.md) | [Русский](/README.ru.md)****
 
 <p align="center">
   <img alt="GachaPoint" src="./media/logo.png">
