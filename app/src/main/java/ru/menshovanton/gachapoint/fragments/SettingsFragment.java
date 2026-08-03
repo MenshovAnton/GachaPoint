@@ -17,7 +17,7 @@ import ru.menshovanton.gachapoint.helpers.AlarmHelper;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.Notification;
-import ru.menshovanton.gachapoint.Preferences;
+import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 import ru.menshovanton.gachapoint.R;
 
 public class SettingsFragment extends Fragment {
@@ -34,7 +34,7 @@ public class SettingsFragment extends Fragment {
     ImageView edit;
 
     MainActivity mainActivity = MainActivity.mainActivity;
-    Preferences preferences = new Preferences(mainActivity);
+    PreferencesHelper preferencesHelper = new PreferencesHelper(mainActivity);
     DatabaseHelper dbHelper = new DatabaseHelper(mainActivity);
 
     public SettingsFragment() {}
@@ -65,7 +65,7 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         notificationsSwitch.setOnCheckedChangeListener(this::onCheckedChange);
-        notificationsSwitch.setChecked(preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS));
+        notificationsSwitch.setChecked(preferencesHelper.getBooleanPreference(PreferencesHelper.ALLOW_NOTIFICATIONS));
 
         edit.setOnClickListener(this::showTimePicker);
         dbBackupButton.setOnClickListener(DatabaseHelper::createExport);
@@ -75,7 +75,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void onCheckedChange(CompoundButton compoundButton, boolean b) {
-        preferences.saveBooleanPreference(Preferences.ALLOW_NOTIFICATIONS, b);
+        preferencesHelper.saveBooleanPreference(PreferencesHelper.ALLOW_NOTIFICATIONS, b);
         Notification.allowNotifications = b;
     }
 
@@ -86,8 +86,8 @@ public class SettingsFragment extends Fragment {
                     AlarmHelper.alarmHour = hourOfDay;
                     AlarmHelper.alarmMinute = minute;
 
-                    preferences.saveIntPreference(Preferences.ALARM_HOURS, hourOfDay);
-                    preferences.saveIntPreference(Preferences.ALARM_MINUTES, minute);
+                    preferencesHelper.saveIntPreference(PreferencesHelper.ALARM_HOURS, hourOfDay);
+                    preferencesHelper.saveIntPreference(PreferencesHelper.ALARM_MINUTES, minute);
 
                     updateTimeDisplay();
 

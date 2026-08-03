@@ -18,6 +18,7 @@ import java.util.Objects;
 
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.helpers.AlarmHelper;
+import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 
 public class Notification extends BroadcastReceiver {
     private static final int NOTIFY_ID = 101;
@@ -27,14 +28,14 @@ public class Notification extends BroadcastReceiver {
     public static boolean allowNotifications = true;
 
     private final MainActivity MAIN_ACTIVITY = MainActivity.mainActivity;
-    Preferences preferences = new Preferences(MAIN_ACTIVITY);
+    PreferencesHelper preferencesHelper = new PreferencesHelper(MAIN_ACTIVITY);
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     @SuppressLint("ScheduleExactAlarm")
     @Override
     public void onReceive(Context context, Intent intent) {
         if (subsCount > 0 && allowNotifications) {
-            allowNotifications = preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS);
+            allowNotifications = preferencesHelper.getBooleanPreference(PreferencesHelper.ALLOW_NOTIFICATIONS);
 
             CharSequence name = "Оповещения";
             String description = "Высылает напоминания о сборе наград.";

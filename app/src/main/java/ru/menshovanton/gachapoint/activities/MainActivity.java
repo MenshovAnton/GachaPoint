@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import ru.menshovanton.gachapoint.fragments.PiggyBankFragment;
 import ru.menshovanton.gachapoint.helpers.AlarmHelper;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 import ru.menshovanton.gachapoint.R;
@@ -209,6 +210,43 @@ public class MainActivity extends AppCompatActivity {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
             calendarMenuRef.clear();
+        }
+    }
+
+    private WeakReference<Dialog> piggyBankMenuRef;
+
+    @SuppressLint("SetTextI18n")
+    public void showPiggyBankMenu() {
+        final Dialog dialog = new Dialog(this);
+        piggyBankMenuRef = new WeakReference<>(dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.piggy_bank_more_sheet);
+
+        PiggyBankFragment piggyBankFragment = PiggyBankFragment.instance;
+
+        LinearLayout layoutAddOne = dialog.findViewById(R.id.layoutAddOneGarant);
+        layoutAddOne.setOnClickListener(piggyBankFragment::addTargetOne);
+
+        LinearLayout layoutAddTwo = dialog.findViewById(R.id.layoutAddTwoGarant);
+        layoutAddTwo.setOnClickListener(piggyBankFragment::addTargetTwo);
+
+        LinearLayout layoutAddSix = dialog.findViewById(R.id.layoutAddSixGarant);
+        layoutAddSix.setOnClickListener(piggyBankFragment::addTargetSix);
+
+        LinearLayout layoutReset = dialog.findViewById(R.id.layoutResetGoal);
+        layoutReset.setOnClickListener(piggyBankFragment::resetTarget);
+
+        dialog.show();
+        Objects.requireNonNull(dialog.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+    }
+
+    public void closePiggyBankMenu() {
+        Dialog dialog = piggyBankMenuRef != null ? piggyBankMenuRef.get() : null;
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+            piggyBankMenuRef.clear();
         }
     }
 }

@@ -57,6 +57,9 @@
     <string name="hsr">Honkai Star Rail</string>
     <string name="zzz">Zenless Zone Zero</string>
 
+    <string name="tab_piggy_bank">Накопления</string>
+    <string name="tab_wishes">Крутки</string>
+
     <string name="blessing_of_the_welkin_moon_checked">✅ Луна</string>
     <string name="star_rail_special_pass_checked">✅ Пропуск</string>
     <string name="inter_knot_member_checked">✅ Интернот</string>
@@ -81,7 +84,9 @@
     <string name="calendar_su">Вс</string>
 
     <string name="title_target">Откручено</string>
-    <string name="target_edit_button">Изменить</string>
+    <string name="title_bank">Накоплено</string>
+    <string name="goal_edit_button">Цель</string>
+    <string name="add_to_bank">Добавить</string>
     <string name="plus_ten">+10</string>
     <string name="plus_one">+1</string>
 
@@ -94,4 +99,12 @@
 
     <string name="logo">Логотип</string>
     <string name="time">:</string>
+    
+    <string name="garant_1">На гарант 1x</string>
+    <string name="garant_2">На гарант 2x</string>
+    <string name="garant_6">На гарант 6x</string>
+    
+    <string name="reset">Сбросить</string>
+
+    <string name="remark_piggy_bank">Гарант 1x = 77 круток</string>
 </resources>

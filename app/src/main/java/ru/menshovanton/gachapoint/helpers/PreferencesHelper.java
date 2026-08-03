@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.activities.SplashScreen;
 
-public class Preferences {
+public class PreferencesHelper {
     private static final String PREF_FILE = "Settings";
     public static final String ALARM_HOURS = "Alarm Hours";
     public static final String ALARM_MINUTES = "Alarm Minutes";
@@ -14,13 +14,21 @@ public class Preferences {
     public static final String CALENDAR_SIZE = "Calendar size";
     public static final String SUB_TYPE = "Selected sub type";
 
+    public static final String PIGGY_BANK_TARGET_GENSHIN = "Piggy Bank target Genshin Impact";
+    public static final String PIGGY_BANK_TARGET_HSR = "Piggy Bank target HSR";
+    public static final String PIGGY_BANK_TARGET_ZZZ = "Piggy Bank target ZZZ";
+
+    public static final String PIGGY_BANK_PROGRESS_GENSHIN = "Piggy Bank progress Genshin Impact";
+    public static final String PIGGY_BANK_PROGRESS_HSR = "Piggy Bank progress HSR";
+    public static final String PIGGY_BANK_PROGRESS_ZZZ = "Piggy Bank progress ZZZ";
+
     private final SharedPreferences settings;
 
-    Preferences(SplashScreen splashScreen) {
+    public PreferencesHelper(SplashScreen splashScreen) {
         settings = splashScreen.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
     }
 
-    public Preferences(MainActivity mainActivity) {
+    public PreferencesHelper(MainActivity mainActivity) {
         settings = mainActivity.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
     }
 

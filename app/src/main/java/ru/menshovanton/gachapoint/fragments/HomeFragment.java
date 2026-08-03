@@ -11,13 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 
 import ru.menshovanton.gachapoint.Statistic;
 import ru.menshovanton.gachapoint.activities.MainActivity;
-import ru.menshovanton.gachapoint.Preferences;
+import ru.menshovanton.gachapoint.helpers.PiggyBankHelper;
+import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.helpers.CalendarHelper;
 
@@ -32,8 +34,9 @@ public class HomeFragment extends Fragment {
 
     HorizontalScrollView scrollView;
 
-    Preferences settings;
+    PreferencesHelper settings;
     CalendarHelper calendarHelper;
+    PiggyBankHelper piggyBankHelper;
 
     public HomeFragment() {}
     public static HomeFragment newInstance() {
@@ -44,8 +47,9 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = MainActivity.mainActivity;
-        settings = new Preferences(mainActivity);
+        settings = new PreferencesHelper(mainActivity);
         calendarHelper = new CalendarHelper(splashScreen);
+        piggyBankHelper = new PiggyBankHelper();
     }
 
     @Override
@@ -76,7 +80,8 @@ public class HomeFragment extends Fragment {
 
         ImageView gemIcon = view.findViewById(R.id.gemIconHome);
         TextView subsCountTitle = view.findViewById(R.id.subsCountHeaderHome);
-        ImageView wishIcon = view.findViewById(R.id.wishIconHome);
+        ImageView wishIconStats = view.findViewById(R.id.wishIconHome);
+        ImageView wishIconPiggyBank = view.findViewById(R.id.wishIconHomeBank);
 
         calendarHelper.calculate();
         setStatistics();
@@ -85,19 +90,22 @@ public class HomeFragment extends Fragment {
         switch (MainActivity.subType) {
             case 0:
                 gemIcon.setImageResource(R.drawable.primogem);
-                wishIcon.setImageResource(R.drawable.intertwined_fate);
+                wishIconStats.setImageResource(R.drawable.intertwined_fate);
+                wishIconPiggyBank.setImageResource(R.drawable.intertwined_fate);
                 subsCountTitle.setText(R.string.blessing_of_the_welkin_moon_count_header);
                 changeCheckedTab(genshinImpact);
                 break;
             case 1:
                 gemIcon.setImageResource(R.drawable.stellar_jade);
-                wishIcon.setImageResource(R.drawable.star_rail_special_pass);
+                wishIconStats.setImageResource(R.drawable.star_rail_special_pass);
+                wishIconPiggyBank.setImageResource(R.drawable.star_rail_special_pass);
                 subsCountTitle.setText(R.string.star_rail_special_pass_count_header);
                 changeCheckedTab(honkaiStarRail);
                 break;
             case 2:
                 gemIcon.setImageResource(R.drawable.polychrome);
-                wishIcon.setImageResource(R.drawable.encrypted_master_tape);
+                wishIconStats.setImageResource(R.drawable.encrypted_master_tape);
+                wishIconPiggyBank.setImageResource(R.drawable.encrypted_master_tape);
                 subsCountTitle.setText(R.string.inter_knot_member_count_header);
                 changeCheckedTab(zenlessZoneZero);
                 break;
@@ -169,5 +177,17 @@ public class HomeFragment extends Fragment {
         if (laterPrimogemsCount > 0 && calendarHelper.claimsDays > 0)
         {   laterWishesText = String.valueOf(laterWishesCount); }
         laterWishes.setText(laterWishesText);
+
+        int progress = piggyBankHelper.getProgress();
+        int target = piggyBankHelper.getTarget();
+
+        String text = progress + "/" + target;
+
+        TextView piggyBank = getView().findViewById(R.id.piggyBankCounterHome);
+        ProgressBar progressBar = getView().findViewById(R.id.piggyBankProgressHome);
+        progressBar.setMax(target);
+        progressBar.setProgress(progress);
+        piggyBank.setText(text);
+
     }
 }

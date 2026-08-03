@@ -16,6 +16,7 @@ import java.util.Locale;
 import ru.menshovanton.gachapoint.activities.SplashScreen;
 import ru.menshovanton.gachapoint.fragments.TrackerFragment;
 import ru.menshovanton.gachapoint.helpers.DataHelper;
+import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 
 public class Calendar {
     public Date[] dateArray;
@@ -26,7 +27,7 @@ public class Calendar {
     public static SplashScreen splashScreen;
     @SuppressLint("StaticFieldLeak")
     public static Calendar calendar;
-    private static Preferences preferences;
+    private static PreferencesHelper preferencesHelper;
     public DataHelper dataHelper;
 
     public static int calendarSize;
@@ -36,9 +37,9 @@ public class Calendar {
     public Calendar(Context context, SplashScreen splashScreen) {
         this.context = context;
         Calendar.splashScreen = splashScreen;
-        preferences = new Preferences(splashScreen);
+        preferencesHelper = new PreferencesHelper(splashScreen);
 
-        calendarSize = preferences.getIntPreference(Preferences.CALENDAR_SIZE);
+        calendarSize = preferencesHelper.getIntPreference(PreferencesHelper.CALENDAR_SIZE);
 
         Date[] date = DataHelper.readDB(context);
         if (date != null) {
@@ -48,7 +49,7 @@ public class Calendar {
                 System.arraycopy(date, 0, dateArray, 0, date.length);
                 System.arraycopy(addYear(context, year + 1), 0, dateArray, date.length, 365);
                 DataHelper.writeDB(context, dateArray, 0, dateArray.length);
-                preferences.saveIntPreference(Preferences.CALENDAR_SIZE, calendarSize);
+                preferencesHelper.saveIntPreference(PreferencesHelper.CALENDAR_SIZE, calendarSize);
             } else {
                 dateArray = date;
             }
@@ -128,7 +129,7 @@ public class Calendar {
         //MainActivity.showMessage(context, "Инициализация календаря. Это может занять некоторое время!");
 
         calendarSize = 730;
-        preferences.saveIntPreference(Preferences.CALENDAR_SIZE, calendarSize);
+        preferencesHelper.saveIntPreference(PreferencesHelper.CALENDAR_SIZE, calendarSize);
 
         Date[] array = new Date[calendarSize];
         int day = 0;

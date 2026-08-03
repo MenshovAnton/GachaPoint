@@ -35,7 +35,7 @@ import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 import ru.menshovanton.gachapoint.Date;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.Notification;
-import ru.menshovanton.gachapoint.Preferences;
+import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 import ru.menshovanton.gachapoint.R;
 
 public class TrackerFragment extends Fragment {
@@ -77,7 +77,7 @@ public class TrackerFragment extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
     public static TrackerFragment instance;
-    Preferences settings;
+    PreferencesHelper settings;
 
     @SuppressLint("StaticFieldLeak")
     static View view;
@@ -100,7 +100,7 @@ public class TrackerFragment extends Fragment {
 
         mainActivity = MainActivity.mainActivity;
         instance = this;
-        settings = new Preferences(mainActivity);
+        settings = new PreferencesHelper(mainActivity);
 
         String toDayMonth = LocalDate.now().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru"));
         toDayMonth.substring(0, 1).toUpperCase();
