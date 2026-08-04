@@ -20,8 +20,7 @@ import ru.menshovanton.gachapoint.R;
 @SuppressLint("CustomSplashScreen")
 public class SplashScreen extends AppCompatActivity {
     public static DatabaseHelper dbHelper;
-    @SuppressLint("StaticFieldLeak")
-    public static Calendar calendar;
+    Calendar calendar;
     SplashScreen splashScreen;
 
     public static int subType = 1;
@@ -45,13 +44,13 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void appInitialization() {
-        dbHelper = new DatabaseHelper(getApplicationContext());
+        dbHelper = new DatabaseHelper(getApplicationContext(), null);
 
         if (!isDatabaseExists(splashScreen)) {
             dbHelper.getWritableDatabase();
         }
 
-        calendar = new Calendar(splashScreen, splashScreen);
+        calendar = new Calendar(splashScreen);
 
         Intent intent = new Intent(SplashScreen.this, MainActivity.class);
         startActivity(intent);

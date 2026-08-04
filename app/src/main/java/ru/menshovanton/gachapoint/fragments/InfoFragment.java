@@ -15,7 +15,7 @@ import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.R;
 
 public class InfoFragment extends Fragment {
-
+    MainActivity mainActivity;
     ImageView backToSettings;
 
     public InfoFragment() {}
@@ -26,6 +26,7 @@ public class InfoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainActivity = (MainActivity) getActivity();
     }
 
     @Override
@@ -44,6 +45,6 @@ public class InfoFragment extends Fragment {
     }
 
     private void onBackToSettings(View view) {
-        MainActivity.mainActivity.updateFragment(SettingsFragment.newInstance());
+        mainActivity.updateFragment(SettingsFragment.newInstance(), mainActivity.SETTINGS_TAG);
     }
 }

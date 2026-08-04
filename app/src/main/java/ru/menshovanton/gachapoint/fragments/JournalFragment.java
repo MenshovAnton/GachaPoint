@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.google.android.material.button.MaterialButton;
 
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.activities.MainActivity;
 
 public class JournalFragment extends Fragment {
 

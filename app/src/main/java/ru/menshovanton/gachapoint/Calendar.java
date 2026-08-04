@@ -1,6 +1,5 @@
 package ru.menshovanton.gachapoint;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,71 +12,58 @@ import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-import ru.menshovanton.gachapoint.activities.SplashScreen;
 import ru.menshovanton.gachapoint.fragments.TrackerFragment;
-import ru.menshovanton.gachapoint.helpers.DataHelper;
+import ru.menshovanton.gachapoint.helpers.DateHelper;
 import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 
 public class Calendar {
-    public Date[] dateArray;
-    public TextView[] dateViewArray;
-    public ImageView[] dateBackArray;
+    public Date[] datesArray;
+    public TextView[] datesCellsLabelsArray;
+    public ImageView[] datesCellsBackgroundArray;
     public Context context;
-    @SuppressLint("StaticFieldLeak")
-    public static SplashScreen splashScreen;
-    @SuppressLint("StaticFieldLeak")
-    public static Calendar calendar;
+    public Calendar calendar;
     private static PreferencesHelper preferencesHelper;
-    public DataHelper dataHelper;
 
     public static int calendarSize;
 
     public static int year = LocalDate.now().getYear();
 
-    public Calendar(Context context, SplashScreen splashScreen) {
+    public Calendar(Context context) {
         this.context = context;
-        Calendar.splashScreen = splashScreen;
-        preferencesHelper = new PreferencesHelper(splashScreen);
+
+        preferencesHelper = new PreferencesHelper(context.getApplicationContext());
 
         calendarSize = preferencesHelper.getIntPreference(PreferencesHelper.CALENDAR_SIZE);
 
-        Date[] date = DataHelper.readDB(context);
-        if (date != null) {
-            if (date[calendarSize - 1].year == year) {
+        Date[] calendarArray = DateHelper.readDB(context);
+        if (calendarArray != null) {
+            if (calendarArray[calendarSize - 1].year == year) {
                 calendarSize += 365;
-                dateArray = new Date[calendarSize];
-                System.arraycopy(date, 0, dateArray, 0, date.length);
-                System.arraycopy(addYear(context, year + 1), 0, dateArray, date.length, 365);
-                DataHelper.writeDB(context, dateArray, 0, dateArray.length);
+                datesArray = new Date[calendarSize];
+                System.arraycopy(calendarArray, 0, datesArray, 0, calendarArray.length);
+                System.arraycopy(addYear(context, year + 1), 0, datesArray, calendarArray.length, 365);
+                DateHelper.writeDB(context, datesArray, 0, datesArray.length);
                 preferencesHelper.saveIntPreference(PreferencesHelper.CALENDAR_SIZE, calendarSize);
             } else {
-                dateArray = date;
+                datesArray = calendarArray;
             }
         } else {
-            dateArray = initialization(context, year);
+            datesArray = initialization(context, year);
         }
 
-        dateViewArray = new TextView[calendarSize];
-        for (int i = 0; i < dateViewArray.length; i++) {
-            dateViewArray[i] = new TextView(context);
+        datesCellsLabelsArray = new TextView[calendarSize];
+        for (int i = 0; i < datesCellsLabelsArray.length; i++) {
+            datesCellsLabelsArray[i] = new TextView(context);
         }
 
-        dateBackArray = new ImageView[calendarSize];
-        for (int i = 0; i < dateBackArray.length; i++) {
+        datesCellsBackgroundArray = new ImageView[calendarSize];
+        for (int i = 0; i < datesCellsBackgroundArray.length; i++) {
             ImageView imageView = new ImageView(context);
             imageView.setId(View.generateViewId());
-            dateBackArray[i] = imageView;
+            datesCellsBackgroundArray[i] = imageView;
         }
 
         calendar = this;
-    }
-
-    public void updateCalendar() {
-        Date[] date = DataHelper.readDB(context);
-        if (date == null) {
-            return;
-        }
-        dateArray = date;
     }
 
     public enum Months {
@@ -164,7 +150,7 @@ public class Calendar {
                 }
             }
         }
-        DataHelper.writeDB(context, array, 0, array.length);
+        DateHelper.writeDB(context, array, 0, array.length);
         return array;
     }
 
@@ -207,10 +193,10 @@ public class Calendar {
     }
 
     public int getSubDaysRemaining(int dayOfYear) {
-        return this.dateArray[dayOfYear - 1].subDaysRemaining;
+        return this.datesArray[dayOfYear - 1].subDaysRemaining;
     }
 
     public int getStatus(int dayOfYear) {
-        return this.dateArray[dayOfYear - 1].status;
+        return this.datesArray[dayOfYear - 1].status;
     }
 }

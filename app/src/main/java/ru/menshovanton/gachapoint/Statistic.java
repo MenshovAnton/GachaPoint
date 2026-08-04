@@ -1,19 +1,19 @@
 package ru.menshovanton.gachapoint;
 
 public class Statistic {
-    public int missedGemsCount;
-    public int claimGemsCount;
-    public int laterGemsCount;
-    public int missedWishesCount;
-    public int claimWishesCount;
-    public int laterWishesCount;
+    public int missedGems;
+    public int claimGems;
+    public int laterGems;
+    public int missedWishes;
+    public int claimWishes;
+    public int laterWishes;
 
-    public Statistic(int missedGemsCount, int claimGemsCount, int laterGemsCount, int missedWishesCount, int claimWishesCount, int laterWishesCount) {
-        this.missedGemsCount = missedGemsCount;
-        this.claimGemsCount = claimGemsCount;
-        this.laterGemsCount = laterGemsCount;
-        this.missedWishesCount = missedWishesCount;
-        this.claimWishesCount = claimWishesCount;
-        this.laterWishesCount = laterWishesCount;
+    public Statistic(int missedGems, int claimGems, int laterGems, int missedWishes, int claimWishes, int laterWishes) {
+        this.missedGems = missedGems;
+        this.claimGems = claimGems;
+        this.laterGems = laterGems;
+        this.missedWishes = missedWishes;
+        this.claimWishes = claimWishes;
+        this.laterWishes = laterWishes;
     }
 }

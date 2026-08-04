@@ -1,7 +1,5 @@
 package ru.menshovanton.gachapoint.fragments;
 
-import static ru.menshovanton.gachapoint.Calendar.splashScreen;
-
 import android.os.Bundle;
 import android.widget.HorizontalScrollView;
 import androidx.annotation.NonNull;
@@ -15,6 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
+
+import java.util.Objects;
 
 import ru.menshovanton.gachapoint.Statistic;
 import ru.menshovanton.gachapoint.activities.MainActivity;
@@ -46,10 +46,10 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = MainActivity.mainActivity;
-        settings = new PreferencesHelper(mainActivity);
-        calendarHelper = new CalendarHelper(splashScreen);
-        piggyBankHelper = new PiggyBankHelper();
+        mainActivity = (MainActivity) getActivity();
+        settings = new PreferencesHelper(Objects.requireNonNull(mainActivity));
+        calendarHelper = new CalendarHelper(mainActivity);
+        piggyBankHelper = new PiggyBankHelper(mainActivity);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment {
         ImageView wishIconStats = view.findViewById(R.id.wishIconHome);
         ImageView wishIconPiggyBank = view.findViewById(R.id.wishIconHomeBank);
 
-        calendarHelper.calculate();
+        calendarHelper.calculateMissesAndClaims();
         setStatistics();
         subsCounterView.setText(String.valueOf(calendarHelper.subsCount));
 
@@ -115,19 +115,19 @@ public class HomeFragment extends Fragment {
     public void onGenshinClick(View view) {
         MainActivity.subType = 0;
         changeCheckedTab(genshinImpact);
-        mainActivity.updateFragment(HomeFragment.newInstance());
+        mainActivity.updateFragmentWithoutAnimation(HomeFragment.newInstance(), mainActivity.HOME_TAG);
     }
 
     public void onHonkaiClick(View view) {
         MainActivity.subType = 1;
         changeCheckedTab(honkaiStarRail);
-        mainActivity.updateFragment(HomeFragment.newInstance());
+        mainActivity.updateFragmentWithoutAnimation(HomeFragment.newInstance(), mainActivity.HOME_TAG);
     }
 
     public void onZenlessClick(View view) {
         MainActivity.subType = 2;
         changeCheckedTab(zenlessZoneZero);
-        mainActivity.updateFragment(HomeFragment.newInstance());
+        mainActivity.updateFragmentWithoutAnimation(HomeFragment.newInstance(), mainActivity.HOME_TAG);
     }
 
     private void changeCheckedTab(MaterialButton view) {
@@ -145,15 +145,15 @@ public class HomeFragment extends Fragment {
     public void setStatistics() {
         Statistic statistic = calendarHelper.getStatistic();
 
-        int laterPrimogemsCount = statistic.laterGemsCount;
-        int laterWishesCount = statistic.laterWishesCount;
+        int laterPrimogemsCount = statistic.laterGems;
+        int laterWishesCount = statistic.laterWishes;
 
         String laterPrimogemsText = "0";
         String laterWishesText = "0";
-        String claimPrimogemsText = String.valueOf(statistic.claimGemsCount);
-        String missedPrimogemsText = String.valueOf(statistic.missedGemsCount);
-        String claimWishesText = String.valueOf(statistic.missedWishesCount);
-        String missedWishesText = String.valueOf(statistic.missedWishesCount);
+        String claimPrimogemsText = String.valueOf(statistic.claimGems);
+        String missedPrimogemsText = String.valueOf(statistic.missedGems);
+        String claimWishesText = String.valueOf(statistic.missedWishes);
+        String missedWishesText = String.valueOf(statistic.missedWishes);
 
         assert getView() != null;
         TextView claimPrimogems = getView().findViewById(R.id.cliamsGemsCounterHome);

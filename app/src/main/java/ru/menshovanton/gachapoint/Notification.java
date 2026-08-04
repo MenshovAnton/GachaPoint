@@ -1,62 +1,74 @@
 package ru.menshovanton.gachapoint;
 
-import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 
-import androidx.annotation.RequiresPermission;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import java.util.Objects;
-
-import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.helpers.AlarmHelper;
 import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 
 public class Notification extends BroadcastReceiver {
-    private static final int NOTIFY_ID = 101;
-    private static final String CHANNEL_ID = "Оповещения";
+    private static final String CHANNEL_ID = "Notifications";
 
     public static int subsCount = 0;
     public static boolean allowNotifications = true;
 
-    private final MainActivity MAIN_ACTIVITY = MainActivity.mainActivity;
-    PreferencesHelper preferencesHelper = new PreferencesHelper(MAIN_ACTIVITY);
+    PreferencesHelper preferencesHelper;
 
-    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    @SuppressLint("ScheduleExactAlarm")
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (subsCount > 0 && allowNotifications) {
-            allowNotifications = preferencesHelper.getBooleanPreference(PreferencesHelper.ALLOW_NOTIFICATIONS);
+        PreferencesHelper preferencesHelper = new PreferencesHelper(context);
 
-            CharSequence name = "Оповещения";
-            String description = "Высылает напоминания о сборе наград.";
+        boolean allowNotifications = preferencesHelper.getBooleanPreference(PreferencesHelper.ALLOW_NOTIFICATIONS);
+
+        if (subsCount > 0 && allowNotifications) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    AlarmHelper.setDailyAlarm(context);
+                    return;
+                }
+            }
+
+            CharSequence name = context.getString(R.string.notifications_name);
+            String description = context.getString(R.string.notifications_description);
             int importance = NotificationManager.IMPORTANCE_HIGH;
 
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
 
-            NotificationManager nm = getSystemService(context, NotificationManager.class);
-            Objects.requireNonNull(nm).createNotificationChannel(channel);
+            NotificationManager nm = context.getSystemService(NotificationManager.class);
+            if (nm != null) {
+                nm.createNotificationChannel(channel);
+            }
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("Напоминание")
-                    .setContentText("Не забудь собрать награды в гачах!")
-                    .setPriority(NotificationCompat.PRIORITY_HIGH);
+                    .setContentTitle(context.getString(R.string.notifications_title))
+                    .setContentText(context.getString(R.string.notifications_text))
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setAutoCancel(true);
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(1, builder.build());
 
-            AlarmHelper.setDailyAlarm(MainActivity.context);
+            try {
+                notificationManager.notify(1, builder.build());
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+
+            AlarmHelper.setDailyAlarm(context);
         }
     }
 

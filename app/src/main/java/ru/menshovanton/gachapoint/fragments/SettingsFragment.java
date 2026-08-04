@@ -2,6 +2,7 @@ package ru.menshovanton.gachapoint.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 
 import android.widget.*;
@@ -12,6 +13,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import java.util.Objects;
 
 import ru.menshovanton.gachapoint.helpers.AlarmHelper;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
@@ -28,14 +33,13 @@ public class SettingsFragment extends Fragment {
     Button dbBackupButton;
     Button infoButton;
 
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
-    Switch notificationsSwitch;
+    SwitchMaterial notificationsSwitch;
 
     ImageView edit;
 
-    MainActivity mainActivity = MainActivity.mainActivity;
-    PreferencesHelper preferencesHelper = new PreferencesHelper(mainActivity);
-    DatabaseHelper dbHelper = new DatabaseHelper(mainActivity);
+    MainActivity mainActivity;
+    PreferencesHelper preferencesHelper;
+    DatabaseHelper dbHelper;
 
     public SettingsFragment() {}
 
@@ -44,7 +48,12 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainActivity = (MainActivity) getActivity();
+        preferencesHelper = new PreferencesHelper(Objects.requireNonNull(mainActivity));
+        dbHelper = new DatabaseHelper(mainActivity, mainActivity);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,7 +77,7 @@ public class SettingsFragment extends Fragment {
         notificationsSwitch.setChecked(preferencesHelper.getBooleanPreference(PreferencesHelper.ALLOW_NOTIFICATIONS));
 
         edit.setOnClickListener(this::showTimePicker);
-        dbBackupButton.setOnClickListener(DatabaseHelper::createExport);
+        dbBackupButton.setOnClickListener(dbHelper::createExport);
         infoButton.setOnClickListener(this::onInfoButton);
 
         updateTimeDisplay();
@@ -80,8 +89,12 @@ public class SettingsFragment extends Fragment {
     }
 
     public void showTimePicker(View view) {
+        if (!isAdded() || getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()) {
+            return;
+        }
+
         TimePickerDialog dialog = new TimePickerDialog(
-                MainActivity.context,
+                requireContext(),
                 (view1, hourOfDay, minute) -> {
                     AlarmHelper.alarmHour = hourOfDay;
                     AlarmHelper.alarmMinute = minute;
@@ -91,8 +104,9 @@ public class SettingsFragment extends Fragment {
 
                     updateTimeDisplay();
 
-                    AlarmHelper.cancelAlarm(MainActivity.context);
-                    AlarmHelper.setDailyAlarm(MainActivity.context);
+                    Context appContext = requireContext().getApplicationContext();
+                    AlarmHelper.cancelAlarm(appContext);
+                    AlarmHelper.setDailyAlarm(appContext);
                 },
                 AlarmHelper.alarmHour,
                 AlarmHelper.alarmMinute,
@@ -112,6 +126,6 @@ public class SettingsFragment extends Fragment {
     }
 
     private void onInfoButton(View view) {
-        MainActivity.mainActivity.updateFragment(InfoFragment.newInstance());
+        mainActivity.updateFragment(InfoFragment.newInstance(), mainActivity.INFO_TAG);
     }
 }

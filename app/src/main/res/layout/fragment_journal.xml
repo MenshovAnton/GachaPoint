@@ -36,7 +36,8 @@
                     android:backgroundTint="@color/accent"
                     android:fontFamily="@font/genshin_font"
                     android:text="@string/tab_wishes"
-                    app:strokeWidth="5dp" />
+                    app:strokeWidth="5dp"
+                    tools:ignore="VisualLintSystemUi" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/piggyBankButton"
@@ -46,7 +47,8 @@
                     android:backgroundTint="@color/accent"
                     android:fontFamily="@font/genshin_font"
                     android:text="@string/tab_piggy_bank"
-                    app:strokeWidth="5dp" />
+                    app:strokeWidth="5dp"
+                    tools:ignore="VisualLintSystemUi" />
 
             </LinearLayout>
         </HorizontalScrollView>

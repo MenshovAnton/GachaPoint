@@ -1,6 +1,5 @@
 package ru.menshovanton.gachapoint.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +19,8 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.util.Objects;
+
 import ru.menshovanton.gachapoint.helpers.PiggyBankHelper;
 import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 import ru.menshovanton.gachapoint.R;
@@ -29,8 +30,7 @@ public class PiggyBankFragment extends Fragment {
 
     PreferencesHelper preferencesHelper;
     PiggyBankHelper piggyBankHelper;
-    @SuppressLint("StaticFieldLeak")
-    public static PiggyBankFragment instance;
+
     MainActivity mainActivity;
     JournalFragment journalFragment;
 
@@ -60,11 +60,10 @@ public class PiggyBankFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferencesHelper = new PreferencesHelper(MainActivity.mainActivity);
-        mainActivity = MainActivity.mainActivity;
+        mainActivity = (MainActivity) getActivity();
+        preferencesHelper = new PreferencesHelper(Objects.requireNonNull(mainActivity));
         journalFragment = JournalFragment.journalFragment;
-        piggyBankHelper = new PiggyBankHelper();
-        instance = this;
+        piggyBankHelper = new PiggyBankHelper(mainActivity);
     }
 
     @Override
@@ -74,9 +73,9 @@ public class PiggyBankFragment extends Fragment {
 
         addOne = view.findViewById(R.id.addOneSavedWish);
         addTen = view.findViewById(R.id.addTenSavedWishes);
-        editGoal = view.findViewById(R.id.editGoalButton);
+        editGoal = view.findViewById(R.id.editTargetButton);
 
-        progressBar = view.findViewById(R.id.goalProgress);
+        progressBar = view.findViewById(R.id.savingProgress);
 
         savedWishesCounter = view.findViewById(R.id.savedWishesCounter);
 
@@ -132,7 +131,12 @@ public class PiggyBankFragment extends Fragment {
     }
 
     private void showMoreMenu(View view) {
-        mainActivity.showPiggyBankMenu();
+        ((MainActivity) requireActivity()).showPiggyBankMenu(new MainActivity.OnPiggyMenuClickListener() {
+            @Override public void onAddOne() { addTargetOne(); }
+            @Override public void onAddTwo() { addTargetTwo(); }
+            @Override public void onAddSix() { addTargetSix(); }
+            @Override public void onReset() { resetTarget(); }
+        });
     }
 
     private void onAddOneSavedWish(View view) {
@@ -191,29 +195,23 @@ public class PiggyBankFragment extends Fragment {
         MainActivity.subTypeScrollX = scrollX;
     }
 
-    private void addTarget() {
-        updateProgress();
-        mainActivity.closePiggyBankMenu();
-    }
-
-    public void addTargetOne(View view) {
+    public void addTargetOne() {
         piggyBankHelper.pushTarget(GARANT);
-        addTarget();
+        updateProgress();
     }
 
-    public void addTargetTwo(View view) {
+    public void addTargetTwo() {
         piggyBankHelper.pushTarget(GARANT*2);
-        addTarget();
+        updateProgress();
     }
 
-    public void addTargetSix(View view) {
+    public void addTargetSix() {
         piggyBankHelper.pushTarget(GARANT*6);
-        addTarget();
+        updateProgress();
     }
 
-    public void resetTarget(View view) {
+    public void resetTarget() {
         piggyBankHelper.reset();
         updateProgress();
-        mainActivity.closePiggyBankMenu();
     }
 }

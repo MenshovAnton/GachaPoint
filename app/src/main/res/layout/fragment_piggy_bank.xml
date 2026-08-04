@@ -27,7 +27,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="VisualLintBounds">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/genshinImpact"
@@ -88,7 +89,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/goalProgress"
+                app:layout_constraintTop_toBottomOf="@+id/savingProgress"
                 app:layout_constraintVertical_bias="0.0" />
 
             <Button
@@ -106,11 +107,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/addOneSavedWish"
-                app:layout_constraintTop_toBottomOf="@+id/goalProgress"
+                app:layout_constraintTop_toBottomOf="@+id/savingProgress"
                 app:layout_constraintVertical_bias="0.0" />
 
             <Button
-                android:id="@+id/editGoalButton"
+                android:id="@+id/editTargetButton"
                 android:layout_width="wrap_content"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
@@ -124,11 +125,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/addTenSavedWishes"
-                app:layout_constraintTop_toBottomOf="@+id/goalProgress"
+                app:layout_constraintTop_toBottomOf="@+id/savingProgress"
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/titleGoal"
+                android:id="@+id/titleSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -140,7 +141,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="VisualLintSystemUi" />
 
             <TextView
                 android:id="@+id/savedWishesCounter"
@@ -153,9 +155,10 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/wishIconPiggyBank"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/titleGoal"
+                app:layout_constraintStart_toEndOf="@+id/titleSave"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="VisualLintSystemUi" />
 
             <ImageView
                 android:id="@+id/wishIconPiggyBank"
@@ -164,7 +167,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="15dp"
                 android:importantForAccessibility="no"
-                app:layout_constraintBottom_toTopOf="@+id/goalProgress"
+                app:layout_constraintBottom_toTopOf="@+id/savingProgress"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -174,7 +177,7 @@
                 tools:ignore="ImageContrastCheck" />
 
             <ProgressBar
-                android:id="@+id/goalProgress"
+                android:id="@+id/savingProgress"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="0dp"
                 android:layout_height="15dp"
@@ -187,7 +190,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleGoal"
+                app:layout_constraintTop_toBottomOf="@+id/titleSave"
                 app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

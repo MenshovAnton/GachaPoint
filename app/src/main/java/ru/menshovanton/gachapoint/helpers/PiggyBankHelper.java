@@ -1,7 +1,6 @@
 package ru.menshovanton.gachapoint.helpers;
 
 import ru.menshovanton.gachapoint.activities.MainActivity;
-import ru.menshovanton.gachapoint.fragments.PiggyBankFragment;
 
 public class PiggyBankHelper {
     PreferencesHelper preferencesHelper;
@@ -9,8 +8,8 @@ public class PiggyBankHelper {
     public int progress;
     public int target;
 
-    public PiggyBankHelper() {
-        preferencesHelper = new PreferencesHelper(MainActivity.mainActivity);
+    public PiggyBankHelper(MainActivity mainActivity) {
+        preferencesHelper = new PreferencesHelper(mainActivity);
         progress = getProgress();
         target = getTarget();
     }

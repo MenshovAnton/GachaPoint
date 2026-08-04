@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">GachaPoint</string>
-    <string name="app_version">0.1</string>
+    <string name="app_name" translatable="false">GachaPoint</string>
+    <string name="app_version" translatable="false">0.1</string>
     <string name="description">GachaPoint ваш удобный ассистент в мире аниме гача RPG.
         Отслеживайте награды Благословления полной Луны, Пропуска снабжения экспересса и
         Интертон-подписки.
@@ -107,4 +107,10 @@
     <string name="reset">Сбросить</string>
 
     <string name="remark_piggy_bank">Гарант 1x = 77 круток</string>
+    <string name="db_export_successful">Данные успешно выгружены!</string>
+    <string name="db_export_failed">Ошибка экспорта!</string>
+    <string name="notifications_name">Оповещения</string>
+    <string name="notifications_description">Высылает напоминания о сборе наград.</string>
+    <string name="notifications_title">Напоминание!</string>
+    <string name="notifications_text">Не забудь собрать награды!</string>
 </resources>

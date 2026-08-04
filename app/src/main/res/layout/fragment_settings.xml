@@ -16,7 +16,7 @@
             android:id="@+id/header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="25dp"
             android:text="@string/nav_settings"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/notificationsSwitch"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
@@ -35,15 +35,14 @@
             android:fontFamily="@font/genshin_font"
             android:text="@string/notifications_settings_title"
             android:textSize="16sp"
-            android:thumbTint="@color/accent"
-            android:trackTintMode="src_over"
+            app:thumbTint="@color/switch_thumb_selector"
+            app:trackTint="@color/switch_track_selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/notificationTimeHeader"
@@ -136,21 +135,22 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-                android:id="@+id/hourTextView"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp"
-                android:text="@string/filler"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notificationTimeHeader"
-                app:layout_constraintVertical_bias="0.0"/>
+            android:id="@+id/hourTextView"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/filler"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notificationTimeHeader"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="TextSizeCheck" />
 
         <TextView
             android:id="@+id/minutesTextView"
@@ -167,7 +167,8 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/separator"
             app:layout_constraintTop_toBottomOf="@+id/notificationTimeHeader"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="TextSizeCheck" />
         <TextView
                 android:text="@string/db_settings_title"
                 android:layout_width="wrap_content"

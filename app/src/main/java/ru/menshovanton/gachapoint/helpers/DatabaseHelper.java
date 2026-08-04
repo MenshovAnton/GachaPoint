@@ -1,7 +1,5 @@
 package ru.menshovanton.gachapoint.helpers;
 
-import static ru.menshovanton.gachapoint.activities.MainActivity.mainActivity;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,37 +7,38 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.view.View;
-import android.widget.Toast;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 
+import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
-    public static final String DATABASE_NAME = "gachamanager.db";
+    MainActivity mainActivity;
+
+    public static final String DATABASE_NAME = "GachaPointDB.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "calendar";
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_DAY = "day";
-    public static final String COLUMN_DAY_YEAR = "dayyear";
-    public static final String COLUMN_DAY_WEEK = "dayweek";
+    public static final String COLUMN_DAY_YEAR = "day_of_year";
+    public static final String COLUMN_DAY_WEEK = "day_of_week";
     public static final String COLUMN_MONTH = "month";
     public static final String COLUMN_YEAR = "year";
-    public static final String COLUMN_STATUSGENSHIN = "statusgenshin";
-    public static final String COLUMN_DRGENSHIN = "drgenshin";
-    public static final String COLUMN_STATUSHSR = "statushsr";
-    public static final String COLUMN_DRHSR = "drhsr";
-    public static final String COLUMN_STATUSZZZ = "statuszzz";
-    public static final String COLUMN_DRZZZ = "drzzz";
+    public static final String COLUMN_STATUS_GENSHIN = "status_genshin";
+    public static final String COLUMN_MOON_DAYS_REMAINING = "moon_days_remaining";
+    public static final String COLUMN_STATUS_HSR = "status_hsr";
+    public static final String COLUMN_EXPRESS_PASS_DAYS_REMAINING = "express_pass_days_remaining";
+    public static final String COLUMN_STATUS_ZZZ = "status_zzz";
+    public static final String COLUMN_INTERKNOT_DAYS_REMAINING = "interknot_days_remaining";
 
-    public int test = 1;
-
-    public DatabaseHelper(Context context) {
+    public DatabaseHelper(Context context, MainActivity mainActivity) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -51,12 +50,12 @@ public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
                 COLUMN_DAY_WEEK + " INTEGER, " +
                 COLUMN_MONTH + " INTEGER, " +
                 COLUMN_YEAR + " INTEGER, " +
-                COLUMN_STATUSGENSHIN + " INTEGER, " +
-                COLUMN_DRGENSHIN + " INTEGER, " +
-                COLUMN_STATUSHSR + " INTEGER, " +
-                COLUMN_DRHSR + " INTEGER, " +
-                COLUMN_STATUSZZZ + " INTEGER, " +
-                COLUMN_DRZZZ + " INTEGER)";
+                COLUMN_STATUS_GENSHIN + " INTEGER, " +
+                COLUMN_MOON_DAYS_REMAINING + " INTEGER, " +
+                COLUMN_STATUS_HSR + " INTEGER, " +
+                COLUMN_EXPRESS_PASS_DAYS_REMAINING + " INTEGER, " +
+                COLUMN_STATUS_ZZZ + " INTEGER, " +
+                COLUMN_INTERKNOT_DAYS_REMAINING + " INTEGER)";
         db.execSQL(createTableQuery);
     }
 
@@ -77,16 +76,16 @@ public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
 
         switch (MainActivity.subType) {
             case 0:
-                values.put(COLUMN_STATUSGENSHIN, status);
-                values.put(COLUMN_DRGENSHIN, subDaysRemaining);
+                values.put(COLUMN_STATUS_GENSHIN, status);
+                values.put(COLUMN_MOON_DAYS_REMAINING, subDaysRemaining);
                 break;
             case 1:
-                values.put(COLUMN_STATUSHSR, status);
-                values.put(COLUMN_DRHSR, subDaysRemaining);
+                values.put(COLUMN_STATUS_HSR, status);
+                values.put(COLUMN_EXPRESS_PASS_DAYS_REMAINING, subDaysRemaining);
                 break;
             case 2:
-                values.put(COLUMN_STATUSZZZ, status);
-                values.put(COLUMN_DRZZZ, subDaysRemaining);
+                values.put(COLUMN_STATUS_ZZZ, status);
+                values.put(COLUMN_INTERKNOT_DAYS_REMAINING, subDaysRemaining);
                 break;
         }
 
@@ -136,14 +135,14 @@ public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
         return isEmpty;
     }
 
-    private static String getDatabasePath() {
+    private String getDatabasePath() {
         return mainActivity.getDatabasePath(DATABASE_NAME).getPath();
     }
 
-    public static void exportDataBase() throws IOException {
+    public void exportDataBase() throws IOException {
         String inFileName = getDatabasePath();
         String outFileName = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS)+"/GachaPoint/subs.db";
+                Environment.DIRECTORY_DOCUMENTS)+"/GachaPoint/GachaPointDB.db";
 
         File dbFile = new File(inFileName);
         File backupFile = new File(outFileName);
@@ -159,14 +158,12 @@ public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
         }
     }
 
-    public static void createExport(View view) {
+    public void createExport(View view) {
         try {
             exportDataBase();
-            Toast toast = Toast.makeText(mainActivity, "Данные успешно выгружены!",Toast.LENGTH_LONG);
-            toast.show();
+            MainActivity.showMessage(mainActivity.getApplicationContext(), mainActivity.getString(R.string.db_export_successful));
         } catch (IOException e) {
-            Toast toast = Toast.makeText(mainActivity, "Ошибка экспорта! " + e.getLocalizedMessage(),Toast.LENGTH_LONG);
-            toast.show();
+            MainActivity.showMessage(mainActivity.getApplicationContext(), mainActivity.getString(R.string.db_export_failed));
         }
     }
 }

@@ -1,7 +1,5 @@
 package ru.menshovanton.gachapoint.helpers;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -9,13 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
-import androidx.annotation.RequiresPermission;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import ru.menshovanton.gachapoint.Notification;
-import ru.menshovanton.gachapoint.activities.MainActivity;
 
 public class AlarmHelper extends Service {
     private static final String TAG = "AlarmHelper";
@@ -24,8 +19,7 @@ public class AlarmHelper extends Service {
     public static int alarmHour = 12;
     public static int alarmMinute = 0;
 
-    public MainActivity mainActivity = MainActivity.mainActivity;
-    PreferencesHelper preferencesHelper = new PreferencesHelper(mainActivity);
+    PreferencesHelper preferencesHelper;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -34,21 +28,21 @@ public class AlarmHelper extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        preferencesHelper = new PreferencesHelper(getApplicationContext());
+
         alarmHour = preferencesHelper.getIntPreference(PreferencesHelper.ALARM_HOURS);
         alarmMinute = preferencesHelper.getIntPreference(PreferencesHelper.ALARM_MINUTES);
 
-        setDailyAlarm(MainActivity.context);
+        setDailyAlarm(getApplicationContext());
         return Service.START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        cancelAlarm(MainActivity.context);
+        cancelAlarm(getApplicationContext());
     }
 
-    @SuppressLint("ScheduleExactAlarm")
-    @RequiresPermission(Manifest.permission.SCHEDULE_EXACT_ALARM)
     public static void setDailyAlarm(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, Notification.class);
@@ -66,7 +60,7 @@ public class AlarmHelper extends Service {
 
         long alarmMillis = alarm.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmMillis, pendingIntent);
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmMillis, pendingIntent);
     }
 
     public static void cancelAlarm(Context context) {

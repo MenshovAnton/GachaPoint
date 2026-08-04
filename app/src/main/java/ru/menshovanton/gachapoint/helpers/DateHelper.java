@@ -9,7 +9,7 @@ import ru.menshovanton.gachapoint.Date;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.activities.SplashScreen;
 
-public class DataHelper {
+public class DateHelper {
 
     public static void writeDB(Context context, Date[] dateArray, int start, int stop) {
         for (int i = start; i < stop + start; i++) {
@@ -112,13 +112,13 @@ public class DataHelper {
 
             switch (MainActivity.subType) {
                 case 0:
-                    status = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATUSGENSHIN));
+                    status = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATUS_GENSHIN));
                     break;
                 case 1:
-                    status = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATUSHSR));
+                    status = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATUS_HSR));
                     break;
                 case 2:
-                    status = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATUSZZZ));
+                    status = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATUS_ZZZ));
                     break;
             }
         }
@@ -135,13 +135,13 @@ public class DataHelper {
 
             switch (MainActivity.subType) {
                 case 0:
-                    days = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_DRGENSHIN));
+                    days = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_MOON_DAYS_REMAINING));
                     break;
                 case 1:
-                    days = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_DRHSR));
+                    days = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_EXPRESS_PASS_DAYS_REMAINING));
                     break;
                 case 2:
-                    days = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_DRZZZ));
+                    days = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_INTERKNOT_DAYS_REMAINING));
                     break;
             }
         }

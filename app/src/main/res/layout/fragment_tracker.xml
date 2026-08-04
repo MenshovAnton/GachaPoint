@@ -22,7 +22,8 @@
                 android:id="@+id/monthHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="25dp"
                 android:text="@string/filler"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -30,8 +31,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                android:layout_marginStart="15dp"/>
+                app:layout_constraintVertical_bias="0.0" />
 
             <Button
                 android:id="@+id/checkButton"
@@ -52,12 +52,11 @@
                 app:layout_constraintVertical_bias="0.0" />
 
 
-
             <TextView
                 android:id="@+id/yearHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="26dp"
                 android:text="@string/filler"
                 android:textColor="@color/check"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -71,7 +70,7 @@
                 android:id="@+id/previousMonth"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="25dp"
                 android:layout_marginEnd="10dp"
                 android:importantForAccessibility="no"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -87,7 +86,7 @@
                 android:id="@+id/nextMonth"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="25dp"
                 android:layout_marginEnd="15dp"
                 android:importantForAccessibility="no"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -200,7 +199,7 @@
                         android:id="@+id/tagSaturday"
                         android:layout_width="46dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="700px"
+                        android:layout_marginStart="700px"
                         android:gravity="center"
                         android:text="@string/calendar_sa"
                         android:textColor="#DD2C00"
