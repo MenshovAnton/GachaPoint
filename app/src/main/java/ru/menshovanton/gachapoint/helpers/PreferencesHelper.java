@@ -3,9 +3,6 @@ package ru.menshovanton.gachapoint.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import ru.menshovanton.gachapoint.activities.MainActivity;
-import ru.menshovanton.gachapoint.activities.SplashScreen;
-
 public class PreferencesHelper {
     private static final String PREF_FILE = "Settings";
     public static final String ALARM_HOURS = "Alarm Hours";
@@ -24,12 +21,8 @@ public class PreferencesHelper {
 
     private final SharedPreferences settings;
 
-    public PreferencesHelper(SplashScreen splashScreen) {
-        settings = splashScreen.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
-    }
-
-    public PreferencesHelper(MainActivity mainActivity) {
-        settings = mainActivity.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
+    public PreferencesHelper(Context context) {
+        settings = context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
     }
 
     public void saveIntPreference(String key, int value) {
