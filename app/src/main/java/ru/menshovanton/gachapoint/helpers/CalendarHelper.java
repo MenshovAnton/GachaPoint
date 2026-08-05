@@ -6,6 +6,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 import ru.menshovanton.gachapoint.Calendar;
 import ru.menshovanton.gachapoint.Statistic;
@@ -40,13 +41,13 @@ public class CalendarHelper {
 
         calendar = new Calendar(mainActivity);
 
-        if (calendar.getSubDaysRemaining(toDayOfYear) == 0) { subsCount = 0; }
-        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 30) { subsCount = 1; }
-        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 60) { subsCount = 2;}
-        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 90) { subsCount = 3; }
-        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 120) { subsCount = 4; }
-        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 150) { subsCount = 5; }
-        else if (calendar.getSubDaysRemaining(toDayOfYear) <= 180) { subsCount = 6; }
+        int daysRemaining = calendar.getSubDaysRemaining(toDayOfYear);
+
+        if (daysRemaining <= 0 || daysRemaining > 180) {
+            subsCount = 0;
+        } else {
+            subsCount = (daysRemaining + 29) / 30;
+        }
     }
 
     public void drawCalendarView() {
@@ -55,7 +56,7 @@ public class CalendarHelper {
         int j = 0;
         int line = 1;
 
-        int daysOfYearForMonth = Calendar.getDaysOfYearForMonth(TrackerFragment.selectedMonth);
+        int daysOfYearForMonth = LocalDate.of(year, TrackerFragment.selectedMonth, 1).getDayOfYear() - 1;
 
         for (int i = 0; i < Calendar.calendarSize; i++) {
             if (calendar.datesArray[i].status == 0
@@ -71,7 +72,7 @@ public class CalendarHelper {
             }
 
             if (i >= daysOfYearForMonth
-                    && i < daysOfYearForMonth + Calendar.getDaysOfMonth(TrackerFragment.selectedMonth)) {
+                    && i < daysOfYearForMonth + YearMonth.of(year, TrackerFragment.selectedMonth).lengthOfMonth()) {
                 if (j == 7) {
                     topMargin = topMargin + 140;
                     margin = 0;
