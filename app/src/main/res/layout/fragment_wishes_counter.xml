@@ -16,13 +16,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
-            android:layout_marginBottom="15dp"
             android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/log"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -68,11 +67,48 @@
             android:id="@+id/wishes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gameTypeChangerWishesCounter"
             app:layout_constraintVertical_bias="0.0">
+
+            <Button
+                android:id="@+id/addFiveStar"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/accent"
+                android:backgroundTintMode="screen"
+                android:text="@string/five_star"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/addTenWishes"
+                app:layout_constraintTop_toBottomOf="@+id/titleTarget"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <Button
+                android:id="@+id/addFourStar"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="9dp"
+                android:backgroundTint="@color/accent"
+                android:backgroundTintMode="screen"
+                android:text="@string/four_star"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/addFiveStar"
+                app:layout_constraintTop_toBottomOf="@+id/titleTarget"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
                 android:id="@+id/wishIconWishCounter"
@@ -81,12 +117,10 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="15dp"
                 android:importantForAccessibility="no"
-                app:layout_constraintBottom_toTopOf="@+id/progressBar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/intertwined_fate"
                 tools:ignore="ImageContrastCheck" />
 
@@ -105,15 +139,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/progressBar"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/titleTarget" />
 
             <Button
                 android:id="@+id/addTenWishes"
                 android:layout_width="wrap_content"
                 android:layout_height="55dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="9dp"
                 android:backgroundTint="@color/accent"
                 android:backgroundTintMode="screen"
                 android:text="@string/plus_ten"
@@ -123,8 +156,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/addOneWish"
-                app:layout_constraintTop_toBottomOf="@+id/progressBar"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/titleTarget" />
 
             <TextView
                 android:id="@+id/titleTarget"
@@ -143,7 +175,7 @@
                 tools:ignore="VisualLintSystemUi" />
 
             <TextView
-                android:id="@+id/targetCounter"
+                android:id="@+id/wishesCounter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -157,23 +189,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
                 tools:ignore="VisualLintSystemUi" />
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="15dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="15dp"
-                android:max="100"
-                android:progress="50"
-                android:progressDrawable="@drawable/progress_bar_custom"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleTarget"
-                app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

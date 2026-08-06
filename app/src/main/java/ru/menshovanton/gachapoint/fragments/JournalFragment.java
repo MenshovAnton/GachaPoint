@@ -5,21 +5,24 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.adapters.JournalPagerAdapter;
 
 public class JournalFragment extends Fragment {
 
     public static JournalFragment journalFragment;
 
-    MaterialButton wishesButton;
-    MaterialButton piggyBankButton;
+    TabLayout tabLayout;
+    ViewPager2 viewPager;
 
     public JournalFragment() {}
 
@@ -38,12 +41,8 @@ public class JournalFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_journal, container, false);
 
-        if (savedInstanceState == null) {
-            replaceFragment(new WishesCounterFragment());
-        }
-
-        wishesButton = view.findViewById(R.id.wishesButton);
-        piggyBankButton = view.findViewById(R.id.piggyBankButton);
+        tabLayout = view.findViewById(R.id.tabLayout);
+        viewPager = view.findViewById(R.id.journalViewPager);
 
         return view;
     }
@@ -52,34 +51,27 @@ public class JournalFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        wishesButton.setOnClickListener(this::onWishesClick);
-        piggyBankButton.setOnClickListener(this::onPiggyBankClick);
+        JournalPagerAdapter adapter = new JournalPagerAdapter(this);
+        viewPager.setAdapter(adapter);
 
-        changeCheckedTab(wishesButton);
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            switch (position) {
+                case 0:
+                    tab.setText(getString(R.string.tab_wishes));
+                    triggerRefresh("refresh_wishes_counter_key");
+                    break;
+                case 1:
+                    tab.setText(getString(R.string.tab_piggy_bank));
+                    triggerRefresh("refresh_piggy_bank_key");
+                    break;
+            }
+        }).attach();
     }
 
-    public void replaceFragment(Fragment fragment) {
-        getChildFragmentManager()
-                .beginTransaction()
-                .replace(R.id.journalFrame, fragment)
-                .addToBackStack(null)
-                .commit();
-    }
+    public void triggerRefresh(String key) {
+        Bundle result = new Bundle();
+        result.putBoolean("shouldRefresh", true);
 
-    public void onWishesClick(View view) {
-        changeCheckedTab(wishesButton);
-        replaceFragment(new WishesCounterFragment());
-    }
-
-    public void onPiggyBankClick(View view) {
-        changeCheckedTab(piggyBankButton);
-        replaceFragment(new PiggyBankFragment());
-    }
-
-    private void changeCheckedTab(MaterialButton view) {
-        wishesButton.setStrokeColorResource(R.color.accent);
-        piggyBankButton.setStrokeColorResource(R.color.accent);
-
-        view.setStrokeColorResource(R.color.check);
+        getChildFragmentManager().setFragmentResult(key, result);
     }
 }

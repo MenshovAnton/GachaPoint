@@ -10,61 +10,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <HorizontalScrollView
-            android:id="@+id/contentTypeChangerJournal"
-            android:layout_width="wrap_content"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/Tabs.GachaPoint.TabLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:scrollbars="none"
+            android:background="@drawable/tab_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0">
 
-            <LinearLayout
+            <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:text="@string/tab_wishes" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/wishesButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/accent"
-                    android:fontFamily="@font/genshin_font"
-                    android:text="@string/tab_wishes"
-                    app:strokeWidth="5dp"
-                    tools:ignore="VisualLintSystemUi" />
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_piggy_bank" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/piggyBankButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/accent"
-                    android:fontFamily="@font/genshin_font"
-                    android:text="@string/tab_piggy_bank"
-                    app:strokeWidth="5dp"
-                    tools:ignore="VisualLintSystemUi" />
+        </com.google.android.material.tabs.TabLayout>
 
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <FrameLayout
-            android:id="@+id/journalFrame"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/journalViewPager"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/contentTypeChangerJournal"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+            app:layout_constraintVertical_bias="0.0" />
 
-        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

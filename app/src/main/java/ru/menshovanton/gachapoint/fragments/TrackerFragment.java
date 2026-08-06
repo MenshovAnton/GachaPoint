@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import android.os.LocaleList;
 import android.os.Vibrator;
 import android.widget.*;
 import androidx.annotation.NonNull;
@@ -272,7 +273,7 @@ public class TrackerFragment extends Fragment {
 
         TextView yearHeader = getView().findViewById(R.id.yearHeader);
 
-        Locale locale = Locale.forLanguageTag("ru");
+        Locale locale = LocaleList.getDefault().get(0);
         String printMonth = monthObj.getDisplayName(TextStyle.FULL_STANDALONE, locale);
 
         monthHeader.setText(printMonth.substring(0, 1).toUpperCase() + printMonth.substring(1));

@@ -1,11 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">GachaPoint</string>
     <string name="app_version" translatable="false">0.1</string>
-    <string name="description">GachaPoint ваш удобный ассистент в мире аниме гача RPG.
-        Отслеживайте награды Благословления полной Луны, Пропуска снабжения экспересса и
-        Интертон-подписки.
-        Ежедневные напоминания, счетчик наград, наглядный календарь.
-    </string>
+    <string name="description">"GachaPoint ваш удобный ассистент в мире аниме гача RPG.         Отслеживайте награды Благословления полной Луны, Пропуска снабжения экспересса и         Интертон-подписки.         Ежедневные напоминания, счетчик наград, наглядный календарь.     "</string>
     <string name="copyright_info">Все права принадлежат их правооблодателям (All rights belong to their copyright
         holders). Приложение не
         аффелировано компанией Hoyoverse
@@ -16,101 +12,80 @@
     <string name="feedback_info">Нашли баг? Оставте репорт на официальном репозитории проекта или напишите на почу (см.
         выше)
     </string>
-
-    <string name="filler">[filler]</string>
-    <string name="num_filler">0</string>
-
-    <string name="sheet_header_actions">Действия</string>
-    <string name="sheet_header_edit">Правка</string>
-
-    <string name="check_button_text">Отметка</string>
-    <string name="add_button_text">Добавить подписку</string>
-    <string name="del_button_text">Удалить подписку</string>
-    <string name="cancel_button_text">Отменить отметку</string>
-    <string name="change_status_button_text">Восстановить пропущенный день</string>
-    <string name="next_month_button_text">&gt;</string>
-    <string name="previous_button_text">&lt;</string>
-
-    <string name="stat_header">Статистика</string>
-    <string name="claim_column_header">Получено</string>
-    <string name="miss_column_header">Пропущено</string>
-    <string name="later_column_header">Получишь</string>
-    <string name="blessing_of_the_welkin_moon_count_header">Кол-во лун:</string>
-    <string name="star_rail_special_pass_count_header">Кол-во пропусков экспресса:</string>
-    <string name="inter_knot_member_count_header">Кол-во интертон-подписок:</string>
-    <string name="sub_type_selector_header">Тип отображаемой подписки:</string>
-
-    <string name="notifications_settings_title">Уведомления</string>
-    <string name="notifications_settings_time">Время оповещения:</string>
-
-    <string name="db_settings_title">Хранилище</string>
-    <string name="db_settings_backup_button">Экспорт данных</string>
-    <string name="db_settings_delete_button">Очистить все</string>
-
-    <string name="nav_home">Домашняя</string>
-    <string name="nav_tracker">Календарь</string>
-    <string name="nav_settings">Настройки</string>
-    <string name="nav_info">О приложении</string>
-    <string name="nav_journal">Журнал круток</string>
-
-    <string name="genshin">Genshin Impact</string>
-    <string name="hsr">Honkai Star Rail</string>
-    <string name="zzz">Zenless Zone Zero</string>
-
-    <string name="tab_piggy_bank">Накопления</string>
-    <string name="tab_wishes">Крутки</string>
-
-    <string name="blessing_of_the_welkin_moon_checked">✅ Луна</string>
-    <string name="star_rail_special_pass_checked">✅ Пропуск</string>
-    <string name="inter_knot_member_checked">✅ Интернот</string>
-
-    <string name="add_sub">Подписка добавлена</string>
-    <string name="del_sub">Подписка удалена</string>
-    <string name="subs_limit">Достигнут лимит подписок</string>
-    <string name="check_today">Отметка выполнена!</string>
-    <string name="cancel_check_today">Отметка удалена</string>
-    <string name="already_cheked">Вы уже отмечались сегодня</string>
-    <string name="active_subs_null">У вас нет активных подписок</string>
-    <string name="not_miss_day">Вчера вы уже отмечались</string>
-    <string name="not_check_today">Сегодня вы еще не отмечались</string>
-    <string name="impossible_cancel_sub">Подписку можно удалить только в день добавления!</string>
-
-    <string name="calendar_mon">Пн</string>
-    <string name="calendar_tue">Вт</string>
-    <string name="calendar_wed">Ср</string>
-    <string name="calendar_th">Чт</string>
-    <string name="calendar_fr">Пт</string>
-    <string name="calendar_sa">Сб</string>
-    <string name="calendar_su">Вс</string>
-
-    <string name="title_target">Откручено</string>
-    <string name="title_bank">Накоплено</string>
-    <string name="goal_edit_button">Цель</string>
-    <string name="add_to_bank">Добавить</string>
-    <string name="plus_ten">+10</string>
-    <string name="plus_one">+1</string>
-
-    <string name="tmp_counter">36/75</string>
-
-    <string name="fast_header">Быстрые действия</string>
-    <string name="review">Обратная связь</string>
-
-    <string name="wip">В разработке…</string>
-
-    <string name="logo">Логотип</string>
-    <string name="time">:</string>
-    
-    <string name="garant_1">На гарант 1x</string>
-    <string name="garant_2">На гарант 2x</string>
-    <string name="garant_6">На гарант 6x</string>
-    
-    <string name="reset">Сбросить</string>
-
-    <string name="remark_piggy_bank">Гарант 1x = 77 круток</string>
+    <string name="filler" translatable="false">[filler]</string>
+    <string name="num_filler" translatable="false">0</string>
+    <string name="sheet_header_actions">Actions</string>
+    <string name="sheet_header_edit">Edit</string>
+    <string name="check_button_text">Mark</string>
+    <string name="add_button_text">Add subscription</string>
+    <string name="del_button_text">Delete subscription</string>
+    <string name="cancel_button_text">Cancel mark</string>
+    <string name="change_status_button_text">Make up for a missed day</string>
+    <string name="next_month_button_text" translatable="false">&gt;</string>
+    <string name="previous_button_text" translatable="false">&lt;</string>
+    <string name="stat_header">Statistics</string>
+    <string name="claim_column_header">Received</string>
+    <string name="miss_column_header">Omitted</string>
+    <string name="later_column_header">Wait</string>
+    <string name="blessing_of_the_welkin_moon_count_header">Number of moons:</string>
+    <string name="star_rail_special_pass_count_header">Number of express passes:</string>
+    <string name="inter_knot_member_count_header">Number of inter-knot subs:</string>
+    <string name="sub_type_selector_header">Displayed subscription type:</string>
+    <string name="notifications_settings_title">Notifications</string>
+    <string name="notifications_settings_time">Notify time:</string>
+    <string name="db_settings_title">Storage</string>
+    <string name="db_settings_backup_button">Export data</string>
+    <string name="db_settings_delete_button">Wipe ALL</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_tracker">Calendar</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_info">About app</string>
+    <string name="nav_journal">Pulls history</string>
+    <string name="genshin" translatable="false">Genshin Impact</string>
+    <string name="hsr" translatable="false">Honkai Star Rail</string>
+    <string name="zzz" translatable="false">Zenless Zone Zero</string>
+    <string name="tab_piggy_bank">Piggy bank</string>
+    <string name="tab_wishes">Pulls history</string>
+    <string name="add_sub">Subscription added</string>
+    <string name="del_sub">Subscription deleted</string>
+    <string name="subs_limit">Subscription limit reached</string>
+    <string name="check_today">Marking complete!</string>
+    <string name="cancel_check_today">Mark removed</string>
+    <string name="already_cheked">You have already checked in today</string>
+    <string name="active_subs_null">You have no active subscriptions</string>
+    <string name="not_miss_day">You already checked in yesterday</string>
+    <string name="not_check_today">You haven\'t checked in yet today</string>
+    <string name="impossible_cancel_sub">A subscription can only be deleted on the day it was added!</string>
+    <string name="calendar_mon">Mon</string>
+    <string name="calendar_tue">Tue</string>
+    <string name="calendar_wed">Wed</string>
+    <string name="calendar_th">Thu</string>
+    <string name="calendar_fr">Fri</string>
+    <string name="calendar_sa">Sat</string>
+    <string name="calendar_su">Sun</string>
+    <string name="title_target">Pulled</string>
+    <string name="title_bank">Saved</string>
+    <string name="goal_edit_button">Target</string>
+    <string name="add_to_bank">Add</string>
+    <string name="plus_ten" translatable="false">+10</string>
+    <string name="plus_one" translatable="false">+1</string>
+    <string name="tmp_counter" translatable="false">36/75</string>
+    <string name="fast_header">Quick actions</string>
+    <string name="review">Feedback</string>
+    <string name="wip">Coming soon…</string>
+    <string name="logo">Logo</string>
+    <string name="time" translatable="false">:</string>
+    <string name="garant_1">Pity 1x</string>
+    <string name="garant_2">Pity 2x</string>
+    <string name="garant_6">Pity 6x</string>
+    <string name="reset">Reset</string>
+    <string name="remark_piggy_bank">Pity 1x = 77 pulls</string>
     <string name="db_export_successful">Данные успешно выгружены!</string>
-    <string name="db_export_failed">Ошибка экспорта!</string>
-    <string name="notifications_name">Оповещения</string>
-    <string name="notifications_description">Высылает напоминания о сборе наград.</string>
-    <string name="notifications_title">Напоминание!</string>
-    <string name="notifications_text">Не забудь собрать награды!</string>
+    <string name="db_export_failed">Export error!</string>
+    <string name="notifications_name">Notifications</string>
+    <string name="notifications_description">Sends reminders to collect rewards</string>
+    <string name="notifications_title">Reminder!</string>
+    <string name="notifications_text">Don\'t forget to collect your rewards!</string>
+    <string name="five_star" translatable="false">5★</string>
+    <string name="four_star" translatable="false">4★</string>
 </resources>

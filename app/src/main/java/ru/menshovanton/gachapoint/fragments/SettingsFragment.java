@@ -1,7 +1,6 @@
 package ru.menshovanton.gachapoint.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -15,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 
 import java.util.Objects;
 
@@ -93,26 +94,30 @@ public class SettingsFragment extends Fragment {
             return;
         }
 
-        TimePickerDialog dialog = new TimePickerDialog(
-                requireContext(),
-                (view1, hourOfDay, minute) -> {
-                    AlarmHelper.alarmHour = hourOfDay;
-                    AlarmHelper.alarmMinute = minute;
+        MaterialTimePicker picker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(AlarmHelper.alarmHour)
+                .setMinute(AlarmHelper.alarmMinute)
+                .build();
 
-                    preferencesHelper.saveIntPreference(PreferencesHelper.ALARM_HOURS, hourOfDay);
-                    preferencesHelper.saveIntPreference(PreferencesHelper.ALARM_MINUTES, minute);
+        picker.addOnPositiveButtonClickListener(v -> {
+            int hourOfDay = picker.getHour();
+            int minute = picker.getMinute();
 
-                    updateTimeDisplay();
+            AlarmHelper.alarmHour = hourOfDay;
+            AlarmHelper.alarmMinute = minute;
 
-                    Context appContext = requireContext().getApplicationContext();
-                    AlarmHelper.cancelAlarm(appContext);
-                    AlarmHelper.setDailyAlarm(appContext);
-                },
-                AlarmHelper.alarmHour,
-                AlarmHelper.alarmMinute,
-                true
-        );
-        dialog.show();
+            preferencesHelper.saveIntPreference(PreferencesHelper.ALARM_HOURS, hourOfDay);
+            preferencesHelper.saveIntPreference(PreferencesHelper.ALARM_MINUTES, minute);
+
+            updateTimeDisplay();
+
+            Context appContext = requireContext().getApplicationContext();
+            AlarmHelper.cancelAlarm(appContext);
+            AlarmHelper.setDailyAlarm(appContext);
+        });
+
+        picker.show(getParentFragmentManager(), "MATERIAL_TIME_PICKER");
     }
 
     @SuppressLint({"DefaultLocale", "SetTextI18n"})

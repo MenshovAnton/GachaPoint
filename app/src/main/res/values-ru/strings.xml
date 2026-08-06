@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="description">"GachaPoint ваш удобный ассистент в мире аниме гача RPG.         Отслеживайте награды Благословления полной Луны, Пропуска снабжения экспересса и         Интертон-подписки.         Ежедневные напоминания, счетчик наград, наглядный календарь.     "</string>
+    <string name="copyright_info">Все права принадлежат их правооблодателям (All rights belong to their copyright
+        holders). Приложение не
+        аффелировано компанией Hoyoverse
+    </string>
+    <string name="dev_info">Разработчик MenshovAnton (Меньшов. А. Р.) По любым вопросам обращаться на почту
+        antrome@yandex.ru
+    </string>
+    <string name="feedback_info">Нашли баг? Оставте репорт на официальном репозитории проекта или напишите на почу (см.
+        выше)
+    </string>
+    <string name="sheet_header_actions">Действия</string>
+    <string name="sheet_header_edit">Правка</string>
+    <string name="check_button_text">Отметка</string>
+    <string name="add_button_text">Добавить подписку</string>
+    <string name="del_button_text">Удалить подписку</string>
+    <string name="cancel_button_text">Отменить отметку</string>
+    <string name="change_status_button_text">Восстановить пропущенный день</string>
+    <string name="stat_header">Статистика</string>
+    <string name="claim_column_header">Получено</string>
+    <string name="miss_column_header">Пропущено</string>
+    <string name="later_column_header">Получишь</string>
+    <string name="blessing_of_the_welkin_moon_count_header">Кол-во лун:</string>
+    <string name="star_rail_special_pass_count_header">Кол-во пропусков экспресса:</string>
+    <string name="inter_knot_member_count_header">Кол-во интертон-подписок:</string>
+    <string name="sub_type_selector_header">Тип отображаемой подписки:</string>
+    <string name="notifications_settings_title">Уведомления</string>
+    <string name="notifications_settings_time">Время оповещения:</string>
+    <string name="db_settings_title">Хранилище</string>
+    <string name="db_settings_backup_button">Экспорт данных</string>
+    <string name="db_settings_delete_button">Очистить все</string>
+    <string name="nav_home">Домашняя</string>
+    <string name="nav_tracker">Календарь</string>
+    <string name="nav_settings">Настройки</string>
+    <string name="nav_info">О приложении</string>
+    <string name="nav_journal">Журнал круток</string>
+    <string name="tab_piggy_bank">Накопления</string>
+    <string name="tab_wishes">Крутки</string>
+    <string name="add_sub">Подписка добавлена</string>
+    <string name="del_sub">Подписка удалена</string>
+    <string name="subs_limit">Достигнут лимит подписок</string>
+    <string name="check_today">Отметка выполнена!</string>
+    <string name="cancel_check_today">Отметка удалена</string>
+    <string name="already_cheked">Вы уже отмечались сегодня</string>
+    <string name="active_subs_null">У вас нет активных подписок</string>
+    <string name="not_miss_day">Вчера вы уже отмечались</string>
+    <string name="not_check_today">Сегодня вы еще не отмечались</string>
+    <string name="impossible_cancel_sub">Подписку можно удалить только в день добавления!</string>
+    <string name="calendar_mon">Пн</string>
+    <string name="calendar_tue">Вт</string>
+    <string name="calendar_wed">Ср</string>
+    <string name="calendar_th">Чт</string>
+    <string name="calendar_fr">Пт</string>
+    <string name="calendar_sa">Сб</string>
+    <string name="calendar_su">Вс</string>
+    <string name="title_target">Откручено</string>
+    <string name="title_bank">Накоплено</string>
+    <string name="goal_edit_button">Цель</string>
+    <string name="add_to_bank">Добавить</string>
+    <string name="fast_header">Быстрые действия</string>
+    <string name="review">Обратная связь</string>
+    <string name="wip">В разработке…</string>
+    <string name="logo">Логотип</string>
+    <string name="garant_1">На гарант 1x</string>
+    <string name="garant_2">На гарант 2x</string>
+    <string name="garant_6">На гарант 6x</string>
+    <string name="reset">Сбросить</string>
+    <string name="remark_piggy_bank">Гарант 1x = 77 круток</string>
+    <string name="db_export_successful">Данные успешно выгружены!</string>
+    <string name="db_export_failed">Ошибка экспорта!</string>
+    <string name="notifications_name">Оповещения</string>
+    <string name="notifications_description">Высылает напоминания о сборе наград.</string>
+    <string name="notifications_title">Напоминание!</string>
+    <string name="notifications_text">Не забудь собрать награды!</string>
+
+
+</resources>

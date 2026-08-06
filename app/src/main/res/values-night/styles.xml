@@ -5,14 +5,13 @@
     </style>
     <style name="ThemeOverlay.GachaPoint.TimePicker" parent="ThemeOverlay.Material3.MaterialTimePicker">
         <item name="elevationOverlayEnabled">false</item>
-        <item name="colorSurfaceContainerHigh">@color/white</item>
+        <item name="colorSurfaceContainerHigh">@color/background_night</item>
         <item name="colorSurfaceContainerHighest">@color/accent</item>
         <item name="colorPrimary">@color/check</item>
-        <item name="colorPrimaryContainer">@color/check</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/accent</item>
         <item name="colorOnPrimaryContainer">@color/white</item>
         <item name="colorOnSurface">@color/white</item>
-        <item name="colorOnSurfaceVariant">@color/black</item>
+        <item name="colorOnSurfaceVariant">@color/white</item>
         <item name="textAppearanceLabelLarge">@style/Typography.GachaPoint.TimePicker</item>
         <item name="textAppearanceLabelMedium">@style/Typography.GachaPoint.TimePicker</item>
         <item name="textAppearanceDisplayLarge">@style/Typography.GachaPoint.TimePicker</item>
@@ -25,11 +24,10 @@
         <item name="android:fontFamily">@font/genshin_font</item>
     </style>
     <style name="TimePickerClock.GachaPoint.Clock" parent="Widget.Material3.MaterialTimePicker.Clock">
-        <!-- Цвет цифр циферблата -->
         <item name="clockNumberTextColor">@color/white</item>
     </style>
     <style name="Navigation.GachaPoint.BottomNavBar" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="backgroundTint">@color/white</item>
+        <item name="backgroundTint">@color/nav_bar_background_night</item>
     </style>
     <style name="ProgressBar.GachaPoint.ProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:progressTint">@color/accent</item>
@@ -40,9 +38,9 @@
         <item name="android:textColor">@color/black</item>
     </style>
     <style name="Tabs.GachaPoint.TabLayout" parent="Widget.Material3.TabLayout">
-        <item name="tabIndicatorColor">@color/accent</item>
+        <item name="tabIndicatorColor">@color/check</item>
         <item name="tabIndicatorGravity">bottom</item>
-        <item name="tabSelectedTextColor">@color/accent</item>
+        <item name="tabSelectedTextColor">@color/check</item>
         <item name="tabTextColor">@color/light_grey</item>
         <item name="android:textAllCaps">false</item>
         <item name="tabGravity">fill</item>

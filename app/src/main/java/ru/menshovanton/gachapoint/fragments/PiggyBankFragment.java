@@ -104,28 +104,36 @@ public class PiggyBankFragment extends Fragment {
 
         scrollView.setOnScrollChangeListener(this::onScrollChange);
 
-        ImageView wishIcon = view.findViewById(R.id.wishIconPiggyBank);
-
-        switch (MainActivity.subType) {
-            case 0:
-                wishIcon.setImageResource(R.drawable.intertwined_fate);
-                changeCheckedTab(genshinImpact);
-                break;
-            case 1:
-                wishIcon.setImageResource(R.drawable.star_rail_special_pass);
-                changeCheckedTab(honkaiStarRail);
-                break;
-            case 2:
-                wishIcon.setImageResource(R.drawable.encrypted_master_tape);
-                changeCheckedTab(zenlessZoneZero);
-                break;
-        }
+        getParentFragmentManager().setFragmentResultListener("refresh_piggy_bank_key", getViewLifecycleOwner(), (requestKey, result) -> {
+            boolean shouldRefresh = result.getBoolean("shouldRefresh", false);
+            if (shouldRefresh) {
+                refreshData(view);
+            }
+        });
 
         target = piggyBankHelper.getTarget();
         progress = piggyBankHelper.getProgress();
 
         progressBar.setProgress(progress);
         progressBar.setMax(target);
+
+        changeCheckedTab(genshinImpact);
+    }
+
+    private void refreshData(View view) {
+        ImageView wishIcon = view.findViewById(R.id.wishIconPiggyBank);
+
+        switch (MainActivity.subType) {
+            case 0:
+                wishIcon.setImageResource(R.drawable.intertwined_fate);
+                break;
+            case 1:
+                wishIcon.setImageResource(R.drawable.star_rail_special_pass);
+                break;
+            case 2:
+                wishIcon.setImageResource(R.drawable.encrypted_master_tape);
+                break;
+        }
 
         updateProgress();
     }
@@ -168,19 +176,19 @@ public class PiggyBankFragment extends Fragment {
     public void onGenshinClick(View view) {
         MainActivity.subType = 0;
         changeCheckedTab(genshinImpact);
-        journalFragment.replaceFragment(new PiggyBankFragment());
+        journalFragment.triggerRefresh("refresh_piggy_bank_key");
     }
 
     public void onHonkaiClick(View view) {
         MainActivity.subType = 1;
         changeCheckedTab(honkaiStarRail);
-        journalFragment.replaceFragment(new PiggyBankFragment());
+        journalFragment.triggerRefresh("refresh_piggy_bank_key");
     }
 
     public void onZenlessClick(View view) {
         MainActivity.subType = 2;
         changeCheckedTab(zenlessZoneZero);
-        journalFragment.replaceFragment(new PiggyBankFragment());
+        journalFragment.triggerRefresh("refresh_piggy_bank_key");
     }
 
     private void changeCheckedTab(MaterialButton view) {

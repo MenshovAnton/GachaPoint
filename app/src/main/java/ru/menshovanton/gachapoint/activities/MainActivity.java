@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -27,13 +28,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationBarView;
 
-import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.helpers.AlarmHelper;
-import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.fragments.HomeFragment;
 import ru.menshovanton.gachapoint.fragments.JournalFragment;
@@ -51,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
     public final String SETTINGS_TAG = "SETTINGS";
     public final String TRACKER_TAG = "TRACKER";
 
-
     public static int subTypeScrollX;
 
-    DatabaseHelper dbHelper;
+    private static final String KEY_SELECTED_NAV_ID = "selected_nav_id";
+
+    private int currentNavId = R.id.nav_home;
 
     private final NavigationBarView.OnItemSelectedListener onItemSelectedListener
             = item -> {
@@ -107,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         NavigationBarView navigation = findViewById(R.id.bottomNavigationView);
-        navigation.setOnItemSelectedListener(onItemSelectedListener);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             navigation.setOnApplyWindowInsetsListener((v, insets) -> {
@@ -121,12 +119,19 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+        if (savedInstanceState != null) {
+            currentNavId = savedInstanceState.getInt(KEY_SELECTED_NAV_ID, R.id.nav_home);
+            navigation.setSelectedItemId(currentNavId);
+        } else {
+            replaceFragmentWithoutAnimation(TrackerFragment.newInstance(), TRACKER_TAG);
+            replaceFragmentWithoutAnimation(HomeFragment.newInstance(), HOME_TAG);
+        }
+
+        navigation.setOnItemSelectedListener(onItemSelectedListener);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             checkAndRequestPermissions();
         }
-
-        replaceFragment(TrackerFragment.newInstance(), TRACKER_TAG);
-        replaceFragment(HomeFragment.newInstance(), HOME_TAG);
 
         startService(new Intent(this, AlarmHelper.class));
     }
@@ -162,17 +167,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isDatabaseExists(Context context) {
-        File dbFile = context.getDatabasePath(DatabaseHelper.DATABASE_NAME);
-        return dbFile.exists();
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_SELECTED_NAV_ID, currentNavId);
     }
 
     public static void showMessage(Context context, String message) {
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         toast.show();
     }
-
-    private WeakReference<Dialog> calendarMenuRef;
 
     public interface OnCalendarMenuClickListener {
         void onAdd();
@@ -220,8 +224,6 @@ public class MainActivity extends AppCompatActivity {
             dialog.getWindow().setGravity(Gravity.BOTTOM);
         }
     }
-
-    private WeakReference<Dialog> piggyBankMenuRef;
 
     public interface OnPiggyMenuClickListener {
         void onAddOne();

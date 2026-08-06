@@ -7,10 +7,10 @@
         <item name="itemTextColor">@drawable/bottom_navigation_text_selector</item>
         <item name="itemIconTint">@drawable/bottom_navigation_selector</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:timePickerStyle">@style/TimePickerStyle</item>
-        <item name="bottomNavigationStyle">@style/BottomNavBarStyle</item>
-        <item name="progressBarStyle">@style/ProgressBar</item>
-        <item name="bottomSheetStyle">@style/CalendarMenuStyle</item>
+        <item name="materialTimePickerTheme">@style/ThemeOverlay.GachaPoint.TimePicker</item>
+        <item name="bottomNavigationStyle">@style/Navigation.GachaPoint.BottomNavBar</item>
+        <item name="progressBarStyle">@style/ProgressBar.GachaPoint.ProgressBar</item>
+        <item name="bottomSheetStyle">@style/CalendarMenu.GachaPoint.MenuSheet</item>
         <item name="android:trackTint">@color/light_grey</item>
     </style>
 </resources>
