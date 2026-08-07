@@ -7,21 +7,20 @@ import android.database.Cursor;
 import ru.menshovanton.gachapoint.Calendar;
 import ru.menshovanton.gachapoint.Date;
 import ru.menshovanton.gachapoint.activities.MainActivity;
-import ru.menshovanton.gachapoint.activities.SplashScreen;
 
 public class DateHelper {
 
     public static void writeDB(Context context, Date[] dateArray, int start, int stop) {
         for (int i = start; i < stop + start; i++) {
-            SplashScreen.dbHelper.updateValue(i, dateArray[i].dayOfMonth, dateArray[i].dayOfYear, dateArray[i].dayOfWeek, dateArray[i].month,
+            MainActivity.dbHelper.updateValue(i, dateArray[i].dayOfMonth, dateArray[i].dayOfYear, dateArray[i].dayOfWeek, dateArray[i].month,
                     dateArray[i].year, dateArray[i].status, dateArray[i].subDaysRemaining);
         }
     }
 
     public static Date[] readDB(Context context) {
-        Cursor cursor = SplashScreen.dbHelper.getValue();
+        Cursor cursor = MainActivity.dbHelper.getValue();
 
-        if (SplashScreen.dbHelper.isDatabaseEmpty()) {
+        if (MainActivity.dbHelper.isDatabaseEmpty()) {
             return null;
         }
 

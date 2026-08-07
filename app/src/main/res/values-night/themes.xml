@@ -1,4 +1,9 @@
 <resources>
+    <style name="Splash.Theme.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/background_night</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.GachaPoint</item>
+    </style>
     <style name="Base.Theme.GachaPoint" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="background">@color/dark_grey</item>
         <item name="android:windowBackground">@color/background_night</item>
@@ -7,7 +12,6 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="itemTextColor">@drawable/bottom_navigation_text_selector_night</item>
         <item name="itemIconTint">@drawable/bottom_navigation_selector_night</item>
-        <item name="android:windowIsTranslucent">true</item>
         <item name="materialTimePickerTheme">@style/ThemeOverlay.GachaPoint.TimePicker</item>
         <item name="bottomNavigationStyle">@style/Navigation.GachaPoint.BottomNavBar</item>
         <item name="progressBarStyle">@style/ProgressBar.GachaPoint.ProgressBar</item>

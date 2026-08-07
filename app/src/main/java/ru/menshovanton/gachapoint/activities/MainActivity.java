@@ -20,6 +20,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -28,6 +29,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +39,11 @@ import ru.menshovanton.gachapoint.fragments.HomeFragment;
 import ru.menshovanton.gachapoint.fragments.JournalFragment;
 import ru.menshovanton.gachapoint.fragments.SettingsFragment;
 import ru.menshovanton.gachapoint.fragments.TrackerFragment;
+import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
+    public static DatabaseHelper dbHelper;
+
     public static int subType;
 
     private static final int REQUEST_CODE = 123;
@@ -94,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
 
         EdgeToEdge.enable(this);
@@ -133,7 +139,18 @@ public class MainActivity extends AppCompatActivity {
             checkAndRequestPermissions();
         }
 
+        dbHelper = new DatabaseHelper(getApplicationContext(), null);
+
+        if (!isDatabaseExists(this)) {
+            dbHelper.getWritableDatabase();
+        }
+
         startService(new Intent(this, AlarmHelper.class));
+    }
+
+    private boolean isDatabaseExists(Context context) {
+        File dbFile = context.getDatabasePath(DatabaseHelper.DATABASE_NAME);
+        return dbFile.exists();
     }
 
     public void updateFragment(Fragment fragment, String tag) {
