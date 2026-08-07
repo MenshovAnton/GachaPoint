@@ -1,14 +1,24 @@
 package ru.menshovanton.gachapoint.helpers;
 
-import android.widget.ImageView;
+import android.content.Context;
+import android.transition.ChangeBounds;
+import android.transition.Fade;
+import android.transition.TransitionManager;
+import android.transition.TransitionSet;
+import android.view.View;
+import android.widget.GridLayout;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.List;
 
 import ru.menshovanton.gachapoint.Calendar;
+import ru.menshovanton.gachapoint.Date;
+import ru.menshovanton.gachapoint.DayState;
+import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.Statistic;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.fragments.TrackerFragment;
@@ -17,11 +27,10 @@ public class CalendarHelper {
     public MainActivity mainActivity;
     public Calendar calendar;
 
-    public int toDayOfMonth;
     public int toDayOfYear;
     public int year;
-    public int missesDays;
-    public int claimsDays;
+    public int missesDays = 0;
+    public int claimsDays = 0;
     public int subsCount;
 
     public final int WISHES_COST = 160;
@@ -31,115 +40,102 @@ public class CalendarHelper {
     public CalendarHelper(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
 
-        missesDays = 0;
-        claimsDays = 0;
-        subsCount = 0;
-
-        toDayOfMonth = LocalDate.now().getDayOfMonth();
         toDayOfYear = LocalDate.now().getDayOfYear();
         year = LocalDate.now().getYear();
 
         calendar = new Calendar(mainActivity);
 
         int daysRemaining = calendar.getSubDaysRemaining(toDayOfYear);
-
-        if (daysRemaining <= 0 || daysRemaining > 180) {
-            subsCount = 0;
-        } else {
-            subsCount = (daysRemaining + 29) / 30;
-        }
+        subsCount = (daysRemaining <= 0 || daysRemaining > 180) ? 0 : (daysRemaining + 29) / 30;
     }
 
-    public void drawCalendarView() {
-        int margin = 0;
-        int topMargin = 0;
-        int j = 0;
-        int line = 1;
+    public void renderCalendar(TrackerFragment fragment) {
+        if (fragment == null || !fragment.isVisible()) return;
 
-        int daysOfYearForMonth = LocalDate.of(year, TrackerFragment.selectedMonth, 1).getDayOfYear() - 1;
+        GridLayout gridLayout = fragment.getCalendarGrid();
+        List<TextView> cellsPool = fragment.getCellViewsPool();
 
-        for (int i = 0; i < Calendar.calendarSize; i++) {
-            if (calendar.datesArray[i].status == 0
-                    && calendar.datesArray[i].subDaysRemaining > 0
-                    && calendar.datesArray[i].dayOfYear <= toDayOfYear - 1) {
-                missesDays++;
-            }
+        int selectedMonth = TrackerFragment.selectedMonth;
+        LocalDate today = LocalDate.now();
+        Context context = mainActivity.getApplicationContext();
 
-            if (calendar.datesArray[i].status == 1
-                    && calendar.datesArray[i].subDaysRemaining > 0
-                    && calendar.datesArray[i].dayOfYear <= toDayOfYear - 1) {
-                claimsDays++;
-            }
+        int firstDayOfWeek = LocalDate.of(year, selectedMonth, 1).getDayOfWeek().getValue();
+        int offset = firstDayOfWeek - 1;
+        int daysInMonth = YearMonth.of(year, selectedMonth).lengthOfMonth();
 
-            if (i >= daysOfYearForMonth
-                    && i < daysOfYearForMonth + YearMonth.of(year, TrackerFragment.selectedMonth).lengthOfMonth()) {
-                if (j == 7) {
-                    topMargin = topMargin + 140;
-                    margin = 0;
-                    j = 0;
+        int yearOffset = (year - today.getYear()) * 365;
+        int startDayOfYearInMonth = LocalDate.of(year, selectedMonth, 1).getDayOfYear();
+
+        TransitionSet transitionSet = new TransitionSet();
+        transitionSet.setOrdering(TransitionSet.ORDERING_TOGETHER);
+        transitionSet.addTransition(new Fade().setDuration(250));
+        transitionSet.addTransition(new ChangeBounds().setDuration(250));
+        TransitionManager.beginDelayedTransition(gridLayout, transitionSet);
+
+        for (int i = 0; i < 42; i++) {
+            TextView cell = cellsPool.get(i);
+
+            if (i < offset || i >= (offset + daysInMonth)) {
+                cell.setVisibility(View.GONE);
+                cell.setText("");
+                cell.setBackground(null);
+            } else {
+                int dayIndexInMonth = i - offset;
+                int globalIndex = (startDayOfYearInMonth - 1) + dayIndexInMonth + yearOffset;
+
+                if (globalIndex >= 0 && globalIndex < calendar.datesArray.length) {
+                    Date dateObj = calendar.datesArray[globalIndex];
+
+                    cell.setVisibility(View.VISIBLE);
+                    cell.setText(String.valueOf(dateObj.dayOfMonth));
+
+                    if (dateObj.dayOfMonth == today.getDayOfMonth()
+                            && dateObj.month == today.getMonthValue()
+                            && dateObj.year == today.getYear()) {
+                        cell.setBackgroundResource(R.drawable.background_date_today);
+                    } else {
+                        cell.setBackgroundResource(R.drawable.background_date);
+                    }
+
+                    DayState dayState = DayState.from(dateObj, selectedMonth, toDayOfYear);
+                    int textColor = ContextCompat.getColor(context, dayState.getColorResId());
+                    cell.setTextColor(textColor);
                 }
-                if (calendar.datesArray[i].dayOfWeek > 1 && line == 1) {
-                    margin = calendar.datesArray[i].dayOfWeek * 140 - 140;
-                    j = calendar.datesArray[i].dayOfWeek - 1;
+            }
+        }
+    }
+
+    public void adjustCellSizes(TrackerFragment fragment) {
+        if (fragment == null || !fragment.isVisible()) return;
+
+        GridLayout gridLayout = fragment.getCalendarGrid();
+        List<TextView> cellsPool = fragment.getCellViewsPool();
+
+        gridLayout.post(() -> {
+            int gridWidth = gridLayout.getWidth();
+            if (gridWidth == 0) return;
+
+            Context context = gridLayout.getContext();
+            float density = context.getResources().getDisplayMetrics().density;
+            int marginPx = (int) (4 * density);
+
+            int cellSidePx = (gridWidth - (marginPx * 2 * 7)) / 7;
+
+            for (int i = 0; i < 42; i++) {
+                TextView cell = cellsPool.get(i);
+                GridLayout.LayoutParams params = (GridLayout.LayoutParams) cell.getLayoutParams();
+
+                if (params != null) {
+                    params.width = cellSidePx;
+                    params.height = cellSidePx;
+                    params.setMargins(marginPx, marginPx, marginPx, marginPx);
+                    cell.setLayoutParams(params);
                 }
-
-                TrackerFragment fragment = (TrackerFragment) mainActivity
-                        .getSupportFragmentManager()
-                        .findFragmentByTag(mainActivity.TRACKER_TAG);
-
-                if (fragment != null && fragment.isVisible()) {
-                    fragment.createView(calendar.datesArray[i],
-                        calendar.datesCellsLabelsArray[i],
-                        calendar.datesCellsBackgroundArray[i],
-                        margin,
-                        topMargin);
-                }
-
-                margin += 140;
-                j++;
-                line++;
             }
-        }
-
-        if (missesDays > 0) {
-            missesDays++;
-        }
-
-        if (calendar.datesArray[toDayOfYear - 1].status == 1) {
-            claimsDays++;
-        }
+        });
     }
 
-    public void removeCalendarView(ConstraintLayout constraintLayout) {
-        for (TextView textView : calendar.datesCellsLabelsArray) {
-            constraintLayout.removeView(textView);
-        }
-        for (ImageView imageView : calendar.datesCellsBackgroundArray) {
-            constraintLayout.removeView(imageView);
-        }
-    }
-
-    public void calculateMissesAndClaims() {
-        for (int i = 0; i < Calendar.calendarSize; i++) {
-            if (calendar.datesArray[i].status == 0 && calendar.datesArray[i].subDaysRemaining > 0 && calendar.datesArray[i].dayOfYear <= toDayOfYear - 1) {
-                missesDays++;
-            }
-
-            if (calendar.datesArray[i].status == 1 && calendar.datesArray[i].subDaysRemaining > 0 && calendar.datesArray[i].dayOfYear <= toDayOfYear - 1) {
-                claimsDays++;
-            }
-        }
-
-        if (missesDays > 0) {
-            missesDays++;
-        }
-
-        if (calendar.datesArray[toDayOfYear - 1].status == 1) {
-            claimsDays++;
-        }
-    }
-
-    private Statistic calculateStatistics() {
+    private void calculateStatistics() {
         int missedPrimogemsCount = missesDays * PRIMOGEMS_PER_DAY;
         int claimPrimogemsCount = claimsDays * PRIMOGEMS_PER_DAY;
 
@@ -149,18 +145,55 @@ public class CalendarHelper {
         int missedWishesCount = missedPrimogemsCount / WISHES_COST;
         int claimWishesCount = claimPrimogemsCount / WISHES_COST;
 
+    }
+
+    public void calculateMissesAndClaims() {
+        missesDays = 0;
+        claimsDays = 0;
+
+        for (int i = 0; i < calendar.datesArray.length; i++) {
+            Date date = calendar.datesArray[i];
+            if (date.status == 0 && date.subDaysRemaining > 0 && date.dayOfYear <= toDayOfYear - 1) {
+                missesDays++;
+            }
+            if (date.status == 1 && date.subDaysRemaining > 0 && date.dayOfYear <= toDayOfYear - 1) {
+                claimsDays++;
+            }
+        }
+
+        if (missesDays > 0) missesDays++;
+        if (toDayOfYear <= calendar.datesArray.length && calendar.datesArray[toDayOfYear - 1].status == 1) {
+            claimsDays++;
+        }
+    }
+
+    public Statistic getStatistic() {
+        calculateMissesAndClaims();
+
+        int missedPrimogemsCount = missesDays * PRIMOGEMS_PER_DAY;
+        int claimPrimogemsCount = claimsDays * PRIMOGEMS_PER_DAY;
+        int laterPrimogemsCount = SUMMARY_CLAIM * subsCount - claimPrimogemsCount - missedPrimogemsCount;
+
         return new Statistic(
                 missedPrimogemsCount,
                 claimPrimogemsCount,
                 laterPrimogemsCount,
-                missedWishesCount,
-                claimWishesCount,
-                laterWishesCount
+                missedPrimogemsCount / WISHES_COST,
+                claimPrimogemsCount / WISHES_COST,
+                laterPrimogemsCount / WISHES_COST
         );
     }
 
-    public Statistic getStatistic() {
-        return calculateStatistics();
+    public void update() {
+        int length;
+        if (calendar.getSubDaysRemaining(toDayOfYear) > 30) {
+            length = calendar.datesArray[toDayOfYear - 1].subDaysRemaining;
+        } else {
+            length = 30;
+        }
+
+        calculateStatistics();
+        DateHelper.writeDB(mainActivity.getApplicationContext(), calendar.datesArray, LocalDate.now().getDayOfYear() - 1, length);
     }
 
     public enum UpdateSubscribeDaysActions {
@@ -187,17 +220,5 @@ public class CalendarHelper {
                 }
                 break;
         }
-    }
-
-    public void update() {
-        int length;
-        if (calendar.getSubDaysRemaining(toDayOfYear) > 30) {
-            length = calendar.datesArray[toDayOfYear - 1].subDaysRemaining;
-        } else {
-            length = 30;
-        }
-
-        calculateStatistics();
-        DateHelper.writeDB(mainActivity.getApplicationContext(), calendar.datesArray, LocalDate.now().getDayOfYear() - 1, length);
     }
 }

@@ -25,7 +25,6 @@
         <item name="android:fontFamily">@font/genshin_font</item>
     </style>
     <style name="TimePickerClock.GachaPoint.Clock" parent="Widget.Material3.MaterialTimePicker.Clock">
-        <!-- Цвет цифр циферблата -->
         <item name="clockNumberTextColor">@color/white</item>
     </style>
     <style name="Navigation.GachaPoint.BottomNavBar" parent="Widget.MaterialComponents.BottomNavigationView">

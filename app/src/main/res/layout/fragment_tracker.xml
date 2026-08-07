@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/filler"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -56,7 +56,7 @@
                 android:id="@+id/yearHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="26dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/filler"
                 android:textColor="@color/check"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -70,7 +70,7 @@
                 android:id="@+id/previousMonth"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
                 android:importantForAccessibility="no"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -86,7 +86,7 @@
                 android:id="@+id/nextMonth"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
                 android:importantForAccessibility="no"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -111,144 +111,103 @@
                 app:layout_constraintTop_toBottomOf="@+id/subTypesLine"
                 app:layout_constraintVertical_bias="0.0">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <GridLayout
                     android:id="@+id/calendarHeader"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:columnCount="7"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0">
+                    app:layout_constraintVertical_bias="0">
 
                     <TextView
                         android:id="@+id/tagMonday"
-                        android:layout_width="46dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="fill_horizontal"
+                        android:layout_column="0"
                         android:gravity="center"
-                        android:text="@string/calendar_mon"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
+                        android:text="@string/calendar_mon" />
 
                     <TextView
                         android:id="@+id/tagTuesday"
-                        android:layout_width="46dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="140px"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="fill_horizontal"
+                        android:layout_column="1"
                         android:gravity="center"
-                        android:text="@string/calendar_tue"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:ignore="PxUsage" />
+                        android:text="@string/calendar_tue" />
 
                     <TextView
                         android:id="@+id/tagWednesday"
-                        android:layout_width="46dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="280px"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="fill_horizontal"
+                        android:layout_column="2"
                         android:gravity="center"
-                        android:text="@string/calendar_wed"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:ignore="PxUsage" />
+                        android:text="@string/calendar_wed" />
 
                     <TextView
                         android:id="@+id/tagThursday"
-                        android:layout_width="46dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="420px"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="fill_horizontal"
+                        android:layout_column="3"
                         android:gravity="center"
-                        android:text="@string/calendar_th"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:ignore="PxUsage" />
+                        android:text="@string/calendar_th" />
 
                     <TextView
                         android:id="@+id/tagFriday"
-                        android:layout_width="46dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="560px"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="fill_horizontal"
+                        android:layout_column="4"
                         android:gravity="center"
-                        android:text="@string/calendar_fr"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:ignore="PxUsage" />
+                        android:text="@string/calendar_fr" />
 
                     <TextView
                         android:id="@+id/tagSaturday"
-                        android:layout_width="46dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="700px"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="fill_horizontal"
+                        android:layout_column="5"
                         android:gravity="center"
                         android:text="@string/calendar_sa"
-                        android:textColor="#DD2C00"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:ignore="PxUsage" />
+                        android:textColor="#DD2C00" />
 
                     <TextView
                         android:id="@+id/tagSunday"
-                        android:layout_width="46dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="840px"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="fill_horizontal"
+                        android:layout_column="6"
                         android:gravity="center"
                         android:text="@string/calendar_su"
-                        android:textColor="#DD2C00"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:ignore="PxUsage" />
+                        android:textColor="#DD2C00" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </GridLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/calendarArea"
-                    android:layout_width="wrap_content"
+                <ru.menshovanton.gachapoint.CalendarGrid
+                    android:id="@+id/calendarGrid"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:columnCount="7"
+                    android:rowCount="6"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/calendarHeader"
-                    app:layout_constraintVertical_bias="0">
-
-                    <TextView
-                        android:id="@+id/calendarFiller"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    app:layout_constraintVertical_bias="0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -509,7 +468,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="5dp"
                     android:text="@string/filler"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -522,7 +481,7 @@
                     android:id="@+id/subsCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="5dp"
                     android:text="@string/num_filler"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

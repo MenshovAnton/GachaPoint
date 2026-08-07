@@ -1,7 +1,5 @@
 package ru.menshovanton.gachapoint.fragments;
 
-import static androidx.core.content.ContextCompat.getColor;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -26,14 +24,15 @@ import com.google.android.material.button.MaterialButton;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import ru.menshovanton.gachapoint.Calendar;
+import ru.menshovanton.gachapoint.CalendarGrid;
 import ru.menshovanton.gachapoint.Statistic;
 import ru.menshovanton.gachapoint.helpers.CalendarHelper;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
-import ru.menshovanton.gachapoint.Date;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.Notification;
 import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
@@ -76,6 +75,9 @@ public class TrackerFragment extends Fragment {
     public static CalendarHelper calendarHelper;
     DatabaseHelper dbHelper;
 
+    CalendarGrid calendarGrid;
+
+    private final List<TextView> cellViewsPool = new ArrayList<>();
 
     public TrackerFragment() {}
 
@@ -108,7 +110,7 @@ public class TrackerFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_tracker, container, false);
 
         subsCounterView = view.findViewById(R.id.subsCount);
-        constraintLayout = view.findViewById(R.id.calendarArea);
+        calendarGrid = view.findViewById(R.id.calendarGrid);
         checkButton = view.findViewById(R.id.checkButton);
         moreButton = view.findViewById(R.id.moreButton);
         previousMonthButton = view.findViewById(R.id.previousMonth);
@@ -136,8 +138,9 @@ public class TrackerFragment extends Fragment {
 
         subsCounterView.setText(String.valueOf(calendarHelper.subsCount));
 
-        calendarHelper.update();
-        calendarHelper.drawCalendarView();
+        initCalendarGrid();
+        calendarHelper.adjustCellSizes(this);
+        calendarHelper.renderCalendar(this);
 
         setHeader(selectedMonth, calendarHelper.year);
         setStatistics();
@@ -176,47 +179,18 @@ public class TrackerFragment extends Fragment {
                 changeCheckedTab(interKnotMembershipSelectButton);
                 break;
         }
-    }
 
-    public void createView(Date date, TextView textView, ImageView imageView, int leftMargin, int topMargin) {
-        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(120, 120);
-        layoutParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
-        layoutParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
-        layoutParams.topToBottom = R.id.calendarFiller;
-        layoutParams.leftMargin = leftMargin;
-        layoutParams.rightMargin = 0;
-        layoutParams.topMargin = topMargin;
-        layoutParams.horizontalBias = 0;
-        layoutParams.verticalBias = 0;
+        calendarGrid.setOnSwipeListener(new CalendarGrid.OnSwipeListener() {
+            @Override
+            public void onSwipeLeft() {
+                nextMonth();
+            }
 
-        textView.setText(String.valueOf(date.dayOfMonth));
-        textView.setTextSize(20);
-        Typeface typeface = ResourcesCompat.getFont(mainActivity.getApplicationContext(), R.font.genshin_font);
-        textView.setTypeface(typeface);
-        textView.setTextColor(getColor(mainActivity.getApplicationContext(), R.color.white));
-        textView.setGravity(Gravity.CENTER);
-
-        if (date.dayOfYear == calendarHelper.toDayOfYear && selectedMonth == LocalDate.now().getMonth().getValue() && selectedYear == LocalDate.now().getYear()) {
-            imageView.setImageResource(R.drawable.background_date_today);
-        } else {
-            imageView.setImageResource(R.drawable.background_date);
-        }
-
-        if (date.status == 0 && date.subDaysRemaining > 0) {
-            textView.setTextColor(getColor(mainActivity.getApplicationContext(), R.color.check));
-        }
-
-        if ((date.status == 1 || date.status == 3) && date.month == selectedMonth) {
-            textView.setTextColor(getColor(mainActivity.getApplicationContext(), R.color.checked));
-        }
-
-        if ((date.status == 0 || date.status == 2) && date.id < calendarHelper.toDayOfYear && date.subDaysRemaining != 0
-                && date.month == selectedMonth) {
-            textView.setTextColor(getColor(mainActivity.getApplicationContext(), R.color.missed));
-        }
-
-        constraintLayout.addView(imageView, layoutParams);
-        constraintLayout.addView(textView, layoutParams);
+            @Override
+            public void onSwipeRight() {
+                previousMonth();
+            }
+        });
     }
 
     public void setStatistics() {
@@ -260,8 +234,7 @@ public class TrackerFragment extends Fragment {
         calendarHelper.update();
         setStatistics();
         selectedMonth = LocalDate.now().getMonth().getValue();
-        calendarHelper.removeCalendarView(constraintLayout);
-        calendarHelper.drawCalendarView();
+        calendarHelper.renderCalendar(this);
         setHeader(selectedMonth, calendarHelper.year);
     }
 
@@ -365,31 +338,11 @@ public class TrackerFragment extends Fragment {
     }
 
     public void onPreviousMonthClick(View view) {
-        if (selectedMonth != 1) {
-            selectedMonth--;
-        } else {
-            if (selectedYear > calendarHelper.calendar.datesArray[0].year) {
-                selectedMonth = 12;
-                selectedYear--;
-            }
-        }
-        calendarHelper.removeCalendarView(constraintLayout);
-        calendarHelper.drawCalendarView();
-        setHeader(selectedMonth, selectedYear);
+        previousMonth();
     }
 
     public void onNextMonthClick(View view) {
-        if (selectedMonth != 12) {
-            selectedMonth++;
-        } else {
-            if (selectedYear < calendarHelper.calendar.datesArray[Calendar.calendarSize - 1].year) {
-                selectedMonth = 1;
-                selectedYear++;
-            }
-        }
-        calendarHelper.removeCalendarView(constraintLayout);
-        calendarHelper.drawCalendarView();
-        setHeader(selectedMonth, selectedYear);
+        nextMonth();
     }
 
     private void onMoonClick(View view) {
@@ -468,5 +421,68 @@ public class TrackerFragment extends Fragment {
 
     public void createDataBaseBackup() {
         dbHelper.createExport(view);
+    }
+
+    private void initCalendarGrid() {
+        calendarGrid.removeAllViews();
+        cellViewsPool.clear();
+
+        float density = getResources().getDisplayMetrics().density;
+        int cellHeightInPx = (int) (48 * density);
+        int marginInPx = (int) (4 * density);
+
+        Typeface customTypeface = ResourcesCompat.getFont(requireContext(), R.font.genshin_font);
+
+        for (int i = 0; i < 42; i++) {
+            TextView dayView = new TextView(getContext());
+
+            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.width = 0;
+            params.height = cellHeightInPx;
+            params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+
+            params.setMargins(marginInPx, marginInPx, marginInPx, marginInPx);
+            dayView.setLayoutParams(params);
+
+            dayView.setGravity(Gravity.CENTER);
+            dayView.setTextSize(18f);
+
+            if (customTypeface != null) {
+                dayView.setTypeface(customTypeface);
+            }
+
+            calendarGrid.addView(dayView);
+            cellViewsPool.add(dayView);
+        }
+    }
+
+    public List<TextView> getCellViewsPool() {
+        return cellViewsPool;
+    }
+
+    public GridLayout getCalendarGrid() {
+        return calendarGrid;
+    }
+
+    private void nextMonth() {
+        if (selectedMonth == 12) {
+            selectedMonth = 1;
+            calendarHelper.year++;
+        } else {
+            selectedMonth++;
+        }
+        calendarHelper.renderCalendar(this);
+        setHeader(selectedMonth, selectedYear);
+    }
+
+    private void previousMonth() {
+        if (selectedMonth == 1) {
+            selectedMonth = 12;
+            calendarHelper.year--;
+        } else {
+            selectedMonth--;
+        }
+        calendarHelper.renderCalendar(this);
+        setHeader(selectedMonth, selectedYear);
     }
 }
