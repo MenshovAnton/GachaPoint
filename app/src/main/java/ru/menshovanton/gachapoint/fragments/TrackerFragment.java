@@ -3,11 +3,15 @@ package ru.menshovanton.gachapoint.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.os.LocaleList;
 import android.os.Vibrator;
 import android.widget.*;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -21,6 +25,11 @@ import android.view.ViewGroup;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
@@ -35,12 +44,14 @@ import ru.menshovanton.gachapoint.helpers.CalendarHelper;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.Notification;
+import ru.menshovanton.gachapoint.helpers.PiggyBankHelper;
 import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 import ru.menshovanton.gachapoint.R;
 
 public class TrackerFragment extends Fragment {
 
     MainActivity mainActivity;
+    PiggyBankHelper piggyBankHelper;
     TextView subsCounterView;
     ConstraintLayout constraintLayout;
     HorizontalScrollView subTypesLine;
@@ -77,6 +88,13 @@ public class TrackerFragment extends Fragment {
 
     CalendarGrid calendarGrid;
 
+    private final ActivityResultLauncher<String> exportDbLauncher =
+            registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
+                if (uri != null) {
+                    writeDatabaseToUri(uri);
+                }
+            });
+
     private final List<TextView> cellViewsPool = new ArrayList<>();
 
     public TrackerFragment() {}
@@ -90,6 +108,7 @@ public class TrackerFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mainActivity = (MainActivity) getActivity();
+        piggyBankHelper = new PiggyBankHelper(mainActivity);
         instance = this;
         settings = new PreferencesHelper(Objects.requireNonNull(mainActivity));
 
@@ -100,7 +119,7 @@ public class TrackerFragment extends Fragment {
         selectedYear = LocalDate.now().getYear();
 
         calendarHelper = new CalendarHelper(mainActivity);
-        dbHelper = new DatabaseHelper(getContext(), mainActivity);
+        dbHelper = new DatabaseHelper(getContext());
 
         Notification.subsCount = calendarHelper.subsCount;
     }
@@ -203,7 +222,7 @@ public class TrackerFragment extends Fragment {
         String laterWishesText = "0";
         String claimPrimogemsText = String.valueOf(statistic.claimGems);
         String missedPrimogemsText = String.valueOf(statistic.missedGems);
-        String claimWishesText = String.valueOf(statistic.missedWishes);
+        String claimWishesText = String.valueOf(statistic.claimWishes);
         String missedWishesText = String.valueOf(statistic.missedWishes);
 
         assert getView() != null;
@@ -334,7 +353,7 @@ public class TrackerFragment extends Fragment {
         }
 
         Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(10);
+        vibrator.vibrate(100);
     }
 
     public void onPreviousMonthClick(View view) {
@@ -379,7 +398,7 @@ public class TrackerFragment extends Fragment {
         ((MainActivity) requireActivity()).showCalendarMenu(new MainActivity.OnCalendarMenuClickListener() {
             @Override public void onAdd() { onAddClick(); }
             @Override public void onDel() { onDelClick(); }
-            @Override public void onExport() { createDataBaseBackup(); }
+            @Override public void onExport() { exportDatabase(); }
             @Override public void onRecovery() { recoveryMissDay(); }
             @Override public void onCancel() { onCancelCheck(); }
         });
@@ -405,7 +424,7 @@ public class TrackerFragment extends Fragment {
         calendarHelper.claimsDays--;
     }
 
-    public void onCancelCheck(){
+    public void onCancelCheck() {
         if (calendarHelper.calendar.getStatus(calendarHelper.toDayOfYear) == 0)
         {   Toast.makeText(mainActivity, getString(R.string.not_check_today), Toast.LENGTH_SHORT).show();  }
         else if (calendarHelper.calendar.getSubDaysRemaining(calendarHelper.toDayOfYear) == 0)
@@ -417,10 +436,6 @@ public class TrackerFragment extends Fragment {
         }
 
         updateCalendar();
-    }
-
-    public void createDataBaseBackup() {
-        dbHelper.createExport(view);
     }
 
     private void initCalendarGrid() {
@@ -484,5 +499,42 @@ public class TrackerFragment extends Fragment {
         }
         calendarHelper.renderCalendar(this);
         setHeader(selectedMonth, selectedYear);
+    }
+
+    public void exportDatabase() {
+        exportDbLauncher.launch(DatabaseHelper.DATABASE_NAME);
+    }
+
+    private void writeDatabaseToUri(Uri targetUri) {
+        if (!isAdded()) return;
+
+        File dbFile = requireContext().getDatabasePath(DatabaseHelper.DATABASE_NAME);
+
+        if (!dbFile.exists()) {
+            Toast.makeText(requireContext(), R.string.db_export_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try (InputStream in = new FileInputStream(dbFile);
+             OutputStream out = requireContext().getContentResolver().openOutputStream(targetUri)) {
+
+            if (out == null) {
+                Toast.makeText(requireContext(), R.string.db_export_failed, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = in.read(buffer)) > 0) {
+                out.write(buffer, 0, length);
+            }
+            out.flush();
+
+            Toast.makeText(requireContext(), R.string.db_export_successful, Toast.LENGTH_SHORT).show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), R.string.db_export_failed, Toast.LENGTH_SHORT).show();
+        }
     }
 }

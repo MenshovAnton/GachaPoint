@@ -12,15 +12,15 @@ public class DateHelper {
 
     public static void writeDB(Context context, Date[] dateArray, int start, int stop) {
         for (int i = start; i < stop + start; i++) {
-            MainActivity.dbHelper.updateValue(i, dateArray[i].dayOfMonth, dateArray[i].dayOfYear, dateArray[i].dayOfWeek, dateArray[i].month,
+            MainActivity.dbHelper.updateCalendarValue(i, dateArray[i].dayOfMonth, dateArray[i].dayOfYear, dateArray[i].dayOfWeek, dateArray[i].month,
                     dateArray[i].year, dateArray[i].status, dateArray[i].subDaysRemaining);
         }
     }
 
     public static Date[] readDB(Context context) {
-        Cursor cursor = MainActivity.dbHelper.getValue();
+        Cursor cursor = MainActivity.dbHelper.getAllCalendarData();
 
-        if (MainActivity.dbHelper.isDatabaseEmpty()) {
+        if (MainActivity.dbHelper.isCalendarEmpty()) {
             return null;
         }
 

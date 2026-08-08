@@ -83,7 +83,14 @@ public class WishesCounterFragment extends Fragment {
             }
         });
 
-        changeCheckedTab(genshinImpact);
+        refreshData(view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        scrollView.post(() -> scrollView.scrollTo(MainActivity.subTypeScrollX, 0));
+        refreshData(requireView());
     }
 
     private void refreshData(View view) {
@@ -92,12 +99,15 @@ public class WishesCounterFragment extends Fragment {
         switch (MainActivity.subType) {
             case 0:
                 wishIcon.setImageResource(R.drawable.intertwined_fate);
+                changeCheckedTab(genshinImpact);
                 break;
             case 1:
                 wishIcon.setImageResource(R.drawable.star_rail_special_pass);
+                changeCheckedTab(honkaiStarRail);
                 break;
             case 2:
                 wishIcon.setImageResource(R.drawable.encrypted_master_tape);
+                changeCheckedTab(zenlessZoneZero);
                 break;
         }
 

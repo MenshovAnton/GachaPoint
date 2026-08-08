@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 
 public class PreferencesHelper {
     private static final String PREF_FILE = "Settings";
+
     public static final String ALARM_HOURS = "Alarm Hours";
     public static final String ALARM_MINUTES = "Alarm Minutes";
     public static final String ALLOW_NOTIFICATIONS = "Enable notifications";
+
     public static final String CALENDAR_SIZE = "Calendar size";
     public static final String SUB_TYPE = "Selected sub type";
 
@@ -15,9 +17,13 @@ public class PreferencesHelper {
     public static final String PIGGY_BANK_TARGET_HSR = "Piggy Bank target HSR";
     public static final String PIGGY_BANK_TARGET_ZZZ = "Piggy Bank target ZZZ";
 
-    public static final String PIGGY_BANK_PROGRESS_GENSHIN = "Piggy Bank progress Genshin Impact";
-    public static final String PIGGY_BANK_PROGRESS_HSR = "Piggy Bank progress HSR";
-    public static final String PIGGY_BANK_PROGRESS_ZZZ = "Piggy Bank progress ZZZ";
+    public static final String PIGGY_BANK_MANUAL_PROGRESS_GENSHIN = "Piggy Bank manual progress Genshin Impact";
+    public static final String PIGGY_BANK_MANUAL_PROGRESS_HSR = "Piggy Bank manual progress HSR";
+    public static final String PIGGY_BANK_MANUAL_PROGRESS_ZZZ = "Piggy Bank manual progress ZZZ";
+
+    public static final String PIGGY_BANK_SUBS_PROGRESS_GENSHIN = "Piggy Bank subs progress Genshin Impact";
+    public static final String PIGGY_BANK_SUBS_PROGRESS_HSR = "Piggy Bank subs progress HSR";
+    public static final String PIGGY_BANK_SUBS_PROGRESS_ZZZ = "Piggy Bank subs progress ZZZ";
 
     private final SharedPreferences settings;
 

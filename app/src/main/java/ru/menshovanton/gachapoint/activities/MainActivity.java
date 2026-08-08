@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             checkAndRequestPermissions();
         }
 
-        dbHelper = new DatabaseHelper(getApplicationContext(), null);
+        dbHelper = new DatabaseHelper(getApplicationContext());
 
         if (!isDatabaseExists(this)) {
             dbHelper.getWritableDatabase();

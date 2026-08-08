@@ -5,26 +5,44 @@ import ru.menshovanton.gachapoint.activities.MainActivity;
 public class PiggyBankHelper {
     PreferencesHelper preferencesHelper;
 
-    public int progress;
+    int manualProgress;
+    int subsProgress;
     public int target;
 
     public PiggyBankHelper(MainActivity mainActivity) {
         preferencesHelper = new PreferencesHelper(mainActivity);
-        progress = getProgress();
+        manualProgress = preferencesHelper.getIntPreference(getManualProgressPrefTag());
+        subsProgress = preferencesHelper.getIntPreference(getSubsProgressPrefTag());
         target = getTarget();
     }
 
-    private String getProgressPrefTag() {
-        String tag = PreferencesHelper.PIGGY_BANK_PROGRESS_GENSHIN;
+    private String getManualProgressPrefTag() {
+        String tag = PreferencesHelper.PIGGY_BANK_MANUAL_PROGRESS_GENSHIN;
         switch (MainActivity.subType) {
             case 0:
-                tag = PreferencesHelper.PIGGY_BANK_PROGRESS_GENSHIN;
+                tag = PreferencesHelper.PIGGY_BANK_MANUAL_PROGRESS_GENSHIN;
                 break;
             case 1:
-                tag = PreferencesHelper.PIGGY_BANK_PROGRESS_HSR;
+                tag = PreferencesHelper.PIGGY_BANK_MANUAL_PROGRESS_HSR;
                 break;
             case 2:
-                tag = PreferencesHelper.PIGGY_BANK_PROGRESS_ZZZ;
+                tag = PreferencesHelper.PIGGY_BANK_MANUAL_PROGRESS_ZZZ;
+                break;
+        }
+        return tag;
+    }
+
+    private String getSubsProgressPrefTag() {
+        String tag = PreferencesHelper.PIGGY_BANK_SUBS_PROGRESS_GENSHIN;
+        switch (MainActivity.subType) {
+            case 0:
+                tag = PreferencesHelper.PIGGY_BANK_SUBS_PROGRESS_GENSHIN;
+                break;
+            case 1:
+                tag = PreferencesHelper.PIGGY_BANK_SUBS_PROGRESS_HSR;
+                break;
+            case 2:
+                tag = PreferencesHelper.PIGGY_BANK_SUBS_PROGRESS_ZZZ;
                 break;
         }
         return tag;
@@ -46,18 +64,25 @@ public class PiggyBankHelper {
         return tag;
     }
 
-    public boolean pushProgress(int i) {
-        if (progress + i <= target) {
-            progress += i;
-            preferencesHelper.saveIntPreference(getProgressPrefTag(), progress);
+    public boolean pushManualProgress(int wishes) {
+        if (manualProgress + subsProgress + wishes <= target) {
+            manualProgress += wishes;
+            preferencesHelper.saveIntPreference(getManualProgressPrefTag(), manualProgress);
             return true;
         } else {
             return false;
         }
     }
 
+    public void updateSubsProgress(int wishes) {
+        if (manualProgress + subsProgress + wishes <= target) {
+            subsProgress = wishes;
+            preferencesHelper.saveIntPreference(getSubsProgressPrefTag(), subsProgress);
+        }
+    }
+
     public int getProgress() {
-        return preferencesHelper.getIntPreference(getProgressPrefTag());
+        return preferencesHelper.getIntPreference(getManualProgressPrefTag()) + preferencesHelper.getIntPreference(getSubsProgressPrefTag());
     }
 
     public int getTarget() {
@@ -71,8 +96,8 @@ public class PiggyBankHelper {
 
     public void reset() {
         target = 0;
-        progress = 0;
-        preferencesHelper.saveIntPreference(getTargetPrefTag(), this.target);
-        preferencesHelper.saveIntPreference(getProgressPrefTag(), this.target);
+        manualProgress = 0;
+        preferencesHelper.saveIntPreference(getTargetPrefTag(), 0);
+        preferencesHelper.saveIntPreference(getManualProgressPrefTag(), 0);
     }
 }

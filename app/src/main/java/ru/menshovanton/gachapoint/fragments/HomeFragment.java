@@ -152,7 +152,7 @@ public class HomeFragment extends Fragment {
         String laterWishesText = "0";
         String claimPrimogemsText = String.valueOf(statistic.claimGems);
         String missedPrimogemsText = String.valueOf(statistic.missedGems);
-        String claimWishesText = String.valueOf(statistic.missedWishes);
+        String claimWishesText = String.valueOf(statistic.claimWishes);
         String missedWishesText = String.valueOf(statistic.missedWishes);
 
         assert getView() != null;

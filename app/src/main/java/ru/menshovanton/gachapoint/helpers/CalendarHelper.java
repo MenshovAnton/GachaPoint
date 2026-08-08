@@ -26,6 +26,7 @@ import ru.menshovanton.gachapoint.fragments.TrackerFragment;
 public class CalendarHelper {
     public MainActivity mainActivity;
     public Calendar calendar;
+    PiggyBankHelper piggyBankHelper;
 
     public int toDayOfYear;
     public int year;
@@ -39,6 +40,7 @@ public class CalendarHelper {
 
     public CalendarHelper(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
+        piggyBankHelper = new PiggyBankHelper(mainActivity);
 
         toDayOfYear = LocalDate.now().getDayOfYear();
         year = LocalDate.now().getYear();
@@ -135,7 +137,7 @@ public class CalendarHelper {
         });
     }
 
-    private void calculateStatistics() {
+    public void calculateStatistics() {
         int missedPrimogemsCount = missesDays * PRIMOGEMS_PER_DAY;
         int claimPrimogemsCount = claimsDays * PRIMOGEMS_PER_DAY;
 
@@ -145,6 +147,7 @@ public class CalendarHelper {
         int missedWishesCount = missedPrimogemsCount / WISHES_COST;
         int claimWishesCount = claimPrimogemsCount / WISHES_COST;
 
+        piggyBankHelper.updateSubsProgress(claimWishesCount);
     }
 
     public void calculateMissesAndClaims() {
@@ -173,13 +176,16 @@ public class CalendarHelper {
         int missedPrimogemsCount = missesDays * PRIMOGEMS_PER_DAY;
         int claimPrimogemsCount = claimsDays * PRIMOGEMS_PER_DAY;
         int laterPrimogemsCount = SUMMARY_CLAIM * subsCount - claimPrimogemsCount - missedPrimogemsCount;
+        int claimWishesCount = claimPrimogemsCount / WISHES_COST;
+
+        piggyBankHelper.updateSubsProgress(claimWishesCount);
 
         return new Statistic(
                 missedPrimogemsCount,
                 claimPrimogemsCount,
                 laterPrimogemsCount,
                 missedPrimogemsCount / WISHES_COST,
-                claimPrimogemsCount / WISHES_COST,
+                claimWishesCount,
                 laterPrimogemsCount / WISHES_COST
         );
     }

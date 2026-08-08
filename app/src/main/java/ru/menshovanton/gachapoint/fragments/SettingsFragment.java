@@ -2,9 +2,13 @@ package ru.menshovanton.gachapoint.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.widget.*;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,6 +21,11 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Objects;
 
 import ru.menshovanton.gachapoint.helpers.AlarmHelper;
@@ -42,6 +51,13 @@ public class SettingsFragment extends Fragment {
     PreferencesHelper preferencesHelper;
     DatabaseHelper dbHelper;
 
+    private final ActivityResultLauncher<String> exportDbLauncher =
+            registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
+                if (uri != null) {
+                    writeDatabaseToUri(uri);
+                }
+            });
+
     public SettingsFragment() {}
 
     public static SettingsFragment newInstance() {
@@ -53,7 +69,7 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
         preferencesHelper = new PreferencesHelper(Objects.requireNonNull(mainActivity));
-        dbHelper = new DatabaseHelper(mainActivity, mainActivity);
+        dbHelper = new DatabaseHelper(mainActivity);
     }
 
     @Override
@@ -78,7 +94,7 @@ public class SettingsFragment extends Fragment {
         notificationsSwitch.setChecked(preferencesHelper.getBooleanPreference(PreferencesHelper.ALLOW_NOTIFICATIONS));
 
         edit.setOnClickListener(this::showTimePicker);
-        dbBackupButton.setOnClickListener(dbHelper::createExport);
+        dbBackupButton.setOnClickListener(this::exportDatabase);
         infoButton.setOnClickListener(this::onInfoButton);
 
         updateTimeDisplay();
@@ -132,5 +148,42 @@ public class SettingsFragment extends Fragment {
 
     private void onInfoButton(View view) {
         mainActivity.updateFragment(InfoFragment.newInstance(), mainActivity.INFO_TAG);
+    }
+
+    public void exportDatabase(View view) {
+        exportDbLauncher.launch(DatabaseHelper.DATABASE_NAME);
+    }
+
+    private void writeDatabaseToUri(Uri targetUri) {
+        if (!isAdded()) return;
+
+        File dbFile = requireContext().getDatabasePath(DatabaseHelper.DATABASE_NAME);
+
+        if (!dbFile.exists()) {
+            Toast.makeText(requireContext(), R.string.db_export_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try (InputStream in = new FileInputStream(dbFile);
+             OutputStream out = requireContext().getContentResolver().openOutputStream(targetUri)) {
+
+            if (out == null) {
+                Toast.makeText(requireContext(), R.string.db_export_failed, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = in.read(buffer)) > 0) {
+                out.write(buffer, 0, length);
+            }
+            out.flush();
+
+            Toast.makeText(requireContext(), R.string.db_export_successful, Toast.LENGTH_SHORT).show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), R.string.db_export_failed, Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -21,6 +21,7 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.Objects;
 
+import ru.menshovanton.gachapoint.helpers.CalendarHelper;
 import ru.menshovanton.gachapoint.helpers.PiggyBankHelper;
 import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 import ru.menshovanton.gachapoint.R;
@@ -30,6 +31,7 @@ public class PiggyBankFragment extends Fragment {
 
     PreferencesHelper preferencesHelper;
     PiggyBankHelper piggyBankHelper;
+    CalendarHelper calendarHelper;
 
     MainActivity mainActivity;
     JournalFragment journalFragment;
@@ -64,6 +66,7 @@ public class PiggyBankFragment extends Fragment {
         preferencesHelper = new PreferencesHelper(Objects.requireNonNull(mainActivity));
         journalFragment = JournalFragment.journalFragment;
         piggyBankHelper = new PiggyBankHelper(mainActivity);
+        calendarHelper = new CalendarHelper(mainActivity);
     }
 
     @Override
@@ -111,13 +114,34 @@ public class PiggyBankFragment extends Fragment {
             }
         });
 
+        calendarHelper.calculateMissesAndClaims();
+        calendarHelper.calculateStatistics();
+
         target = piggyBankHelper.getTarget();
         progress = piggyBankHelper.getProgress();
 
         progressBar.setProgress(progress);
         progressBar.setMax(target);
 
-        changeCheckedTab(genshinImpact);
+        refreshData(view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        scrollView.post(() -> scrollView.scrollTo(MainActivity.subTypeScrollX, 0));
+
+        calendarHelper.calculateMissesAndClaims();
+        calendarHelper.calculateStatistics();
+
+        target = piggyBankHelper.getTarget();
+        progress = piggyBankHelper.getProgress();
+
+        progressBar.setProgress(progress);
+        progressBar.setMax(target);
+
+        refreshData(requireView());
     }
 
     private void refreshData(View view) {
@@ -126,12 +150,15 @@ public class PiggyBankFragment extends Fragment {
         switch (MainActivity.subType) {
             case 0:
                 wishIcon.setImageResource(R.drawable.intertwined_fate);
+                changeCheckedTab(genshinImpact);
                 break;
             case 1:
                 wishIcon.setImageResource(R.drawable.star_rail_special_pass);
+                changeCheckedTab(honkaiStarRail);
                 break;
             case 2:
                 wishIcon.setImageResource(R.drawable.encrypted_master_tape);
+                changeCheckedTab(zenlessZoneZero);
                 break;
         }
 
@@ -156,7 +183,7 @@ public class PiggyBankFragment extends Fragment {
     }
 
     private void progressAdd(int i) {
-        if (piggyBankHelper.pushProgress(i)) {
+        if (piggyBankHelper.pushManualProgress(i)) {
             updateProgress();
         } else {
             Toast.makeText(getContext(), "Цель не установлена или достигнута!", Toast.LENGTH_SHORT).show();
