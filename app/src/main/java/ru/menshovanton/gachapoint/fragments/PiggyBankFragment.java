@@ -27,7 +27,6 @@ import ru.menshovanton.gachapoint.activities.MainActivity;
 public class PiggyBankFragment extends Fragment {
 
     private PiggyBankHelper piggyBankHelper;
-    private CalendarHelper calendarHelper;
 
     private MainActivity mainActivity;
 
@@ -54,7 +53,7 @@ public class PiggyBankFragment extends Fragment {
         mainActivity = (MainActivity) getActivity();
         PreferencesHelper preferencesHelper = new PreferencesHelper(Objects.requireNonNull(mainActivity));
         piggyBankHelper = new PiggyBankHelper(mainActivity);
-        calendarHelper = new CalendarHelper(mainActivity);
+        CalendarHelper calendarHelper = new CalendarHelper(mainActivity);
     }
 
     @Override
@@ -88,8 +87,8 @@ public class PiggyBankFragment extends Fragment {
             }
         });
 
-        calendarHelper.calculateMissesAndClaims();
-        calendarHelper.calculateStatistics();
+//        calendarHelper.calculateMissesAndClaims();
+//        calendarHelper.calculateStatistics();
 
         target = piggyBankHelper.getTarget();
         progress = piggyBankHelper.getProgress();
@@ -104,8 +103,8 @@ public class PiggyBankFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        calendarHelper.calculateMissesAndClaims();
-        calendarHelper.calculateStatistics();
+//        calendarHelper.calculateMissesAndClaims();
+//        calendarHelper.calculateStatistics();
 
         target = piggyBankHelper.getTarget();
         progress = piggyBankHelper.getProgress();

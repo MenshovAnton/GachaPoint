@@ -138,6 +138,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void setStatistics() {
+        calendarHelper = new CalendarHelper(mainActivity);
         Statistic statistic = calendarHelper.getStatistic();
 
         int laterPrimogemsCount = statistic.laterGems;
