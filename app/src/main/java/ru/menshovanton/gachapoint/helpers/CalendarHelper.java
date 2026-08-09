@@ -24,28 +24,30 @@ import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.fragments.TrackerFragment;
 
 public class CalendarHelper {
-    public MainActivity mainActivity;
-    public Calendar calendar;
-    PiggyBankHelper piggyBankHelper;
+    private final MainActivity mainActivity;
+    private final Calendar calendar;
+    private final PiggyBankHelper piggyBankHelper;
+    private final DateHelper dateHelper;
 
-    public int toDayOfYear;
-    public int year;
-    public int missesDays = 0;
-    public int claimsDays = 0;
-    public int subsCount;
+    private final int toDayOfYear;
+    private int year;
+    private int missesDays = 0;
+    private int claimsDays = 0;
+    private int subsCount;
 
-    public final int WISHES_COST = 160;
-    public final int PRIMOGEMS_PER_DAY = 90;
-    public final int SUMMARY_CLAIM = 2700;
+    private final int WISHES_COST = 160;
+    private final int PRIMOGEMS_PER_DAY = 90;
+    private final int SUMMARY_CLAIM = 2700;
 
     public CalendarHelper(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         piggyBankHelper = new PiggyBankHelper(mainActivity);
+        dateHelper = new DateHelper(mainActivity);
 
         toDayOfYear = LocalDate.now().getDayOfYear();
         year = LocalDate.now().getYear();
 
-        calendar = new Calendar(mainActivity);
+        calendar = new Calendar(mainActivity, mainActivity);
 
         int daysRemaining = calendar.getSubDaysRemaining(toDayOfYear);
         subsCount = (daysRemaining <= 0 || daysRemaining > 180) ? 0 : (daysRemaining + 29) / 30;
@@ -57,7 +59,7 @@ public class CalendarHelper {
         GridLayout gridLayout = fragment.getCalendarGrid();
         List<TextView> cellsPool = fragment.getCellViewsPool();
 
-        int selectedMonth = TrackerFragment.selectedMonth;
+        int selectedMonth = fragment.getSelectedMonth();
         LocalDate today = LocalDate.now();
         Context context = mainActivity.getApplicationContext();
 
@@ -199,7 +201,7 @@ public class CalendarHelper {
         }
 
         calculateStatistics();
-        DateHelper.writeDB(mainActivity.getApplicationContext(), calendar.datesArray, LocalDate.now().getDayOfYear() - 1, length);
+        dateHelper.writeDB(mainActivity.getApplicationContext(), calendar.datesArray, LocalDate.now().getDayOfYear() - 1, length);
     }
 
     public enum UpdateSubscribeDaysActions {
@@ -226,5 +228,77 @@ public class CalendarHelper {
                 }
                 break;
         }
+    }
+
+    public int getDayStatus(int id) {
+        return calendar.datesArray[id].status;
+    }
+
+    public void setDayStatus(int id, int status) {
+        calendar.datesArray[id].status = status;
+    }
+
+    public int getDaySubDaysRemaining(int id) {
+        return calendar.datesArray[id].subDaysRemaining;
+    }
+
+    public void setDaySubDaysRemaining(int id, int value) {
+        calendar.datesArray[id].subDaysRemaining = value;
+    }
+
+    public void addDaySubDaysRemaining(int id, int value) {
+        calendar.datesArray[id].subDaysRemaining += value;
+    }
+
+    public void subtractDaySubDaysRemaining(int id, int value) {
+        calendar.datesArray[id].subDaysRemaining -= value;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void addYear() {
+        year++;
+    }
+
+    public void subtractYear() {
+        year--;
+    }
+
+    public int getSubsCount() {
+        return subsCount;
+    }
+
+    public void setSubsCount(int value) {
+        subsCount = value;
+    }
+
+    public void addSub() {
+        subsCount++;
+    }
+
+    public void delSub() {
+        subsCount--;
+    }
+
+    public int getClaimsDays() {
+        return claimsDays;
+    }
+
+    public void setClaimsDays(int value) {
+        claimsDays = value;
+    }
+
+    public void addClaimDay() {
+        claimsDays++;
+    }
+
+    public void subtractClaimDay() {
+        claimsDays--;
+    }
+
+    public void setMissesDays(int value) {
+        missesDays = value;
     }
 }

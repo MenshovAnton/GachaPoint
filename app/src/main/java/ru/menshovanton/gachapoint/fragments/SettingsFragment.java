@@ -37,19 +37,18 @@ import ru.menshovanton.gachapoint.R;
 
 public class SettingsFragment extends Fragment {
 
-    TextView hourTextView;
-    TextView minuteTextView;
+    private TextView hourTextView;
+    private TextView minuteTextView;
 
-    Button dbBackupButton;
-    Button infoButton;
+    private Button dbBackupButton;
+    private Button infoButton;
 
-    SwitchMaterial notificationsSwitch;
+    private SwitchMaterial notificationsSwitch;
 
-    ImageView edit;
+    private ImageView edit;
 
-    MainActivity mainActivity;
-    PreferencesHelper preferencesHelper;
-    DatabaseHelper dbHelper;
+    private MainActivity mainActivity;
+    private PreferencesHelper preferencesHelper;
 
     private final ActivityResultLauncher<String> exportDbLauncher =
             registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
@@ -69,7 +68,6 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
         preferencesHelper = new PreferencesHelper(Objects.requireNonNull(mainActivity));
-        dbHelper = new DatabaseHelper(mainActivity);
     }
 
     @Override
@@ -147,7 +145,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void onInfoButton(View view) {
-        mainActivity.updateFragment(InfoFragment.newInstance(), mainActivity.INFO_TAG);
+        mainActivity.replaceFragment(InfoFragment.newInstance(), mainActivity.INFO_TAG);
     }
 
     public void exportDatabase(View view) {

@@ -27,6 +27,6 @@ public class JournalPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2; // Всего 2 вкладки
+        return 2;
     }
 }

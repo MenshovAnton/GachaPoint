@@ -60,55 +60,22 @@
                 android:text="@string/filler"
                 android:textColor="@color/check"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/previousMonth"
-                app:layout_constraintHorizontal_bias="0.01"
                 app:layout_constraintStart_toEndOf="@+id/monthHeader"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
-
-            <ImageView
-                android:id="@+id/previousMonth"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="10dp"
-                android:importantForAccessibility="no"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/nextMonth"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/arrow_previous" />
-
-            <ImageView
-                android:id="@+id/nextMonth"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
-                android:importantForAccessibility="no"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/arrow_next" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/calendar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="15dp"
                 app:layout_constraintBottom_toBottomOf="@+id/checkButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/subTypesLine"
+                app:layout_constraintTop_toBottomOf="@+id/gameTypeChangerTracker"
                 app:layout_constraintVertical_bias="0.0">
 
                 <GridLayout
@@ -126,9 +93,9 @@
                         android:id="@+id/tagMonday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_column="0"
                         android:layout_columnWeight="1"
                         android:layout_gravity="fill_horizontal"
-                        android:layout_column="0"
                         android:gravity="center"
                         android:text="@string/calendar_mon" />
 
@@ -136,9 +103,9 @@
                         android:id="@+id/tagTuesday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_column="1"
                         android:layout_columnWeight="1"
                         android:layout_gravity="fill_horizontal"
-                        android:layout_column="1"
                         android:gravity="center"
                         android:text="@string/calendar_tue" />
 
@@ -146,9 +113,9 @@
                         android:id="@+id/tagWednesday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_column="2"
                         android:layout_columnWeight="1"
                         android:layout_gravity="fill_horizontal"
-                        android:layout_column="2"
                         android:gravity="center"
                         android:text="@string/calendar_wed" />
 
@@ -156,9 +123,9 @@
                         android:id="@+id/tagThursday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_column="3"
                         android:layout_columnWeight="1"
                         android:layout_gravity="fill_horizontal"
-                        android:layout_column="3"
                         android:gravity="center"
                         android:text="@string/calendar_th" />
 
@@ -166,9 +133,9 @@
                         android:id="@+id/tagFriday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_column="4"
                         android:layout_columnWeight="1"
                         android:layout_gravity="fill_horizontal"
-                        android:layout_column="4"
                         android:gravity="center"
                         android:text="@string/calendar_fr" />
 
@@ -176,9 +143,9 @@
                         android:id="@+id/tagSaturday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_column="5"
                         android:layout_columnWeight="1"
                         android:layout_gravity="fill_horizontal"
-                        android:layout_column="5"
                         android:gravity="center"
                         android:text="@string/calendar_sa"
                         android:textColor="#DD2C00" />
@@ -187,9 +154,9 @@
                         android:id="@+id/tagSunday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_column="6"
                         android:layout_columnWeight="1"
                         android:layout_gravity="fill_horizontal"
-                        android:layout_column="6"
                         android:gravity="center"
                         android:text="@string/calendar_su"
                         android:textColor="#DD2C00" />
@@ -211,61 +178,21 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <HorizontalScrollView
-                android:id="@+id/subTypesLine"
-                android:layout_width="0dp"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gameTypeChangerTracker"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:scrollbars="none"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 app:layout_constraintBottom_toTopOf="@+id/calendar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/monthHeader"
-                app:layout_constraintVertical_bias="0.0">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/blessingOfTheWelkinMoonSelectButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:backgroundTint="@color/accent"
-                        android:text="@string/genshin"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        app:strokeWidth="5dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/starRailSpecialPassSelectButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:backgroundTint="@color/accent"
-                        android:text="@string/hsr"
-                        android:textSize="14sp"
-                        app:strokeWidth="5dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/interKnotMembershipSelectButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:backgroundTint="@color/accent"
-                        android:backgroundTintMode="screen"
-                        android:text="@string/zzz"
-                        android:textSize="14sp"
-                        app:strokeWidth="5dp" />
-                </LinearLayout>
-            </HorizontalScrollView>
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageButton
                 android:id="@+id/moreButton"

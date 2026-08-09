@@ -10,14 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.google.android.material.button.MaterialButton;
 
 import java.util.Objects;
 
@@ -29,29 +26,21 @@ import ru.menshovanton.gachapoint.activities.MainActivity;
 
 public class PiggyBankFragment extends Fragment {
 
-    PreferencesHelper preferencesHelper;
-    PiggyBankHelper piggyBankHelper;
-    CalendarHelper calendarHelper;
+    private PiggyBankHelper piggyBankHelper;
+    private CalendarHelper calendarHelper;
 
-    MainActivity mainActivity;
-    JournalFragment journalFragment;
+    private MainActivity mainActivity;
 
-    ProgressBar progressBar;
-    Button addOne;
-    Button addTen;
-    Button editGoal;
-    TextView savedWishesCounter;
+    private ProgressBar progressBar;
+    private Button addOne;
+    private Button addTen;
+    private Button editGoal;
+    private TextView savedWishesCounter;
 
-    MaterialButton genshinImpact;
-    MaterialButton honkaiStarRail;
-    MaterialButton zenlessZoneZero;
+    private int progress;
+    private int target;
 
-    HorizontalScrollView scrollView;
-
-    public int progress;
-    public int target;
-
-    final int GARANT = 77;
+    private final int GARANT = 77;
 
     public PiggyBankFragment() {}
 
@@ -63,8 +52,7 @@ public class PiggyBankFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
-        preferencesHelper = new PreferencesHelper(Objects.requireNonNull(mainActivity));
-        journalFragment = JournalFragment.journalFragment;
+        PreferencesHelper preferencesHelper = new PreferencesHelper(Objects.requireNonNull(mainActivity));
         piggyBankHelper = new PiggyBankHelper(mainActivity);
         calendarHelper = new CalendarHelper(mainActivity);
     }
@@ -82,14 +70,6 @@ public class PiggyBankFragment extends Fragment {
 
         savedWishesCounter = view.findViewById(R.id.savedWishesCounter);
 
-        genshinImpact = view.findViewById(R.id.genshinImpact);
-        honkaiStarRail = view.findViewById(R.id.honkai);
-        zenlessZoneZero = view.findViewById(R.id.zenless);
-
-        scrollView = view.findViewById(R.id.gameTypeChangerPiggyBank);
-
-        scrollView.post(() -> scrollView.scrollTo(MainActivity.subTypeScrollX, 0));
-
         return view;
     }
 
@@ -100,12 +80,6 @@ public class PiggyBankFragment extends Fragment {
         addOne.setOnClickListener(this::onAddOneSavedWish);
         addTen.setOnClickListener(this::onAddTenSavedWishes);
         editGoal.setOnClickListener(this::showMoreMenu);
-
-        genshinImpact.setOnClickListener(this::onGenshinClick);
-        honkaiStarRail.setOnClickListener(this::onHonkaiClick);
-        zenlessZoneZero.setOnClickListener(this::onZenlessClick);
-
-        scrollView.setOnScrollChangeListener(this::onScrollChange);
 
         getParentFragmentManager().setFragmentResultListener("refresh_piggy_bank_key", getViewLifecycleOwner(), (requestKey, result) -> {
             boolean shouldRefresh = result.getBoolean("shouldRefresh", false);
@@ -130,8 +104,6 @@ public class PiggyBankFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        scrollView.post(() -> scrollView.scrollTo(MainActivity.subTypeScrollX, 0));
-
         calendarHelper.calculateMissesAndClaims();
         calendarHelper.calculateStatistics();
 
@@ -147,18 +119,15 @@ public class PiggyBankFragment extends Fragment {
     private void refreshData(View view) {
         ImageView wishIcon = view.findViewById(R.id.wishIconPiggyBank);
 
-        switch (MainActivity.subType) {
+        switch (mainActivity.getSubType()) {
             case 0:
                 wishIcon.setImageResource(R.drawable.intertwined_fate);
-                changeCheckedTab(genshinImpact);
                 break;
             case 1:
                 wishIcon.setImageResource(R.drawable.star_rail_special_pass);
-                changeCheckedTab(honkaiStarRail);
                 break;
             case 2:
                 wishIcon.setImageResource(R.drawable.encrypted_master_tape);
-                changeCheckedTab(zenlessZoneZero);
                 break;
         }
 
@@ -198,36 +167,6 @@ public class PiggyBankFragment extends Fragment {
         progressBar.setProgress(progress);
         String text = progress + "/" + target;
         savedWishesCounter.setText(text);
-    }
-
-    public void onGenshinClick(View view) {
-        MainActivity.subType = 0;
-        changeCheckedTab(genshinImpact);
-        journalFragment.triggerRefresh("refresh_piggy_bank_key");
-    }
-
-    public void onHonkaiClick(View view) {
-        MainActivity.subType = 1;
-        changeCheckedTab(honkaiStarRail);
-        journalFragment.triggerRefresh("refresh_piggy_bank_key");
-    }
-
-    public void onZenlessClick(View view) {
-        MainActivity.subType = 2;
-        changeCheckedTab(zenlessZoneZero);
-        journalFragment.triggerRefresh("refresh_piggy_bank_key");
-    }
-
-    private void changeCheckedTab(MaterialButton view) {
-        genshinImpact.setStrokeColorResource(R.color.accent);
-        honkaiStarRail.setStrokeColorResource(R.color.accent);
-        zenlessZoneZero.setStrokeColorResource(R.color.accent);
-
-        view.setStrokeColorResource(R.color.check);
-    }
-
-    private void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-        MainActivity.subTypeScrollX = scrollX;
     }
 
     public void addTargetOne() {

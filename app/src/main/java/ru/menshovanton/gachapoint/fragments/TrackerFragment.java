@@ -14,16 +14,15 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,59 +33,40 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import ru.menshovanton.gachapoint.CalendarGrid;
 import ru.menshovanton.gachapoint.Statistic;
+import ru.menshovanton.gachapoint.adapters.PillsAdapter;
 import ru.menshovanton.gachapoint.helpers.CalendarHelper;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.Notification;
-import ru.menshovanton.gachapoint.helpers.PiggyBankHelper;
-import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 import ru.menshovanton.gachapoint.R;
 
 public class TrackerFragment extends Fragment {
 
-    MainActivity mainActivity;
-    PiggyBankHelper piggyBankHelper;
-    TextView subsCounterView;
-    ConstraintLayout constraintLayout;
-    HorizontalScrollView subTypesLine;
+    private MainActivity mainActivity;
+    private TextView subsCounterView;
 
-    ImageView previousMonthButton;
-    ImageView nextMonthButton;
+    private Button checkButton;
+    private ImageButton moreButton;
 
-    Button checkButton;
-    ImageButton moreButton;
+    private View view;
 
-    MaterialButton blessingOfTheWelkinMoonSelectButton;
-    MaterialButton starRailSpecialPassSelectButton;
-    MaterialButton interKnotMembershipSelectButton;
+    private int selectedMonth;
+    private int selectedYear;
 
-    TextView tagMonday;
-    TextView tagTuesday;
-    TextView tagWednesday;
-    TextView tagThursday;
-    TextView tagFriday;
-    TextView tagSaturday;
-    TextView tagSunday;
+    private CalendarHelper calendarHelper;
 
+    private CalendarGrid calendarGrid;
 
-    public TrackerFragment instance;
-    PreferencesHelper settings;
+    private PillsAdapter pillsAdapter;
+    private LinearLayoutManager layoutManager;
 
-    View view;
-
-    public static int selectedMonth;
-    public static int selectedYear;
-
-    public static CalendarHelper calendarHelper;
-    DatabaseHelper dbHelper;
-
-    CalendarGrid calendarGrid;
+    private int toDayOfYear;
 
     private final ActivityResultLauncher<String> exportDbLauncher =
             registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
@@ -108,20 +88,12 @@ public class TrackerFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mainActivity = (MainActivity) getActivity();
-        piggyBankHelper = new PiggyBankHelper(mainActivity);
-        instance = this;
-        settings = new PreferencesHelper(Objects.requireNonNull(mainActivity));
-
-        String toDayMonth = LocalDate.now().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru"));
-        toDayMonth.substring(0, 1).toUpperCase();
-
-        selectedMonth = LocalDate.now().getMonth().getValue();
-        selectedYear = LocalDate.now().getYear();
 
         calendarHelper = new CalendarHelper(mainActivity);
-        dbHelper = new DatabaseHelper(getContext());
 
-        Notification.subsCount = calendarHelper.subsCount;
+        Notification.subsCount = calendarHelper.getSubsCount();
+
+        toDayOfYear = LocalDate.now().getDayOfYear();
     }
 
     @Override
@@ -132,21 +104,6 @@ public class TrackerFragment extends Fragment {
         calendarGrid = view.findViewById(R.id.calendarGrid);
         checkButton = view.findViewById(R.id.checkButton);
         moreButton = view.findViewById(R.id.moreButton);
-        previousMonthButton = view.findViewById(R.id.previousMonth);
-        nextMonthButton = view.findViewById(R.id.nextMonth);
-        blessingOfTheWelkinMoonSelectButton = view.findViewById(R.id.blessingOfTheWelkinMoonSelectButton);
-        starRailSpecialPassSelectButton = view.findViewById(R.id.starRailSpecialPassSelectButton);
-        interKnotMembershipSelectButton = view.findViewById(R.id.interKnotMembershipSelectButton);
-        subTypesLine = view.findViewById(R.id.subTypesLine);
-        tagMonday = view.findViewById(R.id.tagMonday);
-        tagTuesday = view.findViewById(R.id.tagTuesday);
-        tagWednesday = view.findViewById(R.id.tagWednesday);
-        tagThursday = view.findViewById(R.id.tagThursday);
-        tagFriday = view.findViewById(R.id.tagFriday);
-        tagSaturday = view.findViewById(R.id.tagSaturday);
-        tagSunday = view.findViewById(R.id.tagSunday);
-
-        subTypesLine.post(() -> subTypesLine.scrollTo(MainActivity.subTypeScrollX, 0));
 
         return view;
     }
@@ -155,49 +112,8 @@ public class TrackerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        subsCounterView.setText(String.valueOf(calendarHelper.subsCount));
-
-        initCalendarGrid();
-        calendarHelper.adjustCellSizes(this);
-        calendarHelper.renderCalendar(this);
-
-        setHeader(selectedMonth, calendarHelper.year);
-        setStatistics();
-
         checkButton.setOnClickListener(this::onCheckClick);
         moreButton.setOnClickListener(this::showMoreMenu);
-        previousMonthButton.setOnClickListener(this::onPreviousMonthClick);
-        nextMonthButton.setOnClickListener(this::onNextMonthClick);
-        blessingOfTheWelkinMoonSelectButton.setOnClickListener(this::onMoonClick);
-        starRailSpecialPassSelectButton.setOnClickListener(this::onPassClick);
-        interKnotMembershipSelectButton.setOnClickListener(this::onInterknotClick);
-
-        subTypesLine.setOnScrollChangeListener(this::onScrollSubTypes);
-
-        ImageView gemIcon = view.findViewById(R.id.gemIcon);
-        TextView subsCountTitle = view.findViewById(R.id.subsCountHeader);
-        ImageView wishIcon = view.findViewById(R.id.wishIcon);
-
-        switch (MainActivity.subType) {
-            case 0:
-                gemIcon.setImageResource(R.drawable.primogem);
-                wishIcon.setImageResource(R.drawable.intertwined_fate);
-                subsCountTitle.setText(R.string.blessing_of_the_welkin_moon_count_header);
-                changeCheckedTab(blessingOfTheWelkinMoonSelectButton);
-                break;
-            case 1:
-                gemIcon.setImageResource(R.drawable.stellar_jade);
-                wishIcon.setImageResource(R.drawable.star_rail_special_pass);
-                subsCountTitle.setText(R.string.star_rail_special_pass_count_header);
-                changeCheckedTab(starRailSpecialPassSelectButton);
-                break;
-            case 2:
-                gemIcon.setImageResource(R.drawable.polychrome);
-                wishIcon.setImageResource(R.drawable.encrypted_master_tape);
-                subsCountTitle.setText(R.string.inter_knot_member_count_header);
-                changeCheckedTab(interKnotMembershipSelectButton);
-                break;
-        }
 
         calendarGrid.setOnSwipeListener(new CalendarGrid.OnSwipeListener() {
             @Override
@@ -210,6 +126,84 @@ public class TrackerFragment extends Fragment {
                 previousMonth();
             }
         });
+
+        RecyclerView gameTypeChanger = view.findViewById(R.id.gameTypeChangerTracker);
+
+        List<String> categories = Arrays.asList(
+                getString(R.string.genshin),
+                getString(R.string.hsr),
+                getString(R.string.zzz)
+        );
+
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        gameTypeChanger.setLayoutManager(layoutManager);
+
+        pillsAdapter = new PillsAdapter(categories, (item, position) -> {
+            mainActivity.setSubType(position);
+            refresh(view);
+        });
+
+        gameTypeChanger.setAdapter(pillsAdapter);
+        selectAndScrollIfNeeded(mainActivity.getSubType());
+
+        refresh(view);
+    }
+
+    private void selectAndScrollIfNeeded(int targetPosition) {
+        if (pillsAdapter == null || layoutManager == null) return;
+
+        pillsAdapter.setSelectedPosition(targetPosition);
+
+        int firstCompletelyVisible = layoutManager.findFirstCompletelyVisibleItemPosition();
+        int lastCompletelyVisible = layoutManager.findLastCompletelyVisibleItemPosition();
+
+        boolean isNotFullyVisible = targetPosition < firstCompletelyVisible || targetPosition > lastCompletelyVisible;
+
+        if (isNotFullyVisible) {
+            int offsetPx = (int) (16 * getResources().getDisplayMetrics().density);
+            layoutManager.scrollToPositionWithOffset(targetPosition, offsetPx);
+        }
+    }
+
+    void refresh(View view) {
+        calendarHelper = new CalendarHelper(mainActivity);
+
+        String toDayMonth = LocalDate.now().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru"));
+        toDayMonth.substring(0, 1).toUpperCase();
+
+        selectedMonth = LocalDate.now().getMonth().getValue();
+        selectedYear = LocalDate.now().getYear();
+
+        initCalendarGrid();
+        calendarHelper.adjustCellSizes(this);
+        calendarHelper.renderCalendar(this);
+
+        setHeader(selectedMonth, calendarHelper.getYear());
+        setStatistics();
+
+        subsCounterView.setText(String.valueOf(calendarHelper.getSubsCount()));
+
+        ImageView gemIcon = view.findViewById(R.id.gemIcon);
+        TextView subsCountTitle = view.findViewById(R.id.subsCountHeader);
+        ImageView wishIcon = view.findViewById(R.id.wishIcon);
+
+        switch (mainActivity.getSubType()) {
+            case 0:
+                gemIcon.setImageResource(R.drawable.primogem);
+                wishIcon.setImageResource(R.drawable.intertwined_fate);
+                subsCountTitle.setText(R.string.blessing_of_the_welkin_moon_count_header);
+                break;
+            case 1:
+                gemIcon.setImageResource(R.drawable.stellar_jade);
+                wishIcon.setImageResource(R.drawable.star_rail_special_pass);
+                subsCountTitle.setText(R.string.star_rail_special_pass_count_header);
+                break;
+            case 2:
+                gemIcon.setImageResource(R.drawable.polychrome);
+                wishIcon.setImageResource(R.drawable.encrypted_master_tape);
+                subsCountTitle.setText(R.string.inter_knot_member_count_header);
+                break;
+        }
     }
 
     public void setStatistics() {
@@ -239,12 +233,12 @@ public class TrackerFragment extends Fragment {
         missedWishes.setText(missedWishesText);
 
         TextView laterPrimogems = getView().findViewById(R.id.laterGemsCounter);
-        if (laterPrimogemsCount > 0 && calendarHelper.claimsDays > 0)
+        if (laterPrimogemsCount > 0 && calendarHelper.getClaimsDays() > 0)
         {   laterPrimogemsText = String.valueOf(laterPrimogemsCount);   }
         laterPrimogems.setText(laterPrimogemsText);
 
         TextView laterWishes = getView().findViewById(R.id.laterWishesCounter);
-        if (laterPrimogemsCount > 0 && calendarHelper.claimsDays > 0)
+        if (laterPrimogemsCount > 0 && calendarHelper.getClaimsDays() > 0)
         {   laterWishesText = String.valueOf(laterWishesCount); }
         laterWishes.setText(laterWishesText);
     }
@@ -254,7 +248,7 @@ public class TrackerFragment extends Fragment {
         setStatistics();
         selectedMonth = LocalDate.now().getMonth().getValue();
         calendarHelper.renderCalendar(this);
-        setHeader(selectedMonth, calendarHelper.year);
+        setHeader(selectedMonth, calendarHelper.getYear());
     }
 
     @SuppressLint("SetTextI18n")
@@ -274,28 +268,29 @@ public class TrackerFragment extends Fragment {
 
     public void onAddClick()
     {
-        if (calendarHelper.subsCount <= 6) {
-            if (calendarHelper.calendar.getSubDaysRemaining(calendarHelper.toDayOfYear) == 0)
+        if (calendarHelper.getSubsCount() <= 6) {
+            if (calendarHelper.getDaySubDaysRemaining(toDayOfYear - 1) == 0)
             {
-                calendarHelper.subsCount = 1;
-                for (int i = 0; i < calendarHelper.toDayOfYear - 1; i++) {
-                    if (calendarHelper.calendar.datesArray[i].status == 1) {
-                        calendarHelper.calendar.datesArray[i].status = 3;
+                calendarHelper.setSubsCount(1);
+                for (int i = 0; i < toDayOfYear - 1; i++) {
+                    int dayStatus = calendarHelper.getDayStatus(i);
+                    if (dayStatus == 1) {
+                        calendarHelper.setDayStatus(i, 3);
                     }
-                    if (calendarHelper.calendar.datesArray[i].status == 0 && calendarHelper.calendar.datesArray[i].subDaysRemaining > 0) {
-                        calendarHelper.calendar.datesArray[i].status = 2;
+                    if (dayStatus == 0 && calendarHelper.getDaySubDaysRemaining(i) > 0) {
+                        calendarHelper.setDayStatus(i, 2);
                     }
                 }
 
-                calendarHelper.missesDays = 0;
-                calendarHelper.claimsDays = 0;
+                calendarHelper.setMissesDays(0);
+                calendarHelper.setClaimsDays(0);
 
-                calendarHelper.calendar.datesArray[calendarHelper.toDayOfYear - 1].subDaysRemaining = 30;
+                calendarHelper.setDaySubDaysRemaining(toDayOfYear - 1, 30);
             }
             else
             {
-                calendarHelper.subsCount++;
-                calendarHelper.calendar.datesArray[calendarHelper.toDayOfYear - 1].subDaysRemaining += 30;
+                calendarHelper.addSub();
+                calendarHelper.addDaySubDaysRemaining(toDayOfYear - 1, 30);
             }
 
             calendarHelper.updateSubscribeDays(CalendarHelper.UpdateSubscribeDaysActions.Add);
@@ -303,48 +298,48 @@ public class TrackerFragment extends Fragment {
             check();
             updateCalendar();
 
-            Notification.subsCount = calendarHelper.subsCount;
+            Notification.subsCount = calendarHelper.getSubsCount();
 
-            mainActivity.updateFragmentWithoutAnimation(TrackerFragment.newInstance(), mainActivity.TRACKER_TAG);
+            refresh(view);
         }
         else
         {   Toast.makeText(mainActivity, getString(R.string.subs_limit), Toast.LENGTH_SHORT).show(); }
-        subsCounterView.setText(String.valueOf(calendarHelper.subsCount));
+        subsCounterView.setText(String.valueOf(calendarHelper.getSubsCount()));
     }
 
     public void onDelClick() {
-        if (calendarHelper.calendar.datesArray[calendarHelper.toDayOfYear - 1].subDaysRemaining == 30) {
-            if (calendarHelper.subsCount > 0) {
+        if (calendarHelper.getDaySubDaysRemaining(toDayOfYear - 1) == 30) {
+            if (calendarHelper.getSubsCount() > 0) {
                 cancelCheck();
 
-                calendarHelper.subsCount--;
-                calendarHelper.calendar.datesArray[calendarHelper.toDayOfYear - 1].subDaysRemaining -= 30;
+                calendarHelper.delSub();
+                calendarHelper.subtractDaySubDaysRemaining(toDayOfYear - 1, 30);
 
                 calendarHelper.updateSubscribeDays(CalendarHelper.UpdateSubscribeDaysActions.Delete);
                 updateCalendar();
                 Toast.makeText(mainActivity, getString(R.string.del_sub), Toast.LENGTH_SHORT).show();
 
-                Notification.subsCount = calendarHelper.subsCount;
+                Notification.subsCount = calendarHelper.getSubsCount();
             }
             else
             {   Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show(); }
-            subsCounterView.setText(String.valueOf(calendarHelper.subsCount));
+            subsCounterView.setText(String.valueOf(calendarHelper.getSubsCount()));
         } else {
             Toast.makeText(mainActivity, getString(R.string.impossible_cancel_sub), Toast.LENGTH_SHORT).show();
         }
     }
 
     public void check() {
-        calendarHelper.calendar.datesArray[calendarHelper.toDayOfYear - 1].status = 1;
-        calendarHelper.claimsDays++;
+        calendarHelper.setDayStatus(toDayOfYear - 1, 1);
+        calendarHelper.addClaimDay();
         updateCalendar();
     }
 
     public void onCheckClick(View view)
     {
-        if (calendarHelper.calendar.getStatus(calendarHelper.toDayOfYear) == 1)
+        if (calendarHelper.getDayStatus(toDayOfYear - 1) == 1)
         {   Toast.makeText(getActivity(), getString(R.string.already_cheked), Toast.LENGTH_SHORT).show();  }
-        else if (calendarHelper.calendar.getSubDaysRemaining(calendarHelper.toDayOfYear) == 0)
+        else if (calendarHelper.getDaySubDaysRemaining(toDayOfYear - 1) == 0)
         {   Toast.makeText(getActivity(), getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();    }
         else
         {
@@ -354,44 +349,6 @@ public class TrackerFragment extends Fragment {
 
         Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(100);
-    }
-
-    public void onPreviousMonthClick(View view) {
-        previousMonth();
-    }
-
-    public void onNextMonthClick(View view) {
-        nextMonth();
-    }
-
-    private void onMoonClick(View view) {
-        MainActivity.subType = 0;
-        changeCheckedTab(blessingOfTheWelkinMoonSelectButton);
-        mainActivity.updateFragmentWithoutAnimation(TrackerFragment.newInstance(), mainActivity.TRACKER_TAG);
-    }
-
-    private void onPassClick(View view) {
-        MainActivity.subType = 1;
-        changeCheckedTab(starRailSpecialPassSelectButton);
-        mainActivity.updateFragmentWithoutAnimation(TrackerFragment.newInstance(), mainActivity.TRACKER_TAG);
-    }
-
-    private void onInterknotClick(View view) {
-        MainActivity.subType = 2;
-        changeCheckedTab(interKnotMembershipSelectButton);
-        mainActivity.updateFragmentWithoutAnimation(TrackerFragment.newInstance(), mainActivity.TRACKER_TAG);
-    }
-
-    private void changeCheckedTab(MaterialButton view) {
-        blessingOfTheWelkinMoonSelectButton.setStrokeColorResource(R.color.accent);
-        starRailSpecialPassSelectButton.setStrokeColorResource(R.color.accent);
-        interKnotMembershipSelectButton.setStrokeColorResource(R.color.accent);
-
-        view.setStrokeColorResource(R.color.check);
-    }
-
-    private void onScrollSubTypes(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-        MainActivity.subTypeScrollX = scrollX;
     }
 
     private void showMoreMenu(View view) {
@@ -405,29 +362,29 @@ public class TrackerFragment extends Fragment {
     }
 
     public void recoveryMissDay() {
-        if (calendarHelper.calendar.getStatus(calendarHelper.toDayOfYear - 1) == 1)
+        if (calendarHelper.getDayStatus(toDayOfYear - 2) == 1)
         {   Toast.makeText(mainActivity, getString(R.string.not_miss_day), Toast.LENGTH_SHORT).show();  }
-        else if (calendarHelper.calendar.getSubDaysRemaining(calendarHelper.toDayOfYear - 1) == 0)
+        else if (calendarHelper.getDaySubDaysRemaining(toDayOfYear - 2) == 0)
         {   Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();    }
         else
         {
-            calendarHelper.calendar.datesArray[calendarHelper.toDayOfYear - 2].status = 1;
+            calendarHelper.setDayStatus(toDayOfYear - 2, 1);
             Toast.makeText(mainActivity, getString(R.string.check_today), Toast.LENGTH_SHORT).show();
-            calendarHelper.claimsDays++;
+            calendarHelper.addClaimDay();
         }
 
         updateCalendar();
     }
 
     public void cancelCheck() {
-        calendarHelper.calendar.datesArray[calendarHelper.toDayOfYear - 1].status = 0;
-        calendarHelper.claimsDays--;
+        calendarHelper.setDayStatus(toDayOfYear - 1, 0);
+        calendarHelper.subtractClaimDay();
     }
 
     public void onCancelCheck() {
-        if (calendarHelper.calendar.getStatus(calendarHelper.toDayOfYear) == 0)
+        if (calendarHelper.getDayStatus(toDayOfYear - 1) == 0)
         {   Toast.makeText(mainActivity, getString(R.string.not_check_today), Toast.LENGTH_SHORT).show();  }
-        else if (calendarHelper.calendar.getSubDaysRemaining(calendarHelper.toDayOfYear) == 0)
+        else if (calendarHelper.getDaySubDaysRemaining(toDayOfYear - 1) == 0)
         {   Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();    }
         else
         {
@@ -482,7 +439,7 @@ public class TrackerFragment extends Fragment {
     private void nextMonth() {
         if (selectedMonth == 12) {
             selectedMonth = 1;
-            calendarHelper.year++;
+            calendarHelper.addYear();
         } else {
             selectedMonth++;
         }
@@ -493,7 +450,7 @@ public class TrackerFragment extends Fragment {
     private void previousMonth() {
         if (selectedMonth == 1) {
             selectedMonth = 12;
-            calendarHelper.year--;
+            calendarHelper.subtractYear();
         } else {
             selectedMonth--;
         }
@@ -536,5 +493,9 @@ public class TrackerFragment extends Fragment {
             e.printStackTrace();
             Toast.makeText(requireContext(), R.string.db_export_failed, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public int getSelectedMonth() {
+        return selectedMonth;
     }
 }

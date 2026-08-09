@@ -3,13 +3,16 @@ package ru.menshovanton.gachapoint.helpers;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 
 public class PiggyBankHelper {
-    PreferencesHelper preferencesHelper;
+    private final MainActivity mainActivity;
 
-    int manualProgress;
-    int subsProgress;
-    public int target;
+    private final PreferencesHelper preferencesHelper;
+
+    private int manualProgress;
+    private int subsProgress;
+    private int target;
 
     public PiggyBankHelper(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
         preferencesHelper = new PreferencesHelper(mainActivity);
         manualProgress = preferencesHelper.getIntPreference(getManualProgressPrefTag());
         subsProgress = preferencesHelper.getIntPreference(getSubsProgressPrefTag());
@@ -18,7 +21,7 @@ public class PiggyBankHelper {
 
     private String getManualProgressPrefTag() {
         String tag = PreferencesHelper.PIGGY_BANK_MANUAL_PROGRESS_GENSHIN;
-        switch (MainActivity.subType) {
+        switch (mainActivity.getSubType()) {
             case 0:
                 tag = PreferencesHelper.PIGGY_BANK_MANUAL_PROGRESS_GENSHIN;
                 break;
@@ -34,7 +37,7 @@ public class PiggyBankHelper {
 
     private String getSubsProgressPrefTag() {
         String tag = PreferencesHelper.PIGGY_BANK_SUBS_PROGRESS_GENSHIN;
-        switch (MainActivity.subType) {
+        switch (mainActivity.getSubType()) {
             case 0:
                 tag = PreferencesHelper.PIGGY_BANK_SUBS_PROGRESS_GENSHIN;
                 break;
@@ -50,7 +53,7 @@ public class PiggyBankHelper {
 
     private String getTargetPrefTag() {
         String tag = PreferencesHelper.PIGGY_BANK_TARGET_GENSHIN;
-        switch (MainActivity.subType) {
+        switch (mainActivity.getSubType()) {
             case 0:
                 tag = PreferencesHelper.PIGGY_BANK_TARGET_GENSHIN;
                 break;

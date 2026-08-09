@@ -13,7 +13,6 @@ import android.view.Gravity;
 
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -42,11 +41,7 @@ import ru.menshovanton.gachapoint.fragments.TrackerFragment;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
-    public static DatabaseHelper dbHelper;
-
-    public static int subType;
-
-    private static final int REQUEST_CODE = 123;
+    private int subType;
 
     public final String HOME_TAG = "HOME";
     public final String INFO_TAG = "INFO";
@@ -54,9 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public final String SETTINGS_TAG = "SETTINGS";
     public final String TRACKER_TAG = "TRACKER";
 
-    public static int subTypeScrollX;
-
-    private static final String KEY_SELECTED_NAV_ID = "selected_nav_id";
+    private final String KEY_SELECTED_NAV_ID = "selected_nav_id";
 
     private int currentNavId = R.id.nav_home;
 
@@ -82,17 +75,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-    private void replaceFragment(Fragment fragment, String tag) {
+    public void replaceFragment(Fragment fragment, String tag) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.frameLayout, fragment, tag)
-                .commit();
-    }
-
-    private void replaceFragmentWithoutAnimation(Fragment fragment, String tag) {
-        getSupportFragmentManager()
-                .beginTransaction()
                 .replace(R.id.frameLayout, fragment, tag)
                 .commit();
     }
@@ -129,8 +115,7 @@ public class MainActivity extends AppCompatActivity {
             currentNavId = savedInstanceState.getInt(KEY_SELECTED_NAV_ID, R.id.nav_home);
             navigation.setSelectedItemId(currentNavId);
         } else {
-            replaceFragmentWithoutAnimation(TrackerFragment.newInstance(), TRACKER_TAG);
-            replaceFragmentWithoutAnimation(HomeFragment.newInstance(), HOME_TAG);
+            replaceFragment(HomeFragment.newInstance(), HOME_TAG);
         }
 
         navigation.setOnItemSelectedListener(onItemSelectedListener);
@@ -139,10 +124,10 @@ public class MainActivity extends AppCompatActivity {
             checkAndRequestPermissions();
         }
 
-        dbHelper = new DatabaseHelper(getApplicationContext());
-
-        if (!isDatabaseExists(this)) {
-            dbHelper.getWritableDatabase();
+        try (DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext(), this)) {
+            if (!isDatabaseExists(this)) {
+                dbHelper.getWritableDatabase();
+            }
         }
 
         startService(new Intent(this, AlarmHelper.class));
@@ -151,14 +136,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean isDatabaseExists(Context context) {
         File dbFile = context.getDatabasePath(DatabaseHelper.DATABASE_NAME);
         return dbFile.exists();
-    }
-
-    public void updateFragment(Fragment fragment, String tag) {
-        replaceFragment(fragment, tag);
-    }
-
-    public void updateFragmentWithoutAnimation(Fragment fragment, String tag) {
-        replaceFragmentWithoutAnimation(fragment, tag);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
@@ -176,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!permissionsToRequest.isEmpty()) {
+            int REQUEST_CODE = 123;
             ActivityCompat.requestPermissions(
                     this,
                     permissionsToRequest.toArray(new String[0]),
@@ -188,11 +166,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_SELECTED_NAV_ID, currentNavId);
-    }
-
-    public static void showMessage(Context context, String message) {
-        Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
-        toast.show();
     }
 
     public interface OnCalendarMenuClickListener {
@@ -281,5 +254,13 @@ public class MainActivity extends AppCompatActivity {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.getWindow().setGravity(Gravity.BOTTOM);
         }
+    }
+
+    public int getSubType() {
+        return subType;
+    }
+
+    public void setSubType(int value) {
+        subType = value;
     }
 }

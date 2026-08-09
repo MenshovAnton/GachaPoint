@@ -1,41 +1,38 @@
 package ru.menshovanton.gachapoint;
 
 import android.content.Context;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.time.LocalDate;
 
+import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.helpers.DateHelper;
 import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 
 public class Calendar {
     public Date[] datesArray;
-    public TextView[] datesCellsLabelsArray;
-    public ImageView[] datesCellsBackgroundArray;
 
-    public Context context;
     public Calendar calendar;
 
     public static int calendarSize;
 
-    public static int year = LocalDate.now().getYear();
+    private final DateHelper dateHelper;
 
-    public Calendar(Context context) {
-        this.context = context;
+    public Calendar(Context context, MainActivity mainActivity) {
 
         PreferencesHelper preferencesHelper = new PreferencesHelper(context.getApplicationContext());
+        dateHelper = new DateHelper(mainActivity);
 
         calendarSize = preferencesHelper.getIntPreference(PreferencesHelper.CALENDAR_SIZE);
 
-        Date[] calendarArray = DateHelper.readDB(context);
+        Date[] calendarArray = dateHelper.readDB(context);
+        int year = LocalDate.now().getYear();
         if (calendarArray != null) {
             if (calendarArray[calendarSize - 1].year == year) {
                 calendarSize += getCalendarSize(year);
                 datesArray = new Date[calendarSize];
                 System.arraycopy(calendarArray, 0, datesArray, 0, calendarArray.length);
                 System.arraycopy(addYear(context, year + 1), 0, datesArray, calendarArray.length, 365);
-                DateHelper.writeDB(context, datesArray, 0, datesArray.length);
+                dateHelper.writeDB(context, datesArray, 0, datesArray.length);
                 preferencesHelper.saveIntPreference(PreferencesHelper.CALENDAR_SIZE, calendarSize);
             } else {
                 datesArray = calendarArray;
@@ -69,7 +66,7 @@ public class Calendar {
             currentDate = currentDate.plusDays(1);
         }
 
-        DateHelper.writeDB(context, array, 0, array.length);
+        dateHelper.writeDB(context, array, 0, array.length);
         return array;
     }
 

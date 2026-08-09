@@ -13,13 +13,11 @@ import java.time.ZoneId;
 import ru.menshovanton.gachapoint.Notification;
 
 public class AlarmHelper extends Service {
-    private static final String TAG = "AlarmHelper";
+    private final String TAG = "AlarmHelper";
     private static final int REQUEST_CODE = 100;
 
     public static int alarmHour = 12;
     public static int alarmMinute = 0;
-
-    PreferencesHelper preferencesHelper;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -28,7 +26,7 @@ public class AlarmHelper extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        preferencesHelper = new PreferencesHelper(getApplicationContext());
+        PreferencesHelper preferencesHelper = new PreferencesHelper(getApplicationContext());
 
         alarmHour = preferencesHelper.getIntPreference(PreferencesHelper.ALARM_HOURS);
         alarmMinute = preferencesHelper.getIntPreference(PreferencesHelper.ALARM_MINUTES);

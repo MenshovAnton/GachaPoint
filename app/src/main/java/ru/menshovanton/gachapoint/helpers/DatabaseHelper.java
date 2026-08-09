@@ -9,8 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-
-    private static DatabaseHelper instance;
+    private final MainActivity mainActivity;
 
     public static final String DATABASE_NAME = "GachaPointDB.db";
     private static final int DATABASE_VERSION = 1;
@@ -29,16 +28,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STATUS_ZZZ = "status_zzz";
     public static final String COLUMN_INTERKNOT_DAYS_REMAINING = "interknot_days_remaining";
 
-
-    public static synchronized DatabaseHelper getInstance(Context context) {
-        if (instance == null) {
-            instance = new DatabaseHelper(context.getApplicationContext());
-        }
-        return instance;
-    }
-
-    public DatabaseHelper(Context context) {
+    public DatabaseHelper(Context context, MainActivity mainActivity) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -75,7 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_MONTH, month);
         values.put(COLUMN_YEAR, year);
 
-        switch (MainActivity.subType) {
+        switch (mainActivity.getSubType()) {
             case 0:
                 values.put(COLUMN_STATUS_GENSHIN, status);
                 values.put(COLUMN_MOON_DAYS_REMAINING, subDaysRemaining);

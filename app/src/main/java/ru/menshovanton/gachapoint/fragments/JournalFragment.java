@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
@@ -14,15 +16,23 @@ import android.view.ViewGroup;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.Arrays;
+import java.util.List;
+
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.adapters.JournalPagerAdapter;
+import ru.menshovanton.gachapoint.adapters.PillsAdapter;
 
 public class JournalFragment extends Fragment {
 
-    public static JournalFragment journalFragment;
+    private MainActivity mainActivity;
 
-    TabLayout tabLayout;
-    ViewPager2 viewPager;
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager;
+
+    private PillsAdapter pillsAdapter;
+    private LinearLayoutManager layoutManager;
 
     public JournalFragment() {}
 
@@ -33,7 +43,8 @@ public class JournalFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        journalFragment = this;
+        JournalFragment journalFragment = this;
+        mainActivity = (MainActivity) getActivity();
     }
 
     @Override
@@ -66,6 +77,49 @@ public class JournalFragment extends Fragment {
                     break;
             }
         }).attach();
+
+        RecyclerView gameTypeChanger = view.findViewById(R.id.gameTypeChangerJournal);
+
+        List<String> categories = Arrays.asList(
+                getString(R.string.genshin),
+                getString(R.string.hsr),
+                getString(R.string.zzz)
+        );
+
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        gameTypeChanger.setLayoutManager(layoutManager);
+
+        pillsAdapter = new PillsAdapter(categories, (item, position) -> {
+            mainActivity.setSubType(position);
+
+            switch (tabLayout.getSelectedTabPosition()) {
+                case 0:
+                    triggerRefresh("refresh_wishes_counter_key");
+                    break;
+                case 1:
+                    triggerRefresh("refresh_piggy_bank_key");
+                    break;
+            }
+        });
+
+        gameTypeChanger.setAdapter(pillsAdapter);
+        selectAndScrollIfNeeded(mainActivity.getSubType());
+    }
+
+    private void selectAndScrollIfNeeded(int targetPosition) {
+        if (pillsAdapter == null || layoutManager == null) return;
+
+        pillsAdapter.setSelectedPosition(targetPosition);
+
+        int firstCompletelyVisible = layoutManager.findFirstCompletelyVisibleItemPosition();
+        int lastCompletelyVisible = layoutManager.findLastCompletelyVisibleItemPosition();
+
+        boolean isNotFullyVisible = targetPosition < firstCompletelyVisible || targetPosition > lastCompletelyVisible;
+
+        if (isNotFullyVisible) {
+            int offsetPx = (int) (16 * getResources().getDisplayMetrics().density);
+            layoutManager.scrollToPositionWithOffset(targetPosition, offsetPx);
+        }
     }
 
     public void triggerRefresh(String key) {

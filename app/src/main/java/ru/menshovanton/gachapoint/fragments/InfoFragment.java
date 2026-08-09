@@ -15,8 +15,9 @@ import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.R;
 
 public class InfoFragment extends Fragment {
-    MainActivity mainActivity;
-    ImageView backToSettings;
+    private MainActivity mainActivity;
+
+    private ImageView backToSettings;
 
     public InfoFragment() {}
     public static InfoFragment newInstance() {
@@ -45,6 +46,6 @@ public class InfoFragment extends Fragment {
     }
 
     private void onBackToSettings(View view) {
-        mainActivity.updateFragment(SettingsFragment.newInstance(), mainActivity.SETTINGS_TAG);
+        mainActivity.replaceFragment(SettingsFragment.newInstance(), mainActivity.SETTINGS_TAG);
     }
 }

@@ -9,18 +9,25 @@ import ru.menshovanton.gachapoint.Date;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 
 public class DateHelper {
+    private final MainActivity mainActivity;
+    private final DatabaseHelper dbHelper;
 
-    public static void writeDB(Context context, Date[] dateArray, int start, int stop) {
+    public DateHelper(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+        dbHelper = new DatabaseHelper(mainActivity, mainActivity);
+    }
+
+    public void writeDB(Context context, Date[] dateArray, int start, int stop) {
         for (int i = start; i < stop + start; i++) {
-            MainActivity.dbHelper.updateCalendarValue(i, dateArray[i].dayOfMonth, dateArray[i].dayOfYear, dateArray[i].dayOfWeek, dateArray[i].month,
+            dbHelper.updateCalendarValue(i, dateArray[i].dayOfMonth, dateArray[i].dayOfYear, dateArray[i].dayOfWeek, dateArray[i].month,
                     dateArray[i].year, dateArray[i].status, dateArray[i].subDaysRemaining);
         }
     }
 
-    public static Date[] readDB(Context context) {
-        Cursor cursor = MainActivity.dbHelper.getAllCalendarData();
+    public Date[] readDB(Context context) {
+        Cursor cursor = dbHelper.getAllCalendarData();
 
-        if (MainActivity.dbHelper.isCalendarEmpty()) {
+        if (dbHelper.isCalendarEmpty()) {
             return null;
         }
 
@@ -43,7 +50,7 @@ public class DateHelper {
     }
 
     @SuppressLint("Range")
-    public static int getDayById(int id, Cursor cursor) {
+    public int getDayById(int id, Cursor cursor) {
         int day = 1;
 
         if (cursor.moveToFirst()) {
@@ -55,7 +62,7 @@ public class DateHelper {
     }
 
     @SuppressLint("Range")
-    public static int getDayOfYearById(int id, Cursor cursor) {
+    public int getDayOfYearById(int id, Cursor cursor) {
         int day = 1;
 
         if (cursor.moveToFirst()) {
@@ -67,7 +74,7 @@ public class DateHelper {
     }
 
     @SuppressLint("Range")
-    public static int getDayOfWeekById(int id, Cursor cursor) {
+    public int getDayOfWeekById(int id, Cursor cursor) {
         int day = 1;
 
         if (cursor.moveToFirst()) {
@@ -79,7 +86,7 @@ public class DateHelper {
     }
 
     @SuppressLint("Range")
-    public static int getMonthById(int id, Cursor cursor) {
+    public int getMonthById(int id, Cursor cursor) {
         int month = 1;
 
         if (cursor.moveToFirst()) {
@@ -91,7 +98,7 @@ public class DateHelper {
     }
 
     @SuppressLint("Range")
-    public static int getYearById(int id, Cursor cursor) {
+    public int getYearById(int id, Cursor cursor) {
         int year = 1;
 
         if (cursor.moveToFirst()) {
@@ -103,13 +110,13 @@ public class DateHelper {
     }
 
     @SuppressLint("Range")
-    public static int getStatusById(int id, Cursor cursor) {
+    public int getStatusById(int id, Cursor cursor) {
         int status = 0;
 
         if (cursor.moveToFirst()) {
             cursor.moveToPosition(id);
 
-            switch (MainActivity.subType) {
+            switch (mainActivity.getSubType()) {
                 case 0:
                     status = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATUS_GENSHIN));
                     break;
@@ -126,13 +133,13 @@ public class DateHelper {
     }
 
     @SuppressLint("Range")
-    public static int getSubDaysRemainingById(int id, Cursor cursor) {
+    public int getSubDaysRemainingById(int id, Cursor cursor) {
         int days = 0;
 
         if (cursor.moveToFirst()) {
             cursor.moveToPosition(id);
 
-            switch (MainActivity.subType) {
+            switch (mainActivity.getSubType()) {
                 case 0:
                     days = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_MOON_DAYS_REMAINING));
                     break;
@@ -156,16 +163,5 @@ public class DateHelper {
         year,
         status,
         sdr
-    }
-
-    private static class DataItems {
-        private Date[] dates;
-
-        Date[] getDates() {
-            return dates;
-        }
-        void setDates(Date[] dates) {
-            this.dates = dates;
-        }
     }
 }

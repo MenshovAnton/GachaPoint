@@ -44,58 +44,21 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <HorizontalScrollView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/gameTypeChangerHome"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
-                android:scrollbars="none"
+                android:layout_marginTop="5dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 app:layout_constraintBottom_toTopOf="@+id/appVersion"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/appTitle"
-                app:layout_constraintVertical_bias="0.0">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/genshinImpact"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/accent"
-                        android:fontFamily="@font/genshin_font"
-                        android:text="@string/genshin"
-                        app:strokeWidth="5dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/honkai"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/accent"
-                        android:fontFamily="@font/genshin_font"
-                        android:text="@string/hsr"
-                        app:strokeWidth="5dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/zenless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/accent"
-                        android:fontFamily="@font/genshin_font"
-                        android:text="@string/zzz"
-                        app:strokeWidth="5dp" />
-                </LinearLayout>
-            </HorizontalScrollView>
+                app:layout_constraintVertical_bias="0.0" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/statsHome"
