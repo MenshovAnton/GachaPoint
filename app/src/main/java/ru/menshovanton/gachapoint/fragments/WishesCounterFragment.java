@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +15,29 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.time.LocalDate;
+import java.util.Locale;
+
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.activities.MainActivity;
+import ru.menshovanton.gachapoint.adapters.WishAdapter;
+import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
+import ru.menshovanton.gachapoint.helpers.DateHelper;
 
 public class WishesCounterFragment extends Fragment {
     private MainActivity mainActivity;
 
     private TextView savedWishesCounter;
+
+    private Button addActions;
+
+    private DatabaseHelper databaseHelper;
+    private DateHelper dateHelper;
+
+    private String[] wishes;
+
+    private WishAdapter adapter;
+    private RecyclerView recyclerView;
 
     public WishesCounterFragment() {}
     public static WishesCounterFragment newInstance(String param1, String param2) {
@@ -30,6 +48,7 @@ public class WishesCounterFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        databaseHelper = new DatabaseHelper(mainActivity);
     }
 
     @Override
@@ -37,8 +56,7 @@ public class WishesCounterFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wishes_counter, container, false);
 
-        Button addOne = view.findViewById(R.id.addOneWish);
-        Button addTen = view.findViewById(R.id.addTenWishes);
+        addActions = view.findViewById(R.id.addActionsButton);
 
         savedWishesCounter = view.findViewById(R.id.wishesCounter);
 
@@ -55,6 +73,18 @@ public class WishesCounterFragment extends Fragment {
                 refreshData(view);
             }
         });
+
+        addActions.setOnClickListener(this::showMoreMenu);
+
+        dateHelper = new DateHelper(mainActivity);
+
+        wishes = new String[]{"Москва", "Санкт-Петербург", "Новосибирск", "Екатеринбург", "Казань"};
+
+        recyclerView = view.findViewById(R.id.wishesLog);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        adapter = new WishAdapter(wishes);
+        recyclerView.setAdapter(adapter);
 
         refreshData(view);
     }
@@ -81,9 +111,33 @@ public class WishesCounterFragment extends Fragment {
         }
 
         updateProgress();
+
+        wishes = new String[]{"Москва", "Санкт-Петербург", "Новосибирск", "Екатеринбург", "Казань"};
+        adapter = new WishAdapter(wishes);
+        recyclerView.setAdapter(adapter);
     }
 
     private void updateProgress() {
         savedWishesCounter.setText("0");
+    }
+
+    private void showMoreMenu(View view) {
+        ((MainActivity) requireActivity()).showCounterMenu(new MainActivity.OnCounterMenuClickListener() {
+            @Override
+            public void onAddOneAttempt() { temp(); }
+
+            @Override
+            public void onAddTenAttempts() { temp(); }
+
+            @Override
+            public void onAddFiveStarDrop() { temp(); }
+
+            @Override
+            public void onAddFourStarDrop() { temp(); }
+        });
+    }
+
+    void temp() {
+
     }
 }

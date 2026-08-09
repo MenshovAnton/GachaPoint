@@ -6,15 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import ru.menshovanton.gachapoint.activities.MainActivity;
+import ru.menshovanton.gachapoint.Date;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private final MainActivity mainActivity;
 
     public static final String DATABASE_NAME = "GachaPointDB.db";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String CALENDAR_TABLE = "calendar";
+    public static final String CALENDAR_TABLE = "calendar";
     public static final String COLUMN_CALENDAR_ID = "id";
     public static final String COLUMN_DAY = "day";
     public static final String COLUMN_DAY_YEAR = "day_of_year";
@@ -28,15 +27,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STATUS_ZZZ = "status_zzz";
     public static final String COLUMN_INTERKNOT_DAYS_REMAINING = "interknot_days_remaining";
 
-    public DatabaseHelper(Context context, MainActivity mainActivity) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.mainActivity = mainActivity;
+    public DatabaseHelper(Context context) {
+        super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createCalendarTableQuery = "CREATE TABLE " + CALENDAR_TABLE + " (" +
-                COLUMN_CALENDAR_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_CALENDAR_ID + " INTEGER PRIMARY KEY, " +
                 COLUMN_DAY + " INTEGER, " +
                 COLUMN_DAY_YEAR + " INTEGER, " +
                 COLUMN_DAY_WEEK + " INTEGER, " +
@@ -57,63 +55,56 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void updateCalendarValue(int id, int day, int dayOfYear, int dayOfWeek, int month, int year,
-                                    int status, int subDaysRemaining) {
+    /**
+     * Быстрое пакетное обновление/вставка через одну транзакцию
+     */
+    public void saveCalendarBatch(Date[] dateArray, int start, int count, int subType) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_DAY, day);
-        values.put(COLUMN_DAY_YEAR, dayOfYear);
-        values.put(COLUMN_DAY_WEEK, dayOfWeek);
-        values.put(COLUMN_MONTH, month);
-        values.put(COLUMN_YEAR, year);
+        db.beginTransaction();
+        try {
+            ContentValues values = new ContentValues();
+            String statusColumn = getStatusColumn(subType);
+            String subDaysColumn = getSubDaysColumn(subType);
 
-        switch (mainActivity.getSubType()) {
-            case 0:
-                values.put(COLUMN_STATUS_GENSHIN, status);
-                values.put(COLUMN_MOON_DAYS_REMAINING, subDaysRemaining);
-                break;
-            case 1:
-                values.put(COLUMN_STATUS_HSR, status);
-                values.put(COLUMN_EXPRESS_PASS_DAYS_REMAINING, subDaysRemaining);
-                break;
-            case 2:
-                values.put(COLUMN_STATUS_ZZZ, status);
-                values.put(COLUMN_INTERKNOT_DAYS_REMAINING, subDaysRemaining);
-                break;
-        }
+            int end = start + count;
+            for (int i = start; i < end; i++) {
+                Date date = dateArray[i];
+                values.clear();
+                values.put(COLUMN_CALENDAR_ID, i);
+                values.put(COLUMN_DAY, date.dayOfMonth);
+                values.put(COLUMN_DAY_YEAR, date.dayOfYear);
+                values.put(COLUMN_DAY_WEEK, date.dayOfWeek);
+                values.put(COLUMN_MONTH, date.month);
+                values.put(COLUMN_YEAR, date.year);
+                values.put(statusColumn, date.status);
+                values.put(subDaysColumn, date.subDaysRemaining);
 
-        if (isCalendarRecordExists(id)) {
-            db.update(CALENDAR_TABLE, values, COLUMN_CALENDAR_ID + " = ?", new String[]{String.valueOf(id)});
-        } else {
-            values.put(COLUMN_CALENDAR_ID, id);
-            db.insert(CALENDAR_TABLE, null, values);
+                db.insertWithOnConflict(CALENDAR_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
         }
     }
 
     public Cursor getAllCalendarData() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(CALENDAR_TABLE, null, null, null, null, null, null);
+        return db.query(CALENDAR_TABLE, null, null, null, null, null, COLUMN_CALENDAR_ID + " ASC");
     }
 
-    public boolean isCalendarRecordExists(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT EXISTS(SELECT 1 FROM " + CALENDAR_TABLE + " WHERE " + COLUMN_CALENDAR_ID + " = ?)";
-        try (Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(id)})) {
-            if (cursor.moveToFirst()) {
-                return cursor.getInt(0) == 1;
-            }
+    public static String getStatusColumn(int subType) {
+        switch (subType) {
+            case 1: return COLUMN_STATUS_HSR;
+            case 2: return COLUMN_STATUS_ZZZ;
+            default: return COLUMN_STATUS_GENSHIN;
         }
-        return false;
     }
 
-    public boolean isCalendarEmpty() {
-        SQLiteDatabase db = getReadableDatabase();
-        String query = "SELECT EXISTS(SELECT 1 FROM " + CALENDAR_TABLE + ")";
-        try (Cursor cursor = db.rawQuery(query, null)) {
-            if (cursor.moveToFirst()) {
-                return cursor.getInt(0) == 0;
-            }
+    public static String getSubDaysColumn(int subType) {
+        switch (subType) {
+            case 1: return COLUMN_EXPRESS_PASS_DAYS_REMAINING;
+            case 2: return COLUMN_INTERKNOT_DAYS_REMAINING;
+            default: return COLUMN_MOON_DAYS_REMAINING;
         }
-        return true;
     }
 }

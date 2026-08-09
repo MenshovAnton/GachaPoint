@@ -87,9 +87,6 @@ public class PiggyBankFragment extends Fragment {
             }
         });
 
-//        calendarHelper.calculateMissesAndClaims();
-//        calendarHelper.calculateStatistics();
-
         target = piggyBankHelper.getTarget();
         progress = piggyBankHelper.getProgress();
 
@@ -102,9 +99,6 @@ public class PiggyBankFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-//        calendarHelper.calculateMissesAndClaims();
-//        calendarHelper.calculateStatistics();
 
         target = piggyBankHelper.getTarget();
         progress = piggyBankHelper.getProgress();

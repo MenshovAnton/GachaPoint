@@ -21,40 +21,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0">
 
-            <Button
-                android:id="@+id/addFiveStar"
-                android:layout_width="wrap_content"
-                android:layout_height="55dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:backgroundTint="@color/accent"
-                android:backgroundTintMode="screen"
-                android:text="@string/five_star"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addOneWish" />
-
-            <Button
-                android:id="@+id/addFourStar"
-                android:layout_width="wrap_content"
-                android:layout_height="55dp"
-                android:layout_marginStart="5dp"
-                android:backgroundTint="@color/accent"
-                android:backgroundTintMode="screen"
-                android:text="@string/four_star"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/addFiveStar"
-                app:layout_constraintTop_toTopOf="@+id/addFiveStar"
-                app:layout_constraintVertical_bias="0.0" />
-
             <ImageView
                 android:id="@+id/wishIconWishCounter"
                 android:layout_width="30dp"
@@ -70,38 +36,20 @@
                 tools:ignore="ImageContrastCheck" />
 
             <Button
-                android:id="@+id/addOneWish"
+                android:id="@+id/addActionsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="55dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/accent"
                 android:backgroundTintMode="screen"
-                android:text="@string/plus_one"
+                android:text="@string/add_to_bank"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleTarget"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <Button
-                android:id="@+id/addTenWishes"
-                android:layout_width="wrap_content"
-                android:layout_height="55dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="9dp"
-                android:backgroundTint="@color/accent"
-                android:backgroundTintMode="screen"
-                android:text="@string/plus_ten"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/addOneWish"
                 app:layout_constraintTop_toBottomOf="@+id/titleTarget"
                 app:layout_constraintVertical_bias="0.0" />
 
@@ -139,10 +87,10 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/log"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/wishesLog"
+            android:layout_width="409dp"
+            android:layout_height="791dp"
             android:layout_marginTop="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -38,6 +38,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.gson)
+    implementation(libs.recyclerview)
     implementation(libs.splashscreen)
     implementation(libs.viewpager2)
     testImplementation(libs.junit)

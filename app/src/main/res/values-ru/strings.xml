@@ -74,6 +74,10 @@
     <string name="notifications_description">Высылает напоминания о сборе наград.</string>
     <string name="notifications_title">Напоминание!</string>
     <string name="notifications_text">Не забудь собрать награды!</string>
+    <string name="add_one_wish">Добавить 1 крутку</string>
+    <string name="add_ten_wishes">Добавить 10 круток</string>
+    <string name="add_five_star">Выпал 5★</string>
+    <string name="add_four_star">Выпал 4★</string>
 
 
 </resources>

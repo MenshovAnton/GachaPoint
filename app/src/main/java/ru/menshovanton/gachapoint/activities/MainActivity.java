@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             checkAndRequestPermissions();
         }
 
-        try (DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext(), this)) {
+        try (DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext())) {
             if (!isDatabaseExists(this)) {
                 dbHelper.getWritableDatabase();
             }
@@ -244,6 +244,47 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.findViewById(R.id.layoutResetGoal).setOnClickListener(v -> {
             listener.onReset();
+            dialog.dismiss();
+        });
+
+        dialog.show();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setGravity(Gravity.BOTTOM);
+        }
+    }
+
+    public interface OnCounterMenuClickListener {
+        void onAddOneAttempt();
+        void onAddTenAttempts();
+        void onAddFiveStarDrop();
+        void onAddFourStarDrop();
+    }
+
+    public void showCounterMenu(OnCounterMenuClickListener listener) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.wishes_counter_more_sheet);
+
+        dialog.findViewById(R.id.layoutAddOneAttempt).setOnClickListener(v -> {
+            listener.onAddOneAttempt();
+            dialog.dismiss();
+        });
+
+        dialog.findViewById(R.id.layoutAddTenAttempts).setOnClickListener(v -> {
+            listener.onAddTenAttempts();
+            dialog.dismiss();
+        });
+
+        dialog.findViewById(R.id.layoutAddFiveStarDrop).setOnClickListener(v -> {
+            listener.onAddFiveStarDrop();
+            dialog.dismiss();
+        });
+
+        dialog.findViewById(R.id.layoutAddFourStarDrop).setOnClickListener(v -> {
+            listener.onAddFourStarDrop();
             dialog.dismiss();
         });
 

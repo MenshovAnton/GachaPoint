@@ -88,4 +88,8 @@
     <string name="notifications_text">Don\'t forget to collect your rewards!</string>
     <string name="five_star" translatable="false">5★</string>
     <string name="four_star" translatable="false">4★</string>
+    <string name="add_one_wish">Add 1 attempts</string>
+    <string name="add_ten_wishes">Add 10 attempts</string>
+    <string name="add_five_star">Add drop 5★</string>
+    <string name="add_four_star">Add drop 4★</string>
 </resources>
