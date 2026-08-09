@@ -7,13 +7,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.models.Wish;
 
 public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder> {
 
-    private final String[] wishes;
+    private final List<Wish> wishes;
 
-    public WishAdapter(String[] wishes) {
+    public WishAdapter(List<Wish> wishes) {
         this.wishes = wishes;
     }
 
@@ -27,15 +30,18 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull WishViewHolder holder, int position) {
-        holder.date.setText(wishes[position]);
+        Wish wish = wishes.get(position);
+
+        String displayText = wish.getDateTime() + "\n" + wish.getContent();
+        holder.date.setText(displayText);
     }
 
     @Override
     public int getItemCount() {
-        return wishes.length;
+        return wishes != null ? wishes.size() : 0;
     }
 
-    static class WishViewHolder extends RecyclerView.ViewHolder {
+    public static class WishViewHolder extends RecyclerView.ViewHolder {
         TextView date;
 
         public WishViewHolder(@NonNull View itemView) {

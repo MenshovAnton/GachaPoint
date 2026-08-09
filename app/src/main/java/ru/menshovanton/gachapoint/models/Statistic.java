@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.models;
 
 public class Statistic {
     public int missedGems;

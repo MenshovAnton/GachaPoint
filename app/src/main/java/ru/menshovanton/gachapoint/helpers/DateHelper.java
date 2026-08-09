@@ -6,7 +6,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.menshovanton.gachapoint.Date;
+import ru.menshovanton.gachapoint.models.Date;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 
 public class DateHelper {
@@ -29,7 +29,6 @@ public class DateHelper {
                 return null;
             }
 
-            // Кэшируем индексы колонок один раз перед циклом O(1)
             int idIdx = cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CALENDAR_ID);
             int dayIdx = cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DAY);
             int dayOfYearIdx = cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DAY_YEAR);
@@ -43,7 +42,6 @@ public class DateHelper {
 
             List<Date> list = new ArrayList<>();
 
-            // Одиночный проход по курсору O(N)
             do {
                 int id = cursor.getInt(idIdx);
                 int day = cursor.getInt(dayIdx);
@@ -59,14 +57,5 @@ public class DateHelper {
 
             return list.toArray(new Date[0]);
         }
-    }
-
-    public enum DataTypes {
-        dayOfMonth,
-        dayOfYear,
-        month,
-        year,
-        status,
-        sdr
     }
 }

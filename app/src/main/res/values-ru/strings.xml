@@ -78,6 +78,8 @@
     <string name="add_ten_wishes">Добавить 10 круток</string>
     <string name="add_five_star">Выпал 5★</string>
     <string name="add_four_star">Выпал 4★</string>
+    <string name="empty_wishes_log">Круток еще нет :(</string>
+    <string name="default_wish_content">Оружие</string>
 
 
 </resources>

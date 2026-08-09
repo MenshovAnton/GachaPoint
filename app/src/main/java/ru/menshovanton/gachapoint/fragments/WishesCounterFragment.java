@@ -16,13 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.time.LocalDate;
-import java.util.Locale;
+import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.adapters.WishAdapter;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 import ru.menshovanton.gachapoint.helpers.DateHelper;
+import ru.menshovanton.gachapoint.models.Wish;
 
 public class WishesCounterFragment extends Fragment {
     private MainActivity mainActivity;
@@ -34,9 +35,6 @@ public class WishesCounterFragment extends Fragment {
     private DatabaseHelper databaseHelper;
     private DateHelper dateHelper;
 
-    private String[] wishes;
-
-    private WishAdapter adapter;
     private RecyclerView recyclerView;
 
     public WishesCounterFragment() {}
@@ -48,6 +46,7 @@ public class WishesCounterFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        assert mainActivity != null;
         databaseHelper = new DatabaseHelper(mainActivity);
     }
 
@@ -59,6 +58,9 @@ public class WishesCounterFragment extends Fragment {
         addActions = view.findViewById(R.id.addActionsButton);
 
         savedWishesCounter = view.findViewById(R.id.wishesCounter);
+
+        recyclerView = view.findViewById(R.id.wishesLog);
+        View emptyView = view.findViewById(R.id.emptyStateView);
 
         return view;
     }
@@ -75,16 +77,6 @@ public class WishesCounterFragment extends Fragment {
         });
 
         addActions.setOnClickListener(this::showMoreMenu);
-
-        dateHelper = new DateHelper(mainActivity);
-
-        wishes = new String[]{"Москва", "Санкт-Петербург", "Новосибирск", "Екатеринбург", "Казань"};
-
-        recyclerView = view.findViewById(R.id.wishesLog);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        adapter = new WishAdapter(wishes);
-        recyclerView.setAdapter(adapter);
 
         refreshData(view);
     }
@@ -112,9 +104,25 @@ public class WishesCounterFragment extends Fragment {
 
         updateProgress();
 
-        wishes = new String[]{"Москва", "Санкт-Петербург", "Новосибирск", "Екатеринбург", "Казань"};
-        adapter = new WishAdapter(wishes);
-        recyclerView.setAdapter(adapter);
+        List<Wish> wishes;
+        try (DatabaseHelper dbHelper = new DatabaseHelper(mainActivity)) {
+            wishes = dbHelper.getAllWishes(mainActivity.getSubType());
+        }
+
+        View emptyView = view.findViewById(R.id.emptyStateView);
+
+        WishAdapter adapter = new WishAdapter(wishes);
+
+        if (wishes.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     private void updateProgress() {
@@ -124,20 +132,41 @@ public class WishesCounterFragment extends Fragment {
     private void showMoreMenu(View view) {
         ((MainActivity) requireActivity()).showCounterMenu(new MainActivity.OnCounterMenuClickListener() {
             @Override
-            public void onAddOneAttempt() { temp(); }
+            public void onAddOneAttempt() { addOneAttempt(); }
 
             @Override
-            public void onAddTenAttempts() { temp(); }
+            public void onAddTenAttempts() { addTenAttempts(); }
 
             @Override
-            public void onAddFiveStarDrop() { temp(); }
+            public void onAddFiveStarDrop() { addFiveStar(); }
 
             @Override
-            public void onAddFourStarDrop() { temp(); }
+            public void onAddFourStarDrop() { addFourStar(); }
         });
     }
 
-    void temp() {
+    private void addOneAttempt() {
+        databaseHelper.addWish(LocalDate.now().toString(), getString(R.string.default_wish_content), mainActivity.getSubType());
+        assert getView() != null;
+        refreshData(getView());
+    }
 
+    private void addTenAttempts() {
+        databaseHelper.addMultipleWishes(LocalDate.now().toString(), getString(R.string.default_wish_content), 9, mainActivity.getSubType());
+        databaseHelper.addWish(LocalDate.now().toString(), getString(R.string.four_star), mainActivity.getSubType());
+        assert getView() != null;
+        refreshData(getView());
+    }
+
+    private void addFiveStar() {
+        databaseHelper.addWish(LocalDate.now().toString(), getString(R.string.five_star), mainActivity.getSubType());
+        assert getView() != null;
+        refreshData(getView());
+    }
+
+    private void addFourStar() {
+        databaseHelper.addWish(LocalDate.now().toString(), getString(R.string.four_star), mainActivity.getSubType());
+        assert getView() != null;
+        refreshData(getView());
     }
 }

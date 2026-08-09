@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import ru.menshovanton.gachapoint.Statistic;
+import ru.menshovanton.gachapoint.models.Statistic;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.adapters.PillsAdapter;
 import ru.menshovanton.gachapoint.helpers.PiggyBankHelper;

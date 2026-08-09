@@ -1,6 +1,8 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.models;
 
 import androidx.annotation.ColorRes;
+
+import ru.menshovanton.gachapoint.R;
 
 public enum DayState {
     CHECKED(R.color.checked),

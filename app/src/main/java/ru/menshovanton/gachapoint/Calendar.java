@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.helpers.DateHelper;
 import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
+import ru.menshovanton.gachapoint.models.Date;
 
 public class Calendar {
     public Date[] datesArray;

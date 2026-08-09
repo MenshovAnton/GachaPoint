@@ -92,4 +92,6 @@
     <string name="add_ten_wishes">Add 10 attempts</string>
     <string name="add_five_star">Add drop 5★</string>
     <string name="add_four_star">Add drop 4★</string>
+    <string name="empty_wishes_log">No wishes yet :(</string>
+    <string name="default_wish_content">Weapon</string>
 </resources>

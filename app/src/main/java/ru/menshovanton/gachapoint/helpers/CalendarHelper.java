@@ -16,10 +16,10 @@ import java.time.YearMonth;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.Calendar;
-import ru.menshovanton.gachapoint.Date;
-import ru.menshovanton.gachapoint.DayState;
+import ru.menshovanton.gachapoint.models.Date;
+import ru.menshovanton.gachapoint.models.DayState;
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.Statistic;
+import ru.menshovanton.gachapoint.models.Statistic;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.fragments.TrackerFragment;
 

@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.menshovanton.gachapoint.CalendarGrid;
-import ru.menshovanton.gachapoint.Statistic;
+import ru.menshovanton.gachapoint.models.Statistic;
 import ru.menshovanton.gachapoint.adapters.PillsAdapter;
 import ru.menshovanton.gachapoint.helpers.CalendarHelper;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;

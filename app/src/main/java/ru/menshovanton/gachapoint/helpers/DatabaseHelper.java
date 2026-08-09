@@ -5,8 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 
-import ru.menshovanton.gachapoint.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.menshovanton.gachapoint.models.Date;
+import ru.menshovanton.gachapoint.models.Wish;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -27,6 +32,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STATUS_ZZZ = "status_zzz";
     public static final String COLUMN_INTERKNOT_DAYS_REMAINING = "interknot_days_remaining";
 
+    public static final String WISHES_GENSHIN_TABLE = "wishes_genshin";
+    public static final String WISHES_HSR_TABLE = "wishes_hsr";
+    public static final String WISHES_ZZZ_TABLE = "wishes_zzz";
+    public static final String COLUMN_WISHES_ID = "id";
+    public static final String COLUMN_DATETIME = "date_time";
+    public static final String COLUMN_CONTENT = "content";
+
     public DatabaseHelper(Context context) {
         super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -46,18 +58,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_EXPRESS_PASS_DAYS_REMAINING + " INTEGER, " +
                 COLUMN_STATUS_ZZZ + " INTEGER, " +
                 COLUMN_INTERKNOT_DAYS_REMAINING + " INTEGER)";
+
+        String createWishesGenshinTableQuery = "CREATE TABLE " + WISHES_GENSHIN_TABLE + " (" +
+                COLUMN_WISHES_ID + " INTEGER PRIMARY KEY, " +
+                COLUMN_DATETIME + " TEXT, " +
+                COLUMN_CONTENT + " TEXT) ";
+
+        String createWishesHSRTableQuery = "CREATE TABLE " + WISHES_HSR_TABLE + " (" +
+                COLUMN_WISHES_ID + " INTEGER PRIMARY KEY, " +
+                COLUMN_DATETIME + " TEXT, " +
+                COLUMN_CONTENT + " TEXT) ";
+
+        String createWishesZZZTableQuery = "CREATE TABLE " + WISHES_ZZZ_TABLE + " (" +
+                COLUMN_WISHES_ID + " INTEGER PRIMARY KEY, " +
+                COLUMN_DATETIME + " TEXT, " +
+                COLUMN_CONTENT + " TEXT) ";
+
         db.execSQL(createCalendarTableQuery);
+        db.execSQL(createWishesGenshinTableQuery);
+        db.execSQL(createWishesHSRTableQuery);
+        db.execSQL(createWishesZZZTableQuery);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + CALENDAR_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + WISHES_GENSHIN_TABLE);
         onCreate(db);
     }
 
-    /**
-     * Быстрое пакетное обновление/вставка через одну транзакцию
-     */
     public void saveCalendarBatch(Date[] dateArray, int start, int count, int subType) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
@@ -105,6 +134,95 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             case 1: return COLUMN_EXPRESS_PASS_DAYS_REMAINING;
             case 2: return COLUMN_INTERKNOT_DAYS_REMAINING;
             default: return COLUMN_MOON_DAYS_REMAINING;
+        }
+    }
+
+    public List<Wish> getAllWishes(int subType) {
+        String table = WISHES_GENSHIN_TABLE;
+        switch (subType) {
+            case 0:
+                table = WISHES_GENSHIN_TABLE;
+                break;
+            case 1:
+                table = WISHES_HSR_TABLE;
+                break;
+            case 2:
+                table = WISHES_ZZZ_TABLE;
+                break;
+        }
+
+        List<Wish> wishesList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        try (Cursor cursor = db.query(table, null, null, null, null, null, COLUMN_WISHES_ID + " DESC")) {
+            if (cursor.moveToFirst()) {
+                int idIdx = cursor.getColumnIndexOrThrow(COLUMN_WISHES_ID);
+                int dateTimeIdx = cursor.getColumnIndexOrThrow(COLUMN_DATETIME);
+                int contentIdx = cursor.getColumnIndexOrThrow(COLUMN_CONTENT);
+
+                do {
+                    int id = cursor.getInt(idIdx);
+                    String dateTime = cursor.getString(dateTimeIdx);
+                    String content = cursor.getString(contentIdx);
+
+                    wishesList.add(new Wish(id, dateTime, content));
+                } while (cursor.moveToNext());
+            }
+        }
+        return wishesList;
+    }
+
+    public void addWish(String dateTime, String content, int subType) {
+        String table = WISHES_GENSHIN_TABLE;
+        switch (subType) {
+            case 0:
+                table = WISHES_GENSHIN_TABLE;
+                break;
+            case 1:
+                table = WISHES_HSR_TABLE;
+                break;
+            case 2:
+                table = WISHES_ZZZ_TABLE;
+                break;
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_DATETIME, dateTime);
+        values.put(COLUMN_CONTENT, content);
+        db.insert(table, null, values);
+    }
+
+    public void addMultipleWishes(String dateTime, String content, int count, int subType) {
+        String table = WISHES_GENSHIN_TABLE;
+        switch (subType) {
+            case 0:
+                table = WISHES_GENSHIN_TABLE;
+                break;
+            case 1:
+                table = WISHES_HSR_TABLE;
+                break;
+            case 2:
+                table = WISHES_ZZZ_TABLE;
+                break;
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "INSERT INTO " + table + " (" +
+                COLUMN_DATETIME + ", " + COLUMN_CONTENT + ") VALUES (?, ?)";
+
+        db.beginTransaction();
+        try {
+            SQLiteStatement statement = db.compileStatement(sql);
+            statement.bindString(1, dateTime);
+            statement.bindString(2, content);
+
+            for (int i = 0; i < count; i++) {
+                statement.executeInsert();
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
         }
     }
 }
