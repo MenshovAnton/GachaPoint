@@ -88,10 +88,19 @@
     <string name="notifications_text">Don\'t forget to collect your rewards!</string>
     <string name="five_star" translatable="false">5★</string>
     <string name="four_star" translatable="false">4★</string>
+    <string name="three_star" translatable="false">3★</string>
     <string name="add_one_wish">Add 1 attempts</string>
     <string name="add_ten_wishes">Add 10 attempts</string>
     <string name="add_five_star">Add drop 5★</string>
     <string name="add_four_star">Add drop 4★</string>
     <string name="empty_wishes_log">No wishes yet :(</string>
-    <string name="default_wish_content">Weapon</string>
+    <string name="default_wish_content">Unknown</string>
+    <string name="add_pull">Add record</string>
+    <string name="edit_pull">Edit record</string>
+    <string name="hint_input_content">Character/Weapon</string>
+    <string name="select_rare">Select item rare</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="date">Date</string>
+    <string name="select_date">Select date</string>
 </resources>

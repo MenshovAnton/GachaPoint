@@ -2,16 +2,19 @@ package ru.menshovanton.gachapoint.models;
 
 public class Wish {
     private final int id;
+    private final String dropRare;
+    private final String dropType;
     private final String dateTime;
-    private final String content;
 
-    public Wish(int id, String dateTime, String content) {
+    public Wish(int id, String dropRare, String dropType, String dateTime) {
         this.id = id;
+        this.dropRare = dropRare;
+        this.dropType = dropType;
         this.dateTime = dateTime;
-        this.content = content;
     }
 
     public int getId() { return id; }
     public String getDateTime() { return dateTime; }
-    public String getContent() { return content; }
+    public String getDropRare() { return dropRare; }
+    public String getDropType() { return dropType; }
 }

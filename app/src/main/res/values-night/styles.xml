@@ -47,4 +47,16 @@
         <item name="tabIconTint">@color/check</item>
         <item name="tabRippleColor">@android:color/transparent</item>
     </style>
+    <style name="Dialog.GachaPoint.AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:windowBackground">@drawable/bg_dialog_rounded</item>
+        <item name="colorPrimary">@color/check</item>
+        <item name="colorOnSurface">@color/white</item>
+    </style>
+    <style name="DatePicker.GachaPoint.MaterialCalendar" parent="ThemeOverlay.Material3.MaterialCalendar">
+        <item name="colorSurfaceContainerHigh">@color/background_night</item>
+        <item name="colorPrimary">@color/check</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnSurfaceVariant">@color/light_grey</item>
+    </style>
 </resources>
