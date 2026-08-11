@@ -134,7 +134,7 @@ public class SettingsFragment extends Fragment {
         picker.show(getParentFragmentManager(), "MATERIAL_TIME_PICKER");
     }
 
-    @SuppressLint({"DefaultLocale", "SetTextI18n"})
+    @SuppressLint("SetTextI18n")
     private void updateTimeDisplay() {
         hourTextView.setText(String.valueOf(AlarmHelper.alarmHour));
         if (AlarmHelper.alarmMinute < 9) {

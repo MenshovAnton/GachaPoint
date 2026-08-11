@@ -39,7 +39,7 @@ public class PiggyBankFragment extends Fragment {
     private int progress;
     private int target;
 
-    private final int GARANT = 77;
+    private final int PITY = 77;
 
     public PiggyBankFragment() {}
 
@@ -83,7 +83,7 @@ public class PiggyBankFragment extends Fragment {
         getParentFragmentManager().setFragmentResultListener("refresh_piggy_bank_key", getViewLifecycleOwner(), (requestKey, result) -> {
             boolean shouldRefresh = result.getBoolean("shouldRefresh", false);
             if (shouldRefresh) {
-                refreshData(view);
+                refresh(view);
             }
         });
 
@@ -93,7 +93,7 @@ public class PiggyBankFragment extends Fragment {
         progressBar.setProgress(progress);
         progressBar.setMax(target);
 
-        refreshData(view);
+        refresh(view);
     }
 
     @Override
@@ -106,10 +106,10 @@ public class PiggyBankFragment extends Fragment {
         progressBar.setProgress(progress);
         progressBar.setMax(target);
 
-        refreshData(requireView());
+        refresh(requireView());
     }
 
-    private void refreshData(View view) {
+    private void refresh(View view) {
         ImageView wishIcon = view.findViewById(R.id.wishIconPiggyBank);
 
         switch (mainActivity.getSubType()) {
@@ -128,10 +128,10 @@ public class PiggyBankFragment extends Fragment {
     }
 
     private void showMoreMenu(View view) {
-        ((MainActivity) requireActivity()).showPiggyBankMenu(new MainActivity.OnPiggyMenuClickListener() {
-            @Override public void onAddOne() { addTargetOne(); }
-            @Override public void onAddTwo() { addTargetTwo(); }
-            @Override public void onAddSix() { addTargetSix(); }
+        ((MainActivity) requireActivity()).showPiggyBankMenu(new MainActivity.OnPiggyBankMenuClickListener() {
+            @Override public void onAddOnePity() { addTargetOne(); }
+            @Override public void onAddTwoPity() { addTargetTwo(); }
+            @Override public void onAddSixPity() { addTargetSix(); }
             @Override public void onReset() { resetTarget(); }
         });
     }
@@ -163,17 +163,17 @@ public class PiggyBankFragment extends Fragment {
     }
 
     public void addTargetOne() {
-        piggyBankHelper.pushTarget(GARANT);
+        piggyBankHelper.pushTarget(PITY);
         updateProgress();
     }
 
     public void addTargetTwo() {
-        piggyBankHelper.pushTarget(GARANT*2);
+        piggyBankHelper.pushTarget(PITY *2);
         updateProgress();
     }
 
     public void addTargetSix() {
-        piggyBankHelper.pushTarget(GARANT*6);
+        piggyBankHelper.pushTarget(PITY *6);
         updateProgress();
     }
 

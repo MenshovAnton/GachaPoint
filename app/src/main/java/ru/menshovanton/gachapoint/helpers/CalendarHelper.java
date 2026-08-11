@@ -192,7 +192,7 @@ public class CalendarHelper {
         );
     }
 
-    public void update() {
+    public void updateStatistics() {
         int length;
         if (calendar.getSubDaysRemaining(toDayOfYear) > 30) {
             length = calendar.datesArray[toDayOfYear - 1].subDaysRemaining;

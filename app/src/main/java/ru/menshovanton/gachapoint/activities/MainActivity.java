@@ -215,30 +215,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public interface OnPiggyMenuClickListener {
-        void onAddOne();
-        void onAddTwo();
-        void onAddSix();
+    public interface OnPiggyBankMenuClickListener {
+        void onAddOnePity();
+        void onAddTwoPity();
+        void onAddSixPity();
         void onReset();
     }
 
-    public void showPiggyBankMenu(OnPiggyMenuClickListener listener) {
+    public void showPiggyBankMenu(OnPiggyBankMenuClickListener listener) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.piggy_bank_more_sheet);
 
         dialog.findViewById(R.id.layoutAddOneGarant).setOnClickListener(v -> {
-            listener.onAddOne();
+            listener.onAddOnePity();
             dialog.dismiss();
         });
 
         dialog.findViewById(R.id.layoutAddTwoGarant).setOnClickListener(v -> {
-            listener.onAddTwo();
+            listener.onAddTwoPity();
             dialog.dismiss();
         });
 
         dialog.findViewById(R.id.layoutAddSixGarant).setOnClickListener(v -> {
-            listener.onAddSix();
+            listener.onAddSixPity();
             dialog.dismiss();
         });
 
@@ -256,14 +256,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public interface OnCounterMenuClickListener {
+    public interface OnWishCounterMenuClickListener {
         void onAddOneAttempt();
         void onAddTenAttempts();
         void onAddFiveStarDrop();
         void onAddFourStarDrop();
     }
 
-    public void showCounterMenu(OnCounterMenuClickListener listener) {
+    public void showWishCounterMenu(OnWishCounterMenuClickListener listener) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.wishes_counter_more_sheet);

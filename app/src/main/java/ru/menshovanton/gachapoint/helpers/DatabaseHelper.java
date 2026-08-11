@@ -16,7 +16,7 @@ import ru.menshovanton.gachapoint.models.Wish;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "GachaPointDB.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2; // Увеличили версию базы данных
 
     public static final String CALENDAR_TABLE = "calendar";
     public static final String COLUMN_CALENDAR_ID = "id";
@@ -39,7 +39,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DATETIME = "date_time";
     public static final String COLUMN_DROP_RARE = "drop_rare";
     public static final String COLUMN_DROP_TYPE = "drop_type";
-    public static final String COLUMN_BANNER_TYPE = "banner_type"; // Новая колонка
+    public static final String COLUMN_BANNER_TYPE = "banner_type";
+    public static final String COLUMN_IS_RESET_PITY = "is_reset_pity"; // Новая колонка
 
     public DatabaseHelper(Context context) {
         super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
@@ -73,17 +74,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_DATETIME + " TEXT, " +
                 COLUMN_DROP_RARE + " TEXT, " +
                 COLUMN_DROP_TYPE + " TEXT, " +
-                COLUMN_BANNER_TYPE + " TEXT DEFAULT 'event')";
+                COLUMN_BANNER_TYPE + " TEXT DEFAULT 'event', " +
+                COLUMN_IS_RESET_PITY + " INTEGER DEFAULT 0)";
         db.execSQL(query);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
-            String alterSql = "ALTER TABLE %s ADD COLUMN " + COLUMN_BANNER_TYPE + " TEXT DEFAULT 'event'";
-            db.execSQL(String.format(alterSql, WISHES_GENSHIN_TABLE));
-            db.execSQL(String.format(alterSql, WISHES_HSR_TABLE));
-            db.execSQL(String.format(alterSql, WISHES_ZZZ_TABLE));
+            String alterBanner = "ALTER TABLE %s ADD COLUMN " + COLUMN_BANNER_TYPE + " TEXT DEFAULT 'event'";
+            String alterReset = "ALTER TABLE %s ADD COLUMN " + COLUMN_IS_RESET_PITY + " INTEGER DEFAULT 0";
+
+            for (String table : new String[]{WISHES_GENSHIN_TABLE, WISHES_HSR_TABLE, WISHES_ZZZ_TABLE}) {
+                try {
+                    db.execSQL(String.format(alterBanner, table));
+                } catch (Exception ignored) {}
+                try {
+                    db.execSQL(String.format(alterReset, table));
+                } catch (Exception ignored) {}
+            }
         }
     }
 
@@ -102,6 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int dropRareIdx = cursor.getColumnIndexOrThrow(COLUMN_DROP_RARE);
                 int dropTypeIdx = cursor.getColumnIndexOrThrow(COLUMN_DROP_TYPE);
                 int bannerTypeIdx = cursor.getColumnIndexOrThrow(COLUMN_BANNER_TYPE);
+                int resetPityIdx = cursor.getColumnIndexOrThrow(COLUMN_IS_RESET_PITY);
 
                 do {
                     int id = cursor.getInt(idIdx);
@@ -109,19 +119,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     String dropRare = cursor.getString(dropRareIdx);
                     String dropType = cursor.getString(dropTypeIdx);
                     String bType = cursor.getString(bannerTypeIdx);
+                    boolean isResetPity = cursor.getInt(resetPityIdx) == 1;
 
-                    wishesList.add(new Wish(id, dropRare, dropType, dateTime, bType));
+                    wishesList.add(new Wish(id, dropRare, dropType, dateTime, bType, isResetPity));
                 } while (cursor.moveToNext());
             }
         }
         return wishesList;
     }
 
-    public void addWishes(String dateTime, String dropType, String dropRare, int count, int subType, String bannerType) {
+    public void addWishes(String dateTime, String dropType, String dropRare, int count, int subType, String bannerType, boolean isResetPity) {
         String table = getCurrentTable(subType);
         SQLiteDatabase db = this.getWritableDatabase();
         String sql = "INSERT INTO " + table + " (" +
-                COLUMN_DATETIME + ", " + COLUMN_DROP_RARE + ", " + COLUMN_DROP_TYPE + ", " + COLUMN_BANNER_TYPE + ") VALUES (?, ?, ?, ?)";
+                COLUMN_DATETIME + ", " + COLUMN_DROP_RARE + ", " + COLUMN_DROP_TYPE + ", " + COLUMN_BANNER_TYPE + ", " + COLUMN_IS_RESET_PITY + ") VALUES (?, ?, ?, ?, ?)";
 
         db.beginTransaction();
         try {
@@ -132,6 +143,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             statement.bindString(4, bannerType);
 
             for (int i = 0; i < count; i++) {
+                // Если добавляется пачка (например, 10), сброс привязываем к последней введенной крутке
+                boolean currentReset = isResetPity && (i == count - 1);
+                statement.bindLong(5, currentReset ? 1 : 0);
                 statement.executeInsert();
             }
             db.setTransactionSuccessful();
@@ -140,7 +154,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void updateWish(int id, String dateTime, String dropType, String dropRare, int subType, String bannerType) {
+    public void updateWish(int id, String dateTime, String dropType, String dropRare, int subType, String bannerType, boolean isResetPity) {
         String table = getCurrentTable(subType);
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -149,6 +163,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_DROP_TYPE, dropType);
         values.put(COLUMN_DROP_RARE, dropRare);
         values.put(COLUMN_BANNER_TYPE, bannerType);
+        values.put(COLUMN_IS_RESET_PITY, isResetPity ? 1 : 0);
 
         String whereClause = COLUMN_WISHES_ID + " = ?";
         String[] whereArgs = new String[]{String.valueOf(id)};

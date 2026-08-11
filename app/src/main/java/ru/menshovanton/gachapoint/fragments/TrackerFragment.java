@@ -244,7 +244,7 @@ public class TrackerFragment extends Fragment {
     }
 
     public void updateCalendar() {
-        calendarHelper.update();
+        calendarHelper.updateStatistics();
         setStatistics();
         selectedMonth = LocalDate.now().getMonth().getValue();
         calendarHelper.renderCalendar(this);

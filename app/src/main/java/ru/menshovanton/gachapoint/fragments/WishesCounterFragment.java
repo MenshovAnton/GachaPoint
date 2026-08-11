@@ -160,7 +160,9 @@ public class WishesCounterFragment extends Fragment {
             counter++;
             wish.setPityNumber(counter);
 
-            if (getString(R.string.five_star).equalsIgnoreCase(wish.getDropRare())) {
+            // Сброс происходит либо если выпала 5★, либо если у крутки установлен принудительный флаг isResetPity
+            boolean is5Star = getString(R.string.five_star).equalsIgnoreCase(wish.getDropRare());
+            if (is5Star || wish.isResetPity()) {
                 counter = 0;
             }
         }
@@ -171,7 +173,7 @@ public class WishesCounterFragment extends Fragment {
     }
 
     private void showMoreMenu(View view) {
-        ((MainActivity) requireActivity()).showCounterMenu(new MainActivity.OnCounterMenuClickListener() {
+        ((MainActivity) requireActivity()).showWishCounterMenu(new MainActivity.OnWishCounterMenuClickListener() {
             @Override
             public void onAddOneAttempt() {
                 addOneAttempt();
@@ -216,11 +218,13 @@ public class WishesCounterFragment extends Fragment {
         final LocalDate[] selectedDate = new LocalDate[1];
         boolean isEditMode = (wishToEdit != null);
 
+        // Чекбокс доступен и видием в обоих режимах
+        checkResetPity.setVisibility(View.VISIBLE);
+
         if (isEditMode) {
             dialogTitle.setText(getString(R.string.edit_pull));
             editDropType.setText(wishToEdit.getDropType());
-
-            checkResetPity.setVisibility(View.GONE);
+            checkResetPity.setChecked(wishToEdit.isResetPity());
 
             try {
                 selectedDate[0] = LocalDate.parse(wishToEdit.getDateTime(), dbFormatter);
@@ -238,28 +242,21 @@ public class WishesCounterFragment extends Fragment {
             }
         } else {
             dialogTitle.setText(getString(R.string.add_pull));
-            checkResetPity.setVisibility(View.VISIBLE);
+            checkResetPity.setChecked(autoCheckResetPity);
             selectedDate[0] = LocalDate.now();
 
             if (getString(R.string.five_star).equalsIgnoreCase(defaultRarity)) {
                 radioFiveStar.setChecked(true);
-                checkResetPity.setChecked(true);
             } else if (getString(R.string.four_star).equalsIgnoreCase(defaultRarity)) {
                 radioFourStar.setChecked(true);
-                checkResetPity.setChecked(autoCheckResetPity);
             } else {
                 radioThreeStar.setChecked(true);
-                checkResetPity.setChecked(autoCheckResetPity);
             }
         }
 
         editDate.setText(selectedDate[0].format(displayFormatter));
 
         radioGroupRarity.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.radioFiveStar) {
-                checkResetPity.setChecked(true);
-            }
-
             String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
             if (TextUtils.isEmpty(currentText)) {
                 if (checkedId == R.id.radioThreeStar) {
@@ -316,7 +313,8 @@ public class WishesCounterFragment extends Fragment {
                         dropType,
                         dropRare,
                         mainActivity.getSubType(),
-                        currentBannerType
+                        currentBannerType,
+                        isResetPity
                 );
             } else {
                 databaseHelper.addWishes(
@@ -325,7 +323,8 @@ public class WishesCounterFragment extends Fragment {
                         dropRare,
                         1,
                         mainActivity.getSubType(),
-                        currentBannerType
+                        currentBannerType,
+                        isResetPity
                 );
             }
 
@@ -353,7 +352,8 @@ public class WishesCounterFragment extends Fragment {
                 dropRare,
                 1,
                 mainActivity.getSubType(),
-                currentBannerType
+                currentBannerType,
+                false
         );
         if (getView() != null) {
             refreshData(getView());
@@ -371,7 +371,8 @@ public class WishesCounterFragment extends Fragment {
                 getString(R.string.three_star),
                 9,
                 mainActivity.getSubType(),
-                currentBannerType
+                currentBannerType,
+                false
         );
         showWishDialog(null, getString(R.string.four_star), false);
     }
