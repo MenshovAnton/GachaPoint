@@ -97,7 +97,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/claimColumnHeaderHome"
                     app:layout_constraintVertical_bias="0.0"
-                    app:srcCompat="@drawable/primogem"
+                    app:srcCompat="@drawable/icon_primogem"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
@@ -111,7 +111,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/gemIconHome"
                     app:layout_constraintVertical_bias="0.0"
-                    app:srcCompat="@drawable/intertwined_fate"
+                    app:srcCompat="@drawable/icon_intertwined_fate"
                     tools:ignore="ImageContrastCheck" />
 
                 <TextView
@@ -321,7 +321,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.0"
-                        app:srcCompat="@drawable/intertwined_fate"
+                        app:srcCompat="@drawable/icon_intertwined_fate"
                         tools:ignore="ImageContrastCheck" />
 
                     <ProgressBar
@@ -334,7 +334,7 @@
                         android:layout_marginEnd="15dp"
                         android:max="100"
                         android:progress="50"
-                        android:progressDrawable="@drawable/progress_bar_custom"
+                        android:progressDrawable="@drawable/progress_bar_layer"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

@@ -10,8 +10,8 @@
         <item name="android:textColor">@color/white</item>
         <item name="fontFamily">@font/genshin_font</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="itemTextColor">@drawable/bottom_navigation_text_selector_night</item>
-        <item name="itemIconTint">@drawable/bottom_navigation_selector_night</item>
+        <item name="itemTextColor">@drawable/bottom_navigation_text_selector</item>
+        <item name="itemIconTint">@drawable/bottom_navigation_selector</item>
         <item name="materialTimePickerTheme">@style/ThemeOverlay.GachaPoint.TimePicker</item>
         <item name="bottomNavigationStyle">@style/Navigation.GachaPoint.BottomNavBar</item>
         <item name="progressBarStyle">@style/ProgressBar.GachaPoint.ProgressBar</item>

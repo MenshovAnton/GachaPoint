@@ -201,7 +201,7 @@
                 android:layout_marginStart="10dp"
                 android:background="@drawable/rounded_button"
                 android:importantForAccessibility="no"
-                android:src="@drawable/baseline_more_horiz_24"
+                android:src="@drawable/icon_more"
                 app:layout_constraintBottom_toBottomOf="@+id/checkButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -246,7 +246,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/claimColumnHeader"
                     app:layout_constraintVertical_bias="0.0"
-                    app:srcCompat="@drawable/primogem"
+                    app:srcCompat="@drawable/icon_primogem"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
@@ -260,7 +260,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/gemIcon"
                     app:layout_constraintVertical_bias="0.0"
-                    app:srcCompat="@drawable/intertwined_fate"
+                    app:srcCompat="@drawable/icon_intertwined_fate"
                     tools:ignore="ImageContrastCheck" />
 
                 <TextView

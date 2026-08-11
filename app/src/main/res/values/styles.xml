@@ -49,7 +49,7 @@
         <item name="tabRippleColor">@android:color/transparent</item>
     </style>
     <style name="Dialog.GachaPoint.AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="android:windowBackground">@drawable/bg_dialog_rounded</item>
+        <item name="colorSurfaceContainerHigh">@color/white</item>
         <item name="colorPrimary">@color/accent</item>
         <item name="colorOnSurface">@color/white</item>
     </style>

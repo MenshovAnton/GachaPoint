@@ -96,9 +96,9 @@ public class CalendarHelper {
                     if (dateObj.dayOfMonth == today.getDayOfMonth()
                             && dateObj.month == today.getMonthValue()
                             && dateObj.year == today.getYear()) {
-                        cell.setBackgroundResource(R.drawable.background_date_today);
+                        cell.setBackgroundResource(R.drawable.calendar_cell_today);
                     } else {
-                        cell.setBackgroundResource(R.drawable.background_date);
+                        cell.setBackgroundResource(R.drawable.calendar_cell);
                     }
 
                     DayState dayState = DayState.from(dateObj, selectedMonth, toDayOfYear);

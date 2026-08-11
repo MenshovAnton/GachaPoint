@@ -117,21 +117,21 @@ public class HomeFragment extends Fragment {
 
         switch (mainActivity.getSubType()) {
             case 0:
-                gemIcon.setImageResource(R.drawable.primogem);
-                wishIconStats.setImageResource(R.drawable.intertwined_fate);
-                wishIconPiggyBank.setImageResource(R.drawable.intertwined_fate);
+                gemIcon.setImageResource(R.drawable.icon_primogem);
+                wishIconStats.setImageResource(R.drawable.icon_intertwined_fate);
+                wishIconPiggyBank.setImageResource(R.drawable.icon_intertwined_fate);
                 subsCountTitle.setText(R.string.blessing_of_the_welkin_moon_count_header);
                 break;
             case 1:
-                gemIcon.setImageResource(R.drawable.stellar_jade);
-                wishIconStats.setImageResource(R.drawable.star_rail_special_pass);
-                wishIconPiggyBank.setImageResource(R.drawable.star_rail_special_pass);
+                gemIcon.setImageResource(R.drawable.icon_stellar_jade);
+                wishIconStats.setImageResource(R.drawable.icon_star_rail_special_pass);
+                wishIconPiggyBank.setImageResource(R.drawable.icon_star_rail_special_pass);
                 subsCountTitle.setText(R.string.star_rail_special_pass_count_header);
                 break;
             case 2:
-                gemIcon.setImageResource(R.drawable.polychrome);
-                wishIconStats.setImageResource(R.drawable.encrypted_master_tape);
-                wishIconPiggyBank.setImageResource(R.drawable.encrypted_master_tape);
+                gemIcon.setImageResource(R.drawable.icon_polychrome);
+                wishIconStats.setImageResource(R.drawable.icon_encrypted_master_tape);
+                wishIconPiggyBank.setImageResource(R.drawable.icon_encrypted_master_tape);
                 subsCountTitle.setText(R.string.inter_knot_member_count_header);
                 break;
         }

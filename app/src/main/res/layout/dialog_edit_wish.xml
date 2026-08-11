@@ -14,39 +14,35 @@
         android:text="@string/add_pull"
         android:textSize="18sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/date"
-        android:textSize="14sp"
-        android:layout_marginBottom="8dp" />
-
-    <EditText
-        android:id="@+id/editDate"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        android:clickable="true"
-        android:focusable="false"
-        android:hint="@string/date"
-        android:importantForAutofill="no"
-        android:inputType="date" />
+        android:hint="@string/date">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hint_input_content"
-        android:textSize="14sp"
-        android:layout_marginBottom="8dp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:importantForAutofill="no"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/editDropType"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_input_content"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginBottom="12dp"
+        android:hint="@string/hint_input_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editDropType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:layout_width="wrap_content"

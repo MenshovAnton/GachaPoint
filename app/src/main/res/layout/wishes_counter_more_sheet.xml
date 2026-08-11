@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/dialog_background">
+    android:background="@drawable/bottom_sheet_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
-            android:src="@drawable/plus"
+            android:src="@drawable/icon_plus"
             app:tint="@color/check"
             tools:ignore="ContentDescription" />
 
@@ -65,7 +65,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
-            android:src="@drawable/plus"
+            android:src="@drawable/icon_plus"
             app:tint="@color/check"
             tools:ignore="ContentDescription" />
 
@@ -90,7 +90,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
-            android:src="@drawable/plus"
+            android:src="@drawable/icon_plus"
             app:tint="@color/check"
             tools:ignore="ContentDescription" />
 
@@ -118,7 +118,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
-            android:src="@drawable/plus"
+            android:src="@drawable/icon_plus"
             app:tint="@color/check"
             tools:ignore="ContentDescription" />
 

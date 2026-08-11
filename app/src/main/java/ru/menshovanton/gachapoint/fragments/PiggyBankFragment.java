@@ -114,13 +114,13 @@ public class PiggyBankFragment extends Fragment {
 
         switch (mainActivity.getSubType()) {
             case 0:
-                wishIcon.setImageResource(R.drawable.intertwined_fate);
+                wishIcon.setImageResource(R.drawable.icon_intertwined_fate);
                 break;
             case 1:
-                wishIcon.setImageResource(R.drawable.star_rail_special_pass);
+                wishIcon.setImageResource(R.drawable.icon_star_rail_special_pass);
                 break;
             case 2:
-                wishIcon.setImageResource(R.drawable.encrypted_master_tape);
+                wishIcon.setImageResource(R.drawable.icon_encrypted_master_tape);
                 break;
         }
 

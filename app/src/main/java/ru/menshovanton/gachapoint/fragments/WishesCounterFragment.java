@@ -1,15 +1,14 @@
 package ru.menshovanton.gachapoint.fragments;
 
-import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -20,6 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.radiobutton.MaterialRadioButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -94,13 +96,13 @@ public class WishesCounterFragment extends Fragment {
 
         switch (mainActivity.getSubType()) {
             case 0:
-                wishIcon.setImageResource(R.drawable.intertwined_fate);
+                wishIcon.setImageResource(R.drawable.icon_intertwined_fate);
                 break;
             case 1:
-                wishIcon.setImageResource(R.drawable.star_rail_special_pass);
+                wishIcon.setImageResource(R.drawable.icon_star_rail_special_pass);
                 break;
             case 2:
-                wishIcon.setImageResource(R.drawable.encrypted_master_tape);
+                wishIcon.setImageResource(R.drawable.icon_encrypted_master_tape);
                 break;
         }
 
@@ -154,17 +156,19 @@ public class WishesCounterFragment extends Fragment {
     }
 
     private void showWishDialog(@Nullable Wish wishToEdit, @Nullable String defaultRarity) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.Dialog_GachaPoint_AlertDialog);
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_wish, null);
+        Context contextThemeWrapper = new ContextThemeWrapper(requireContext(), R.style.Dialog_GachaPoint_AlertDialog);
+        View dialogView = LayoutInflater.from(contextThemeWrapper).inflate(R.layout.dialog_edit_wish, null);
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(contextThemeWrapper, R.style.Dialog_GachaPoint_AlertDialog);
         builder.setView(dialogView);
 
         TextView dialogTitle = dialogView.findViewById(R.id.dialogTitle);
-        EditText editDate = dialogView.findViewById(R.id.editDate);
-        EditText editDropType = dialogView.findViewById(R.id.editDropType);
+        TextInputEditText editDate = dialogView.findViewById(R.id.editDate);
+        TextInputEditText editDropType = dialogView.findViewById(R.id.editDropType);
         RadioGroup radioGroupRarity = dialogView.findViewById(R.id.radioGroupRarity);
-        RadioButton radioThreeStar = dialogView.findViewById(R.id.radioThreeStar);
-        RadioButton radioFourStar = dialogView.findViewById(R.id.radioFourStar);
-        RadioButton radioFiveStar = dialogView.findViewById(R.id.radioFiveStar);
+        MaterialRadioButton radioThreeStar = dialogView.findViewById(R.id.radioThreeStar);
+        MaterialRadioButton radioFourStar = dialogView.findViewById(R.id.radioFourStar);
+        MaterialRadioButton radioFiveStar = dialogView.findViewById(R.id.radioFiveStar);
 
         DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.getDefault());
         DateTimeFormatter dbFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -201,10 +205,6 @@ public class WishesCounterFragment extends Fragment {
             } else {
                 radioThreeStar.setChecked(true);
             }
-
-            if (TextUtils.isEmpty(editDropType.getText())) {
-                editDropType.setHint(getString(R.string.default_wish_content));
-            }
         }
 
         editDate.setText(selectedDate[0].format(displayFormatter));
@@ -232,7 +232,7 @@ public class WishesCounterFragment extends Fragment {
         });
 
         radioGroupRarity.setOnCheckedChangeListener((group, checkedId) -> {
-            String currentText = editDropType.getText().toString().trim();
+            String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
             if (TextUtils.isEmpty(currentText)) {
                 if (checkedId == R.id.radioThreeStar) {
                     editDropType.setText(getString(R.string.default_wish_content));
@@ -241,7 +241,7 @@ public class WishesCounterFragment extends Fragment {
         });
 
         builder.setPositiveButton(isEditMode ? getString(R.string.save) : getString(R.string.add_to_bank), (dialog, which) -> {
-            String dropType = editDropType.getText().toString().trim();
+            String dropType = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
             if (TextUtils.isEmpty(dropType)) {
                 dropType = getString(R.string.default_wish_content);
             }
@@ -276,12 +276,13 @@ public class WishesCounterFragment extends Fragment {
                 );
             }
 
-            assert getView() != null;
-            refreshData(getView());
+            if (getView() != null) {
+                refreshData(getView());
+            }
         });
 
         builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
-        builder.create().show();
+        builder.show();
     }
 
     private void addWish(String dropRare, String dropType) {

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/dialog_background">
+    android:background="@drawable/bottom_sheet_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
-            android:src="@drawable/plus"
+            android:src="@drawable/icon_plus"
             app:tint="@color/check"
             tools:ignore="ContentDescription" />
 
@@ -65,7 +65,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
-            android:src="@drawable/minus"
+            android:src="@drawable/icon_minus"
             app:tint="@color/check"
             tools:ignore="ContentDescription" />
 
@@ -92,7 +92,7 @@
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/backup"
+            android:src="@drawable/icon_backup"
             app:tint="@color/check"/>
 
         <TextView
@@ -137,7 +137,7 @@
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/right_arrow"
+            android:src="@drawable/icon_right_arrow"
             app:tint="@color/check"/>
 
         <TextView
@@ -165,7 +165,7 @@
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/cross"
+            android:src="@drawable/icon_cross"
             app:tint="@color/check"/>
 
         <TextView
