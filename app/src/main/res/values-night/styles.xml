@@ -59,4 +59,35 @@
         <item name="colorOnSurface">@color/white</item>
         <item name="colorOnSurfaceVariant">@color/light_grey</item>
     </style>
+    <style name="DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.GachaPoint.Pill</item>
+        <item name="expandedHintEnabled">false</item>
+        <item name="hintEnabled">false</item>
+        <item name="boxCollapsedPaddingTop">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="boxStrokeColor">@color/dropdown_stroke_color</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="boxBackgroundColor">@color/background_night</item>
+        <item name="endIconTint">@color/accent</item>
+    </style>
+    <style name="ThemeOverlay.GachaPoint.DropdownMenu" parent="ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox">
+        <item name="colorSurfaceContainerHigh">@color/background_night</item>
+        <item name="colorSurfaceContainer">@color/background_night</item>
+        <item name="colorSurface">@color/background_night</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnSurfaceVariant">@color/accent</item>
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="shapeAppearanceCornerExtraSmall">@style/ShapeAppearance.GachaPoint.RoundedPopup</item>
+        <item name="shapeAppearanceCornerMedium">@style/ShapeAppearance.GachaPoint.RoundedPopup</item>
+    </style>
+    <style name="ShapeAppearance.GachaPoint.Pill" parent="ShapeAppearance.Material3.Corner.Full">
+        <item name="cornerSize">50%</item>
+    </style>
+    <style name="ShapeAppearance.GachaPoint.RoundedPopup" parent="ShapeAppearance.Material3.Corner.Medium">
+        <item name="cornerSize">16dp</item>
+    </style>
 </resources>

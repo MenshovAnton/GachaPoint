@@ -39,7 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DATETIME = "date_time";
     public static final String COLUMN_DROP_RARE = "drop_rare";
     public static final String COLUMN_DROP_TYPE = "drop_type";
-
+    public static final String COLUMN_BANNER_TYPE = "banner_type"; // Новая колонка
 
     public DatabaseHelper(Context context) {
         super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
@@ -61,37 +61,107 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_STATUS_ZZZ + " INTEGER, " +
                 COLUMN_INTERKNOT_DAYS_REMAINING + " INTEGER)";
 
-        String createWishesGenshinTableQuery = "CREATE TABLE " + WISHES_GENSHIN_TABLE + " (" +
-                COLUMN_WISHES_ID + " INTEGER PRIMARY KEY, " +
-                COLUMN_DATETIME + " TEXT, " +
-                COLUMN_DROP_RARE + " TEXT, " +
-                COLUMN_DROP_TYPE + " TEXT) ";
-
-        String createWishesHSRTableQuery = "CREATE TABLE " + WISHES_HSR_TABLE + " (" +
-                COLUMN_WISHES_ID + " INTEGER PRIMARY KEY, " +
-                COLUMN_DATETIME + " TEXT, " +
-                COLUMN_DROP_RARE + " TEXT, " +
-                COLUMN_DROP_TYPE + " TEXT) ";
-
-        String createWishesZZZTableQuery = "CREATE TABLE " + WISHES_ZZZ_TABLE + " (" +
-                COLUMN_WISHES_ID + " INTEGER PRIMARY KEY, " +
-                COLUMN_DATETIME + " TEXT, " +
-                COLUMN_DROP_RARE + " TEXT, " +
-                COLUMN_DROP_TYPE + " TEXT) ";
-
         db.execSQL(createCalendarTableQuery);
-        db.execSQL(createWishesGenshinTableQuery);
-        db.execSQL(createWishesHSRTableQuery);
-        db.execSQL(createWishesZZZTableQuery);
+        createWishesTable(db, WISHES_GENSHIN_TABLE);
+        createWishesTable(db, WISHES_HSR_TABLE);
+        createWishesTable(db, WISHES_ZZZ_TABLE);
+    }
+
+    private void createWishesTable(SQLiteDatabase db, String tableName) {
+        String query = "CREATE TABLE " + tableName + " (" +
+                COLUMN_WISHES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_DATETIME + " TEXT, " +
+                COLUMN_DROP_RARE + " TEXT, " +
+                COLUMN_DROP_TYPE + " TEXT, " +
+                COLUMN_BANNER_TYPE + " TEXT DEFAULT 'event')";
+        db.execSQL(query);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + CALENDAR_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + WISHES_GENSHIN_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + WISHES_HSR_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + WISHES_ZZZ_TABLE);
-        onCreate(db);
+        if (oldVersion < 2) {
+            String alterSql = "ALTER TABLE %s ADD COLUMN " + COLUMN_BANNER_TYPE + " TEXT DEFAULT 'event'";
+            db.execSQL(String.format(alterSql, WISHES_GENSHIN_TABLE));
+            db.execSQL(String.format(alterSql, WISHES_HSR_TABLE));
+            db.execSQL(String.format(alterSql, WISHES_ZZZ_TABLE));
+        }
+    }
+
+    public List<Wish> getWishesByBanner(int subType, String bannerType) {
+        String table = getCurrentTable(subType);
+        List<Wish> wishesList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_BANNER_TYPE + " = ?";
+        String[] selectionArgs = new String[]{bannerType};
+
+        try (Cursor cursor = db.query(table, null, selection, selectionArgs, null, null, COLUMN_WISHES_ID + " DESC")) {
+            if (cursor.moveToFirst()) {
+                int idIdx = cursor.getColumnIndexOrThrow(COLUMN_WISHES_ID);
+                int dateTimeIdx = cursor.getColumnIndexOrThrow(COLUMN_DATETIME);
+                int dropRareIdx = cursor.getColumnIndexOrThrow(COLUMN_DROP_RARE);
+                int dropTypeIdx = cursor.getColumnIndexOrThrow(COLUMN_DROP_TYPE);
+                int bannerTypeIdx = cursor.getColumnIndexOrThrow(COLUMN_BANNER_TYPE);
+
+                do {
+                    int id = cursor.getInt(idIdx);
+                    String dateTime = cursor.getString(dateTimeIdx);
+                    String dropRare = cursor.getString(dropRareIdx);
+                    String dropType = cursor.getString(dropTypeIdx);
+                    String bType = cursor.getString(bannerTypeIdx);
+
+                    wishesList.add(new Wish(id, dropRare, dropType, dateTime, bType));
+                } while (cursor.moveToNext());
+            }
+        }
+        return wishesList;
+    }
+
+    public void addWishes(String dateTime, String dropType, String dropRare, int count, int subType, String bannerType) {
+        String table = getCurrentTable(subType);
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "INSERT INTO " + table + " (" +
+                COLUMN_DATETIME + ", " + COLUMN_DROP_RARE + ", " + COLUMN_DROP_TYPE + ", " + COLUMN_BANNER_TYPE + ") VALUES (?, ?, ?, ?)";
+
+        db.beginTransaction();
+        try {
+            SQLiteStatement statement = db.compileStatement(sql);
+            statement.bindString(1, dateTime);
+            statement.bindString(2, dropRare);
+            statement.bindString(3, dropType);
+            statement.bindString(4, bannerType);
+
+            for (int i = 0; i < count; i++) {
+                statement.executeInsert();
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void updateWish(int id, String dateTime, String dropType, String dropRare, int subType, String bannerType) {
+        String table = getCurrentTable(subType);
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_DATETIME, dateTime);
+        values.put(COLUMN_DROP_TYPE, dropType);
+        values.put(COLUMN_DROP_RARE, dropRare);
+        values.put(COLUMN_BANNER_TYPE, bannerType);
+
+        String whereClause = COLUMN_WISHES_ID + " = ?";
+        String[] whereArgs = new String[]{String.valueOf(id)};
+
+        db.update(table, values, whereClause, whereArgs);
+    }
+
+    private String getCurrentTable(int subType) {
+        switch (subType) {
+            case 1: return WISHES_HSR_TABLE;
+            case 2: return WISHES_ZZZ_TABLE;
+            case 0: default: return WISHES_GENSHIN_TABLE;
+        }
     }
 
     public void saveCalendarBatch(Date[] dateArray, int start, int count, int subType) {
@@ -141,78 +211,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             case 1: return COLUMN_EXPRESS_PASS_DAYS_REMAINING;
             case 2: return COLUMN_INTERKNOT_DAYS_REMAINING;
             default: return COLUMN_MOON_DAYS_REMAINING;
-        }
-    }
-
-    public List<Wish> getAllWishes(int subType) {
-        String table = getCurrentTable(subType);
-
-        List<Wish> wishesList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        try (Cursor cursor = db.query(table, null, null, null, null, null, COLUMN_WISHES_ID + " DESC")) {
-            if (cursor.moveToFirst()) {
-                int idIdx = cursor.getColumnIndexOrThrow(COLUMN_WISHES_ID);
-                int dateTimeIdx = cursor.getColumnIndexOrThrow(COLUMN_DATETIME);
-                int dropRareIdx = cursor.getColumnIndexOrThrow(COLUMN_DROP_RARE);
-                int dropTypeIdx = cursor.getColumnIndexOrThrow(COLUMN_DROP_TYPE);
-
-                do {
-                    int id = cursor.getInt(idIdx);
-                    String dateTime = cursor.getString(dateTimeIdx);
-                    String dropRare = cursor.getString(dropRareIdx);
-                    String dropType = cursor.getString(dropTypeIdx);
-
-                    wishesList.add(new Wish(id, dropRare, dropType, dateTime));
-                } while (cursor.moveToNext());
-            }
-        }
-        return wishesList;
-    }
-
-    public void addWishes(String dateTime, String dropType, String dropRare, int count, int subType) {
-        String table = getCurrentTable(subType);
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        String sql = "INSERT INTO " + table + " (" +
-                COLUMN_DATETIME + ", " + COLUMN_DROP_RARE + ", " + COLUMN_DROP_TYPE + ") VALUES (?, ?, ?)";
-
-        db.beginTransaction();
-        try {
-            SQLiteStatement statement = db.compileStatement(sql);
-            statement.bindString(1, dateTime);
-            statement.bindString(2, dropRare);
-            statement.bindString(3, dropType);
-
-            for (int i = 0; i < count; i++) {
-                statement.executeInsert();
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-    public void updateWish(int id, String dateTime, String dropType, String dropRare, int subType) {
-        String table = getCurrentTable(subType);
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_DATETIME, dateTime);
-        values.put(COLUMN_DROP_TYPE, dropType);
-        values.put(COLUMN_DROP_RARE, dropRare);
-
-        String whereClause = COLUMN_WISHES_ID + " = ?";
-        String[] whereArgs = new String[]{String.valueOf(id)};
-
-        db.update(table, values, whereClause, whereArgs);
-    }
-
-    private String getCurrentTable(int subType) {
-        switch (subType) {
-            case 1: return WISHES_HSR_TABLE;
-            case 2: return WISHES_ZZZ_TABLE;
-            case 0: default: return WISHES_GENSHIN_TABLE;
         }
     }
 }

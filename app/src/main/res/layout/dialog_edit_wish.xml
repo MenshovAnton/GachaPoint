@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="20dp">
 
@@ -47,9 +47,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="@string/select_rare"
-        android:textSize="14sp"
-        android:layout_marginBottom="8dp" />
+        android:textSize="14sp" />
 
     <RadioGroup
         android:id="@+id/radioGroupRarity"
@@ -81,5 +81,13 @@
             android:text="@string/five_star"
             app:buttonTint="@color/radio_button_selector"/>
     </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/checkResetPity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/reset_pity"
+        android:textSize="14sp" />
 
 </LinearLayout>

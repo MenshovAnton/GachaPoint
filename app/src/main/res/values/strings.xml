@@ -103,4 +103,9 @@
     <string name="cancel">Cancel</string>
     <string name="date">Date</string>
     <string name="select_date">Select date</string>
+    <string name="type_event">Event</string>
+    <string name="type_std">Standart</string>
+    <string name="type_spec">Special</string>
+    <string name="type_novie">Novice</string>
+    <string name="reset_pity">Reset pity</string>
 </resources>

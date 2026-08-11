@@ -46,7 +46,7 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
     public void onBindViewHolder(@NonNull WishViewHolder holder, int position) {
         Wish wish = wishes.get(position);
 
-        holder.numberOfWish.setText(String.valueOf(wish.getId()));
+        holder.numberOfWish.setText(String.valueOf(wish.getPityNumber()));
         holder.dropRare.setText(wish.getDropRare());
         holder.dropType.setText(wish.getDropType());
 

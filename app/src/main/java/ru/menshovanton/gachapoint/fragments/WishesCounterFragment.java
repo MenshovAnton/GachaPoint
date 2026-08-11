@@ -7,7 +7,10 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -28,14 +31,15 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import ru.menshovanton.gachapoint.BannerType;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.adapters.WishAdapter;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
-import ru.menshovanton.gachapoint.helpers.DateHelper;
 import ru.menshovanton.gachapoint.models.Wish;
 
 public class WishesCounterFragment extends Fragment {
@@ -43,8 +47,10 @@ public class WishesCounterFragment extends Fragment {
     private TextView savedWishesCounter;
     private Button addActions;
     private DatabaseHelper databaseHelper;
-    private DateHelper dateHelper;
     private RecyclerView recyclerView;
+    private AutoCompleteTextView bannerSelector;
+
+    private String currentBannerType = BannerType.EVENT.getDbKey();
 
     public WishesCounterFragment() {}
 
@@ -67,6 +73,7 @@ public class WishesCounterFragment extends Fragment {
         addActions = view.findViewById(R.id.addActionsButton);
         savedWishesCounter = view.findViewById(R.id.wishesCounter);
         recyclerView = view.findViewById(R.id.wishesLog);
+        bannerSelector = view.findViewById(R.id.bannerSelector);
         return view;
     }
 
@@ -79,6 +86,22 @@ public class WishesCounterFragment extends Fragment {
             if (shouldRefresh) {
                 refreshData(view);
             }
+        });
+
+        String[] banners = new String[]{
+                getString(R.string.type_event),
+                getString(R.string.type_spec),
+                getString(R.string.type_std),
+                getString(R.string.type_novie)
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, banners);
+        bannerSelector.setAdapter(adapter);
+        bannerSelector.setText(getBannerLabel(currentBannerType), false);
+
+        bannerSelector.setOnItemClickListener((parent, itemView, position, id) -> {
+            String selectedLabel = (String) parent.getItemAtPosition(position);
+            currentBannerType = getBannerKey(selectedLabel);
+            refreshData(requireView());
         });
 
         addActions.setOnClickListener(this::showMoreMenu);
@@ -106,14 +129,14 @@ public class WishesCounterFragment extends Fragment {
                 break;
         }
 
-        updateProgress();
+        List<Wish> wishes = databaseHelper.getWishesByBanner(mainActivity.getSubType(), currentBannerType);
 
-        List<Wish> wishes = databaseHelper.getAllWishes(mainActivity.getSubType());
+        int currentPity = calculatePityAndNumbers(wishes);
+        savedWishesCounter.setText(String.valueOf(currentPity));
+
         View emptyView = view.findViewById(R.id.emptyStateView);
-
-        WishAdapter adapter = new WishAdapter(wishes);
-
-        adapter.setOnItemClickListener(wish -> showWishDialog(wish, null));
+        WishAdapter wishAdapter = new WishAdapter(wishes);
+        wishAdapter.setOnItemClickListener(wish -> showWishDialog(wish, null, false));
 
         if (wishes.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
@@ -123,12 +146,28 @@ public class WishesCounterFragment extends Fragment {
             emptyView.setVisibility(View.GONE);
 
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(adapter);
+            recyclerView.setAdapter(wishAdapter);
         }
     }
 
-    private void updateProgress() {
-        savedWishesCounter.setText("0");
+    private int calculatePityAndNumbers(List<Wish> wishes) {
+        if (wishes.isEmpty()) return 0;
+
+        Collections.reverse(wishes);
+
+        int counter = 0;
+        for (Wish wish : wishes) {
+            counter++;
+            wish.setPityNumber(counter);
+
+            if (getString(R.string.five_star).equalsIgnoreCase(wish.getDropRare())) {
+                counter = 0;
+            }
+        }
+
+        Collections.reverse(wishes);
+
+        return counter;
     }
 
     private void showMoreMenu(View view) {
@@ -145,17 +184,17 @@ public class WishesCounterFragment extends Fragment {
 
             @Override
             public void onAddFiveStarDrop() {
-                showWishDialog(null, getString(R.string.five_star));
+                showWishDialog(null, getString(R.string.five_star), true);
             }
 
             @Override
             public void onAddFourStarDrop() {
-                showWishDialog(null, getString(R.string.four_star));
+                showWishDialog(null, getString(R.string.four_star), false);
             }
         });
     }
 
-    private void showWishDialog(@Nullable Wish wishToEdit, @Nullable String defaultRarity) {
+    private void showWishDialog(@Nullable Wish wishToEdit, @Nullable String defaultRarity, boolean autoCheckResetPity) {
         Context contextThemeWrapper = new ContextThemeWrapper(requireContext(), R.style.Dialog_GachaPoint_AlertDialog);
         View dialogView = LayoutInflater.from(contextThemeWrapper).inflate(R.layout.dialog_edit_wish, null);
 
@@ -169,6 +208,7 @@ public class WishesCounterFragment extends Fragment {
         MaterialRadioButton radioThreeStar = dialogView.findViewById(R.id.radioThreeStar);
         MaterialRadioButton radioFourStar = dialogView.findViewById(R.id.radioFourStar);
         MaterialRadioButton radioFiveStar = dialogView.findViewById(R.id.radioFiveStar);
+        CheckBox checkResetPity = dialogView.findViewById(R.id.checkResetPity);
 
         DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.getDefault());
         DateTimeFormatter dbFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -180,6 +220,8 @@ public class WishesCounterFragment extends Fragment {
             dialogTitle.setText(getString(R.string.edit_pull));
             editDropType.setText(wishToEdit.getDropType());
 
+            checkResetPity.setVisibility(View.GONE);
+
             try {
                 selectedDate[0] = LocalDate.parse(wishToEdit.getDateTime(), dbFormatter);
             } catch (Exception e) {
@@ -187,27 +229,44 @@ public class WishesCounterFragment extends Fragment {
             }
 
             String rarity = wishToEdit.getDropRare();
-            if (getString(R.string.three_star).equalsIgnoreCase(rarity)) {
-                radioThreeStar.setChecked(true);
-            } else if (getString(R.string.four_star).equalsIgnoreCase(rarity)) {
+            if (getString(R.string.four_star).equalsIgnoreCase(rarity)) {
                 radioFourStar.setChecked(true);
-            } else {
+            } else if (getString(R.string.five_star).equalsIgnoreCase(rarity)) {
                 radioFiveStar.setChecked(true);
+            } else {
+                radioThreeStar.setChecked(true);
             }
         } else {
             dialogTitle.setText(getString(R.string.add_pull));
+            checkResetPity.setVisibility(View.VISIBLE);
             selectedDate[0] = LocalDate.now();
 
             if (getString(R.string.five_star).equalsIgnoreCase(defaultRarity)) {
                 radioFiveStar.setChecked(true);
+                checkResetPity.setChecked(true);
             } else if (getString(R.string.four_star).equalsIgnoreCase(defaultRarity)) {
                 radioFourStar.setChecked(true);
+                checkResetPity.setChecked(autoCheckResetPity);
             } else {
                 radioThreeStar.setChecked(true);
+                checkResetPity.setChecked(autoCheckResetPity);
             }
         }
 
         editDate.setText(selectedDate[0].format(displayFormatter));
+
+        radioGroupRarity.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radioFiveStar) {
+                checkResetPity.setChecked(true);
+            }
+
+            String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
+            if (TextUtils.isEmpty(currentText)) {
+                if (checkedId == R.id.radioThreeStar) {
+                    editDropType.setText(getString(R.string.default_wish_content));
+                }
+            }
+        });
 
         editDate.setOnClickListener(v -> {
             long selectionEpochMilli = selectedDate[0]
@@ -231,15 +290,6 @@ public class WishesCounterFragment extends Fragment {
             datePicker.show(getParentFragmentManager(), "DATE_PICKER");
         });
 
-        radioGroupRarity.setOnCheckedChangeListener((group, checkedId) -> {
-            String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
-            if (TextUtils.isEmpty(currentText)) {
-                if (checkedId == R.id.radioThreeStar) {
-                    editDropType.setText(getString(R.string.default_wish_content));
-                }
-            }
-        });
-
         builder.setPositiveButton(isEditMode ? getString(R.string.save) : getString(R.string.add_to_bank), (dialog, which) -> {
             String dropType = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
             if (TextUtils.isEmpty(dropType)) {
@@ -256,6 +306,7 @@ public class WishesCounterFragment extends Fragment {
                 dropRare = getString(R.string.three_star);
             }
 
+            boolean isResetPity = checkResetPity.isChecked();
             String dateForDb = selectedDate[0].format(dbFormatter);
 
             if (isEditMode) {
@@ -264,7 +315,8 @@ public class WishesCounterFragment extends Fragment {
                         dateForDb,
                         dropType,
                         dropRare,
-                        mainActivity.getSubType()
+                        mainActivity.getSubType(),
+                        currentBannerType
                 );
             } else {
                 databaseHelper.addWishes(
@@ -272,7 +324,8 @@ public class WishesCounterFragment extends Fragment {
                         dropType,
                         dropRare,
                         1,
-                        mainActivity.getSubType()
+                        mainActivity.getSubType(),
+                        currentBannerType
                 );
             }
 
@@ -285,16 +338,26 @@ public class WishesCounterFragment extends Fragment {
         builder.show();
     }
 
+    private String getBannerKey(String label) {
+        return BannerType.getKeyByLabel(requireContext(), label);
+    }
+
+    private String getBannerLabel(String key) {
+        return BannerType.getLabelByKey(requireContext(), key);
+    }
+
     private void addWish(String dropRare, String dropType) {
         databaseHelper.addWishes(
                 LocalDate.now().toString(),
                 dropType,
                 dropRare,
                 1,
-                mainActivity.getSubType()
+                mainActivity.getSubType(),
+                currentBannerType
         );
-        assert getView() != null;
-        refreshData(getView());
+        if (getView() != null) {
+            refreshData(getView());
+        }
     }
 
     private void addOneAttempt() {
@@ -307,8 +370,9 @@ public class WishesCounterFragment extends Fragment {
                 getString(R.string.default_wish_content),
                 getString(R.string.three_star),
                 9,
-                mainActivity.getSubType()
+                mainActivity.getSubType(),
+                currentBannerType
         );
-        showWishDialog(null, getString(R.string.four_star));
+        showWishDialog(null, getString(R.string.four_star), false);
     }
 }

@@ -88,6 +88,11 @@
     <string name="cancel">Отмена</string>
     <string name="date">Дата</string>
     <string name="select_date">Выбирете дату</string>
+    <string name="type_event">Ивент</string>
+    <string name="type_std">Стандарт</string>
+    <string name="type_spec">Особый</string>
+    <string name="type_novie">Новичок</string>
+    <string name="reset_pity">Сбросить гарант</string>
 
 
 </resources>
