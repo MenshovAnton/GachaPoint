@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Objects;
 
+import ru.menshovanton.gachapoint.db.AppDatabase;
 import ru.menshovanton.gachapoint.helpers.AlarmHelper;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.Notification;
@@ -154,6 +155,8 @@ public class SettingsFragment extends Fragment {
 
     private void writeDatabaseToUri(Uri targetUri) {
         if (!isAdded()) return;
+
+        AppDatabase.getInstance(requireContext()).checkpoint();
 
         File dbFile = requireContext().getDatabasePath(DatabaseHelper.DATABASE_NAME);
 

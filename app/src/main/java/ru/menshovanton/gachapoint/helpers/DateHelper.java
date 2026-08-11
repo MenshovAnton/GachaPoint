@@ -1,13 +1,9 @@
 package ru.menshovanton.gachapoint.helpers;
 
 import android.content.Context;
-import android.database.Cursor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.menshovanton.gachapoint.models.Date;
 import ru.menshovanton.gachapoint.activities.MainActivity;
+import ru.menshovanton.gachapoint.models.Date;
 
 public class DateHelper {
     private final MainActivity mainActivity;
@@ -24,38 +20,6 @@ public class DateHelper {
     }
 
     public Date[] readDB(Context context) {
-        try (Cursor cursor = dbHelper.getAllCalendarData()) {
-            if (cursor == null || !cursor.moveToFirst()) {
-                return null;
-            }
-
-            int idIdx = cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CALENDAR_ID);
-            int dayIdx = cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DAY);
-            int dayOfYearIdx = cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DAY_YEAR);
-            int dayOfWeekIdx = cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DAY_WEEK);
-            int monthIdx = cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_MONTH);
-            int yearIdx = cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_YEAR);
-
-            int subType = mainActivity.getSubType();
-            int statusIdx = cursor.getColumnIndexOrThrow(DatabaseHelper.getStatusColumn(subType));
-            int subDaysIdx = cursor.getColumnIndexOrThrow(DatabaseHelper.getSubDaysColumn(subType));
-
-            List<Date> list = new ArrayList<>();
-
-            do {
-                int id = cursor.getInt(idIdx);
-                int day = cursor.getInt(dayIdx);
-                int dayOfYear = cursor.getInt(dayOfYearIdx);
-                int dayOfWeek = cursor.getInt(dayOfWeekIdx);
-                int status = cursor.getInt(statusIdx);
-                int subDays = cursor.getInt(subDaysIdx);
-                int month = cursor.getInt(monthIdx);
-                int year = cursor.getInt(yearIdx);
-
-                list.add(new Date(id, day, dayOfYear, dayOfWeek, status, subDays, month, year));
-            } while (cursor.moveToNext());
-
-            return list.toArray(new Date[0]);
-        }
+        return dbHelper.getAllCalendarData(mainActivity.getSubType());
     }
 }

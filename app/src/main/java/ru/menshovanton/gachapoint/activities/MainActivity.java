@@ -32,6 +32,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.menshovanton.gachapoint.db.AppDatabase;
 import ru.menshovanton.gachapoint.helpers.AlarmHelper;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.fragments.HomeFragment;
@@ -124,10 +125,8 @@ public class MainActivity extends AppCompatActivity {
             checkAndRequestPermissions();
         }
 
-        try (DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext())) {
-            if (!isDatabaseExists(this)) {
-                dbHelper.getWritableDatabase();
-            }
+        if (!isDatabaseExists(this)) {
+            AppDatabase.getInstance(getApplicationContext()).getOpenHelper().getWritableDatabase();
         }
 
         startService(new Intent(this, AlarmHelper.class));

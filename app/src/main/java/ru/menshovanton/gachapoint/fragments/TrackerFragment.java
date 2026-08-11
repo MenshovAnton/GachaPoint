@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.menshovanton.gachapoint.CalendarGrid;
+import ru.menshovanton.gachapoint.db.AppDatabase;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 import ru.menshovanton.gachapoint.models.Statistic;
 import ru.menshovanton.gachapoint.adapters.PillsAdapter;
@@ -464,6 +465,8 @@ public class TrackerFragment extends Fragment {
 
     private void writeDatabaseToUri(Uri targetUri) {
         if (!isAdded()) return;
+
+        AppDatabase.getInstance(requireContext()).checkpoint();
 
         File dbFile = requireContext().getDatabasePath(DatabaseHelper.DATABASE_NAME);
 
