@@ -11,6 +11,9 @@ constraintlayout = "2.2.2"
 coreSplashscreen = "1.2.0"
 viewpager2 = "1.1.0"
 recyclerview = "1.4.0"
+roomCommon = "2.8.4"
+roomRuntime = "2.8.4"
+roomCompiler = "2.8.4"
 
 [libraries]
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
@@ -24,6 +27,9 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

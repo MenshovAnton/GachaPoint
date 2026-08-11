@@ -44,9 +44,12 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.gson)
     implementation(libs.recyclerview)
+    implementation(libs.room.common)
+    implementation(libs.room.runtime)
     implementation(libs.splashscreen)
     implementation(libs.viewpager2)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    annotationProcessor(libs.room.compiler)
 }

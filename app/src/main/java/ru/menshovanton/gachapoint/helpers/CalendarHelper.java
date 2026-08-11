@@ -166,7 +166,6 @@ public class CalendarHelper {
             }
         }
 
-        if (missesDays > 0) missesDays++;
         if (toDayOfYear <= calendar.datesArray.length && calendar.datesArray[toDayOfYear - 1].status == 1) {
             claimsDays++;
         }
