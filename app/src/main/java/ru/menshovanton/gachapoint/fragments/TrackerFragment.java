@@ -168,17 +168,14 @@ public class TrackerFragment extends Fragment {
     void refresh(View view) {
         calendarHelper = new CalendarHelper(mainActivity);
 
-        String toDayMonth = LocalDate.now().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru"));
-        toDayMonth.substring(0, 1).toUpperCase();
-
         selectedMonth = LocalDate.now().getMonth().getValue();
-        selectedYear = LocalDate.now().getYear();
+        selectedYear = calendarHelper.getYear();
 
         initCalendarGrid();
         calendarHelper.adjustCellSizes(this);
         calendarHelper.renderCalendar(this);
 
-        setHeader(selectedMonth, calendarHelper.getYear());
+        setHeader(selectedMonth, selectedYear);
         setStatistics();
 
         subsCounterView.setText(String.valueOf(calendarHelper.getSubsCount()));
@@ -439,6 +436,7 @@ public class TrackerFragment extends Fragment {
         } else {
             selectedMonth++;
         }
+        selectedYear = calendarHelper.getYear();
         calendarHelper.renderCalendar(this);
         setHeader(selectedMonth, selectedYear);
     }
@@ -450,6 +448,7 @@ public class TrackerFragment extends Fragment {
         } else {
             selectedMonth--;
         }
+        selectedYear = calendarHelper.getYear();
         calendarHelper.renderCalendar(this);
         setHeader(selectedMonth, selectedYear);
     }
@@ -495,5 +494,9 @@ public class TrackerFragment extends Fragment {
 
     public int getSelectedMonth() {
         return selectedMonth;
+    }
+
+    public int getSelectedYear() {
+        return selectedYear;
     }
 }
