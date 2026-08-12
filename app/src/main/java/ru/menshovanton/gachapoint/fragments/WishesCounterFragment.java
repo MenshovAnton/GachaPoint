@@ -129,25 +129,27 @@ public class WishesCounterFragment extends Fragment {
                 break;
         }
 
-        List<Wish> wishes = databaseHelper.getWishesByBanner(mainActivity.getSubType(), currentBannerType);
+        databaseHelper.getWishesByBanner(mainActivity.getSubType(), currentBannerType, wishes -> {
+            if (!isAdded()) return;
 
-        int currentPity = calculatePityAndNumbers(wishes);
-        savedWishesCounter.setText(String.valueOf(currentPity));
+            int currentPity = calculatePityAndNumbers(wishes);
+            savedWishesCounter.setText(String.valueOf(currentPity));
 
-        View emptyView = view.findViewById(R.id.emptyStateView);
-        WishAdapter wishAdapter = new WishAdapter(wishes);
-        wishAdapter.setOnItemClickListener(wish -> showWishDialog(wish, null, false));
+            View emptyView = view.findViewById(R.id.emptyStateView);
+            WishAdapter wishAdapter = new WishAdapter(wishes);
+            wishAdapter.setOnItemClickListener(wish -> showWishDialog(wish, null, false));
 
-        if (wishes.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
+            if (wishes.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
 
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(wishAdapter);
-        }
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(wishAdapter);
+            }
+        });
     }
 
     private int calculatePityAndNumbers(List<Wish> wishes) {
@@ -311,7 +313,10 @@ public class WishesCounterFragment extends Fragment {
                         dropRare,
                         mainActivity.getSubType(),
                         currentBannerType,
-                        isResetPity
+                        isResetPity,
+                        () -> {
+                            if (getView() != null) refreshData(getView());
+                        }
                 );
             } else {
                 databaseHelper.addWishes(
@@ -321,7 +326,10 @@ public class WishesCounterFragment extends Fragment {
                         1,
                         mainActivity.getSubType(),
                         currentBannerType,
-                        isResetPity
+                        isResetPity,
+                        () -> {
+                            if (getView() != null) refreshData(getView());
+                        }
                 );
             }
 
@@ -350,7 +358,10 @@ public class WishesCounterFragment extends Fragment {
                 1,
                 mainActivity.getSubType(),
                 currentBannerType,
-                false
+                false,
+                () -> {
+                    if (getView() != null) refreshData(getView());
+                }
         );
         if (getView() != null) {
             refreshData(getView());
@@ -369,7 +380,10 @@ public class WishesCounterFragment extends Fragment {
                 9,
                 mainActivity.getSubType(),
                 currentBannerType,
-                false
+                false,
+                () -> {
+                    if (getView() != null) refreshData(getView());
+                }
         );
         showWishDialog(null, getString(R.string.four_star), false);
     }

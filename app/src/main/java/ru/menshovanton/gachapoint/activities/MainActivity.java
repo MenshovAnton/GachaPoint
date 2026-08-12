@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -138,27 +137,29 @@ public class MainActivity extends AppCompatActivity {
         return dbFile.exists();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void checkAndRequestPermissions() {
-        String[] permissions = {
-                Manifest.permission.POST_NOTIFICATIONS
-        };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
-        List<String> permissionsToRequest = new ArrayList<>();
+            String[] permissions = {
+                    Manifest.permission.POST_NOTIFICATIONS
+            };
 
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(permission);
+            List<String> permissionsToRequest = new ArrayList<>();
+
+            for (String permission : permissions) {
+                if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsToRequest.add(permission);
+                }
             }
-        }
 
-        if (!permissionsToRequest.isEmpty()) {
-            int REQUEST_CODE = 123;
-            ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toArray(new String[0]),
-                    REQUEST_CODE
-            );
+            if (!permissionsToRequest.isEmpty()) {
+                int REQUEST_CODE = 123;
+                ActivityCompat.requestPermissions(
+                        this,
+                        permissionsToRequest.toArray(new String[0]),
+                        REQUEST_CODE
+                );
+            }
         }
     }
 

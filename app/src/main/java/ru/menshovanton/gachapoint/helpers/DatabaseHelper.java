@@ -14,6 +14,10 @@ import ru.menshovanton.gachapoint.models.Wish;
 
 public class DatabaseHelper {
 
+    public interface Callback<T> {
+        void onResult(T result);
+    }
+
     public static final String DATABASE_NAME = AppDatabase.DATABASE_NAME;
     private final AppDatabase db;
 
@@ -21,60 +25,98 @@ public class DatabaseHelper {
         this.db = AppDatabase.getInstance(context);
     }
 
-    public List<Wish> getWishesByBanner(GameType gameType, String bannerType) {
-        List<WishEntity> entities = db.wishDao().getWishes(gameType.getCode(), bannerType);
-        List<Wish> wishes = new ArrayList<>(entities.size());
-        for (WishEntity entity : entities) {
-            wishes.add(entity.toWishModel());
-        }
-        return wishes;
+    // --- WISHES ---
+
+    public void getWishesByBanner(GameType gameType, String bannerType, Callback<List<Wish>> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            List<WishEntity> entities = db.wishDao().getWishes(gameType.getCode(), bannerType);
+            List<Wish> wishes = new ArrayList<>(entities.size());
+            for (WishEntity entity : entities) {
+                wishes.add(entity.toWishModel());
+            }
+            AppDatabase.postToMain(() -> callback.onResult(wishes));
+        });
     }
 
-    public void addWishes(String dateTime, String dropType, String dropRare, int count, GameType gameType, String bannerType, boolean isResetPity) {
-        db.wishDao().addWishesBatch(dateTime, dropType, dropRare, count, gameType.getCode(), bannerType, isResetPity);
+    public void addWishes(String dateTime, String dropType, String dropRare, int count,
+                          GameType gameType, String bannerType, boolean isResetPity, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            db.wishDao().addWishesBatch(dateTime, dropType, dropRare, count, gameType.getCode(), bannerType, isResetPity);
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
     }
 
-    public void updateWish(int id, String dateTime, String dropType, String dropRare, GameType gameType, String bannerType, boolean isResetPity) {
-        db.wishDao().updateWishFields(id, dateTime, dropType, dropRare, bannerType, isResetPity);
+    public void updateWish(int id, String dateTime, String dropType, String dropRare,
+                           GameType gameType, String bannerType, boolean isResetPity, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            db.wishDao().updateWishFields(id, dateTime, dropType, dropRare, bannerType, isResetPity);
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
     }
 
-    public boolean hasDataForYear(int year) {
-        return db.calendarDao().getYearEntriesCount(year) > 0;
+    // --- CALENDAR ---
+
+    public void hasDataForYear(int year, Callback<Boolean> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            boolean hasData = db.calendarDao().getYearEntriesCount(year) > 0;
+            AppDatabase.postToMain(() -> callback.onResult(hasData));
+        });
     }
 
-    public void saveCalendarEntities(List<CalendarEntity> entities) {
-        db.calendarDao().insertOrUpdateBatch(entities);
+    public void saveCalendarEntities(List<CalendarEntity> entities, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            db.calendarDao().insertOrUpdateBatch(entities);
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
     }
 
-    public List<Date> getMonthCalendarData(int year, int month, GameType gameType) {
-        List<CalendarEntity> entities = db.calendarDao().getCalendarForMonth(year, month);
-        List<Date> dates = new ArrayList<>(entities.size());
-        for (CalendarEntity entity : entities) {
-            dates.add(entity.toDateModel(gameType));
-        }
-        return dates;
+    public void getMonthCalendarData(int year, int month, GameType gameType, Callback<List<Date>> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            List<CalendarEntity> entities = db.calendarDao().getCalendarForMonth(year, month);
+            List<Date> dates = new ArrayList<>(entities.size());
+            for (CalendarEntity entity : entities) {
+                dates.add(entity.toDateModel(gameType));
+            }
+            AppDatabase.postToMain(() -> callback.onResult(dates));
+        });
     }
 
-    public Date getDayCalendarData(int year, int dayOfYear, GameType gameType) {
-        CalendarEntity entity = db.calendarDao().getDay(year, dayOfYear);
-        return entity != null ? entity.toDateModel(gameType) : null;
+    public void getDayCalendarData(int year, int dayOfYear, GameType gameType, Callback<Date> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            CalendarEntity entity = db.calendarDao().getDay(year, dayOfYear);
+            Date date = entity != null ? entity.toDateModel(gameType) : null;
+            AppDatabase.postToMain(() -> callback.onResult(date));
+        });
     }
 
-    public List<Date> getDaysRangeData(int year, int startDay, int endDay, GameType gameType) {
-        List<CalendarEntity> entities = db.calendarDao().getDaysRange(year, startDay, endDay);
-        List<Date> dates = new ArrayList<>(entities.size());
-        for (CalendarEntity entity : entities) {
-            dates.add(entity.toDateModel(gameType));
-        }
-        return dates;
+    public void getDaysRangeData(int year, int startDay, int endDay, GameType gameType, Callback<List<Date>> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            List<CalendarEntity> entities = db.calendarDao().getDaysRange(year, startDay, endDay);
+            List<Date> dates = new ArrayList<>(entities.size());
+            for (CalendarEntity entity : entities) {
+                dates.add(entity.toDateModel(gameType));
+            }
+            AppDatabase.postToMain(() -> callback.onResult(dates));
+        });
     }
 
-    public void updateCalendarDay(int year, int dayOfYear, GameType gameType, int status, int subDaysRemaining) {
-        CalendarEntity entity = db.calendarDao().getDay(year, dayOfYear);
-        if (entity != null) {
-            entity.updateForGame(gameType, status, subDaysRemaining);
-            db.calendarDao().insertOrUpdate(entity);
-        }
+    public void updateCalendarDay(int year, int dayOfYear, GameType gameType, int status, int subDaysRemaining, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            CalendarEntity entity = db.calendarDao().getDay(year, dayOfYear);
+            if (entity != null) {
+                entity.updateForGame(gameType, status, subDaysRemaining);
+                db.calendarDao().insertOrUpdate(entity);
+            }
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
     }
 
     public AppDatabase getDb() {

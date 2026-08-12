@@ -156,20 +156,30 @@ public class SettingsFragment extends Fragment {
     private void writeDatabaseToUri(Uri targetUri) {
         if (!isAdded()) return;
 
-        AppDatabase.getInstance(requireContext()).checkpoint();
+        Context context = requireContext();
 
-        File dbFile = requireContext().getDatabasePath(DatabaseHelper.DATABASE_NAME);
+        try {
+            AppDatabase.getInstance(context)
+                    .getOpenHelper()
+                    .getWritableDatabase()
+                    .query("PRAGMA wal_checkpoint(TRUNCATE)")
+                    .close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        File dbFile = context.getDatabasePath(DatabaseHelper.DATABASE_NAME);
 
         if (!dbFile.exists()) {
-            Toast.makeText(requireContext(), R.string.db_export_failed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.db_export_failed, Toast.LENGTH_SHORT).show();
             return;
         }
 
         try (InputStream in = new FileInputStream(dbFile);
-             OutputStream out = requireContext().getContentResolver().openOutputStream(targetUri)) {
+             OutputStream out = context.getContentResolver().openOutputStream(targetUri)) {
 
             if (out == null) {
-                Toast.makeText(requireContext(), R.string.db_export_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.db_export_failed, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -180,11 +190,11 @@ public class SettingsFragment extends Fragment {
             }
             out.flush();
 
-            Toast.makeText(requireContext(), R.string.db_export_successful, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.db_export_successful, Toast.LENGTH_SHORT).show();
 
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(requireContext(), R.string.db_export_failed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.db_export_failed, Toast.LENGTH_SHORT).show();
         }
     }
 }

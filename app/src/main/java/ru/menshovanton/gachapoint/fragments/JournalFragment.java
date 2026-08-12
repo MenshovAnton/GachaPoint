@@ -44,7 +44,6 @@ public class JournalFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JournalFragment journalFragment = this;
         mainActivity = (MainActivity) getActivity();
     }
 

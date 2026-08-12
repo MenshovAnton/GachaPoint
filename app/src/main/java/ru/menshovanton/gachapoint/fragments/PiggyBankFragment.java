@@ -15,19 +15,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import java.util.Objects;
-
-import ru.menshovanton.gachapoint.helpers.CalendarHelper;
 import ru.menshovanton.gachapoint.helpers.PiggyBankHelper;
-import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 
 public class PiggyBankFragment extends Fragment {
 
     private PiggyBankHelper piggyBankHelper;
-
     private MainActivity mainActivity;
 
     private ProgressBar progressBar;
@@ -35,9 +29,6 @@ public class PiggyBankFragment extends Fragment {
     private Button addTen;
     private Button editGoal;
     private TextView savedWishesCounter;
-
-    private int progress;
-    private int target;
 
     private final int PITY = 77;
 
@@ -51,9 +42,7 @@ public class PiggyBankFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
-        PreferencesHelper preferencesHelper = new PreferencesHelper(Objects.requireNonNull(mainActivity));
         piggyBankHelper = new PiggyBankHelper(mainActivity);
-        CalendarHelper calendarHelper = new CalendarHelper(mainActivity);
     }
 
     @Override
@@ -66,7 +55,6 @@ public class PiggyBankFragment extends Fragment {
         editGoal = view.findViewById(R.id.editTargetButton);
 
         progressBar = view.findViewById(R.id.savingProgress);
-
         savedWishesCounter = view.findViewById(R.id.savedWishesCounter);
 
         return view;
@@ -82,34 +70,26 @@ public class PiggyBankFragment extends Fragment {
 
         getParentFragmentManager().setFragmentResultListener("refresh_piggy_bank_key", getViewLifecycleOwner(), (requestKey, result) -> {
             boolean shouldRefresh = result.getBoolean("shouldRefresh", false);
-            if (shouldRefresh) {
-                refresh(view);
+            if (shouldRefresh && isAdded() && getView() != null) {
+                refresh(getView());
             }
         });
 
-        target = piggyBankHelper.getTarget();
-        progress = piggyBankHelper.getProgress();
-
-        progressBar.setProgress(progress);
-        progressBar.setMax(target);
-
+        // Единая точка обновления при создании View
         refresh(view);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        target = piggyBankHelper.getTarget();
-        progress = piggyBankHelper.getProgress();
-
-        progressBar.setProgress(progress);
-        progressBar.setMax(target);
-
-        refresh(requireView());
+        if (getView() != null) {
+            refresh(getView());
+        }
     }
 
     private void refresh(View view) {
+        if (!isAdded() || view == null) return;
+
         ImageView wishIcon = view.findViewById(R.id.wishIconPiggyBank);
 
         switch (mainActivity.getSubType()) {
@@ -153,11 +133,15 @@ public class PiggyBankFragment extends Fragment {
     }
 
     private void updateProgress() {
-        target = piggyBankHelper.getTarget();
-        progress = piggyBankHelper.getProgress();
+        if (!isAdded() || getView() == null) return;
+
+        int target = piggyBankHelper.getTarget();
+        int progress = piggyBankHelper.getProgress();
 
         progressBar.setMax(target);
-        progressBar.setProgress(progress);
+
+        progressBar.setProgress(progress, false);
+
         String text = progress + "/" + target;
         savedWishesCounter.setText(text);
     }
@@ -168,12 +152,12 @@ public class PiggyBankFragment extends Fragment {
     }
 
     public void addTargetTwo() {
-        piggyBankHelper.pushTarget(PITY *2);
+        piggyBankHelper.pushTarget(PITY * 2);
         updateProgress();
     }
 
     public void addTargetSix() {
-        piggyBankHelper.pushTarget(PITY *6);
+        piggyBankHelper.pushTarget(PITY * 6);
         updateProgress();
     }
 

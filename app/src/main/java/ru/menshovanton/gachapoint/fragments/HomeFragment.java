@@ -1,8 +1,7 @@
 package ru.menshovanton.gachapoint.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,14 +15,11 @@ import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import ru.menshovanton.gachapoint.enums.GameType;
-import ru.menshovanton.gachapoint.models.Statistic;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.adapters.PillsAdapter;
 import ru.menshovanton.gachapoint.helpers.PiggyBankHelper;
-import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.helpers.CalendarHelper;
 
@@ -36,10 +32,10 @@ public class HomeFragment extends Fragment {
     private PiggyBankHelper piggyBankHelper;
 
     private PillsAdapter pillsAdapter;
-
     private LinearLayoutManager layoutManager;
 
     public HomeFragment() {}
+
     public static HomeFragment newInstance() {
         return new HomeFragment();
     }
@@ -49,7 +45,6 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mainActivity = (MainActivity) getActivity();
-        PreferencesHelper settings = new PreferencesHelper(Objects.requireNonNull(mainActivity));
         calendarHelper = new CalendarHelper(mainActivity);
         piggyBankHelper = new PiggyBankHelper(mainActivity);
     }
@@ -58,15 +53,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         subsCounterView = view.findViewById(R.id.subsCountHome);
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         RecyclerView gameTypeChanger = view.findViewById(R.id.gameTypeChangerHome);
 
@@ -81,13 +68,16 @@ public class HomeFragment extends Fragment {
 
         pillsAdapter = new PillsAdapter(categories, (item, position) -> {
             mainActivity.setSubType(GameType.fromCode(position));
-            refresh(view);
+            if (getView() != null) {
+                refresh(getView());
+            }
         });
-        selectAndScrollIfNeeded(mainActivity.getSubType().getCode());
 
         gameTypeChanger.setAdapter(pillsAdapter);
+        selectAndScrollIfNeeded(mainActivity.getSubType().getCode());
 
         refresh(view);
+        return view;
     }
 
     private void selectAndScrollIfNeeded(int targetPosition) {
@@ -107,10 +97,77 @@ public class HomeFragment extends Fragment {
     }
 
     void refresh(View view) {
-        calendarHelper.calculateMissesAndClaims();
-        setStatistics();
-        subsCounterView.setText(String.valueOf(calendarHelper.getSubsCount()));
+        if (!isAdded() || view == null) return;
 
+        updateGameTheme(view);
+
+        updatePiggyBank(view);
+
+        calendarHelper.init(() -> {
+            if (!isAdded() || getView() == null) return;
+
+            subsCounterView.setText(String.valueOf(calendarHelper.getSubsCount()));
+            setStatistics();
+        });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updatePiggyBank(View currentView) {
+        int progress = piggyBankHelper.getProgress();
+        int target = piggyBankHelper.getTarget();
+
+        TextView piggyBank = currentView.findViewById(R.id.piggyBankCounterHome);
+        ProgressBar progressBar = currentView.findViewById(R.id.piggyBankProgressHome);
+
+        if (progressBar != null && piggyBank != null) {
+            progressBar.setMax(target);
+            progressBar.setProgress(progress);
+            piggyBank.setText(progress + "/" + target);
+        }
+    }
+
+    public void setStatistics() {
+        if (!isAdded() || getView() == null) return;
+
+        calendarHelper.getStatistic(statistic -> {
+            if (!isAdded() || getView() == null) return;
+
+            int laterPrimogemsCount = statistic.laterGems;
+            int laterWishesCount = statistic.laterWishes;
+
+            String laterPrimogemsText = "0";
+            String laterWishesText = "0";
+            String claimPrimogemsText = String.valueOf(statistic.claimGems);
+            String missedPrimogemsText = String.valueOf(statistic.missedGems);
+            String claimWishesText = String.valueOf(statistic.claimWishes);
+            String missedWishesText = String.valueOf(statistic.missedWishes);
+
+            View currentView = getView();
+            TextView claimPrimogems = currentView.findViewById(R.id.cliamsGemsCounterHome);
+            TextView missedPrimogems = currentView.findViewById(R.id.missGemsCounterHome);
+            TextView claimWishes = currentView.findViewById(R.id.claimWishesCounterHome);
+            TextView missedWishes = currentView.findViewById(R.id.missWishesCounterHome);
+            TextView laterPrimogems = currentView.findViewById(R.id.laterGemsCounterHome);
+            TextView laterWishes = currentView.findViewById(R.id.laterWishesCounterHome);
+
+            claimPrimogems.setText(claimPrimogemsText);
+            missedPrimogems.setText(missedPrimogemsText);
+            claimWishes.setText(claimWishesText);
+            missedWishes.setText(missedWishesText);
+
+            if (laterPrimogemsCount > 0 && calendarHelper.getClaimsDays() > 0) {
+                laterPrimogemsText = String.valueOf(laterPrimogemsCount);
+            }
+            laterPrimogems.setText(laterPrimogemsText);
+
+            if (laterPrimogemsCount > 0 && calendarHelper.getClaimsDays() > 0) {
+                laterWishesText = String.valueOf(laterWishesCount);
+            }
+            laterWishes.setText(laterWishesText);
+        });
+    }
+
+    private void updateGameTheme(View view) {
         ImageView gemIcon = view.findViewById(R.id.gemIconHome);
         TextView subsCountTitle = view.findViewById(R.id.subsCountHeaderHome);
         ImageView wishIconStats = view.findViewById(R.id.wishIconHome);
@@ -136,55 +193,5 @@ public class HomeFragment extends Fragment {
                 subsCountTitle.setText(R.string.inter_knot_member_count_header);
                 break;
         }
-    }
-
-    public void setStatistics() {
-        calendarHelper = new CalendarHelper(mainActivity);
-        Statistic statistic = calendarHelper.getStatistic();
-
-        int laterPrimogemsCount = statistic.laterGems;
-        int laterWishesCount = statistic.laterWishes;
-
-        String laterPrimogemsText = "0";
-        String laterWishesText = "0";
-        String claimPrimogemsText = String.valueOf(statistic.claimGems);
-        String missedPrimogemsText = String.valueOf(statistic.missedGems);
-        String claimWishesText = String.valueOf(statistic.claimWishes);
-        String missedWishesText = String.valueOf(statistic.missedWishes);
-
-        assert getView() != null;
-        TextView claimPrimogems = getView().findViewById(R.id.cliamsGemsCounterHome);
-        claimPrimogems.setText(claimPrimogemsText);
-
-        TextView missedPrimogems = getView().findViewById(R.id.missGemsCounterHome);
-        missedPrimogems.setText(missedPrimogemsText);
-
-        TextView claimWishes = getView().findViewById(R.id.claimWishesCounterHome);
-        claimWishes.setText(claimWishesText);
-
-        TextView missedWishes = getView().findViewById(R.id.missWishesCounterHome);
-        missedWishes.setText(missedWishesText);
-
-        TextView laterPrimogems = getView().findViewById(R.id.laterGemsCounterHome);
-        if (laterPrimogemsCount > 0 && calendarHelper.getClaimsDays() > 0)
-        {   laterPrimogemsText = String.valueOf(laterPrimogemsCount);   }
-        laterPrimogems.setText(laterPrimogemsText);
-
-        TextView laterWishes = getView().findViewById(R.id.laterWishesCounterHome);
-        if (laterPrimogemsCount > 0 && calendarHelper.getClaimsDays() > 0)
-        {   laterWishesText = String.valueOf(laterWishesCount); }
-        laterWishes.setText(laterWishesText);
-
-        int progress = piggyBankHelper.getProgress();
-        int target = piggyBankHelper.getTarget();
-
-        String text = progress + "/" + target;
-
-        TextView piggyBank = getView().findViewById(R.id.piggyBankCounterHome);
-        ProgressBar progressBar = getView().findViewById(R.id.piggyBankProgressHome);
-        progressBar.setMax(target);
-        progressBar.setProgress(progress);
-        piggyBank.setText(text);
-
     }
 }

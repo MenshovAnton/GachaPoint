@@ -17,16 +17,21 @@ public class Calendar {
 
     public Calendar(Context context) {
         this.dbHelper = new DatabaseHelper(context);
-        ensureYearInitialized(LocalDate.now().getYear());
     }
 
-    public void ensureYearInitialized(int year) {
-        if (!dbHelper.hasDataForYear(year)) {
-            generateAndSaveYear(year);
-        }
+    public void ensureYearInitialized(int year, Runnable onComplete) {
+        dbHelper.hasDataForYear(year, hasData -> {
+            if (!hasData) {
+                generateAndSaveYear(year, onComplete);
+            } else {
+                if (onComplete != null) {
+                    onComplete.run();
+                }
+            }
+        });
     }
 
-    private void generateAndSaveYear(int year) {
+    private void generateAndSaveYear(int year, Runnable onComplete) {
         boolean isLeap = LocalDate.of(year, 1, 1).isLeapYear();
         int daysInYear = isLeap ? 366 : 365;
 
@@ -45,25 +50,22 @@ public class Calendar {
             entities.add(entity);
         }
 
-        dbHelper.saveCalendarEntities(entities);
+        dbHelper.saveCalendarEntities(entities, onComplete);
     }
 
-    public List<Date> getMonthDates(int year, int month, GameType gameType) {
-        ensureYearInitialized(year);
-        return dbHelper.getMonthCalendarData(year, month, gameType);
+    public void getMonthDates(int year, int month, GameType gameType, DatabaseHelper.Callback<List<Date>> callback) {
+        ensureYearInitialized(year, () -> dbHelper.getMonthCalendarData(year, month, gameType, callback));
     }
 
-    public Date getDay(int year, int dayOfYear, GameType gameType) {
-        ensureYearInitialized(year);
-        return dbHelper.getDayCalendarData(year, dayOfYear, gameType);
+    public void getDay(int year, int dayOfYear, GameType gameType, DatabaseHelper.Callback<Date> callback) {
+        ensureYearInitialized(year, () -> dbHelper.getDayCalendarData(year, dayOfYear, gameType, callback));
     }
 
-    public void updateDay(int year, int dayOfYear, GameType gameType, int status, int subDaysRemaining) {
-        dbHelper.updateCalendarDay(year, dayOfYear, gameType, status, subDaysRemaining);
+    public void updateDay(int year, int dayOfYear, GameType gameType, int status, int subDaysRemaining, Runnable onComplete) {
+        dbHelper.updateCalendarDay(year, dayOfYear, gameType, status, subDaysRemaining, onComplete);
     }
 
-    public List<Date> getDaysRange(int year, int startDay, int endDay, GameType gameType) {
-        ensureYearInitialized(year);
-        return dbHelper.getDaysRangeData(year, startDay, endDay, gameType);
+    public void getDaysRange(int year, int startDay, int endDay, GameType gameType, DatabaseHelper.Callback<List<Date>> callback) {
+        ensureYearInitialized(year, () -> dbHelper.getDaysRangeData(year, startDay, endDay, gameType, callback));
     }
 }
