@@ -27,21 +27,22 @@ public class Calendar {
     }
 
     private void generateAndSaveYear(int year) {
-        int daysInYear = LocalDate.of(year, 1, 1).isLeapYear() ? 366 : 365;
-        List<CalendarEntity> entities = new ArrayList<>(daysInYear);
-        LocalDate currentDate = LocalDate.of(year, 1, 1);
+        boolean isLeap = LocalDate.of(year, 1, 1).isLeapYear();
+        int daysInYear = isLeap ? 366 : 365;
 
-        for (int i = 0; i < daysInYear; i++) {
+        List<CalendarEntity> entities = new ArrayList<>(daysInYear);
+
+        for (int dayOfYear = 1; dayOfYear <= daysInYear; dayOfYear++) {
+            LocalDate currentDate = LocalDate.ofYearDay(year, dayOfYear);
+
             CalendarEntity entity = new CalendarEntity();
-            entity.id = (year * 1000) + (i + 1);
             entity.day = currentDate.getDayOfMonth();
-            entity.dayOfYear = currentDate.getDayOfYear();
+            entity.dayOfYear = dayOfYear;
             entity.dayOfWeek = currentDate.getDayOfWeek().getValue();
             entity.month = currentDate.getMonthValue();
-            entity.year = currentDate.getYear();
+            entity.year = year;
 
             entities.add(entity);
-            currentDate = currentDate.plusDays(1);
         }
 
         dbHelper.saveCalendarEntities(entities);

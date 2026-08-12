@@ -2,16 +2,12 @@ package ru.menshovanton.gachapoint.db.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 import ru.menshovanton.gachapoint.enums.GameType;
 import ru.menshovanton.gachapoint.models.Date;
 
-@Entity(tableName = "calendar")
+@Entity(tableName = "calendar", primaryKeys = {"year", "day_of_year"})
 public class CalendarEntity {
-
-    @PrimaryKey
-    public int id;
 
     public int day;
 
@@ -64,7 +60,7 @@ public class CalendarEntity {
                 break;
         }
 
-        return new Date(id, day, dayOfYear, dayOfWeek, status, subDays, month, year);
+        return new Date(0, day, dayOfYear, dayOfWeek, status, subDays, month, year);
     }
 
     public void updateForGame(GameType gameType, int status, int subDaysRemaining) {

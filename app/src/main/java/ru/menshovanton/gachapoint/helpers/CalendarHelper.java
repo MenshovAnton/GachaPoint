@@ -39,8 +39,9 @@ public class CalendarHelper {
         this.mainActivity = mainActivity;
         this.piggyBankHelper = new PiggyBankHelper(mainActivity);
 
-        toDayOfYear = LocalDate.now().getDayOfYear();
-        year = LocalDate.now().getYear();
+        LocalDate now = LocalDate.now();
+        toDayOfYear = now.getDayOfYear();
+        year = now.getYear();
 
         calendar = new Calendar(mainActivity);
 
@@ -136,13 +137,15 @@ public class CalendarHelper {
         missesDays = 0;
         claimsDays = 0;
 
-        List<Date> pastDays = calendar.getDaysRange(year, 1, toDayOfYear - 1, mainActivity.getSubType());
-        for (Date date : pastDays) {
-            if (date.status == 0 && date.subDaysRemaining > 0) {
-                missesDays++;
-            }
-            if (date.status == 1 && date.subDaysRemaining > 0) {
-                claimsDays++;
+        if (toDayOfYear > 1) {
+            List<Date> pastDays = calendar.getDaysRange(year, 1, toDayOfYear - 1, mainActivity.getSubType());
+            for (Date date : pastDays) {
+                if (date.status == 0 && date.subDaysRemaining > 0) {
+                    missesDays++;
+                }
+                if (date.status == 1 && date.subDaysRemaining > 0) {
+                    claimsDays++;
+                }
             }
         }
 
@@ -185,18 +188,16 @@ public class CalendarHelper {
         GameType gameType = mainActivity.getSubType();
         int remaining = getDaySubDaysRemaining(toDayOfYear);
 
+        LocalDate currentDate = LocalDate.ofYearDay(year, toDayOfYear);
+
         if (action == UpdateSubscribeDaysActions.Add) {
             for (int i = 1; i < remaining; i++) {
-                int targetDay = toDayOfYear + i;
-                int targetYear = year;
-                int daysInYear = LocalDate.of(targetYear, 1, 1).isLeapYear() ? 366 : 365;
+                LocalDate targetDate = currentDate.plusDays(i);
 
-                if (targetDay > daysInYear) {
-                    targetDay -= daysInYear;
-                    targetYear++;
-                }
-
+                int targetYear = targetDate.getYear();
+                int targetDay = targetDate.getDayOfYear();
                 int targetSubDays = remaining - i;
+
                 Date existingDate = calendar.getDay(targetYear, targetDay, gameType);
                 int currentStatus = existingDate != null ? existingDate.status : 0;
 
@@ -205,16 +206,12 @@ public class CalendarHelper {
         } else if (action == UpdateSubscribeDaysActions.Delete) {
             int daysToClear = 30;
             for (int i = 1; i <= daysToClear; i++) {
-                int targetDay = toDayOfYear + i;
-                int targetYear = year;
-                int daysInYear = LocalDate.of(targetYear, 1, 1).isLeapYear() ? 366 : 365;
+                LocalDate targetDate = currentDate.plusDays(i);
 
-                if (targetDay > daysInYear) {
-                    targetDay -= daysInYear;
-                    targetYear++;
-                }
-
+                int targetYear = targetDate.getYear();
+                int targetDay = targetDate.getDayOfYear();
                 int targetSubDays = remaining > 0 ? Math.max(0, remaining - i) : 0;
+
                 Date existingDate = calendar.getDay(targetYear, targetDay, gameType);
                 int currentStatus = existingDate != null ? existingDate.status : 0;
 

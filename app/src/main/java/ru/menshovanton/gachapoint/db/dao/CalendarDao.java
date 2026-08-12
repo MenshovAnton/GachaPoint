@@ -12,7 +12,7 @@ import ru.menshovanton.gachapoint.db.entities.CalendarEntity;
 @Dao
 public interface CalendarDao {
 
-    @Query("SELECT * FROM calendar WHERE year = :year AND month = :month ORDER BY id ASC")
+    @Query("SELECT * FROM calendar WHERE year = :year AND month = :month ORDER BY day_of_year ASC")
     List<CalendarEntity> getCalendarForMonth(int year, int month);
 
     @Query("SELECT * FROM calendar WHERE year = :year AND day_of_year = :dayOfYear LIMIT 1")
