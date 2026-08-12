@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import ru.menshovanton.gachapoint.BannerType;
+import ru.menshovanton.gachapoint.enums.BannerType;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.adapters.WishAdapter;
@@ -160,9 +160,7 @@ public class WishesCounterFragment extends Fragment {
             counter++;
             wish.setPityNumber(counter);
 
-            // Сброс происходит либо если выпала 5★, либо если у крутки установлен принудительный флаг isResetPity
-            boolean is5Star = getString(R.string.five_star).equalsIgnoreCase(wish.getDropRare());
-            if (is5Star || wish.isResetPity()) {
+            if (wish.isResetPity()) {
                 counter = 0;
             }
         }
@@ -218,7 +216,6 @@ public class WishesCounterFragment extends Fragment {
         final LocalDate[] selectedDate = new LocalDate[1];
         boolean isEditMode = (wishToEdit != null);
 
-        // Чекбокс доступен и видием в обоих режимах
         checkResetPity.setVisibility(View.VISIBLE);
 
         if (isEditMode) {

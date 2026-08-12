@@ -19,6 +19,7 @@ public class DateHelper {
         dbHelper.saveCalendarBatch(dateArray, start, count, mainActivity.getSubType());
     }
 
+    // TODO: Возвращает всю БД в list, а БД то размером не маленьким
     public Date[] readDB(Context context) {
         return dbHelper.getAllCalendarData(mainActivity.getSubType());
     }

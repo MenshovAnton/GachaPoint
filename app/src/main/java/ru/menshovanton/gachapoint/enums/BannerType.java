@@ -1,8 +1,10 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.enums;
 
 import android.content.Context;
 
 import androidx.annotation.StringRes;
+
+import ru.menshovanton.gachapoint.R;
 
 public enum BannerType {
     EVENT("BANNER_EVENT", R.string.type_event),

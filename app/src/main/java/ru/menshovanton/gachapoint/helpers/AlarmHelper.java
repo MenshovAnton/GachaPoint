@@ -10,7 +10,7 @@ import android.os.IBinder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import ru.menshovanton.gachapoint.Notification;
+import ru.menshovanton.gachapoint.utils.Notification;
 
 public class AlarmHelper extends Service {
     private final String TAG = "AlarmHelper";

@@ -42,6 +42,7 @@ import ru.menshovanton.gachapoint.fragments.TrackerFragment;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
+    // TODO: Избавиться от "магических чисел" (перейти на Enum)
     private int subType;
 
     public final String HOME_TAG = "HOME";

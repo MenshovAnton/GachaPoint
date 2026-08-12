@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.calendar;
 
 import android.content.Context;
 import android.util.AttributeSet;

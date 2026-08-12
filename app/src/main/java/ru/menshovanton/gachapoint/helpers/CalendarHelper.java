@@ -13,11 +13,12 @@ import androidx.core.content.ContextCompat;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import ru.menshovanton.gachapoint.Calendar;
+import ru.menshovanton.gachapoint.calendar.Calendar;
 import ru.menshovanton.gachapoint.models.Date;
-import ru.menshovanton.gachapoint.models.DayState;
+import ru.menshovanton.gachapoint.enums.DayState;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.models.Statistic;
 import ru.menshovanton.gachapoint.activities.MainActivity;
@@ -67,7 +68,10 @@ public class CalendarHelper {
         int offset = firstDayOfWeek - 1;
         int daysInMonth = YearMonth.of(year, selectedMonth).lengthOfMonth();
 
-        int yearOffset = (year - today.getYear()) * 365;
+        LocalDate startOfTodayYear = LocalDate.of(today.getYear(), 1, 1);
+        LocalDate startOfSelectedYear = LocalDate.of(year, 1, 1);
+        int yearOffset = (int) ChronoUnit.DAYS.between(startOfTodayYear, startOfSelectedYear);
+
         int startDayOfYearInMonth = LocalDate.of(year, selectedMonth, 1).getDayOfYear();
 
         TransitionSet transitionSet = new TransitionSet();

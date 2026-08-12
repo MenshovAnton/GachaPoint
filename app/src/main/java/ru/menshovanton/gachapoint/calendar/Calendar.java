@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint;
+package ru.menshovanton.gachapoint.calendar;
 
 import android.content.Context;
 
@@ -29,10 +29,16 @@ public class Calendar {
         int year = LocalDate.now().getYear();
         if (calendarArray != null) {
             if (calendarArray[calendarSize - 1].year == year) {
-                calendarSize += getCalendarSize(year);
+                int nextYearSize = getCalendarSize(year + 1);
+                Date[] newYearDates = addYear(context, year + 1);
+
+                int oldSize = calendarSize;
+                calendarSize += nextYearSize;
                 datesArray = new Date[calendarSize];
+
                 System.arraycopy(calendarArray, 0, datesArray, 0, calendarArray.length);
-                System.arraycopy(addYear(context, year + 1), 0, datesArray, calendarArray.length, 365);
+                System.arraycopy(newYearDates, 0, datesArray, oldSize, nextYearSize);
+
                 dateHelper.writeDB(context, datesArray, 0, datesArray.length);
                 preferencesHelper.saveIntPreference(PreferencesHelper.CALENDAR_SIZE, calendarSize);
             } else {

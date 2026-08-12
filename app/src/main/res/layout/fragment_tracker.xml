@@ -163,7 +163,7 @@
 
                 </GridLayout>
 
-                <ru.menshovanton.gachapoint.CalendarGrid
+                <ru.menshovanton.gachapoint.calendar.CalendarGrid
                     android:id="@+id/calendarGrid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

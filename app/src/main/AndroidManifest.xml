@@ -34,7 +34,7 @@
             android:exported="false"/>
 
         <receiver
-            android:name=".Notification"
+            android:name=".utils.Notification"
             android:permission="Notifications"/>
     </application>
 

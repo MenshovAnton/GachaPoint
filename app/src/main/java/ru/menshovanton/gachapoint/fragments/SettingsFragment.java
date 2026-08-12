@@ -31,7 +31,7 @@ import java.util.Objects;
 import ru.menshovanton.gachapoint.db.AppDatabase;
 import ru.menshovanton.gachapoint.helpers.AlarmHelper;
 import ru.menshovanton.gachapoint.activities.MainActivity;
-import ru.menshovanton.gachapoint.Notification;
+import ru.menshovanton.gachapoint.utils.Notification;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
 import ru.menshovanton.gachapoint.R;
