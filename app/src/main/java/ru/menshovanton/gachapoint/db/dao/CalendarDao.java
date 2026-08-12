@@ -12,11 +12,17 @@ import ru.menshovanton.gachapoint.db.entities.CalendarEntity;
 @Dao
 public interface CalendarDao {
 
-    @Query("SELECT * FROM calendar ORDER BY id ASC")
-    List<CalendarEntity> getAllCalendarEntries();
+    @Query("SELECT * FROM calendar WHERE year = :year AND month = :month ORDER BY id ASC")
+    List<CalendarEntity> getCalendarForMonth(int year, int month);
 
-    @Query("SELECT * FROM calendar WHERE id BETWEEN :startId AND :endId ORDER BY id ASC")
-    List<CalendarEntity> getCalendarRange(int startId, int endId);
+    @Query("SELECT * FROM calendar WHERE year = :year AND day_of_year = :dayOfYear LIMIT 1")
+    CalendarEntity getDay(int year, int dayOfYear);
+
+    @Query("SELECT * FROM calendar WHERE year = :year AND day_of_year BETWEEN :startDay AND :endDay ORDER BY day_of_year ASC")
+    List<CalendarEntity> getDaysRange(int year, int startDay, int endDay);
+
+    @Query("SELECT COUNT(*) FROM calendar WHERE year = :year")
+    int getYearEntriesCount(int year);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrUpdateBatch(List<CalendarEntity> entities);

@@ -2,6 +2,8 @@ package ru.menshovanton.gachapoint.enums;
 
 import androidx.annotation.ColorRes;
 
+import java.time.LocalDate;
+
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.models.Date;
 
@@ -27,14 +29,17 @@ public enum DayState {
             return DEFAULT;
         }
 
-        if ((dateObj.status == 0 || dateObj.status == 2)
-                && dateObj.id < toDayOfYear
-                && dateObj.subDaysRemaining != 0) {
-            return MISSED;
-        }
-
         if (dateObj.status == 1 || dateObj.status == 3) {
             return CHECKED;
+        }
+
+        int todayYear = LocalDate.now().getYear();
+
+        boolean isPastDay = dateObj.year < todayYear
+                || (dateObj.year == todayYear && dateObj.dayOfYear < toDayOfYear);
+
+        if (isPastDay && (dateObj.status == 0 || dateObj.status == 2) && dateObj.subDaysRemaining > 0) {
+            return MISSED;
         }
 
         if (dateObj.status == 0 && dateObj.subDaysRemaining > 0) {

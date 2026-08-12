@@ -39,6 +39,7 @@ import java.util.Locale;
 
 import ru.menshovanton.gachapoint.calendar.CalendarGrid;
 import ru.menshovanton.gachapoint.db.AppDatabase;
+import ru.menshovanton.gachapoint.enums.GameType;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 import ru.menshovanton.gachapoint.models.Statistic;
 import ru.menshovanton.gachapoint.adapters.PillsAdapter;
@@ -89,11 +90,9 @@ public class TrackerFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mainActivity = (MainActivity) getActivity();
-
         calendarHelper = new CalendarHelper(mainActivity);
 
         Notification.subsCount = calendarHelper.getSubsCount();
-
         toDayOfYear = LocalDate.now().getDayOfYear();
     }
 
@@ -140,12 +139,12 @@ public class TrackerFragment extends Fragment {
         gameTypeChanger.setLayoutManager(layoutManager);
 
         pillsAdapter = new PillsAdapter(categories, (item, position) -> {
-            mainActivity.setSubType(position);
+            mainActivity.setSubType(GameType.fromCode(position));
             refresh(view);
         });
 
         gameTypeChanger.setAdapter(pillsAdapter);
-        selectAndScrollIfNeeded(mainActivity.getSubType());
+        selectAndScrollIfNeeded(mainActivity.getSubType().getCode());
 
         refresh(view);
     }
@@ -189,17 +188,17 @@ public class TrackerFragment extends Fragment {
         ImageView wishIcon = view.findViewById(R.id.wishIcon);
 
         switch (mainActivity.getSubType()) {
-            case 0:
+            case GENSHIN:
                 gemIcon.setImageResource(R.drawable.icon_primogem);
                 wishIcon.setImageResource(R.drawable.icon_intertwined_fate);
                 subsCountTitle.setText(R.string.blessing_of_the_welkin_moon_count_header);
                 break;
-            case 1:
+            case HSR:
                 gemIcon.setImageResource(R.drawable.icon_stellar_jade);
                 wishIcon.setImageResource(R.drawable.icon_star_rail_special_pass);
                 subsCountTitle.setText(R.string.star_rail_special_pass_count_header);
                 break;
-            case 2:
+            case ZZZ:
                 gemIcon.setImageResource(R.drawable.icon_polychrome);
                 wishIcon.setImageResource(R.drawable.icon_encrypted_master_tape);
                 subsCountTitle.setText(R.string.inter_knot_member_count_header);
@@ -234,20 +233,20 @@ public class TrackerFragment extends Fragment {
         missedWishes.setText(missedWishesText);
 
         TextView laterPrimogems = getView().findViewById(R.id.laterGemsCounter);
-        if (laterPrimogemsCount > 0 && calendarHelper.getClaimsDays() > 0)
-        {   laterPrimogemsText = String.valueOf(laterPrimogemsCount);   }
+        if (laterPrimogemsCount > 0 && calendarHelper.getClaimsDays() > 0) {
+            laterPrimogemsText = String.valueOf(laterPrimogemsCount);
+        }
         laterPrimogems.setText(laterPrimogemsText);
 
         TextView laterWishes = getView().findViewById(R.id.laterWishesCounter);
-        if (laterPrimogemsCount > 0 && calendarHelper.getClaimsDays() > 0)
-        {   laterWishesText = String.valueOf(laterWishesCount); }
+        if (laterPrimogemsCount > 0 && calendarHelper.getClaimsDays() > 0) {
+            laterWishesText = String.valueOf(laterWishesCount);
+        }
         laterWishes.setText(laterWishesText);
     }
 
     public void updateCalendar() {
-        calendarHelper.updateStatistics();
         setStatistics();
-        selectedMonth = LocalDate.now().getMonth().getValue();
         calendarHelper.renderCalendar(this);
         setHeader(selectedMonth, calendarHelper.getYear());
     }
@@ -267,13 +266,11 @@ public class TrackerFragment extends Fragment {
         yearHeader.setText(String.valueOf(year));
     }
 
-    public void onAddClick()
-    {
+    public void onAddClick() {
         if (calendarHelper.getSubsCount() <= 6) {
-            if (calendarHelper.getDaySubDaysRemaining(toDayOfYear - 1) == 0)
-            {
+            if (calendarHelper.getDaySubDaysRemaining(toDayOfYear) == 0) {
                 calendarHelper.setSubsCount(1);
-                for (int i = 0; i < toDayOfYear - 1; i++) {
+                for (int i = 1; i < toDayOfYear; i++) {
                     int dayStatus = calendarHelper.getDayStatus(i);
                     if (dayStatus == 1) {
                         calendarHelper.setDayStatus(i, 3);
@@ -286,12 +283,10 @@ public class TrackerFragment extends Fragment {
                 calendarHelper.setMissesDays(0);
                 calendarHelper.setClaimsDays(0);
 
-                calendarHelper.setDaySubDaysRemaining(toDayOfYear - 1, 30);
-            }
-            else
-            {
+                calendarHelper.setDaySubDaysRemaining(toDayOfYear, 30);
+            } else {
                 calendarHelper.addSub();
-                calendarHelper.addDaySubDaysRemaining(toDayOfYear - 1, 30);
+                calendarHelper.addDaySubDaysRemaining(toDayOfYear, 30);
             }
 
             calendarHelper.updateSubscribeDays(CalendarHelper.UpdateSubscribeDaysActions.Add);
@@ -302,28 +297,28 @@ public class TrackerFragment extends Fragment {
             Notification.subsCount = calendarHelper.getSubsCount();
 
             refresh(view);
+        } else {
+            Toast.makeText(mainActivity, getString(R.string.subs_limit), Toast.LENGTH_SHORT).show();
         }
-        else
-        {   Toast.makeText(mainActivity, getString(R.string.subs_limit), Toast.LENGTH_SHORT).show(); }
         subsCounterView.setText(String.valueOf(calendarHelper.getSubsCount()));
     }
 
     public void onDelClick() {
-        if (calendarHelper.getDaySubDaysRemaining(toDayOfYear - 1) == 30) {
+        if (calendarHelper.getDaySubDaysRemaining(toDayOfYear) == 30) {
             if (calendarHelper.getSubsCount() > 0) {
                 cancelCheck();
 
                 calendarHelper.delSub();
-                calendarHelper.subtractDaySubDaysRemaining(toDayOfYear - 1, 30);
+                calendarHelper.subtractDaySubDaysRemaining(toDayOfYear, 30);
 
                 calendarHelper.updateSubscribeDays(CalendarHelper.UpdateSubscribeDaysActions.Delete);
                 updateCalendar();
                 Toast.makeText(mainActivity, getString(R.string.del_sub), Toast.LENGTH_SHORT).show();
 
                 Notification.subsCount = calendarHelper.getSubsCount();
+            } else {
+                Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();
             }
-            else
-            {   Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show(); }
             subsCounterView.setText(String.valueOf(calendarHelper.getSubsCount()));
         } else {
             Toast.makeText(mainActivity, getString(R.string.impossible_cancel_sub), Toast.LENGTH_SHORT).show();
@@ -331,25 +326,25 @@ public class TrackerFragment extends Fragment {
     }
 
     public void check() {
-        calendarHelper.setDayStatus(toDayOfYear - 1, 1);
+        calendarHelper.setDayStatus(toDayOfYear, 1);
         calendarHelper.addClaimDay();
         updateCalendar();
     }
 
-    public void onCheckClick(View view)
-    {
-        if (calendarHelper.getDayStatus(toDayOfYear - 1) == 1)
-        {   Toast.makeText(getActivity(), getString(R.string.already_cheked), Toast.LENGTH_SHORT).show();  }
-        else if (calendarHelper.getDaySubDaysRemaining(toDayOfYear - 1) == 0)
-        {   Toast.makeText(getActivity(), getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();    }
-        else
-        {
+    public void onCheckClick(View view) {
+        if (calendarHelper.getDayStatus(toDayOfYear) == 1) {
+            Toast.makeText(getActivity(), getString(R.string.already_cheked), Toast.LENGTH_SHORT).show();
+        } else if (calendarHelper.getDaySubDaysRemaining(toDayOfYear) == 0) {
+            Toast.makeText(getActivity(), getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();
+        } else {
             check();
             Toast.makeText(getActivity(), getString(R.string.check_today), Toast.LENGTH_SHORT).show();
         }
 
         Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(100);
+        if (vibrator != null) {
+            vibrator.vibrate(100);
+        }
     }
 
     private void showMoreMenu(View view) {
@@ -363,32 +358,32 @@ public class TrackerFragment extends Fragment {
     }
 
     public void recoveryMissDay() {
-        if (calendarHelper.getDayStatus(toDayOfYear - 2) == 1)
-        {   Toast.makeText(mainActivity, getString(R.string.not_miss_day), Toast.LENGTH_SHORT).show();  }
-        else if (calendarHelper.getDaySubDaysRemaining(toDayOfYear - 2) == 0)
-        {   Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();    }
-        else
-        {
-            calendarHelper.setDayStatus(toDayOfYear - 2, 1);
-            Toast.makeText(mainActivity, getString(R.string.check_today), Toast.LENGTH_SHORT).show();
-            calendarHelper.addClaimDay();
+        int yesterday = toDayOfYear - 1;
+        if (yesterday >= 1) {
+            if (calendarHelper.getDayStatus(yesterday) == 1) {
+                Toast.makeText(mainActivity, getString(R.string.not_miss_day), Toast.LENGTH_SHORT).show();
+            } else if (calendarHelper.getDaySubDaysRemaining(yesterday) == 0) {
+                Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();
+            } else {
+                calendarHelper.setDayStatus(yesterday, 1);
+                Toast.makeText(mainActivity, getString(R.string.check_today), Toast.LENGTH_SHORT).show();
+                calendarHelper.addClaimDay();
+            }
         }
-
         updateCalendar();
     }
 
     public void cancelCheck() {
-        calendarHelper.setDayStatus(toDayOfYear - 1, 0);
+        calendarHelper.setDayStatus(toDayOfYear, 0);
         calendarHelper.subtractClaimDay();
     }
 
     public void onCancelCheck() {
-        if (calendarHelper.getDayStatus(toDayOfYear - 1) == 0)
-        {   Toast.makeText(mainActivity, getString(R.string.not_check_today), Toast.LENGTH_SHORT).show();  }
-        else if (calendarHelper.getDaySubDaysRemaining(toDayOfYear - 1) == 0)
-        {   Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();    }
-        else
-        {
+        if (calendarHelper.getDayStatus(toDayOfYear) == 0) {
+            Toast.makeText(mainActivity, getString(R.string.not_check_today), Toast.LENGTH_SHORT).show();
+        } else if (calendarHelper.getDaySubDaysRemaining(toDayOfYear) == 0) {
+            Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();
+        } else {
             cancelCheck();
             Toast.makeText(mainActivity, getString(R.string.cancel_check_today), Toast.LENGTH_SHORT).show();
         }

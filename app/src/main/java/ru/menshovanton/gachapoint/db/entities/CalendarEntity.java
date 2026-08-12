@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import ru.menshovanton.gachapoint.enums.GameType;
 import ru.menshovanton.gachapoint.models.Date;
 
 @Entity(tableName = "calendar")
@@ -43,38 +44,20 @@ public class CalendarEntity {
 
     public CalendarEntity() {}
 
-    public CalendarEntity(int id, int day, int dayOfYear, int dayOfWeek, int month, int year,
-                          int statusGenshin, int moonDaysRemaining,
-                          int statusHsr, int expressPassDaysRemaining,
-                          int statusZzz, int interknotDaysRemaining) {
-        this.id = id;
-        this.day = day;
-        this.dayOfYear = dayOfYear;
-        this.dayOfWeek = dayOfWeek;
-        this.month = month;
-        this.year = year;
-        this.statusGenshin = statusGenshin;
-        this.moonDaysRemaining = moonDaysRemaining;
-        this.statusHsr = statusHsr;
-        this.expressPassDaysRemaining = expressPassDaysRemaining;
-        this.statusZzz = statusZzz;
-        this.interknotDaysRemaining = interknotDaysRemaining;
-    }
-
-    public Date toDateModel(int subType) {
+    public Date toDateModel(GameType gameType) {
         int status;
         int subDays;
 
-        switch (subType) {
-            case 1:
+        switch (gameType) {
+            case HSR:
                 status = this.statusHsr;
                 subDays = this.expressPassDaysRemaining;
                 break;
-            case 2:
+            case ZZZ:
                 status = this.statusZzz;
                 subDays = this.interknotDaysRemaining;
                 break;
-            case 0:
+            case GENSHIN:
             default:
                 status = this.statusGenshin;
                 subDays = this.moonDaysRemaining;
@@ -84,26 +67,20 @@ public class CalendarEntity {
         return new Date(id, day, dayOfYear, dayOfWeek, status, subDays, month, year);
     }
 
-    public void updateForGame(int subType, Date date) {
-        this.day = date.dayOfMonth;
-        this.dayOfYear = date.dayOfYear;
-        this.dayOfWeek = date.dayOfWeek;
-        this.month = date.month;
-        this.year = date.year;
-
-        switch (subType) {
-            case 1:
-                this.statusHsr = date.status;
-                this.expressPassDaysRemaining = date.subDaysRemaining;
+    public void updateForGame(GameType gameType, int status, int subDaysRemaining) {
+        switch (gameType) {
+            case HSR:
+                this.statusHsr = status;
+                this.expressPassDaysRemaining = subDaysRemaining;
                 break;
-            case 2:
-                this.statusZzz = date.status;
-                this.interknotDaysRemaining = date.subDaysRemaining;
+            case ZZZ:
+                this.statusZzz = status;
+                this.interknotDaysRemaining = subDaysRemaining;
                 break;
-            case 0:
+            case GENSHIN:
             default:
-                this.statusGenshin = date.status;
-                this.moonDaysRemaining = date.subDaysRemaining;
+                this.statusGenshin = status;
+                this.moonDaysRemaining = subDaysRemaining;
                 break;
         }
     }

@@ -22,13 +22,13 @@ public class PiggyBankHelper {
     private String getManualProgressPrefTag() {
         String tag = PreferencesHelper.PIGGY_BANK_MANUAL_PROGRESS_GENSHIN;
         switch (mainActivity.getSubType()) {
-            case 0:
+            case GENSHIN:
                 tag = PreferencesHelper.PIGGY_BANK_MANUAL_PROGRESS_GENSHIN;
                 break;
-            case 1:
+            case HSR:
                 tag = PreferencesHelper.PIGGY_BANK_MANUAL_PROGRESS_HSR;
                 break;
-            case 2:
+            case ZZZ:
                 tag = PreferencesHelper.PIGGY_BANK_MANUAL_PROGRESS_ZZZ;
                 break;
         }
@@ -38,13 +38,13 @@ public class PiggyBankHelper {
     private String getSubsProgressPrefTag() {
         String tag = PreferencesHelper.PIGGY_BANK_SUBS_PROGRESS_GENSHIN;
         switch (mainActivity.getSubType()) {
-            case 0:
+            case GENSHIN:
                 tag = PreferencesHelper.PIGGY_BANK_SUBS_PROGRESS_GENSHIN;
                 break;
-            case 1:
+            case HSR:
                 tag = PreferencesHelper.PIGGY_BANK_SUBS_PROGRESS_HSR;
                 break;
-            case 2:
+            case ZZZ:
                 tag = PreferencesHelper.PIGGY_BANK_SUBS_PROGRESS_ZZZ;
                 break;
         }
@@ -54,13 +54,13 @@ public class PiggyBankHelper {
     private String getTargetPrefTag() {
         String tag = PreferencesHelper.PIGGY_BANK_TARGET_GENSHIN;
         switch (mainActivity.getSubType()) {
-            case 0:
+            case GENSHIN:
                 tag = PreferencesHelper.PIGGY_BANK_TARGET_GENSHIN;
                 break;
-            case 1:
+            case HSR:
                 tag = PreferencesHelper.PIGGY_BANK_TARGET_HSR;
                 break;
-            case 2:
+            case ZZZ:
                 tag = PreferencesHelper.PIGGY_BANK_TARGET_ZZZ;
                 break;
         }

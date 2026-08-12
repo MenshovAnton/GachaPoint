@@ -3,110 +3,66 @@ package ru.menshovanton.gachapoint.calendar;
 import android.content.Context;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import ru.menshovanton.gachapoint.activities.MainActivity;
-import ru.menshovanton.gachapoint.helpers.DateHelper;
-import ru.menshovanton.gachapoint.helpers.PreferencesHelper;
+import ru.menshovanton.gachapoint.db.entities.CalendarEntity;
+import ru.menshovanton.gachapoint.enums.GameType;
+import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 import ru.menshovanton.gachapoint.models.Date;
 
 public class Calendar {
-    public Date[] datesArray;
 
-    public Calendar calendar;
+    private final DatabaseHelper dbHelper;
 
-    public static int calendarSize;
-
-    private final DateHelper dateHelper;
-
-    public Calendar(Context context, MainActivity mainActivity) {
-
-        PreferencesHelper preferencesHelper = new PreferencesHelper(context.getApplicationContext());
-        dateHelper = new DateHelper(mainActivity);
-
-        calendarSize = preferencesHelper.getIntPreference(PreferencesHelper.CALENDAR_SIZE);
-
-        Date[] calendarArray = dateHelper.readDB(context);
-        int year = LocalDate.now().getYear();
-        if (calendarArray != null) {
-            if (calendarArray[calendarSize - 1].year == year) {
-                int nextYearSize = getCalendarSize(year + 1);
-                Date[] newYearDates = addYear(context, year + 1);
-
-                int oldSize = calendarSize;
-                calendarSize += nextYearSize;
-                datesArray = new Date[calendarSize];
-
-                System.arraycopy(calendarArray, 0, datesArray, 0, calendarArray.length);
-                System.arraycopy(newYearDates, 0, datesArray, oldSize, nextYearSize);
-
-                dateHelper.writeDB(context, datesArray, 0, datesArray.length);
-                preferencesHelper.saveIntPreference(PreferencesHelper.CALENDAR_SIZE, calendarSize);
-            } else {
-                datesArray = calendarArray;
-            }
-        } else {
-            datesArray = initialization(context, year);
-        }
-
-        calendar = this;
+    public Calendar(Context context) {
+        this.dbHelper = new DatabaseHelper(context);
+        ensureYearInitialized(LocalDate.now().getYear());
     }
 
-    public Date[] initialization(Context context, int srcYear) {
-        calendarSize = getCalendarSize(srcYear) + getCalendarSize(srcYear + 1);
-        PreferencesHelper preferencesHelper = new PreferencesHelper(context.getApplicationContext());
-        preferencesHelper.saveIntPreference(PreferencesHelper.CALENDAR_SIZE, calendarSize);
+    public void ensureYearInitialized(int year) {
+        if (!dbHelper.hasDataForYear(year)) {
+            generateAndSaveYear(year);
+        }
+    }
 
-        Date[] array = new Date[calendarSize];
-        LocalDate currentDate = LocalDate.of(srcYear, 1, 1);
+    private void generateAndSaveYear(int year) {
+        int daysInYear = LocalDate.of(year, 1, 1).isLeapYear() ? 366 : 365;
+        List<CalendarEntity> entities = new ArrayList<>(daysInYear);
+        LocalDate currentDate = LocalDate.of(year, 1, 1);
 
-        for (int i = 0; i < array.length; i++) {
-            array[i] = new Date(
-                    i,
-                    currentDate.getDayOfMonth(),
-                    currentDate.getDayOfYear(),
-                    currentDate.getDayOfWeek().getValue(),
-                    0,
-                    0,
-                    currentDate.getMonthValue(),
-                    currentDate.getYear()
-            );
+        for (int i = 0; i < daysInYear; i++) {
+            CalendarEntity entity = new CalendarEntity();
+            entity.id = (year * 1000) + (i + 1);
+            entity.day = currentDate.getDayOfMonth();
+            entity.dayOfYear = currentDate.getDayOfYear();
+            entity.dayOfWeek = currentDate.getDayOfWeek().getValue();
+            entity.month = currentDate.getMonthValue();
+            entity.year = currentDate.getYear();
+
+            entities.add(entity);
             currentDate = currentDate.plusDays(1);
         }
 
-        dateHelper.writeDB(context, array, 0, array.length);
-        return array;
+        dbHelper.saveCalendarEntities(entities);
     }
 
-    public Date[] addYear(Context context, int targetYear) {
-        Date[] array = new Date[getCalendarSize(targetYear)];
-        LocalDate currentDate = LocalDate.of(targetYear, 1, 1);
-
-        for (int i = 0; i < array.length; i++) {
-            array[i] = new Date(
-                    calendarSize + i,
-                    currentDate.getDayOfMonth(),
-                    i + 1,
-                    currentDate.getDayOfWeek().getValue(),
-                    0,
-                    0,
-                    currentDate.getMonthValue(),
-                    currentDate.getYear()
-            );
-            currentDate = currentDate.plusDays(1);
-        }
-        return array;
+    public List<Date> getMonthDates(int year, int month, GameType gameType) {
+        ensureYearInitialized(year);
+        return dbHelper.getMonthCalendarData(year, month, gameType);
     }
 
-    public int getSubDaysRemaining(int dayOfYear) {
-        if (dayOfYear <= 0 || dayOfYear > datesArray.length) return 0;
-        return this.datesArray[dayOfYear - 1].subDaysRemaining;
+    public Date getDay(int year, int dayOfYear, GameType gameType) {
+        ensureYearInitialized(year);
+        return dbHelper.getDayCalendarData(year, dayOfYear, gameType);
     }
 
-    public int getCalendarSize(int year) {
-        return LocalDate.of(year, 1, 1).isLeapYear() ? 366 : 365;
+    public void updateDay(int year, int dayOfYear, GameType gameType, int status, int subDaysRemaining) {
+        dbHelper.updateCalendarDay(year, dayOfYear, gameType, status, subDaysRemaining);
     }
 
-    public int getStatus(int dayOfYear) {
-        return this.datesArray[dayOfYear - 1].status;
+    public List<Date> getDaysRange(int year, int startDay, int endDay, GameType gameType) {
+        ensureYearInitialized(year);
+        return dbHelper.getDaysRangeData(year, startDay, endDay, gameType);
     }
 }

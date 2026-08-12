@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import ru.menshovanton.gachapoint.enums.GameType;
 import ru.menshovanton.gachapoint.models.Statistic;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.adapters.PillsAdapter;
@@ -79,12 +80,12 @@ public class HomeFragment extends Fragment {
         gameTypeChanger.setLayoutManager(layoutManager);
 
         pillsAdapter = new PillsAdapter(categories, (item, position) -> {
-            mainActivity.setSubType(position);
+            mainActivity.setSubType(GameType.fromCode(position));
             refresh(view);
         });
+        selectAndScrollIfNeeded(mainActivity.getSubType().getCode());
 
         gameTypeChanger.setAdapter(pillsAdapter);
-        selectAndScrollIfNeeded(mainActivity.getSubType());
 
         refresh(view);
     }
@@ -116,19 +117,19 @@ public class HomeFragment extends Fragment {
         ImageView wishIconPiggyBank = view.findViewById(R.id.wishIconHomeBank);
 
         switch (mainActivity.getSubType()) {
-            case 0:
+            case GENSHIN:
                 gemIcon.setImageResource(R.drawable.icon_primogem);
                 wishIconStats.setImageResource(R.drawable.icon_intertwined_fate);
                 wishIconPiggyBank.setImageResource(R.drawable.icon_intertwined_fate);
                 subsCountTitle.setText(R.string.blessing_of_the_welkin_moon_count_header);
                 break;
-            case 1:
+            case HSR:
                 gemIcon.setImageResource(R.drawable.icon_stellar_jade);
                 wishIconStats.setImageResource(R.drawable.icon_star_rail_special_pass);
                 wishIconPiggyBank.setImageResource(R.drawable.icon_star_rail_special_pass);
                 subsCountTitle.setText(R.string.star_rail_special_pass_count_header);
                 break;
-            case 2:
+            case ZZZ:
                 gemIcon.setImageResource(R.drawable.icon_polychrome);
                 wishIconStats.setImageResource(R.drawable.icon_encrypted_master_tape);
                 wishIconPiggyBank.setImageResource(R.drawable.icon_encrypted_master_tape);

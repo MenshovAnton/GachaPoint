@@ -23,6 +23,7 @@ import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.activities.MainActivity;
 import ru.menshovanton.gachapoint.adapters.JournalPagerAdapter;
 import ru.menshovanton.gachapoint.adapters.PillsAdapter;
+import ru.menshovanton.gachapoint.enums.GameType;
 
 public class JournalFragment extends Fragment {
 
@@ -90,7 +91,7 @@ public class JournalFragment extends Fragment {
         gameTypeChanger.setLayoutManager(layoutManager);
 
         pillsAdapter = new PillsAdapter(categories, (item, position) -> {
-            mainActivity.setSubType(position);
+            mainActivity.setSubType(GameType.fromCode(position));
 
             switch (tabLayout.getSelectedTabPosition()) {
                 case 0:
@@ -101,9 +102,9 @@ public class JournalFragment extends Fragment {
                     break;
             }
         });
+        selectAndScrollIfNeeded(mainActivity.getSubType().getCode());
 
         gameTypeChanger.setAdapter(pillsAdapter);
-        selectAndScrollIfNeeded(mainActivity.getSubType());
     }
 
     private void selectAndScrollIfNeeded(int targetPosition) {

@@ -118,13 +118,13 @@ public class WishesCounterFragment extends Fragment {
         ImageView wishIcon = view.findViewById(R.id.wishIconWishCounter);
 
         switch (mainActivity.getSubType()) {
-            case 0:
+            case GENSHIN:
                 wishIcon.setImageResource(R.drawable.icon_intertwined_fate);
                 break;
-            case 1:
+            case HSR:
                 wishIcon.setImageResource(R.drawable.icon_star_rail_special_pass);
                 break;
-            case 2:
+            case ZZZ:
                 wishIcon.setImageResource(R.drawable.icon_encrypted_master_tape);
                 break;
         }

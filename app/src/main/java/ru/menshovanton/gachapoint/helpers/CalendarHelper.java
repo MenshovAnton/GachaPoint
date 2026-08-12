@@ -13,22 +13,21 @@ import androidx.core.content.ContextCompat;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import ru.menshovanton.gachapoint.calendar.Calendar;
-import ru.menshovanton.gachapoint.models.Date;
-import ru.menshovanton.gachapoint.enums.DayState;
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.models.Statistic;
 import ru.menshovanton.gachapoint.activities.MainActivity;
+import ru.menshovanton.gachapoint.calendar.Calendar;
+import ru.menshovanton.gachapoint.enums.DayState;
+import ru.menshovanton.gachapoint.enums.GameType;
 import ru.menshovanton.gachapoint.fragments.TrackerFragment;
+import ru.menshovanton.gachapoint.models.Date;
+import ru.menshovanton.gachapoint.models.Statistic;
 
 public class CalendarHelper {
     private final MainActivity mainActivity;
     private final Calendar calendar;
     private final PiggyBankHelper piggyBankHelper;
-    private final DateHelper dateHelper;
 
     private final int toDayOfYear;
     private int year;
@@ -36,21 +35,17 @@ public class CalendarHelper {
     private int claimsDays = 0;
     private int subsCount;
 
-    private final int WISHES_COST = 160;
-    private final int PRIMOGEMS_PER_DAY = 90;
-    private final int SUMMARY_CLAIM = 2700;
-
     public CalendarHelper(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-        piggyBankHelper = new PiggyBankHelper(mainActivity);
-        dateHelper = new DateHelper(mainActivity);
+        this.piggyBankHelper = new PiggyBankHelper(mainActivity);
 
         toDayOfYear = LocalDate.now().getDayOfYear();
         year = LocalDate.now().getYear();
 
-        calendar = new Calendar(mainActivity, mainActivity);
+        calendar = new Calendar(mainActivity);
 
-        int daysRemaining = calendar.getSubDaysRemaining(toDayOfYear);
+        Date todayDate = calendar.getDay(year, toDayOfYear, mainActivity.getSubType());
+        int daysRemaining = todayDate != null ? todayDate.subDaysRemaining : 0;
         subsCount = (daysRemaining <= 0 || daysRemaining > 180) ? 0 : (daysRemaining + 29) / 30;
     }
 
@@ -68,11 +63,7 @@ public class CalendarHelper {
         int offset = firstDayOfWeek - 1;
         int daysInMonth = YearMonth.of(year, selectedMonth).lengthOfMonth();
 
-        LocalDate startOfTodayYear = LocalDate.of(today.getYear(), 1, 1);
-        LocalDate startOfSelectedYear = LocalDate.of(year, 1, 1);
-        int yearOffset = (int) ChronoUnit.DAYS.between(startOfTodayYear, startOfSelectedYear);
-
-        int startDayOfYearInMonth = LocalDate.of(year, selectedMonth, 1).getDayOfYear();
+        List<Date> monthDates = calendar.getMonthDates(year, selectedMonth, mainActivity.getSubType());
 
         TransitionSet transitionSet = new TransitionSet();
         transitionSet.setOrdering(TransitionSet.ORDERING_TOGETHER);
@@ -89,10 +80,8 @@ public class CalendarHelper {
                 cell.setBackground(null);
             } else {
                 int dayIndexInMonth = i - offset;
-                int globalIndex = (startDayOfYearInMonth - 1) + dayIndexInMonth + yearOffset;
-
-                if (globalIndex >= 0 && globalIndex < calendar.datesArray.length) {
-                    Date dateObj = calendar.datesArray[globalIndex];
+                if (dayIndexInMonth < monthDates.size()) {
+                    Date dateObj = monthDates.get(dayIndexInMonth);
 
                     cell.setVisibility(View.VISIBLE);
                     cell.setText(String.valueOf(dateObj.dayOfMonth));
@@ -143,34 +132,22 @@ public class CalendarHelper {
         });
     }
 
-    public void calculateStatistics() {
-        int missedPrimogemsCount = missesDays * PRIMOGEMS_PER_DAY;
-        int claimPrimogemsCount = claimsDays * PRIMOGEMS_PER_DAY;
-
-        int laterPrimogemsCount = SUMMARY_CLAIM * subsCount - claimPrimogemsCount - missedPrimogemsCount;
-        int laterWishesCount = laterPrimogemsCount / WISHES_COST;
-
-        int missedWishesCount = missedPrimogemsCount / WISHES_COST;
-        int claimWishesCount = claimPrimogemsCount / WISHES_COST;
-
-        piggyBankHelper.updateSubsProgress(claimWishesCount);
-    }
-
     public void calculateMissesAndClaims() {
         missesDays = 0;
         claimsDays = 0;
 
-        for (int i = 0; i < calendar.datesArray.length; i++) {
-            Date date = calendar.datesArray[i];
-            if (date.status == 0 && date.subDaysRemaining > 0 && date.dayOfYear <= toDayOfYear - 1) {
+        List<Date> pastDays = calendar.getDaysRange(year, 1, toDayOfYear - 1, mainActivity.getSubType());
+        for (Date date : pastDays) {
+            if (date.status == 0 && date.subDaysRemaining > 0) {
                 missesDays++;
             }
-            if (date.status == 1 && date.subDaysRemaining > 0 && date.dayOfYear <= toDayOfYear - 1) {
+            if (date.status == 1 && date.subDaysRemaining > 0) {
                 claimsDays++;
             }
         }
 
-        if (toDayOfYear <= calendar.datesArray.length && calendar.datesArray[toDayOfYear - 1].status == 1) {
+        Date today = calendar.getDay(year, toDayOfYear, mainActivity.getSubType());
+        if (today != null && today.status == 1) {
             claimsDays++;
         }
     }
@@ -178,10 +155,14 @@ public class CalendarHelper {
     public Statistic getStatistic() {
         calculateMissesAndClaims();
 
-        int missedPrimogemsCount = missesDays * PRIMOGEMS_PER_DAY;
-        int claimPrimogemsCount = claimsDays * PRIMOGEMS_PER_DAY;
-        int laterPrimogemsCount = SUMMARY_CLAIM * subsCount - claimPrimogemsCount - missedPrimogemsCount;
-        int claimWishesCount = claimPrimogemsCount / WISHES_COST;
+        int wishesCost = 160;
+        int primogemsPerDay = 90;
+        int summaryClaim = 2700;
+
+        int missedPrimogemsCount = missesDays * primogemsPerDay;
+        int claimPrimogemsCount = claimsDays * primogemsPerDay;
+        int laterPrimogemsCount = summaryClaim * subsCount - claimPrimogemsCount - missedPrimogemsCount;
+        int claimWishesCount = claimPrimogemsCount / wishesCost;
 
         piggyBankHelper.updateSubsProgress(claimWishesCount);
 
@@ -189,22 +170,10 @@ public class CalendarHelper {
                 missedPrimogemsCount,
                 claimPrimogemsCount,
                 laterPrimogemsCount,
-                missedPrimogemsCount / WISHES_COST,
+                missedPrimogemsCount / wishesCost,
                 claimWishesCount,
-                laterPrimogemsCount / WISHES_COST
+                laterPrimogemsCount / wishesCost
         );
-    }
-
-    public void updateStatistics() {
-        int length;
-        if (calendar.getSubDaysRemaining(toDayOfYear) > 30) {
-            length = calendar.datesArray[toDayOfYear - 1].subDaysRemaining;
-        } else {
-            length = 30;
-        }
-
-        calculateStatistics();
-        dateHelper.writeDB(mainActivity.getApplicationContext(), calendar.datesArray, LocalDate.now().getDayOfYear() - 1, length);
     }
 
     public enum UpdateSubscribeDaysActions {
@@ -213,48 +182,75 @@ public class CalendarHelper {
     }
 
     public void updateSubscribeDays(UpdateSubscribeDaysActions action) {
-        switch (action) {
-            case Add:
-                for (int i = 0; i < calendar.getSubDaysRemaining(toDayOfYear); i++) {
-                    calendar.datesArray[toDayOfYear + i].subDaysRemaining = calendar.datesArray[toDayOfYear + i - 1].subDaysRemaining - 1;
+        GameType gameType = mainActivity.getSubType();
+        int remaining = getDaySubDaysRemaining(toDayOfYear);
+
+        if (action == UpdateSubscribeDaysActions.Add) {
+            for (int i = 1; i < remaining; i++) {
+                int targetDay = toDayOfYear + i;
+                int targetYear = year;
+                int daysInYear = LocalDate.of(targetYear, 1, 1).isLeapYear() ? 366 : 365;
+
+                if (targetDay > daysInYear) {
+                    targetDay -= daysInYear;
+                    targetYear++;
                 }
-                break;
-            case Delete:
-                if (calendar.getSubDaysRemaining(toDayOfYear) > 30) {
-                    for (int i = 0; i < calendar.getSubDaysRemaining(toDayOfYear); i++) {
-                        calendar.datesArray[toDayOfYear + i].subDaysRemaining = calendar.datesArray[toDayOfYear + i - 1].subDaysRemaining - 1;
-                    }
-                } else {
-                    for (int i = 30; i >= 0; i--) {
-                        calendar.datesArray[toDayOfYear + i].subDaysRemaining = 0;
-                    }
+
+                int targetSubDays = remaining - i;
+                Date existingDate = calendar.getDay(targetYear, targetDay, gameType);
+                int currentStatus = existingDate != null ? existingDate.status : 0;
+
+                calendar.updateDay(targetYear, targetDay, gameType, currentStatus, targetSubDays);
+            }
+        } else if (action == UpdateSubscribeDaysActions.Delete) {
+            int daysToClear = 30;
+            for (int i = 1; i <= daysToClear; i++) {
+                int targetDay = toDayOfYear + i;
+                int targetYear = year;
+                int daysInYear = LocalDate.of(targetYear, 1, 1).isLeapYear() ? 366 : 365;
+
+                if (targetDay > daysInYear) {
+                    targetDay -= daysInYear;
+                    targetYear++;
                 }
-                break;
+
+                int targetSubDays = remaining > 0 ? Math.max(0, remaining - i) : 0;
+                Date existingDate = calendar.getDay(targetYear, targetDay, gameType);
+                int currentStatus = existingDate != null ? existingDate.status : 0;
+
+                calendar.updateDay(targetYear, targetDay, gameType, currentStatus, targetSubDays);
+            }
         }
     }
 
-    public int getDayStatus(int id) {
-        return calendar.datesArray[id].status;
+    public int getDayStatus(int dayOfYear) {
+        Date date = calendar.getDay(year, dayOfYear, mainActivity.getSubType());
+        return date != null ? date.status : 0;
     }
 
-    public void setDayStatus(int id, int status) {
-        calendar.datesArray[id].status = status;
+    public void setDayStatus(int dayOfYear, int status) {
+        Date date = calendar.getDay(year, dayOfYear, mainActivity.getSubType());
+        int rem = date != null ? date.subDaysRemaining : 0;
+        calendar.updateDay(year, dayOfYear, mainActivity.getSubType(), status, rem);
     }
 
-    public int getDaySubDaysRemaining(int id) {
-        return calendar.datesArray[id].subDaysRemaining;
+    public int getDaySubDaysRemaining(int dayOfYear) {
+        Date date = calendar.getDay(year, dayOfYear, mainActivity.getSubType());
+        return date != null ? date.subDaysRemaining : 0;
     }
 
-    public void setDaySubDaysRemaining(int id, int value) {
-        calendar.datesArray[id].subDaysRemaining = value;
+    public void setDaySubDaysRemaining(int dayOfYear, int value) {
+        Date date = calendar.getDay(year, dayOfYear, mainActivity.getSubType());
+        int status = date != null ? date.status : 0;
+        calendar.updateDay(year, dayOfYear, mainActivity.getSubType(), status, value);
     }
 
-    public void addDaySubDaysRemaining(int id, int value) {
-        calendar.datesArray[id].subDaysRemaining += value;
+    public void addDaySubDaysRemaining(int dayOfYear, int value) {
+        setDaySubDaysRemaining(dayOfYear, getDaySubDaysRemaining(dayOfYear) + value);
     }
 
-    public void subtractDaySubDaysRemaining(int id, int value) {
-        calendar.datesArray[id].subDaysRemaining -= value;
+    public void subtractDaySubDaysRemaining(int dayOfYear, int value) {
+        setDaySubDaysRemaining(dayOfYear, getDaySubDaysRemaining(dayOfYear) - value);
     }
 
     public int getYear() {

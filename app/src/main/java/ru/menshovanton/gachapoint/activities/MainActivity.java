@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.db.AppDatabase;
+import ru.menshovanton.gachapoint.enums.GameType;
 import ru.menshovanton.gachapoint.helpers.AlarmHelper;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.fragments.HomeFragment;
@@ -42,8 +43,7 @@ import ru.menshovanton.gachapoint.fragments.TrackerFragment;
 import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
-    // TODO: Избавиться от "магических чисел" (перейти на Enum)
-    private int subType;
+    private GameType subType = GameType.GENSHIN;
 
     public final String HOME_TAG = "HOME";
     public final String INFO_TAG = "INFO";
@@ -297,11 +297,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public int getSubType() {
+    public GameType getSubType() {
         return subType;
     }
 
-    public void setSubType(int value) {
-        subType = value;
+    public void setSubType(GameType value) {
+        this.subType = value;
+    }
+
+    public void setSubType(int code) {
+        this.subType = GameType.fromCode(code);
     }
 }
