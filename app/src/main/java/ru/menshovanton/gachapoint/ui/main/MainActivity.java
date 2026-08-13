@@ -35,7 +35,7 @@ import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.service.AlarmService;
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.ui.home.HomeFragment;
+import ru.menshovanton.gachapoint.ui.home.HomeView;
 import ru.menshovanton.gachapoint.ui.journal.JournalView;
 import ru.menshovanton.gachapoint.ui.settings.SettingsFragment;
 import ru.menshovanton.gachapoint.ui.tracker.TrackerFragment;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private final NavigationBarView.OnItemSelectedListener onItemSelectedListener
             = item -> {
                 if (item.getItemId() == R.id.nav_home) {
-                    replaceFragment(HomeFragment.newInstance(), HOME_TAG);
+                    replaceFragment(HomeView.newInstance(), HOME_TAG);
                     return true;
                 }
                 else if (item.getItemId() == R.id.nav_tracker) {
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             currentNavId = savedInstanceState.getInt(KEY_SELECTED_NAV_ID, R.id.nav_home);
             navigation.setSelectedItemId(currentNavId);
         } else {
-            replaceFragment(HomeFragment.newInstance(), HOME_TAG);
+            replaceFragment(HomeView.newInstance(), HOME_TAG);
         }
 
         navigation.setOnItemSelectedListener(onItemSelectedListener);

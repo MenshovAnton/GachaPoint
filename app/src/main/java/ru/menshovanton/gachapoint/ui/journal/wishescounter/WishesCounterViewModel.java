@@ -19,7 +19,7 @@ import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Wish;
-import ru.menshovanton.gachapoint.ui.common.SingleLiveEvent;
+import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 
 public class WishesCounterViewModel extends AndroidViewModel {
 
@@ -44,7 +44,7 @@ public class WishesCounterViewModel extends AndroidViewModel {
     public SingleLiveEvent<Void> getOpenDialogEvent() { return openDialogEvent; }
 
     public void setGameType(GameType gameType) {
-        if (gameType != null && this.currentGameType != gameType) {
+        if (gameType != null) {
             this.currentGameType = gameType;
             refreshData();
         }

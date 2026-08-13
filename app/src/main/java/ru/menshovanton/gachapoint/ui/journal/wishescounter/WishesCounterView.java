@@ -64,7 +64,6 @@ public class WishesCounterView extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(WishesCounterViewModel.class);
 
-        // Получаем ViewModel родительского JournalFragment
         Fragment parentFragment = getParentFragment();
         if (parentFragment != null) {
             sharedViewModel = new ViewModelProvider(parentFragment).get(SharedJournalViewModel.class);
@@ -95,6 +94,14 @@ public class WishesCounterView extends Fragment {
         addActions.setOnClickListener(this::showMoreMenu);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (viewModel != null) {
+            viewModel.refreshData();
+        }
+    }
+
     private void setupBannerSelector() {
         String[] banners = new String[]{
                 getString(R.string.type_event),
@@ -113,7 +120,6 @@ public class WishesCounterView extends Fragment {
     }
 
     private void observeViewModels() {
-        // Подписка на локальную ViewModel
         viewModel.getWishesLiveData().observe(getViewLifecycleOwner(), wishes -> {
             WishAdapter wishAdapter = new WishAdapter(wishes != null ? wishes : new ArrayList<>());
             wishAdapter.setOnItemClickListener(wish -> showWishDialog(wish, null, false));
@@ -137,12 +143,10 @@ public class WishesCounterView extends Fragment {
             bannerSelector.setText(label, false);
         });
 
-        // Подписка на одноразовое событие открытия 4★ диалога
         viewModel.getOpenDialogEvent().observe(getViewLifecycleOwner(), unused ->
                 showWishDialog(null, getString(R.string.four_star), false)
         );
 
-        // Подписка на изменение типа игры в родительском JournalFragment
         if (sharedViewModel != null) {
             sharedViewModel.getSelectedGameType().observe(getViewLifecycleOwner(), gameType -> {
                 updateGameIcon(gameType);
@@ -297,7 +301,6 @@ public class WishesCounterView extends Fragment {
 
             boolean isResetPity = checkResetPity.isChecked();
 
-            // Передаём валидацию и сохранение полностью во ViewModel
             viewModel.saveWishFromUi(
                     wishToEdit,
                     selectedDate[0],

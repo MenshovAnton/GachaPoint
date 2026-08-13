@@ -25,7 +25,6 @@ public class DatabaseRepository {
         this.db = AppDatabase.getInstance(context);
     }
 
-    // --- WISHES ---
 
     public void getWishesByBanner(GameType gameType, String bannerType, Callback<List<Wish>> callback) {
         AppDatabase.getExecutor().execute(() -> {
@@ -58,7 +57,6 @@ public class DatabaseRepository {
         });
     }
 
-    // --- CALENDAR ---
 
     public void hasDataForYear(int year, Callback<Boolean> callback) {
         AppDatabase.getExecutor().execute(() -> {

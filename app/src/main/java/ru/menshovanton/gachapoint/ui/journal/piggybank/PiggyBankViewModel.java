@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import ru.menshovanton.gachapoint.data.repository.PiggyBankRepository;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
-import ru.menshovanton.gachapoint.ui.common.SingleLiveEvent;
+import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 
 public class PiggyBankViewModel extends AndroidViewModel {
 

@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.common;
+package ru.menshovanton.gachapoint.ui.event;
 
 import android.util.Log;
 

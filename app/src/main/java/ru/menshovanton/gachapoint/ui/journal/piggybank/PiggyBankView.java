@@ -20,7 +20,7 @@ import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.ui.journal.SharedJournalViewModel;
 import ru.menshovanton.gachapoint.ui.main.MainActivity;
 
-public class PiggyBankFragment extends Fragment {
+public class PiggyBankView extends Fragment {
 
     private PiggyBankViewModel viewModel;
     private SharedJournalViewModel sharedViewModel;
@@ -32,10 +32,10 @@ public class PiggyBankFragment extends Fragment {
     private TextView savedWishesCounter;
     private ImageView wishIcon;
 
-    public PiggyBankFragment() {}
+    public PiggyBankView() {}
 
-    public static PiggyBankFragment newInstance() {
-        return new PiggyBankFragment();
+    public static PiggyBankView newInstance() {
+        return new PiggyBankView();
     }
 
     @Override

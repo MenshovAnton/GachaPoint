@@ -44,7 +44,6 @@ public class JournalView extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
-        // Вьюмодель привязана к самому JournalFragment
         sharedViewModel = new ViewModelProvider(this).get(SharedJournalViewModel.class);
     }
 
@@ -84,7 +83,7 @@ public class JournalView extends Fragment {
         pillsAdapter = new PillsAdapter(categories, (item, position) -> {
             GameType selectedGame = GameType.fromCode(position);
             mainActivity.setSubType(selectedGame);
-            // Передаём событие всем дочерним вкладкам через SharedViewModel
+
             sharedViewModel.selectGameType(selectedGame);
         });
 

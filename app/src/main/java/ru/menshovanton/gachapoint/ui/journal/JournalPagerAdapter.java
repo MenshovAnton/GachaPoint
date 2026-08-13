@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import ru.menshovanton.gachapoint.ui.journal.piggybank.PiggyBankFragment;
+import ru.menshovanton.gachapoint.ui.journal.piggybank.PiggyBankView;
 import ru.menshovanton.gachapoint.ui.journal.wishescounter.WishesCounterView;
 
 public class JournalPagerAdapter extends FragmentStateAdapter {
@@ -19,7 +19,7 @@ public class JournalPagerAdapter extends FragmentStateAdapter {
             case 0:
                 return new WishesCounterView();
             case 1:
-                return new PiggyBankFragment();
+                return new PiggyBankView();
             default:
                 throw new IllegalArgumentException("Invalid position: " + position);
         }

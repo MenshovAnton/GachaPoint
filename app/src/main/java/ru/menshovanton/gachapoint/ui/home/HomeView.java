@@ -1,0 +1,186 @@
+package ru.menshovanton.gachapoint.ui.home;
+
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import java.util.Arrays;
+import java.util.List;
+
+import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.domain.enums.GameType;
+import ru.menshovanton.gachapoint.domain.models.Statistic;
+import ru.menshovanton.gachapoint.ui.main.MainActivity;
+import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
+
+public class HomeView extends Fragment {
+
+    private MainActivity mainActivity;
+    private HomeViewModel viewModel;
+
+    private TextView subsCounterView;
+    private TextView piggyBankCounter;
+    private ProgressBar piggyBankProgress;
+
+    private TextView claimPrimogems, missedPrimogems, claimWishes, missedWishes, laterPrimogems, laterWishes;
+    private ImageView gemIcon, wishIconStats, wishIconPiggyBank;
+    private TextView subsCountTitle;
+
+    private PillsAdapter pillsAdapter;
+    private LinearLayoutManager layoutManager;
+
+    private int lastProgress = 0;
+    private int lastTarget = 100;
+
+    public HomeView() {}
+
+    public static HomeView newInstance() {
+        return new HomeView();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainActivity = (MainActivity) getActivity();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        subsCounterView = view.findViewById(R.id.subsCountHome);
+        piggyBankCounter = view.findViewById(R.id.piggyBankCounterHome);
+        piggyBankProgress = view.findViewById(R.id.piggyBankProgressHome);
+
+        claimPrimogems = view.findViewById(R.id.cliamsGemsCounterHome);
+        missedPrimogems = view.findViewById(R.id.missGemsCounterHome);
+        claimWishes = view.findViewById(R.id.claimWishesCounterHome);
+        missedWishes = view.findViewById(R.id.missWishesCounterHome);
+        laterPrimogems = view.findViewById(R.id.laterGemsCounterHome);
+        laterWishes = view.findViewById(R.id.laterWishesCounterHome);
+
+        gemIcon = view.findViewById(R.id.gemIconHome);
+        subsCountTitle = view.findViewById(R.id.subsCountHeaderHome);
+        wishIconStats = view.findViewById(R.id.wishIconHome);
+        wishIconPiggyBank = view.findViewById(R.id.wishIconHomeBank);
+
+        initGameTypePills(view);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
+        observeViewModel();
+    }
+
+    private void initGameTypePills(View view) {
+        RecyclerView gameTypeChanger = view.findViewById(R.id.gameTypeChangerHome);
+
+        List<String> categories = Arrays.asList(
+                getString(R.string.genshin),
+                getString(R.string.hsr),
+                getString(R.string.zzz)
+        );
+
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        gameTypeChanger.setLayoutManager(layoutManager);
+
+        pillsAdapter = new PillsAdapter(categories, (item, position) -> {
+            GameType selected = GameType.fromCode(position);
+            if (mainActivity != null) mainActivity.setSubType(selected);
+            viewModel.setGameType(selected);
+        });
+
+        gameTypeChanger.setAdapter(pillsAdapter);
+        if (mainActivity != null) {
+            selectAndScrollIfNeeded(mainActivity.getSubType().getCode());
+        }
+    }
+
+    private void observeViewModel() {
+        viewModel.getGameTypeLiveData().observe(getViewLifecycleOwner(), this::updateGameTheme);
+        viewModel.getSubsCountLiveData().observe(getViewLifecycleOwner(), count -> subsCounterView.setText(String.valueOf(count)));
+
+        viewModel.getPiggyProgressLiveData().observe(getViewLifecycleOwner(), progress -> updatePiggyProgress(progress, null));
+        viewModel.getPiggyTargetLiveData().observe(getViewLifecycleOwner(), target -> updatePiggyProgress(null, target));
+
+        viewModel.getStatisticLiveData().observe(getViewLifecycleOwner(), this::updateStatisticsUi);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updatePiggyProgress(@Nullable Integer progress, @Nullable Integer target) {
+        if (progress != null) lastProgress = progress;
+        if (target != null) lastTarget = target;
+
+        if (piggyBankProgress != null && piggyBankCounter != null) {
+            piggyBankProgress.setMax(lastTarget);
+            piggyBankProgress.setProgress(lastProgress);
+            piggyBankCounter.setText(lastProgress + "/" + lastTarget);
+        }
+    }
+
+    private void updateStatisticsUi(Statistic statistic) {
+        if (statistic == null) return;
+
+        claimPrimogems.setText(String.valueOf(statistic.claimGems));
+        missedPrimogems.setText(String.valueOf(statistic.missedGems));
+        claimWishes.setText(String.valueOf(statistic.claimWishes));
+        missedWishes.setText(String.valueOf(statistic.missedWishes));
+
+        laterPrimogems.setText(statistic.laterGems > 0 ? String.valueOf(statistic.laterGems) : "0");
+        laterWishes.setText(statistic.laterWishes > 0 ? String.valueOf(statistic.laterWishes) : "0");
+    }
+
+    private void updateGameTheme(GameType gameType) {
+        selectAndScrollIfNeeded(gameType.getCode());
+
+        switch (gameType) {
+            case GENSHIN:
+                gemIcon.setImageResource(R.drawable.icon_primogem);
+                wishIconStats.setImageResource(R.drawable.icon_intertwined_fate);
+                wishIconPiggyBank.setImageResource(R.drawable.icon_intertwined_fate);
+                subsCountTitle.setText(R.string.blessing_of_the_welkin_moon_count_header);
+                break;
+            case HSR:
+                gemIcon.setImageResource(R.drawable.icon_stellar_jade);
+                wishIconStats.setImageResource(R.drawable.icon_star_rail_special_pass);
+                wishIconPiggyBank.setImageResource(R.drawable.icon_star_rail_special_pass);
+                subsCountTitle.setText(R.string.star_rail_special_pass_count_header);
+                break;
+            case ZZZ:
+                gemIcon.setImageResource(R.drawable.icon_polychrome);
+                wishIconStats.setImageResource(R.drawable.icon_encrypted_master_tape);
+                wishIconPiggyBank.setImageResource(R.drawable.icon_encrypted_master_tape);
+                subsCountTitle.setText(R.string.inter_knot_member_count_header);
+                break;
+        }
+    }
+
+    private void selectAndScrollIfNeeded(int targetPosition) {
+        if (pillsAdapter == null || layoutManager == null) return;
+        pillsAdapter.setSelectedPosition(targetPosition);
+
+        int firstCompletelyVisible = layoutManager.findFirstCompletelyVisibleItemPosition();
+        int lastCompletelyVisible = layoutManager.findLastCompletelyVisibleItemPosition();
+
+        if (targetPosition < firstCompletelyVisible || targetPosition > lastCompletelyVisible) {
+            int offsetPx = (int) (16 * getResources().getDisplayMetrics().density);
+            layoutManager.scrollToPositionWithOffset(targetPosition, offsetPx);
+        }
+    }
+}

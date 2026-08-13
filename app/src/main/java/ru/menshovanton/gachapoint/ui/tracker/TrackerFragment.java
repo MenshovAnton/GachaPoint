@@ -5,31 +5,39 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.os.LocaleList;
 import android.os.Vibrator;
-import android.widget.*;
+import android.transition.ChangeBounds;
+import android.transition.Fade;
+import android.transition.TransitionManager;
+import android.transition.TransitionSet;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -37,36 +45,42 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import ru.menshovanton.gachapoint.data.db.AppDatabase;
-import ru.menshovanton.gachapoint.domain.enums.GameType;
-import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
-import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
-import ru.menshovanton.gachapoint.data.repository.CalendarRepository;
-import ru.menshovanton.gachapoint.ui.main.MainActivity;
-import ru.menshovanton.gachapoint.receiver.DailyNotificationReceiver;
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.data.db.AppDatabase;
+import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
+import ru.menshovanton.gachapoint.domain.enums.GameType;
+import ru.menshovanton.gachapoint.domain.models.Statistic;
+import ru.menshovanton.gachapoint.ui.main.MainActivity;
+import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
+import ru.menshovanton.gachapoint.ui.tracker.model.CalendarCellUiModel;
 
 public class TrackerFragment extends Fragment {
 
-    private MainActivity mainActivity;
-    private TextView subsCounterView;
+    private TrackerViewModel viewModel;
 
+    private TextView subsCounterView;
     private Button checkButton;
     private ImageButton moreButton;
-
-    private View view;
-
-    private int selectedMonth;
-    private int selectedYear;
-
-    private CalendarRepository calendarRepository;
-
     private CalendarGrid calendarGrid;
 
     private PillsAdapter pillsAdapter;
     private LinearLayoutManager layoutManager;
 
-    private int toDayOfYear;
+    private ImageView gemIcon;
+    private TextView subsCountTitle;
+    private ImageView wishIcon;
+
+    private TextView monthHeader;
+    private TextView yearHeader;
+
+    private TextView claimPrimogems;
+    private TextView missedPrimogems;
+    private TextView claimWishes;
+    private TextView missedWishes;
+    private TextView laterPrimogems;
+    private TextView laterWishes;
+
+    private final List<TextView> cellViewsPool = new ArrayList<>();
 
     private final ActivityResultLauncher<String> exportDbLauncher =
             registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
@@ -75,8 +89,6 @@ public class TrackerFragment extends Fragment {
                 }
             });
 
-    private final List<TextView> cellViewsPool = new ArrayList<>();
-
     public TrackerFragment() {}
 
     public static TrackerFragment newInstance() {
@@ -84,23 +96,27 @@ public class TrackerFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mainActivity = (MainActivity) getActivity();
-        calendarRepository = new CalendarRepository(mainActivity);
-
-        toDayOfYear = LocalDate.now().getDayOfYear();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_tracker, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_tracker, container, false);
 
         subsCounterView = view.findViewById(R.id.subsCount);
         calendarGrid = view.findViewById(R.id.calendarGrid);
         checkButton = view.findViewById(R.id.checkButton);
         moreButton = view.findViewById(R.id.moreButton);
+
+        gemIcon = view.findViewById(R.id.gemIcon);
+        subsCountTitle = view.findViewById(R.id.subsCountHeader);
+        wishIcon = view.findViewById(R.id.wishIcon);
+
+        monthHeader = view.findViewById(R.id.monthHeader);
+        yearHeader = view.findViewById(R.id.yearHeader);
+
+        claimPrimogems = view.findViewById(R.id.cliamsGemsCounter);
+        missedPrimogems = view.findViewById(R.id.missGemsCounter);
+        claimWishes = view.findViewById(R.id.claimWishesCounter);
+        missedWishes = view.findViewById(R.id.missWishesCounter);
+        laterPrimogems = view.findViewById(R.id.laterGemsCounter);
+        laterWishes = view.findViewById(R.id.laterWishesCounter);
 
         return view;
     }
@@ -109,23 +125,45 @@ public class TrackerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initCalendarGrid();
+        viewModel = new ViewModelProvider(this).get(TrackerViewModel.class);
 
-        checkButton.setOnClickListener(this::onCheckClick);
+        initCalendarGrid();
+        initGameTypePills(view);
+
+        checkButton.setOnClickListener(v -> viewModel.onCheckClick());
         moreButton.setOnClickListener(this::showMoreMenu);
 
         calendarGrid.setOnSwipeListener(new CalendarGrid.OnSwipeListener() {
-            @Override
-            public void onSwipeLeft() {
-                nextMonth();
-            }
+            @Override public void onSwipeLeft() { viewModel.nextMonth(); }
+            @Override public void onSwipeRight() { viewModel.previousMonth(); }
+        });
 
-            @Override
-            public void onSwipeRight() {
-                previousMonth();
+        observeViewModel();
+
+        viewModel.loadCurrentMonthData();
+    }
+
+    private void observeViewModel() {
+        viewModel.getGameTypeLiveData().observe(getViewLifecycleOwner(), this::updateGameTypeUi);
+        viewModel.getSelectedMonthLiveData().observe(getViewLifecycleOwner(), this::updateHeaderMonth);
+        viewModel.getSelectedYearLiveData().observe(getViewLifecycleOwner(), year -> yearHeader.setText(String.valueOf(year)));
+        viewModel.getSubsCountLiveData().observe(getViewLifecycleOwner(), count -> subsCounterView.setText(String.valueOf(count)));
+        viewModel.getStatisticLiveData().observe(getViewLifecycleOwner(), this::updateStatisticsUi);
+        viewModel.getCalendarCellsLiveData().observe(getViewLifecycleOwner(), this::renderCalendarGrid);
+
+        viewModel.getToastMessageEvent().observe(getViewLifecycleOwner(), resId -> {
+            if (resId != null) {
+                Toast.makeText(requireContext(), resId, Toast.LENGTH_SHORT).show();
             }
         });
 
+        viewModel.getVibrateEvent().observe(getViewLifecycleOwner(), unused -> {
+            Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator != null) vibrator.vibrate(100);
+        });
+    }
+
+    private void initGameTypePills(View view) {
         RecyclerView gameTypeChanger = view.findViewById(R.id.gameTypeChangerTracker);
 
         List<String> categories = Arrays.asList(
@@ -138,47 +176,20 @@ public class TrackerFragment extends Fragment {
         gameTypeChanger.setLayoutManager(layoutManager);
 
         pillsAdapter = new PillsAdapter(categories, (item, position) -> {
-            mainActivity.setSubType(GameType.fromCode(position));
-            refresh(view);
+            GameType selected = GameType.fromCode(position);
+            viewModel.setGameType(selected);
         });
 
         gameTypeChanger.setAdapter(pillsAdapter);
-        selectAndScrollIfNeeded(mainActivity.getSubType().getCode());
 
-        refresh(view);
+        GameType currentType = viewModel.getCurrentGameType();
+        selectAndScrollIfNeeded(currentType.getCode());
     }
 
-    private void selectAndScrollIfNeeded(int targetPosition) {
-        if (pillsAdapter == null || layoutManager == null) return;
+    private void updateGameTypeUi(GameType gameType) {
+        selectAndScrollIfNeeded(gameType.getCode());
 
-        pillsAdapter.setSelectedPosition(targetPosition);
-
-        int firstCompletelyVisible = layoutManager.findFirstCompletelyVisibleItemPosition();
-        int lastCompletelyVisible = layoutManager.findLastCompletelyVisibleItemPosition();
-
-        boolean isNotFullyVisible = targetPosition < firstCompletelyVisible || targetPosition > lastCompletelyVisible;
-
-        if (isNotFullyVisible) {
-            int offsetPx = (int) (16 * getResources().getDisplayMetrics().density);
-            layoutManager.scrollToPositionWithOffset(targetPosition, offsetPx);
-        }
-    }
-
-    void refresh(View view) {
-        if (!isAdded() || view == null) return;
-
-        // 1. Убрано пересоздание `calendarHelper = new CalendarHelper(...)`
-
-        // 2. Мгновенно обновляем месяц, год, иконки и темы в основном потоке UI
-        selectedMonth = LocalDate.now().getMonth().getValue();
-        selectedYear = calendarRepository.getYear();
-        setHeader(selectedMonth, selectedYear);
-
-        ImageView gemIcon = view.findViewById(R.id.gemIcon);
-        TextView subsCountTitle = view.findViewById(R.id.subsCountHeader);
-        ImageView wishIcon = view.findViewById(R.id.wishIcon);
-
-        switch (mainActivity.getSubType()) {
+        switch (gameType) {
             case GENSHIN:
                 gemIcon.setImageResource(R.drawable.icon_primogem);
                 wishIcon.setImageResource(R.drawable.icon_intertwined_fate);
@@ -195,238 +206,58 @@ public class TrackerFragment extends Fragment {
                 subsCountTitle.setText(R.string.inter_knot_member_count_header);
                 break;
         }
-
-        calendarRepository.adjustCellSizes(this);
-
-        // 3. Асинхронно запрашиваем данные из БД и обновляем сетку и статистику
-        calendarRepository.init(() -> {
-            if (!isAdded() || getView() == null) return;
-
-            DailyNotificationReceiver.subsCount = calendarRepository.getSubsCount();
-            subsCounterView.setText(String.valueOf(calendarRepository.getSubsCount()));
-
-            calendarRepository.renderCalendar(this);
-            setStatistics();
-        });
     }
 
-    public void setStatistics() {
-        if (!isAdded() || getView() == null) return;
+    private void renderCalendarGrid(List<CalendarCellUiModel> cells) {
+        if (cells == null || cells.size() < 42) return;
 
-        calendarRepository.getStatistic(statistic -> {
-            if (!isAdded() || getView() == null) return;
+        TransitionSet transitionSet = new TransitionSet();
+        transitionSet.setOrdering(TransitionSet.ORDERING_TOGETHER);
+        transitionSet.addTransition(new Fade().setDuration(250));
+        transitionSet.addTransition(new ChangeBounds().setDuration(250));
+        TransitionManager.beginDelayedTransition(calendarGrid, transitionSet);
 
-            int laterPrimogemsCount = statistic.laterGems;
-            int laterWishesCount = statistic.laterWishes;
+        for (int i = 0; i < 42; i++) {
+            TextView cellView = cellViewsPool.get(i);
+            CalendarCellUiModel model = cells.get(i);
 
-            String laterPrimogemsText = "0";
-            String laterWishesText = "0";
-            String claimPrimogemsText = String.valueOf(statistic.claimGems);
-            String missedPrimogemsText = String.valueOf(statistic.missedGems);
-            String claimWishesText = String.valueOf(statistic.claimWishes);
-            String missedWishesText = String.valueOf(statistic.missedWishes);
-
-            View currentView = getView();
-            TextView claimPrimogems = currentView.findViewById(R.id.cliamsGemsCounter);
-            claimPrimogems.setText(claimPrimogemsText);
-
-            TextView missedPrimogems = currentView.findViewById(R.id.missGemsCounter);
-            missedPrimogems.setText(missedPrimogemsText);
-
-            TextView claimWishes = currentView.findViewById(R.id.claimWishesCounter);
-            claimWishes.setText(claimWishesText);
-
-            TextView missedWishes = currentView.findViewById(R.id.missWishesCounter);
-            missedWishes.setText(missedWishesText);
-
-            TextView laterPrimogems = currentView.findViewById(R.id.laterGemsCounter);
-            if (laterPrimogemsCount > 0 && calendarRepository.getClaimsDays() > 0) {
-                laterPrimogemsText = String.valueOf(laterPrimogemsCount);
+            if (!model.isVisible) {
+                cellView.setVisibility(View.GONE);
+                cellView.setText("");
+                cellView.setBackground(null);
+            } else {
+                cellView.setVisibility(View.VISIBLE);
+                cellView.setText(String.valueOf(model.dayOfMonth));
+                cellView.setBackgroundResource(model.backgroundRes);
+                cellView.setTextColor(ContextCompat.getColor(requireContext(), model.textColorRes));
             }
-            laterPrimogems.setText(laterPrimogemsText);
+        }
 
-            TextView laterWishes = currentView.findViewById(R.id.laterWishesCounter);
-            if (laterPrimogemsCount > 0 && calendarRepository.getClaimsDays() > 0) {
-                laterWishesText = String.valueOf(laterWishesCount);
-            }
-            laterWishes.setText(laterWishesText);
-        });
+        adjustCellSizes();
     }
 
-    public void updateCalendar() {
-        setStatistics();
-        calendarRepository.renderCalendar(this);
-        setHeader(selectedMonth, calendarRepository.getYear());
+    private void updateStatisticsUi(Statistic statistic) {
+        if (statistic == null) return;
+
+        claimPrimogems.setText(String.valueOf(statistic.claimGems));
+        missedPrimogems.setText(String.valueOf(statistic.missedGems));
+        claimWishes.setText(String.valueOf(statistic.claimWishes));
+        missedWishes.setText(String.valueOf(statistic.missedWishes));
+
+        laterPrimogems.setText(statistic.laterGems > 0 ? String.valueOf(statistic.laterGems) : "0");
+        laterWishes.setText(statistic.laterWishes > 0 ? String.valueOf(statistic.laterWishes) : "0");
     }
 
     @SuppressLint("SetTextI18n")
-    public void setHeader(int month, int year) {
-        if (!isAdded() || getView() == null) return;
-
-        TextView monthHeader = getView().findViewById(R.id.monthHeader);
+    private void updateHeaderMonth(int month) {
         Month monthObj = Month.of(month);
-
-        TextView yearHeader = getView().findViewById(R.id.yearHeader);
-
         Locale locale = LocaleList.getDefault().get(0);
         String printMonth = monthObj.getDisplayName(TextStyle.FULL_STANDALONE, locale);
-
         monthHeader.setText(printMonth.substring(0, 1).toUpperCase() + printMonth.substring(1));
-        yearHeader.setText(String.valueOf(year));
-    }
-
-    public void onAddClick() {
-        if (calendarRepository.getSubsCount() <= 6) {
-            calendarRepository.getDaySubDaysRemaining(toDayOfYear, remaining -> {
-                if (remaining == 0) {
-                    calendarRepository.setSubsCount(1);
-                    calendarRepository.setMissesDays(0);
-                    calendarRepository.setClaimsDays(0);
-
-                    calendarRepository.setDaySubDaysRemaining(toDayOfYear, 30, () -> calendarRepository.updateSubscribeDays(CalendarRepository.UpdateSubscribeDaysActions.Add, () -> {
-                        if (!isAdded()) return;
-                        Toast.makeText(mainActivity, getString(R.string.add_sub), Toast.LENGTH_SHORT).show();
-                        check();
-                        DailyNotificationReceiver.subsCount = calendarRepository.getSubsCount();
-                        refresh(view);
-                    }));
-                } else {
-                    calendarRepository.addSub();
-                    calendarRepository.addDaySubDaysRemaining(toDayOfYear, 30, () -> calendarRepository.updateSubscribeDays(CalendarRepository.UpdateSubscribeDaysActions.Add, () -> {
-                        if (!isAdded()) return;
-                        Toast.makeText(mainActivity, getString(R.string.add_sub), Toast.LENGTH_SHORT).show();
-                        check();
-                        DailyNotificationReceiver.subsCount = calendarRepository.getSubsCount();
-                        refresh(view);
-                    }));
-                }
-            });
-        } else {
-            Toast.makeText(mainActivity, getString(R.string.subs_limit), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void onDelClick() {
-        calendarRepository.getDaySubDaysRemaining(toDayOfYear, remaining -> {
-            if (remaining == 30) {
-                if (calendarRepository.getSubsCount() > 0) {
-                    cancelCheck(() -> {
-                        calendarRepository.delSub();
-                        calendarRepository.subtractDaySubDaysRemaining(toDayOfYear, 30, () -> calendarRepository.updateSubscribeDays(CalendarRepository.UpdateSubscribeDaysActions.Delete, () -> {
-                            if (!isAdded()) return;
-                            updateCalendar();
-                            Toast.makeText(mainActivity, getString(R.string.del_sub), Toast.LENGTH_SHORT).show();
-                            DailyNotificationReceiver.subsCount = calendarRepository.getSubsCount();
-                            subsCounterView.setText(String.valueOf(calendarRepository.getSubsCount()));
-                        }));
-                    });
-                } else {
-                    Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(mainActivity, getString(R.string.impossible_cancel_sub), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void check() {
-        calendarRepository.setDayStatus(toDayOfYear, 1, () -> {
-            calendarRepository.addClaimDay();
-            updateCalendar();
-        });
-    }
-
-    public void onCheckClick(View view) {
-        calendarRepository.getDayStatus(toDayOfYear, status -> {
-            if (status == 1) {
-                Toast.makeText(getActivity(), getString(R.string.already_cheked), Toast.LENGTH_SHORT).show();
-            } else {
-                calendarRepository.getDaySubDaysRemaining(toDayOfYear, remaining -> {
-                    if (remaining == 0) {
-                        Toast.makeText(getActivity(), getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();
-                    } else {
-                        check();
-                        Toast.makeText(getActivity(), getString(R.string.check_today), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-
-        Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
-        if (vibrator != null) {
-            vibrator.vibrate(100);
-        }
-    }
-
-    private void showMoreMenu(View view) {
-        ((MainActivity) requireActivity()).showCalendarMenu(new MainActivity.OnCalendarMenuClickListener() {
-            @Override public void onAdd() { onAddClick(); }
-            @Override public void onDel() { onDelClick(); }
-            @Override public void onExport() { exportDatabase(); }
-            @Override public void onRecovery() { recoveryMissDay(); }
-            @Override public void onCancel() { onCancelCheck(); }
-        });
-    }
-
-    public void recoveryMissDay() {
-        int yesterday = toDayOfYear - 1;
-        if (yesterday >= 1) {
-            calendarRepository.getDayStatus(yesterday, status -> {
-                if (status == 1) {
-                    Toast.makeText(mainActivity, getString(R.string.not_miss_day), Toast.LENGTH_SHORT).show();
-                } else {
-                    calendarRepository.getDaySubDaysRemaining(yesterday, remaining -> {
-                        if (remaining == 0) {
-                            Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();
-                        } else {
-                            calendarRepository.setDayStatus(yesterday, 1, () -> {
-                                Toast.makeText(mainActivity, getString(R.string.check_today), Toast.LENGTH_SHORT).show();
-                                calendarRepository.addClaimDay();
-                                updateCalendar();
-                            });
-                        }
-                    });
-                }
-            });
-        } else {
-            updateCalendar();
-        }
-    }
-
-    public void cancelCheck(Runnable onComplete) {
-        calendarRepository.setDayStatus(toDayOfYear, 0, () -> {
-            calendarRepository.subtractClaimDay();
-            if (onComplete != null) onComplete.run();
-        });
-    }
-
-    public void cancelCheck() {
-        cancelCheck(this::updateCalendar);
-    }
-
-    public void onCancelCheck() {
-        calendarRepository.getDayStatus(toDayOfYear, status -> {
-            if (status == 0) {
-                Toast.makeText(mainActivity, getString(R.string.not_check_today), Toast.LENGTH_SHORT).show();
-            } else {
-                calendarRepository.getDaySubDaysRemaining(toDayOfYear, remaining -> {
-                    if (remaining == 0) {
-                        Toast.makeText(mainActivity, getString(R.string.active_subs_null), Toast.LENGTH_SHORT).show();
-                    } else {
-                        cancelCheck(() -> {
-                            Toast.makeText(mainActivity, getString(R.string.cancel_check_today), Toast.LENGTH_SHORT).show();
-                            updateCalendar();
-                        });
-                    }
-                });
-            }
-        });
     }
 
     private void initCalendarGrid() {
-        if (!cellViewsPool.isEmpty() && calendarGrid.getChildCount() == 42) {
-            return;
-        }
+        if (!cellViewsPool.isEmpty() && calendarGrid.getChildCount() == 42) return;
 
         calendarGrid.removeAllViews();
         cellViewsPool.clear();
@@ -444,7 +275,6 @@ public class TrackerFragment extends Fragment {
             params.width = 0;
             params.height = cellHeightInPx;
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-
             params.setMargins(marginInPx, marginInPx, marginInPx, marginInPx);
             dayView.setLayoutParams(params);
 
@@ -460,36 +290,53 @@ public class TrackerFragment extends Fragment {
         }
     }
 
-    public List<TextView> getCellViewsPool() {
-        return cellViewsPool;
+    private void adjustCellSizes() {
+        calendarGrid.post(() -> {
+            int gridWidth = calendarGrid.getWidth();
+            if (gridWidth == 0 || !isAdded()) return;
+
+            float density = getResources().getDisplayMetrics().density;
+            int marginPx = (int) (4 * density);
+            int cellSidePx = (gridWidth - (marginPx * 2 * 7)) / 7;
+
+            for (int i = 0; i < 42; i++) {
+                TextView cell = cellViewsPool.get(i);
+                GridLayout.LayoutParams params = (GridLayout.LayoutParams) cell.getLayoutParams();
+
+                if (params != null) {
+                    params.width = cellSidePx;
+                    params.height = cellSidePx;
+                    params.setMargins(marginPx, marginPx, marginPx, marginPx);
+                    cell.setLayoutParams(params);
+                }
+            }
+        });
     }
 
-    public GridLayout getCalendarGrid() {
-        return calendarGrid;
-    }
+    private void selectAndScrollIfNeeded(int targetPosition) {
+        if (pillsAdapter == null || layoutManager == null) return;
 
-    private void nextMonth() {
-        if (selectedMonth == 12) {
-            selectedMonth = 1;
-            calendarRepository.addYear();
-        } else {
-            selectedMonth++;
+        pillsAdapter.setSelectedPosition(targetPosition);
+
+        int firstCompletelyVisible = layoutManager.findFirstCompletelyVisibleItemPosition();
+        int lastCompletelyVisible = layoutManager.findLastCompletelyVisibleItemPosition();
+
+        if (targetPosition < firstCompletelyVisible || targetPosition > lastCompletelyVisible) {
+            int offsetPx = (int) (16 * getResources().getDisplayMetrics().density);
+            layoutManager.scrollToPositionWithOffset(targetPosition, offsetPx);
         }
-        selectedYear = calendarRepository.getYear();
-        calendarRepository.renderCalendar(this);
-        setHeader(selectedMonth, selectedYear);
     }
 
-    private void previousMonth() {
-        if (selectedMonth == 1) {
-            selectedMonth = 12;
-            calendarRepository.subtractYear();
-        } else {
-            selectedMonth--;
+    private void showMoreMenu(View view) {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).showCalendarMenu(new MainActivity.OnCalendarMenuClickListener() {
+                @Override public void onAdd() { viewModel.onAddClick(); }
+                @Override public void onDel() { viewModel.onDelClick(); }
+                @Override public void onExport() { exportDatabase(); }
+                @Override public void onRecovery() { viewModel.recoveryMissDay(); }
+                @Override public void onCancel() { viewModel.onCancelCheck(); }
+            });
         }
-        selectedYear = calendarRepository.getYear();
-        calendarRepository.renderCalendar(this);
-        setHeader(selectedMonth, selectedYear);
     }
 
     public void exportDatabase() {
@@ -498,7 +345,6 @@ public class TrackerFragment extends Fragment {
 
     private void writeDatabaseToUri(Uri targetUri) {
         if (!isAdded()) return;
-
         Context context = requireContext();
 
         try {
@@ -539,13 +385,5 @@ public class TrackerFragment extends Fragment {
             e.printStackTrace();
             Toast.makeText(context, R.string.db_export_failed, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public int getSelectedMonth() {
-        return selectedMonth;
-    }
-
-    public int getSelectedYear() {
-        return selectedYear;
     }
 }
