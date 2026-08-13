@@ -93,6 +93,7 @@
     <string name="type_spec">Особый</string>
     <string name="type_novie">Новичок</string>
     <string name="reset_pity">Сбросить гарант</string>
+    <string name="goal_not_set_or_reached">Цель не установлена или не достигнута</string>
 
 
 </resources>

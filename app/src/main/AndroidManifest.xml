@@ -19,7 +19,7 @@
         android:theme="@style/Splash.Theme.Starting"
         tools:targetApi="37">
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize"
             android:exported="true">
             <intent-filter>
@@ -29,12 +29,12 @@
         </activity>
 
         <service
-            android:name=".helpers.AlarmHelper"
+            android:name=".service.AlarmService"
             android:enabled="true"
             android:exported="false"/>
 
         <receiver
-            android:name=".utils.Notification"
+            android:name=".receiver.DailyNotificationReceiver"
             android:permission="Notifications"/>
     </application>
 

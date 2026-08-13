@@ -6,17 +6,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.menshovanton.gachapoint.db.entities.CalendarEntity;
-import ru.menshovanton.gachapoint.enums.GameType;
-import ru.menshovanton.gachapoint.helpers.DatabaseHelper;
-import ru.menshovanton.gachapoint.models.Date;
+import ru.menshovanton.gachapoint.data.db.entities.CalendarEntity;
+import ru.menshovanton.gachapoint.domain.enums.GameType;
+import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
+import ru.menshovanton.gachapoint.domain.models.Date;
 
 public class Calendar {
 
-    private final DatabaseHelper dbHelper;
+    private final DatabaseRepository dbHelper;
 
     public Calendar(Context context) {
-        this.dbHelper = new DatabaseHelper(context);
+        this.dbHelper = new DatabaseRepository(context);
     }
 
     public void ensureYearInitialized(int year, Runnable onComplete) {
@@ -53,11 +53,11 @@ public class Calendar {
         dbHelper.saveCalendarEntities(entities, onComplete);
     }
 
-    public void getMonthDates(int year, int month, GameType gameType, DatabaseHelper.Callback<List<Date>> callback) {
+    public void getMonthDates(int year, int month, GameType gameType, DatabaseRepository.Callback<List<Date>> callback) {
         ensureYearInitialized(year, () -> dbHelper.getMonthCalendarData(year, month, gameType, callback));
     }
 
-    public void getDay(int year, int dayOfYear, GameType gameType, DatabaseHelper.Callback<Date> callback) {
+    public void getDay(int year, int dayOfYear, GameType gameType, DatabaseRepository.Callback<Date> callback) {
         ensureYearInitialized(year, () -> dbHelper.getDayCalendarData(year, dayOfYear, gameType, callback));
     }
 
@@ -65,7 +65,7 @@ public class Calendar {
         dbHelper.updateCalendarDay(year, dayOfYear, gameType, status, subDaysRemaining, onComplete);
     }
 
-    public void getDaysRange(int year, int startDay, int endDay, GameType gameType, DatabaseHelper.Callback<List<Date>> callback) {
+    public void getDaysRange(int year, int startDay, int endDay, GameType gameType, DatabaseRepository.Callback<List<Date>> callback) {
         ensureYearInitialized(year, () -> dbHelper.getDaysRangeData(year, startDay, endDay, gameType, callback));
     }
 }

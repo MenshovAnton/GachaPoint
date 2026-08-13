@@ -108,4 +108,5 @@
     <string name="type_spec">Special</string>
     <string name="type_novie">Novice</string>
     <string name="reset_pity">Reset pity</string>
+    <string name="goal_not_set_or_reached">Target not set or reached</string>
 </resources>
