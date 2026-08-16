@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fl_info"
-    tools:context=".ui.info.InfoFragment">
+    tools:context=".ui.fragment.info.InfoView">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -35,10 +35,10 @@ import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.service.AlarmService;
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.ui.home.HomeView;
-import ru.menshovanton.gachapoint.ui.journal.JournalView;
-import ru.menshovanton.gachapoint.ui.settings.SettingsFragment;
-import ru.menshovanton.gachapoint.ui.tracker.TrackerFragment;
+import ru.menshovanton.gachapoint.ui.fragment.home.HomeView;
+import ru.menshovanton.gachapoint.ui.fragment.journal.JournalView;
+import ru.menshovanton.gachapoint.ui.fragment.settings.SettingsFragment;
+import ru.menshovanton.gachapoint.ui.fragment.tracker.TrackerFragment;
 import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 
 public class MainActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.tracker;
+package ru.menshovanton.gachapoint.ui.fragment.tracker;
 
 import android.content.Context;
 import android.util.AttributeSet;

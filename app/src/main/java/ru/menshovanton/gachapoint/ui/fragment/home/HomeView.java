@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.home;
+package ru.menshovanton.gachapoint.ui.fragment.home;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.journal.wishescounter;
+package ru.menshovanton.gachapoint.ui.fragment.journal.wishescounter;
 
 import android.app.Application;
 import android.text.TextUtils;

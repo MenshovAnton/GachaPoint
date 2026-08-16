@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.tracker;
+package ru.menshovanton.gachapoint.ui.fragment.tracker;
 
 import android.app.Application;
 
@@ -18,10 +18,11 @@ import ru.menshovanton.gachapoint.data.repository.CalendarRepository;
 import ru.menshovanton.gachapoint.domain.enums.DayState;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Date;
+import ru.menshovanton.gachapoint.domain.models.InAppNotification;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
 import ru.menshovanton.gachapoint.receiver.DailyNotificationReceiver;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
-import ru.menshovanton.gachapoint.ui.tracker.model.CalendarCellUiModel;
+import ru.menshovanton.gachapoint.ui.fragment.tracker.model.CalendarCellUiModel;
 
 public class TrackerViewModel extends AndroidViewModel {
 
@@ -40,6 +41,9 @@ public class TrackerViewModel extends AndroidViewModel {
 
     private final SingleLiveEvent<Integer> toastMessageEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> vibrateEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> openQuestionDialogEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<InAppNotification> notificationEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Integer> playSoundEvent = new SingleLiveEvent<>();
 
     private final MutableLiveData<List<Date>> monthDates = new MutableLiveData<>();
 
@@ -62,18 +66,6 @@ public class TrackerViewModel extends AndroidViewModel {
         return monthDates;
     }
 
-    public void loadCurrentMonthData() {
-        int year = selectedYearLiveData.getValue() != null ? selectedYearLiveData.getValue() : LocalDate.now().getYear();
-        int month = selectedMonthLiveData.getValue() != null ? selectedMonthLiveData.getValue() : LocalDate.now().getMonthValue();
-        GameType gameType = gameTypeLiveData.getValue() != null ? gameTypeLiveData.getValue() : GameType.GENSHIN;
-
-        loadCalendarGrid();
-
-        calendarRepository.getStatistic(gameType, year, statisticLiveData::postValue);
-
-        calendarRepository.init(gameType, year, () -> subsCountLiveData.postValue(calendarRepository.getSubsCount()));
-    }
-
     public LiveData<GameType> getGameTypeLiveData() { return gameTypeLiveData; }
     public LiveData<Integer> getSelectedMonthLiveData() { return selectedMonthLiveData; }
     public LiveData<Integer> getSelectedYearLiveData() { return selectedYearLiveData; }
@@ -82,6 +74,8 @@ public class TrackerViewModel extends AndroidViewModel {
     public LiveData<List<CalendarCellUiModel>> getCalendarCellsLiveData() { return calendarCellsLiveData; }
     public LiveData<Integer> getToastMessageEvent() { return toastMessageEvent; }
     public LiveData<Void> getVibrateEvent() { return vibrateEvent; }
+    public SingleLiveEvent<Void> getOpenQuestionDialogEvent() { return openQuestionDialogEvent; }
+    public LiveData<Integer> getPlaySoundEvent() { return playSoundEvent; }
 
     public void setGameType(GameType gameType) {
         if (this.currentGameType != gameType) {
@@ -181,8 +175,9 @@ public class TrackerViewModel extends AndroidViewModel {
             } else {
                 calendarRepository.getDaySubDaysRemaining(selectedYear, today, currentGameType, remaining -> {
                     if (remaining == 0) {
-                        toastMessageEvent.setValue(R.string.active_subs_null);
+                        openQuestionDialogEvent.call();
                     } else {
+                        playSoundEvent.setValue(R.raw.success);
                         performCheck(today, R.string.check_today);
                     }
                 });
@@ -202,6 +197,7 @@ public class TrackerViewModel extends AndroidViewModel {
         int today = LocalDate.now().getDayOfYear();
 
         if (calendarRepository.getSubsCount() <= 6) {
+            playSoundEvent.setValue(R.raw.success);
             calendarRepository.getDaySubDaysRemaining(selectedYear, today, currentGameType, remaining -> {
                 if (remaining == 0) {
                     calendarRepository.setSubsCount(1);

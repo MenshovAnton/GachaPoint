@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">GachaPoint</string>
-    <string name="app_version" translatable="false">0.1</string>
+    <string name="app_version" translatable="false">0.1.0</string>
     <string name="description">"GachaPoint ваш удобный ассистент в мире аниме гача RPG.         Отслеживайте награды Благословления полной Луны, Пропуска снабжения экспересса и         Интертон-подписки.         Ежедневные напоминания, счетчик наград, наглядный календарь.     "</string>
     <string name="copyright_info">Все права принадлежат их правооблодателям (All rights belong to their copyright
         holders). Приложение не
@@ -52,7 +52,7 @@
     <string name="check_today">Marking complete!</string>
     <string name="cancel_check_today">Mark removed</string>
     <string name="already_cheked">You have already checked in today</string>
-    <string name="active_subs_null">You have no active subscriptions</string>
+    <string name="active_subs_null">You have no active subscriptions.</string>
     <string name="not_miss_day">You already checked in yesterday</string>
     <string name="not_check_today">You haven\'t checked in yet today</string>
     <string name="impossible_cancel_sub">A subscription can only be deleted on the day it was added!</string>
@@ -80,7 +80,7 @@
     <string name="garant_6">Pity 6x</string>
     <string name="reset">Reset</string>
     <string name="remark_piggy_bank">Pity 1x = 77 pulls</string>
-    <string name="db_export_successful">Данные успешно выгружены!</string>
+    <string name="db_export_successful">Export success!</string>
     <string name="db_export_failed">Export error!</string>
     <string name="notifications_name">Notifications</string>
     <string name="notifications_description">Sends reminders to collect rewards</string>
@@ -109,4 +109,7 @@
     <string name="type_novie">Novice</string>
     <string name="reset_pity">Reset pity</string>
     <string name="goal_not_set_or_reached">Target not set or reached</string>
+    <string name="ok_button">Yes</string>
+    <string name="cancel_button">No, thanks</string>
+    <string name="active_subs_null_question">You have no active subscriptions. Add one?</string>
 </resources>

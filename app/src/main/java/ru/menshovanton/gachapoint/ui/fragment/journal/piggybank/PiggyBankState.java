@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.journal.piggybank;
+package ru.menshovanton.gachapoint.ui.fragment.journal.piggybank;
 
 public class PiggyBankState {
     private final int progress;

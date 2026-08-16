@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.settings;
+package ru.menshovanton.gachapoint.ui.fragment.settings;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -29,7 +29,7 @@ import java.io.OutputStream;
 import java.util.Objects;
 
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
-import ru.menshovanton.gachapoint.ui.info.InfoFragment;
+import ru.menshovanton.gachapoint.ui.fragment.info.InfoView;
 import ru.menshovanton.gachapoint.service.AlarmService;
 import ru.menshovanton.gachapoint.ui.main.MainActivity;
 import ru.menshovanton.gachapoint.receiver.DailyNotificationReceiver;
@@ -147,7 +147,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void onInfoButton(View view) {
-        mainActivity.replaceFragment(InfoFragment.newInstance(), mainActivity.INFO_TAG);
+        mainActivity.replaceFragment(InfoView.newInstance(), mainActivity.INFO_TAG);
     }
 
     public void exportDatabase(View view) {

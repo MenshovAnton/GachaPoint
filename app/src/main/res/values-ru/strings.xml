@@ -44,7 +44,7 @@
     <string name="check_today">Отметка выполнена!</string>
     <string name="cancel_check_today">Отметка удалена</string>
     <string name="already_cheked">Вы уже отмечались сегодня</string>
-    <string name="active_subs_null">У вас нет активных подписок</string>
+    <string name="active_subs_null">У вас нет активных подписок.</string>
     <string name="not_miss_day">Вчера вы уже отмечались</string>
     <string name="not_check_today">Сегодня вы еще не отмечались</string>
     <string name="impossible_cancel_sub">Подписку можно удалить только в день добавления!</string>
@@ -94,6 +94,9 @@
     <string name="type_novie">Новичок</string>
     <string name="reset_pity">Сбросить гарант</string>
     <string name="goal_not_set_or_reached">Цель не установлена или не достигнута</string>
+    <string name="ok_button">Да</string>
+    <string name="cancel_button">Нет, спасибо</string>
+    <string name="active_subs_null_question">У вас нет активных подписок. Добавить одну?</string>
 
 
 </resources>

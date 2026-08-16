@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.home;
+package ru.menshovanton.gachapoint.ui.fragment.home;
 
 import android.app.Application;
 import androidx.annotation.NonNull;

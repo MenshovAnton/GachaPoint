@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.info;
+package ru.menshovanton.gachapoint.ui.fragment.info;
 
 import android.os.Bundle;
 
@@ -13,16 +13,16 @@ import android.widget.ImageView;
 
 import ru.menshovanton.gachapoint.ui.main.MainActivity;
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.ui.settings.SettingsFragment;
+import ru.menshovanton.gachapoint.ui.fragment.settings.SettingsFragment;
 
-public class InfoFragment extends Fragment {
+public class InfoView extends Fragment {
     private MainActivity mainActivity;
 
     private ImageView backToSettings;
 
-    public InfoFragment() {}
-    public static InfoFragment newInstance() {
-        return new InfoFragment();
+    public InfoView() {}
+    public static InfoView newInstance() {
+        return new InfoView();
     }
 
     @Override

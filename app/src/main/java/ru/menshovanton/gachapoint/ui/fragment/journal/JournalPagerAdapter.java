@@ -1,11 +1,11 @@
-package ru.menshovanton.gachapoint.ui.journal;
+package ru.menshovanton.gachapoint.ui.fragment.journal;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import ru.menshovanton.gachapoint.ui.journal.piggybank.PiggyBankView;
-import ru.menshovanton.gachapoint.ui.journal.wishescounter.WishesCounterView;
+import ru.menshovanton.gachapoint.ui.fragment.journal.piggybank.PiggyBankView;
+import ru.menshovanton.gachapoint.ui.fragment.journal.wishescounter.WishesCounterView;
 
 public class JournalPagerAdapter extends FragmentStateAdapter {
     public JournalPagerAdapter(@NonNull Fragment fragment) {

@@ -1,16 +1,18 @@
-package ru.menshovanton.gachapoint.ui.tracker;
+package ru.menshovanton.gachapoint.ui.fragment.tracker;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.LocaleList;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.transition.ChangeBounds;
-import android.transition.Fade;
-import android.transition.TransitionManager;
-import android.transition.TransitionSet;
+import android.os.VibratorManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -44,15 +49,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
+import ru.menshovanton.gachapoint.domain.models.InAppNotification;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
 import ru.menshovanton.gachapoint.ui.main.MainActivity;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
-import ru.menshovanton.gachapoint.ui.tracker.model.CalendarCellUiModel;
+import ru.menshovanton.gachapoint.ui.fragment.tracker.model.CalendarCellUiModel;
 
 public class TrackerFragment extends Fragment {
 
@@ -80,7 +87,12 @@ public class TrackerFragment extends Fragment {
     private TextView laterPrimogems;
     private TextView laterWishes;
 
+    private boolean isAnimating = false;
+
     private final List<TextView> cellViewsPool = new ArrayList<>();
+
+    private SoundPool soundPool;
+    private int successSound;
 
     private final ActivityResultLauncher<String> exportDbLauncher =
             registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
@@ -93,6 +105,22 @@ public class TrackerFragment extends Fragment {
 
     public static TrackerFragment newInstance() {
         return new TrackerFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(5)
+                .setAudioAttributes(audioAttributes)
+                .build();
+
+        successSound = soundPool.load(requireContext(), R.raw.success, 1);
     }
 
     @Override
@@ -134,13 +162,13 @@ public class TrackerFragment extends Fragment {
         moreButton.setOnClickListener(this::showMoreMenu);
 
         calendarGrid.setOnSwipeListener(new CalendarGrid.OnSwipeListener() {
-            @Override public void onSwipeLeft() { viewModel.nextMonth(); }
-            @Override public void onSwipeRight() { viewModel.previousMonth(); }
+            @Override public void onSwipeLeft() { animateMonthChange(true); }
+            @Override public void onSwipeRight() { animateMonthChange(false); }
         });
 
         observeViewModel();
 
-        viewModel.loadCurrentMonthData();
+        viewModel.refreshData();
     }
 
     private void observeViewModel() {
@@ -157,10 +185,30 @@ public class TrackerFragment extends Fragment {
             }
         });
 
-        viewModel.getVibrateEvent().observe(getViewLifecycleOwner(), unused -> {
-            Vibrator vibrator = (Vibrator) requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
-            if (vibrator != null) vibrator.vibrate(100);
-        });
+        viewModel.getOpenQuestionDialogEvent().observe(getViewLifecycleOwner(), unused ->
+                showQuestionDialog(requireContext())
+        );
+
+        viewModel.getVibrateEvent().observe(getViewLifecycleOwner(), unused -> triggerVibration());
+
+        viewModel.getPlaySoundEvent().observe(requireActivity(), this::playSound);
+    }
+
+    private void triggerVibration() {
+        Context context = getContext();
+        if (context == null) return;
+
+        Vibrator vibrator;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            VibratorManager vibratorManager = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+            vibrator = vibratorManager != null ? vibratorManager.getDefaultVibrator() : null;
+        } else {
+            vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        }
+
+        if (vibrator != null && vibrator.hasVibrator()) {
+            vibrator.vibrate(VibrationEffect.createOneShot(60, VibrationEffect.DEFAULT_AMPLITUDE));
+        }
     }
 
     private void initGameTypePills(View view) {
@@ -208,21 +256,83 @@ public class TrackerFragment extends Fragment {
         }
     }
 
+    private void animateGridHeight(int targetHeight) {
+        int initialHeight = calendarGrid.getHeight();
+        if (initialHeight == targetHeight || initialHeight == 0) {
+            ViewGroup.LayoutParams params = calendarGrid.getLayoutParams();
+            params.height = targetHeight;
+            calendarGrid.setLayoutParams(params);
+            return;
+        }
+
+        ValueAnimator animator = ValueAnimator.ofInt(initialHeight, targetHeight);
+        animator.setDuration(250);
+        animator.addUpdateListener(animation -> {
+            ViewGroup.LayoutParams params = calendarGrid.getLayoutParams();
+            params.height = (int) animation.getAnimatedValue();
+            calendarGrid.setLayoutParams(params);
+        });
+        animator.start();
+    }
+
+    private void animateMonthChange(boolean isNext) {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        int width = calendarGrid.getWidth();
+        if (width == 0) {
+            notifyViewModelMonthChange(isNext);
+            isAnimating = false;
+            return;
+        }
+
+        float targetOutX = isNext ? -width * 0.4f : width * 0.4f;
+        float startInX = isNext ? width * 0.4f : -width * 0.4f;
+
+        calendarGrid.animate()
+                .translationX(targetOutX)
+                .alpha(0f)
+                .setDuration(130)
+                .withEndAction(() -> {
+                    notifyViewModelMonthChange(isNext);
+
+                    calendarGrid.setTranslationX(startInX);
+                    calendarGrid.animate()
+                            .translationX(0f)
+                            .alpha(1f)
+                            .setDuration(130)
+                            .withEndAction(() -> isAnimating = false)
+                            .start();
+                })
+                .start();
+    }
+
+    private void notifyViewModelMonthChange(boolean isNext) {
+        if (isNext) {
+            viewModel.nextMonth();
+        } else {
+            viewModel.previousMonth();
+        }
+    }
+
     private void renderCalendarGrid(List<CalendarCellUiModel> cells) {
         if (cells == null || cells.size() < 42) return;
 
-        TransitionSet transitionSet = new TransitionSet();
-        transitionSet.setOrdering(TransitionSet.ORDERING_TOGETHER);
-        transitionSet.addTransition(new Fade().setDuration(250));
-        transitionSet.addTransition(new ChangeBounds().setDuration(250));
-        TransitionManager.beginDelayedTransition(calendarGrid, transitionSet);
+        int activeRows = IntStream.range(35, 42).anyMatch(i -> cells.get(i).isVisible) ? 6 : 5;
 
         for (int i = 0; i < 42; i++) {
             TextView cellView = cellViewsPool.get(i);
             CalendarCellUiModel model = cells.get(i);
 
-            if (!model.isVisible) {
+            if (i >= 35 && activeRows == 5) {
                 cellView.setVisibility(View.GONE);
+                cellView.setText("");
+                cellView.setBackground(null);
+                continue;
+            }
+
+            if (!model.isVisible) {
+                cellView.setVisibility(View.INVISIBLE);
                 cellView.setText("");
                 cellView.setBackground(null);
             } else {
@@ -233,7 +343,29 @@ public class TrackerFragment extends Fragment {
             }
         }
 
-        adjustCellSizes();
+        calendarGrid.post(() -> {
+            int gridWidth = calendarGrid.getWidth();
+            if (gridWidth == 0 || !isAdded()) return;
+
+            float density = getResources().getDisplayMetrics().density;
+            int marginPx = (int) (4 * density);
+            int cellSidePx = (gridWidth - (marginPx * 2 * 7)) / 7;
+
+            for (int i = 0; i < 42; i++) {
+                TextView cell = cellViewsPool.get(i);
+                GridLayout.LayoutParams params = (GridLayout.LayoutParams) cell.getLayoutParams();
+                if (params != null) {
+                    params.width = cellSidePx;
+                    params.height = cellSidePx;
+                    params.setMargins(marginPx, marginPx, marginPx, marginPx);
+                    cell.setLayoutParams(params);
+                }
+            }
+
+            int targetHeight = (cellSidePx + (marginPx * 2)) * activeRows;
+
+            animateGridHeight(targetHeight);
+        });
     }
 
     private void updateStatisticsUi(Statistic statistic) {
@@ -288,29 +420,6 @@ public class TrackerFragment extends Fragment {
             calendarGrid.addView(dayView);
             cellViewsPool.add(dayView);
         }
-    }
-
-    private void adjustCellSizes() {
-        calendarGrid.post(() -> {
-            int gridWidth = calendarGrid.getWidth();
-            if (gridWidth == 0 || !isAdded()) return;
-
-            float density = getResources().getDisplayMetrics().density;
-            int marginPx = (int) (4 * density);
-            int cellSidePx = (gridWidth - (marginPx * 2 * 7)) / 7;
-
-            for (int i = 0; i < 42; i++) {
-                TextView cell = cellViewsPool.get(i);
-                GridLayout.LayoutParams params = (GridLayout.LayoutParams) cell.getLayoutParams();
-
-                if (params != null) {
-                    params.width = cellSidePx;
-                    params.height = cellSidePx;
-                    params.setMargins(marginPx, marginPx, marginPx, marginPx);
-                    cell.setLayoutParams(params);
-                }
-            }
-        });
     }
 
     private void selectAndScrollIfNeeded(int targetPosition) {
@@ -385,5 +494,30 @@ public class TrackerFragment extends Fragment {
             e.printStackTrace();
             Toast.makeText(context, R.string.db_export_failed, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void showQuestionDialog(Context context) {
+        new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
+                .setTitle(getString(R.string.check_button_text))
+                .setMessage(R.string.active_subs_null_question)
+                .setPositiveButton(getString(R.string.ok_button), (dialog, which) -> {
+                    viewModel.onAddClick();
+                    dialog.dismiss();
+                })
+                .setNegativeButton(getString(R.string.cancel_button), (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    private void showInAppNotification(InAppNotification notification) {
+        assert getView() != null;
+        View rootView = getView().getRootView();
+
+        Snackbar snackbar = Snackbar.make(rootView, notification.getMessage(), Snackbar.LENGTH_LONG);
+        snackbar.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
+        snackbar.show();
+    }
+
+    private void playSound(int resId) {
+        soundPool.play(successSound, 1.0f, 1.0f, 0, 0, 1.0f);
     }
 }

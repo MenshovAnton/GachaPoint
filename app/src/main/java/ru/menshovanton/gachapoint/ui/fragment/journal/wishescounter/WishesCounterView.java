@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.journal.wishescounter;
+package ru.menshovanton.gachapoint.ui.fragment.journal.wishescounter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -39,7 +39,7 @@ import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Wish;
-import ru.menshovanton.gachapoint.ui.journal.SharedJournalViewModel;
+import ru.menshovanton.gachapoint.ui.fragment.journal.SharedJournalViewModel;
 import ru.menshovanton.gachapoint.ui.main.MainActivity;
 
 public class WishesCounterView extends Fragment {

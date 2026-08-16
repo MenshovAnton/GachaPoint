@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.journal;
+package ru.menshovanton.gachapoint.ui.fragment.journal;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

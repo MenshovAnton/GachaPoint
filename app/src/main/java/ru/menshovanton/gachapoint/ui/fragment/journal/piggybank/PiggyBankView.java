@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.journal.piggybank;
+package ru.menshovanton.gachapoint.ui.fragment.journal.piggybank;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
-import ru.menshovanton.gachapoint.ui.journal.SharedJournalViewModel;
+import ru.menshovanton.gachapoint.ui.fragment.journal.SharedJournalViewModel;
 import ru.menshovanton.gachapoint.ui.main.MainActivity;
 
 public class PiggyBankView extends Fragment {

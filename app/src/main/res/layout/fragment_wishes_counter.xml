@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.journal.wishescounter.WishesCounterView">
+    tools:context=".ui.fragment.journal.wishescounter.WishesCounterView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -87,6 +87,7 @@
                     android:layout_marginStart="4dp"
                     android:importantForAccessibility="no"
                     app:srcCompat="@drawable/icon_intertwined_fate" />
+
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

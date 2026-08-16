@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.journal;
+package ru.menshovanton.gachapoint.ui.fragment.journal;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

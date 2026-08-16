@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.tracker.model;
+package ru.menshovanton.gachapoint.ui.fragment.tracker.model;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
