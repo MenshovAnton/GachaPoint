@@ -19,7 +19,7 @@
         android:theme="@style/Splash.Theme.Starting"
         tools:targetApi="37">
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.main.MainActivityView"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize"
             android:exported="true">
             <intent-filter>

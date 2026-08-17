@@ -40,13 +40,13 @@ import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Wish;
 import ru.menshovanton.gachapoint.ui.fragment.journal.SharedJournalViewModel;
-import ru.menshovanton.gachapoint.ui.main.MainActivity;
+import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
 public class WishesCounterView extends Fragment {
 
     private WishesCounterViewModel viewModel;
     private SharedJournalViewModel sharedViewModel;
-    private MainActivity mainActivity;
+    private MainActivityView mainActivityView;
 
     private TextView savedWishesCounter;
     private Button addActions;
@@ -60,7 +60,7 @@ public class WishesCounterView extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = (MainActivity) getActivity();
+        mainActivityView = (MainActivityView) getActivity();
 
         viewModel = new ViewModelProvider(this).get(WishesCounterViewModel.class);
 
@@ -171,9 +171,9 @@ public class WishesCounterView extends Fragment {
     }
 
     private void showMoreMenu(View view) {
-        if (mainActivity == null) return;
+        if (mainActivityView == null) return;
 
-        mainActivity.showWishCounterMenu(new MainActivity.OnWishCounterMenuClickListener() {
+        mainActivityView.showWishCounterMenu(new MainActivityView.OnWishCounterMenuClickListener() {
             @Override
             public void onAddOneAttempt() {
                 viewModel.addOneAttempt();

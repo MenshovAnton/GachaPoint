@@ -22,12 +22,12 @@ import java.util.List;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
-import ru.menshovanton.gachapoint.ui.main.MainActivity;
+import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
 
 public class HomeView extends Fragment {
 
-    private MainActivity mainActivity;
+    private MainActivityView mainActivityView;
     private HomeViewModel viewModel;
 
     private TextView subsCounterView;
@@ -53,7 +53,7 @@ public class HomeView extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = (MainActivity) getActivity();
+        mainActivityView = (MainActivityView) getActivity();
     }
 
     @Override
@@ -102,13 +102,13 @@ public class HomeView extends Fragment {
 
         pillsAdapter = new PillsAdapter(categories, (item, position) -> {
             GameType selected = GameType.fromCode(position);
-            if (mainActivity != null) mainActivity.setSubType(selected);
+            if (mainActivityView != null) mainActivityView.setSubType(selected);
             viewModel.setGameType(selected);
         });
 
         gameTypeChanger.setAdapter(pillsAdapter);
-        if (mainActivity != null) {
-            selectAndScrollIfNeeded(mainActivity.getSubType().getCode());
+        if (mainActivityView != null) {
+            selectAndScrollIfNeeded(mainActivityView.getSubType().getCode());
         }
     }
 

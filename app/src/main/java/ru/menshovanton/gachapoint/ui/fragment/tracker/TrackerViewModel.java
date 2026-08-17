@@ -18,7 +18,6 @@ import ru.menshovanton.gachapoint.data.repository.CalendarRepository;
 import ru.menshovanton.gachapoint.domain.enums.DayState;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Date;
-import ru.menshovanton.gachapoint.domain.models.InAppNotification;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
 import ru.menshovanton.gachapoint.receiver.DailyNotificationReceiver;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
@@ -42,7 +41,6 @@ public class TrackerViewModel extends AndroidViewModel {
     private final SingleLiveEvent<Integer> toastMessageEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> vibrateEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> openQuestionDialogEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<InAppNotification> notificationEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Integer> playSoundEvent = new SingleLiveEvent<>();
 
     private final MutableLiveData<List<Date>> monthDates = new MutableLiveData<>();

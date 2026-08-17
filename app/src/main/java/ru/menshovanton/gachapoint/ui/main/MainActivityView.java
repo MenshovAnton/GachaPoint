@@ -2,7 +2,6 @@ package ru.menshovanton.gachapoint.ui.main;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -24,70 +23,39 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.navigation.NavigationBarView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.menshovanton.gachapoint.data.db.AppDatabase;
+import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.service.AlarmService;
-import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.ui.fragment.home.HomeView;
 import ru.menshovanton.gachapoint.ui.fragment.journal.JournalView;
-import ru.menshovanton.gachapoint.ui.fragment.settings.SettingsFragment;
-import ru.menshovanton.gachapoint.ui.fragment.tracker.TrackerFragment;
-import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
+import ru.menshovanton.gachapoint.ui.fragment.settings.SettingsView;
+import ru.menshovanton.gachapoint.ui.fragment.tracker.TrackerView;
 
-public class MainActivity extends AppCompatActivity {
-    private GameType subType = GameType.GENSHIN;
+public class MainActivityView extends AppCompatActivity {
 
-    public final String HOME_TAG = "HOME";
-    public final String INFO_TAG = "INFO";
-    public final String JOURNAL_TAG = "JOURNAL";
-    public final String SETTINGS_TAG = "SETTINGS";
-    public final String TRACKER_TAG = "TRACKER";
+    public static final String HOME_TAG = "HOME";
+    public static final String INFO_TAG = "INFO";
+    public static final String JOURNAL_TAG = "JOURNAL";
+    public static final String SETTINGS_TAG = "SETTINGS";
+    public static final String TRACKER_TAG = "TRACKER";
 
-    private final String KEY_SELECTED_NAV_ID = "selected_nav_id";
+    private static final String KEY_SELECTED_NAV_ID = "selected_nav_id";
 
-    private int currentNavId = R.id.nav_home;
-
-    private final NavigationBarView.OnItemSelectedListener onItemSelectedListener
-            = item -> {
-                if (item.getItemId() == R.id.nav_home) {
-                    replaceFragment(HomeView.newInstance(), HOME_TAG);
-                    return true;
-                }
-                else if (item.getItemId() == R.id.nav_tracker) {
-                    replaceFragment(TrackerFragment.newInstance(), TRACKER_TAG);
-                    return true;
-                }
-                else if (item.getItemId() == R.id.nav_journal) {
-                    replaceFragment(JournalView.newInstance(), JOURNAL_TAG);
-                    return true;
-                }
-                else if (item.getItemId() == R.id.nav_settings) {
-                    replaceFragment(SettingsFragment.newInstance(), SETTINGS_TAG);
-                    return true;
-                } else {
-                    return false;
-                }
-            };
-
-    public void replaceFragment(Fragment fragment, String tag) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.frameLayout, fragment, tag)
-                .commit();
-    }
+    private MainActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+        SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
+
+        viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -112,29 +80,51 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+        navigation.setOnItemSelectedListener(item -> viewModel.onNavigationItemSelected(item.getItemId()));
+
+        observeViewModel();
+
         if (savedInstanceState != null) {
-            currentNavId = savedInstanceState.getInt(KEY_SELECTED_NAV_ID, R.id.nav_home);
+            int currentNavId = savedInstanceState.getInt(KEY_SELECTED_NAV_ID, R.id.nav_home);
             navigation.setSelectedItemId(currentNavId);
         } else {
             replaceFragment(HomeView.newInstance(), HOME_TAG);
         }
 
-        navigation.setOnItemSelectedListener(onItemSelectedListener);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             checkAndRequestPermissions();
-        }
-
-        if (!isDatabaseExists(this)) {
-            AppDatabase.getInstance(getApplicationContext()).getOpenHelper().getWritableDatabase();
         }
 
         startService(new Intent(this, AlarmService.class));
     }
 
-    private boolean isDatabaseExists(Context context) {
-        File dbFile = context.getDatabasePath(DatabaseRepository.DATABASE_NAME);
-        return dbFile.exists();
+    private void observeViewModel() {
+        viewModel.getNavigateToTagEvent().observe(this, tag -> {
+            if (tag == null) return;
+
+            switch (tag) {
+                case HOME_TAG:
+                    replaceFragment(HomeView.newInstance(), HOME_TAG);
+                    break;
+                case TRACKER_TAG:
+                    replaceFragment(TrackerView.newInstance(), TRACKER_TAG);
+                    break;
+                case JOURNAL_TAG:
+                    replaceFragment(JournalView.newInstance(), JOURNAL_TAG);
+                    break;
+                case SETTINGS_TAG:
+                    replaceFragment(SettingsView.newInstance(), SETTINGS_TAG);
+                    break;
+            }
+        });
+    }
+
+    public void replaceFragment(Fragment fragment, String tag) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.frameLayout, fragment, tag)
+                .commit();
     }
 
     private void checkAndRequestPermissions() {
@@ -166,7 +156,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_SELECTED_NAV_ID, currentNavId);
+        Integer navId = viewModel.getSelectedNavId().getValue();
+        outState.putInt(KEY_SELECTED_NAV_ID, navId != null ? navId : R.id.nav_home);
     }
 
     public interface OnCalendarMenuClickListener {
@@ -299,14 +290,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public GameType getSubType() {
-        return subType;
+        return viewModel.getSubType();
     }
 
     public void setSubType(GameType value) {
-        this.subType = value;
+        viewModel.setSubType(value);
     }
 
     public void setSubType(int code) {
-        this.subType = GameType.fromCode(code);
+        viewModel.setSubType(code);
     }
 }

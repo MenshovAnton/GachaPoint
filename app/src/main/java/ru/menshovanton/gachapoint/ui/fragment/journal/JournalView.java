@@ -21,13 +21,13 @@ import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
-import ru.menshovanton.gachapoint.ui.main.MainActivity;
+import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
 
 public class JournalView extends Fragment {
 
     private SharedJournalViewModel sharedViewModel;
-    private MainActivity mainActivity;
+    private MainActivityView mainActivityView;
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
@@ -43,7 +43,7 @@ public class JournalView extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = (MainActivity) getActivity();
+        mainActivityView = (MainActivityView) getActivity();
         sharedViewModel = new ViewModelProvider(this).get(SharedJournalViewModel.class);
     }
 
@@ -82,14 +82,14 @@ public class JournalView extends Fragment {
 
         pillsAdapter = new PillsAdapter(categories, (item, position) -> {
             GameType selectedGame = GameType.fromCode(position);
-            mainActivity.setSubType(selectedGame);
+            mainActivityView.setSubType(selectedGame);
 
             sharedViewModel.selectGameType(selectedGame);
         });
 
-        if (mainActivity != null && mainActivity.getSubType() != null) {
-            selectAndScrollIfNeeded(mainActivity.getSubType().getCode());
-            sharedViewModel.selectGameType(mainActivity.getSubType());
+        if (mainActivityView != null && mainActivityView.getSubType() != null) {
+            selectAndScrollIfNeeded(mainActivityView.getSubType().getCode());
+            sharedViewModel.selectGameType(mainActivityView.getSubType());
         }
 
         gameTypeChanger.setAdapter(pillsAdapter);

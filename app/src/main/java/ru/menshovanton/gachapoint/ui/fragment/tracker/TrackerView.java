@@ -36,7 +36,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,13 +54,12 @@ import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
-import ru.menshovanton.gachapoint.domain.models.InAppNotification;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
-import ru.menshovanton.gachapoint.ui.main.MainActivity;
+import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
 import ru.menshovanton.gachapoint.ui.fragment.tracker.model.CalendarCellUiModel;
 
-public class TrackerFragment extends Fragment {
+public class TrackerView extends Fragment {
 
     private TrackerViewModel viewModel;
 
@@ -101,10 +99,10 @@ public class TrackerFragment extends Fragment {
                 }
             });
 
-    public TrackerFragment() {}
+    public TrackerView() {}
 
-    public static TrackerFragment newInstance() {
-        return new TrackerFragment();
+    public static TrackerView newInstance() {
+        return new TrackerView();
     }
 
     @Override
@@ -437,8 +435,8 @@ public class TrackerFragment extends Fragment {
     }
 
     private void showMoreMenu(View view) {
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).showCalendarMenu(new MainActivity.OnCalendarMenuClickListener() {
+        if (getActivity() instanceof MainActivityView) {
+            ((MainActivityView) getActivity()).showCalendarMenu(new MainActivityView.OnCalendarMenuClickListener() {
                 @Override public void onAdd() { viewModel.onAddClick(); }
                 @Override public void onDel() { viewModel.onDelClick(); }
                 @Override public void onExport() { exportDatabase(); }
@@ -506,15 +504,6 @@ public class TrackerFragment extends Fragment {
                 })
                 .setNegativeButton(getString(R.string.cancel_button), (dialog, which) -> dialog.dismiss())
                 .show();
-    }
-
-    private void showInAppNotification(InAppNotification notification) {
-        assert getView() != null;
-        View rootView = getView().getRootView();
-
-        Snackbar snackbar = Snackbar.make(rootView, notification.getMessage(), Snackbar.LENGTH_LONG);
-        snackbar.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
-        snackbar.show();
     }
 
     private void playSound(int resId) {

@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.ui.fragment.journal.SharedJournalViewModel;
-import ru.menshovanton.gachapoint.ui.main.MainActivity;
+import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
 public class PiggyBankView extends Fragment {
 
@@ -122,9 +122,9 @@ public class PiggyBankView extends Fragment {
     }
 
     private void showMoreMenu(View view) {
-        if (!(getActivity() instanceof MainActivity)) return;
+        if (!(getActivity() instanceof MainActivityView)) return;
 
-        ((MainActivity) getActivity()).showPiggyBankMenu(new MainActivity.OnPiggyBankMenuClickListener() {
+        ((MainActivityView) getActivity()).showPiggyBankMenu(new MainActivityView.OnPiggyBankMenuClickListener() {
             @Override public void onAddOnePity() { viewModel.addTargetMultiplier(1); }
             @Override public void onAddTwoPity() { viewModel.addTargetMultiplier(2); }
             @Override public void onAddSixPity() { viewModel.addTargetMultiplier(6); }
