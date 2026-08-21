@@ -64,8 +64,6 @@ public class TrackerView extends Fragment {
     private TrackerViewModel viewModel;
 
     private TextView subsCounterView;
-    private Button checkButton;
-    private ImageButton moreButton;
     private CalendarGrid calendarGrid;
 
     private PillsAdapter pillsAdapter;
@@ -86,6 +84,7 @@ public class TrackerView extends Fragment {
     private TextView laterWishes;
 
     private boolean isAnimating = false;
+    private boolean isFirstLaunch = true;
 
     private final List<TextView> cellViewsPool = new ArrayList<>();
 
@@ -127,8 +126,8 @@ public class TrackerView extends Fragment {
 
         subsCounterView = view.findViewById(R.id.subsCount);
         calendarGrid = view.findViewById(R.id.calendarGrid);
-        checkButton = view.findViewById(R.id.checkButton);
-        moreButton = view.findViewById(R.id.moreButton);
+        Button checkButton = view.findViewById(R.id.checkButton);
+        ImageButton moreButton = view.findViewById(R.id.moreButton);
 
         gemIcon = view.findViewById(R.id.gemIcon);
         subsCountTitle = view.findViewById(R.id.subsCountHeader);
@@ -144,13 +143,6 @@ public class TrackerView extends Fragment {
         laterPrimogems = view.findViewById(R.id.laterGemsCounter);
         laterWishes = view.findViewById(R.id.laterWishesCounter);
 
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         viewModel = new ViewModelProvider(this).get(TrackerViewModel.class);
 
         initCalendarGrid();
@@ -165,8 +157,19 @@ public class TrackerView extends Fragment {
         });
 
         observeViewModel();
-
         viewModel.refreshData();
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!isFirstLaunch && viewModel != null) {
+            observeViewModel();
+            viewModel.refreshData();
+        }
+        isFirstLaunch = false;
     }
 
     private void observeViewModel() {

@@ -82,6 +82,7 @@
                 android:layout_marginTop="5dp"
                 android:text="@string/title_bank"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -96,14 +97,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/wishIconPiggyBank"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/titleSave"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                tools:ignore="VisualLintSystemUi" />
+                tools:ignore="VisualLintSystemUi"
+                tools:text="0/77"/>
 
             <ImageView
                 android:id="@+id/wishIconPiggyBank"

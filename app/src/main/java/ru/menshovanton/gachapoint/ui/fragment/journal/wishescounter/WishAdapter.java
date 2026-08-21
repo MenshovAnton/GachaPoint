@@ -5,30 +5,47 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.Objects;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.models.Wish;
 
-public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder> {
+public class WishAdapter extends ListAdapter<Wish, WishAdapter.WishViewHolder> {
 
     private static final DateTimeFormatter DB_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
     private static final DateTimeFormatter DISPLAY_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    private final List<Wish> wishes;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(Wish wish);
     }
 
-    public WishAdapter(List<Wish> wishes) {
-        this.wishes = wishes;
+    public WishAdapter() {
+        super(DIFF_CALLBACK);
     }
+
+    private static final DiffUtil.ItemCallback<Wish> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Wish oldItem, @NonNull Wish newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Wish oldItem, @NonNull Wish newItem) {
+            return oldItem.getPityNumber() == newItem.getPityNumber()
+                    && oldItem.isResetPity() == newItem.isResetPity()
+                    && Objects.equals(oldItem.getDropRare(), newItem.getDropRare())
+                    && Objects.equals(oldItem.getDropType(), newItem.getDropType())
+                    && Objects.equals(oldItem.getDateTime(), newItem.getDateTime());
+        }
+    };
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
@@ -44,7 +61,7 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull WishViewHolder holder, int position) {
-        Wish wish = wishes.get(position);
+        Wish wish = getItem(position);
 
         holder.numberOfWish.setText(String.valueOf(wish.getPityNumber()));
         holder.dropRare.setText(wish.getDropRare());
@@ -67,11 +84,6 @@ public class WishAdapter extends RecyclerView.Adapter<WishAdapter.WishViewHolder
                 listener.onItemClick(wish);
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return wishes != null ? wishes.size() : 0;
     }
 
     public static class WishViewHolder extends RecyclerView.ViewHolder {

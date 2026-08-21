@@ -112,4 +112,7 @@
     <string name="ok_button">Yes</string>
     <string name="cancel_button">No, thanks</string>
     <string name="active_subs_null_question">You have no active subscriptions. Add one?</string>
+    <string name="number" translatable="false">№</string>
+    <string name="rare" translatable="false">★</string>
+    <string name="type">Drop</string>
 </resources>

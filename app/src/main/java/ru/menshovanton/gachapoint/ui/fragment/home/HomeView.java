@@ -77,14 +77,17 @@ public class HomeView extends Fragment {
         wishIconPiggyBank = view.findViewById(R.id.wishIconHomeBank);
 
         initGameTypePills(view);
+
+        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
+        observeViewModel();
+
         return view;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-
+    public void onResume() {
+        super.onResume();
         observeViewModel();
     }
 

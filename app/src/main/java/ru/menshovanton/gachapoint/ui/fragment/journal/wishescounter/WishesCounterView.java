@@ -1,5 +1,7 @@
 package ru.menshovanton.gachapoint.ui.fragment.journal.wishescounter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,6 +58,10 @@ public class WishesCounterView extends Fragment {
     private ImageView wishIcon;
     private View emptyView;
 
+    private WishAdapter wishAdapter;
+
+    private boolean isFirstLaunch = true;
+
     public WishesCounterView() {}
 
     @Override
@@ -86,20 +93,38 @@ public class WishesCounterView extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.GONE);
 
+        setupRecyclerView();
         setupBannerSelector();
         observeViewModels();
 
         addActions.setOnClickListener(this::showMoreMenu);
     }
 
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setAddDuration(200);
+        animator.setRemoveDuration(150);
+        animator.setMoveDuration(200);
+        animator.setChangeDuration(150);
+        recyclerView.setItemAnimator(animator);
+
+        wishAdapter = new WishAdapter();
+        wishAdapter.setOnItemClickListener(wish -> showWishDialog(wish, null, false));
+        recyclerView.setAdapter(wishAdapter);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        if (viewModel != null) {
+        if (!isFirstLaunch && viewModel != null) {
             viewModel.refreshData();
         }
+        isFirstLaunch = false;
     }
 
     private void setupBannerSelector() {
@@ -121,17 +146,25 @@ public class WishesCounterView extends Fragment {
 
     private void observeViewModels() {
         viewModel.getWishesLiveData().observe(getViewLifecycleOwner(), wishes -> {
-            WishAdapter wishAdapter = new WishAdapter(wishes != null ? wishes : new ArrayList<>());
-            wishAdapter.setOnItemClickListener(wish -> showWishDialog(wish, null, false));
-            recyclerView.setAdapter(wishAdapter);
+            boolean isEmpty = (wishes == null || wishes.isEmpty());
 
-            if (wishes == null || wishes.isEmpty()) {
-                recyclerView.setVisibility(View.GONE);
-                emptyView.setVisibility(View.VISIBLE);
-            } else {
-                recyclerView.setVisibility(View.VISIBLE);
-                emptyView.setVisibility(View.GONE);
-            }
+            wishAdapter.submitList(wishes != null ? new ArrayList<>(wishes) : new ArrayList<>(), () -> {
+                if (recyclerView.getVisibility() == View.GONE && emptyView.getVisibility() == View.GONE) {
+                    if (isEmpty) {
+                        emptyView.setAlpha(1f);
+                        emptyView.setVisibility(View.VISIBLE);
+                    } else {
+                        recyclerView.setAlpha(1f);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    if (isEmpty) {
+                        crossFadeViews(recyclerView, emptyView);
+                    } else {
+                        crossFadeViews(emptyView, recyclerView);
+                    }
+                }
+            });
         });
 
         viewModel.getCurrentPityLiveData().observe(getViewLifecycleOwner(), pity ->
@@ -153,6 +186,32 @@ public class WishesCounterView extends Fragment {
                 viewModel.setGameType(gameType);
             });
         }
+    }
+
+    private void crossFadeViews(View viewToHide, View viewToShow) {
+        if (viewToShow.getVisibility() == View.VISIBLE && viewToHide.getVisibility() == View.GONE) {
+            return;
+        }
+
+        viewToShow.animate().cancel();
+        viewToHide.animate().cancel();
+
+        viewToShow.setAlpha(0f);
+        viewToShow.setVisibility(View.VISIBLE);
+        viewToShow.animate()
+                .alpha(1f)
+                .setDuration(150)
+                .setListener(null);
+
+        viewToHide.animate()
+                .alpha(0f)
+                .setDuration(150)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        viewToHide.setVisibility(View.GONE);
+                    }
+                });
     }
 
     private void updateGameIcon(GameType gameType) {

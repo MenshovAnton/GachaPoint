@@ -90,4 +90,8 @@
     <style name="ShapeAppearance.GachaPoint.RoundedPopup" parent="ShapeAppearance.Material3.Corner.Medium">
         <item name="cornerSize">16dp</item>
     </style>
+    <style name="Widget.GachaPoint.MaterialCardView" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/nav_bar_background_night</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
 </resources>

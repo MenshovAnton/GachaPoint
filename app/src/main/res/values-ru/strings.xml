@@ -98,5 +98,7 @@
     <string name="cancel_button">Нет, спасибо</string>
     <string name="active_subs_null_question">У вас нет активных подписок. Добавить одну?</string>
 
+    <string name="type">Дроп</string>
+
 
 </resources>

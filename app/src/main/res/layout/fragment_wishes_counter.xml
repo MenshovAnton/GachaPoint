@@ -7,6 +7,7 @@
     tools:context=".ui.fragment.journal.wishescounter.WishesCounterView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/contentRootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -71,19 +72,22 @@
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="UseCompoundDrawables">
 
                 <TextView
                     android:id="@+id/wishesCounter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tmp_counter"
-                    android:textSize="16sp" />
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textSize="14sp"
+                    tools:text="75" />
 
                 <ImageView
                     android:id="@+id/wishIconWishCounter"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_marginStart="4dp"
                     android:importantForAccessibility="no"
                     app:srcCompat="@drawable/icon_intertwined_fate" />
@@ -96,7 +100,7 @@
             android:id="@+id/wishesLog"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
