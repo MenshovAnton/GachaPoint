@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="description">"GachaPoint ваш удобный ассистент в мире аниме гача RPG.         Отслеживайте награды Благословления полной Луны, Пропуска снабжения экспересса и         Интертон-подписки.         Ежедневные напоминания, счетчик наград, наглядный календарь.     "</string>
-    <string name="copyright_info">Все права принадлежат их правооблодателям (All rights belong to their copyright
-        holders). Приложение не
-        аффелировано компанией Hoyoverse
-    </string>
-    <string name="dev_info">Разработчик MenshovAnton (Меньшов. А. Р.) По любым вопросам обращаться на почту
-        antrome@yandex.ru
-    </string>
-    <string name="feedback_info">Нашли баг? Оставте репорт на официальном репозитории проекта или напишите на почу (см.
-        выше)
-    </string>
+    <string name="description">GachaPoint ваш удобный ассистент в мире аниме гача RPG. Отслеживайте награды Благословления полной Луны, Пропуска снабжения экспресса и Интертон-подписки. Ежедневные напоминания, счетчик наград, наглядный календарь.</string>
+    <string name="copyright_info">Все права принадлежат их правооблодателям (All rights belong to their copyright holders). Приложение не аффилировано компанией Hoyoverse.</string>
+    <string name="dev_info">Разработчик: MenshovAnton (Меньшов. А. Р.)</string>
     <string name="sheet_header_actions">Действия</string>
     <string name="sheet_header_edit">Правка</string>
     <string name="check_button_text">Отметка</string>
@@ -97,8 +89,5 @@
     <string name="ok_button">Да</string>
     <string name="cancel_button">Нет, спасибо</string>
     <string name="active_subs_null_question">У вас нет активных подписок. Добавить одну?</string>
-
-    <string name="type">Дроп</string>
-
-
+    <string name="links">Полезные ссылки</string>
 </resources>

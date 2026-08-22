@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="viewStart"
             android:text="@string/add_to_bank"
+            android:textStyle="bold"
             android:padding="8dp"
             android:textColor="@color/check"
             android:layout_marginStart="12dp"
@@ -36,12 +37,14 @@
         android:padding="10dp"
         tools:ignore="UseCompoundDrawables">
 
-        <ImageView
+        <TextView
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
-            android:src="@drawable/icon_plus"
-            app:tint="@color/check"
+            android:text="@string/one"
+            android:textColor="@color/check"
+            android:textSize="18sp"
+            android:gravity="center"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -61,12 +64,14 @@
         android:padding="10dp"
         tools:ignore="UseCompoundDrawables">
 
-        <ImageView
+        <TextView
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
-            android:src="@drawable/icon_plus"
-            app:tint="@color/check"
+            android:text="@string/two"
+            android:textSize="18sp"
+            android:textColor="@color/check"
+            android:gravity="center"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -86,12 +91,14 @@
         android:padding="10dp"
         tools:ignore="UseCompoundDrawables">
 
-        <ImageView
+        <TextView
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
-            android:src="@drawable/icon_plus"
-            app:tint="@color/check"
+            android:text="@string/six"
+            android:textColor="@color/check"
+            android:textSize="18sp"
+            android:gravity="center"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -114,6 +121,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="viewStart"
             android:text="@string/sheet_header_edit"
+            android:textStyle="bold"
             android:padding="8dp"
             android:textColor="@color/check"
             android:layout_marginStart="12dp"
@@ -163,6 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:textStyle="italic"
             android:text="@string/remark_piggy_bank"
             android:textColor="@color/check"
             android:textSize="12sp" />

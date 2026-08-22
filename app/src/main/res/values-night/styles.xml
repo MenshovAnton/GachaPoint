@@ -94,4 +94,11 @@
         <item name="cardBackgroundColor">@color/nav_bar_background_night</item>
         <item name="strokeWidth">0dp</item>
     </style>
+    <style name="Switch.GachaPoint.MaterialSwitch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="thumbTint">@color/switch_thumb_selector</item>
+        <item name="trackTint">@color/switch_track_selector</item>
+        <item name="iconTint">@color/white</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="switchPadding">10dp</item>
+    </style>
 </resources>

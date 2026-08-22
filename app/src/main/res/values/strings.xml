@@ -1,17 +1,9 @@
 <resources>
     <string name="app_name" translatable="false">GachaPoint</string>
     <string name="app_version" translatable="false">0.1.0</string>
-    <string name="description">"GachaPoint ваш удобный ассистент в мире аниме гача RPG.         Отслеживайте награды Благословления полной Луны, Пропуска снабжения экспересса и         Интертон-подписки.         Ежедневные напоминания, счетчик наград, наглядный календарь.     "</string>
-    <string name="copyright_info">Все права принадлежат их правооблодателям (All rights belong to their copyright
-        holders). Приложение не
-        аффелировано компанией Hoyoverse
-    </string>
-    <string name="dev_info">Разработчик MenshovAnton (Меньшов. А. Р.) По любым вопросам обращаться на почту
-        antrome@yandex.ru
-    </string>
-    <string name="feedback_info">Нашли баг? Оставте репорт на официальном репозитории проекта или напишите на почу (см.
-        выше)
-    </string>
+    <string name="description">GachaPoint is your convenient assistant in the world of anime gacha RPGs. Track rewards for Blessing of the Welkin Moon, Express Supply Pass, and Inter-Knot Membership. Features daily reminders, a reward counter, and a clear calendar visual.</string>
+    <string name="copyright_info">All rights belong to their respective copyright holders. This app is not affiliated with Hoyoverse.</string>
+    <string name="dev_info">Developer: MenshovAnton (Anton Menshov)</string>
     <string name="filler" translatable="false">[filler]</string>
     <string name="num_filler" translatable="false">0</string>
     <string name="sheet_header_actions">Actions</string>
@@ -112,7 +104,8 @@
     <string name="ok_button">Yes</string>
     <string name="cancel_button">No, thanks</string>
     <string name="active_subs_null_question">You have no active subscriptions. Add one?</string>
-    <string name="number" translatable="false">№</string>
-    <string name="rare" translatable="false">★</string>
-    <string name="type">Drop</string>
+    <string name="links">Useful links</string>
+    <string name="one" translatable="false">1</string>
+    <string name="two" translatable="false">2</string>
+    <string name="six" translatable="false">6</string>
 </resources>

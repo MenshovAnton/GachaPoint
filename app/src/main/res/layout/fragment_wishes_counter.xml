@@ -104,7 +104,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/controlPanel" />
+            app:layout_constraintTop_toBottomOf="@+id/controlPanel"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"/>
 
         <LinearLayout
             android:id="@+id/emptyStateView"

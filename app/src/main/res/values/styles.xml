@@ -47,11 +47,12 @@
         <item name="tabGravity">fill</item>
         <item name="tabIconTint">@color/check</item>
         <item name="tabRippleColor">@android:color/transparent</item>
+        <item name="android:tabStripEnabled">true</item>
     </style>
     <style name="Dialog.GachaPoint.AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="colorSurfaceContainerHigh">@color/white</item>
         <item name="colorPrimary">@color/accent</item>
-        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
     </style>
     <style name="DatePicker.GachaPoint.MaterialCalendar" parent="ThemeOverlay.Material3.MaterialCalendar">
         <item name="colorSurfaceContainerHigh">@color/white</item>
@@ -99,5 +100,12 @@
         <item name="cardBackgroundColor">@color/white</item>
         <item name="strokeWidth">2dp</item>
         <item name="strokeColor">@color/accent</item>
+    </style>
+    <style name="Switch.GachaPoint.MaterialSwitch" parent="TextAppearance.AppCompat.Widget.Switch">
+        <item name="thumbTint">@color/switch_thumb_selector</item>
+        <item name="trackTint">@color/switch_track_selector</item>
+        <item name="iconTint">@color/white</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="switchPadding">10dp</item>
     </style>
 </resources>
