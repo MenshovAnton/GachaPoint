@@ -13,6 +13,7 @@ import android.os.LocaleList;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -412,7 +414,14 @@ public class TrackerView extends Fragment {
             dayView.setLayoutParams(params);
 
             dayView.setGravity(Gravity.CENTER);
-            dayView.setTextSize(18f);
+
+            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
+                    dayView,
+                    12,
+                    18,
+                    1,
+                    TypedValue.COMPLEX_UNIT_SP
+            );
 
             if (customTypeface != null) {
                 dayView.setTypeface(customTypeface);
