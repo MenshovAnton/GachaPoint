@@ -28,8 +28,8 @@ public class CalendarRepository {
     }
 
     public void init(GameType gameType, int year, Runnable onComplete) {
-        int todayOfYear = LocalDate.now().getDayOfYear();
-        calendar.getDay(year, todayOfYear, gameType, todayDate -> {
+        LocalDate now = LocalDate.now();
+        calendar.getDay(now.getYear(), now.getDayOfYear(), gameType, todayDate -> {
             int daysRemaining = todayDate != null ? todayDate.subDaysRemaining : 0;
             subsCount = (daysRemaining <= 0 || daysRemaining > 180) ? 0 : (daysRemaining + 29) / 30;
             if (onComplete != null) {
@@ -96,29 +96,31 @@ public class CalendarRepository {
 
     public enum UpdateSubscribeDaysActions { Add, Delete }
 
-    public void updateSubscribeDays(int year, int dayOfYear, GameType gameType, UpdateSubscribeDaysActions action, Runnable onComplete) {
+    public void updateSubscribeDays(int year, int dayOfYear, GameType gameType, UpdateSubscribeDaysActions action, int totalDays, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
             LocalDate currentDate = LocalDate.ofYearDay(year, dayOfYear);
 
-            if (action == UpdateSubscribeDaysActions.Add) {
-                calendar.updateDay(year, dayOfYear, gameType, 1, 30, null);
+            calendar.getDay(year, dayOfYear, gameType, todayDate -> {
+                int newStatus;
+                if (action == UpdateSubscribeDaysActions.Add) {
+                    newStatus = 1;
+                } else {
+                    newStatus = (totalDays > 0 && todayDate != null) ? todayDate.status : 0;
+                }
 
-                for (int i = 1; i < 30; i++) {
+                calendar.updateDay(year, dayOfYear, gameType, newStatus, totalDays, null);
+
+                for (int i = 1; i <= 180; i++) {
                     LocalDate targetDate = currentDate.plusDays(i);
-                    int targetSubDays = 30 - i;
+                    int targetSubDays = Math.max(0, totalDays - i);
+
                     calendar.updateDay(targetDate.getYear(), targetDate.getDayOfYear(), gameType, 0, targetSubDays, null);
                 }
-            } else if (action == UpdateSubscribeDaysActions.Delete) {
-                calendar.updateDay(year, dayOfYear, gameType, 0, 0, null);
-                for (int i = 1; i <= 30; i++) {
-                    LocalDate targetDate = currentDate.plusDays(i);
-                    calendar.updateDay(targetDate.getYear(), targetDate.getDayOfYear(), gameType, 0, 0, null);
-                }
-            }
 
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
+                if (onComplete != null) {
+                    AppDatabase.postToMain(onComplete);
+                }
+            });
         });
     }
 

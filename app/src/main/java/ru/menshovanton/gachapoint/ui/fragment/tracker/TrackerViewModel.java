@@ -190,11 +190,12 @@ public class TrackerViewModel extends AndroidViewModel {
     }
 
     public void onAddClick() {
-        int today = LocalDate.now().getDayOfYear();
+        int today = todayOfYear();
+        int currentYear = LocalDate.now().getYear();
 
-        if (calendarRepository.getSubsCount() <= 6) {
+        if (calendarRepository.getSubsCount() < 6) {
             playSoundEvent.setValue(R.raw.success);
-            calendarRepository.getDaySubDaysRemaining(selectedYear, today, currentGameType, remaining -> {
+            calendarRepository.getDaySubDaysRemaining(currentYear, today, currentGameType, remaining -> {
                 if (remaining == 0) {
                     calendarRepository.setSubsCount(1);
                     calendarRepository.setMissesDays(0);
@@ -202,7 +203,7 @@ public class TrackerViewModel extends AndroidViewModel {
                     executeSubAction(today, 30, CalendarRepository.UpdateSubscribeDaysActions.Add);
                 } else {
                     calendarRepository.addSub();
-                    executeSubAction(today, 30, CalendarRepository.UpdateSubscribeDaysActions.Add);
+                    executeSubAction(today, remaining + 30, CalendarRepository.UpdateSubscribeDaysActions.Add);
                 }
             });
         } else {
@@ -211,26 +212,25 @@ public class TrackerViewModel extends AndroidViewModel {
     }
 
     private void executeSubAction(int dayOfYear, int subDays, CalendarRepository.UpdateSubscribeDaysActions action) {
-        calendarRepository.setDaySubDaysRemaining(selectedYear, dayOfYear, currentGameType, subDays, () -> calendarRepository.updateSubscribeDays(selectedYear, todayOfYear(), currentGameType, action, () -> {
+        int currentYear = LocalDate.now().getYear();
+        calendarRepository.updateSubscribeDays(currentYear, dayOfYear, currentGameType, action, subDays, () -> {
             toastMessageEvent.setValue(action == CalendarRepository.UpdateSubscribeDaysActions.Add ? R.string.add_sub : R.string.del_sub);
             refreshData();
-        }));
+        });
     }
 
     public void onDelClick() {
         int today = todayOfYear();
-        calendarRepository.getDaySubDaysRemaining(selectedYear, today, currentGameType, remaining -> {
-            if (remaining == 30) {
-                if (calendarRepository.getSubsCount() > 0) {
-                    cancelCheckInternal(today, () -> {
-                        calendarRepository.delSub();
-                        executeSubAction(today, 0, CalendarRepository.UpdateSubscribeDaysActions.Delete);
-                    });
-                } else {
-                    toastMessageEvent.setValue(R.string.active_subs_null);
-                }
+        int currentYear = LocalDate.now().getYear();
+
+        calendarRepository.getDaySubDaysRemaining(currentYear, today, currentGameType, remaining -> {
+            if (remaining > 0) {
+                int newRemaining = Math.max(0, remaining - 30);
+
+                calendarRepository.delSub();
+                executeSubAction(today, newRemaining, CalendarRepository.UpdateSubscribeDaysActions.Delete);
             } else {
-                toastMessageEvent.setValue(R.string.impossible_cancel_sub);
+                toastMessageEvent.setValue(R.string.active_subs_null);
             }
         });
     }
