@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fl_tracker"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.tracker.TrackerView">
 
@@ -15,7 +14,6 @@
         tools:ignore="UselessParent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_tracker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -96,7 +94,6 @@
                     app:layout_constraintVertical_bias="0">
 
                     <TextView
-                        android:id="@+id/tv_weekday_monday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="0"
@@ -106,7 +103,6 @@
                         android:text="@string/calendar_mon" />
 
                     <TextView
-                        android:id="@+id/tv_weekday_tuesday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="1"
@@ -116,7 +112,6 @@
                         android:text="@string/calendar_tue" />
 
                     <TextView
-                        android:id="@+id/tv_weekday_wednesday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="2"
@@ -126,7 +121,6 @@
                         android:text="@string/calendar_wed" />
 
                     <TextView
-                        android:id="@+id/tv_weekday_thursday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="3"
@@ -136,7 +130,6 @@
                         android:text="@string/calendar_th" />
 
                     <TextView
-                        android:id="@+id/tv_weekday_friday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="4"
@@ -146,7 +139,6 @@
                         android:text="@string/calendar_fr" />
 
                     <TextView
-                        android:id="@+id/tv_weekday_saturday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="5"
@@ -157,7 +149,6 @@
                         android:textColor="#DD2C00" />
 
                     <TextView
-                        android:id="@+id/tv_weekday_sunday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="6"
@@ -232,7 +223,6 @@
                 app:layout_constraintWidth_max="450dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_stats"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="12dp">

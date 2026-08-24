@@ -167,7 +167,7 @@ public class TrackerViewModel extends AndroidViewModel {
 
         calendarRepository.getDayStatus(selectedYear, today, currentGameType, status -> {
             if (status == 1) {
-                toastMessageEvent.setValue(R.string.already_cheked);
+                toastMessageEvent.setValue(R.string.already_checked);
             } else {
                 calendarRepository.getDaySubDaysRemaining(selectedYear, today, currentGameType, remaining -> {
                     if (remaining == 0) {

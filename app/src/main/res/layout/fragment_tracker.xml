@@ -3,19 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fl_tracker"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.tracker.TrackerView">
 
 
     <ScrollView
-        android:id="@+id/sv_tracker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="UselessParent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_tracker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -123,7 +120,6 @@
                     app:layout_constraintVertical_bias="0">
 
                     <TextView
-                        android:id="@+id/tagMonday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="0"
@@ -133,7 +129,6 @@
                         android:text="@string/calendar_mon" />
 
                     <TextView
-                        android:id="@+id/tagTuesday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="1"
@@ -143,7 +138,6 @@
                         android:text="@string/calendar_tue" />
 
                     <TextView
-                        android:id="@+id/tagWednesday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="2"
@@ -153,7 +147,6 @@
                         android:text="@string/calendar_wed" />
 
                     <TextView
-                        android:id="@+id/tagThursday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="3"
@@ -163,7 +156,6 @@
                         android:text="@string/calendar_th" />
 
                     <TextView
-                        android:id="@+id/tagFriday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="4"
@@ -173,7 +165,6 @@
                         android:text="@string/calendar_fr" />
 
                     <TextView
-                        android:id="@+id/tagSaturday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="5"
@@ -184,7 +175,6 @@
                         android:textColor="#DD2C00" />
 
                     <TextView
-                        android:id="@+id/tagSunday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="6"
@@ -228,7 +218,6 @@
                 app:layout_constraintVertical_bias="0">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_stats"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="12dp">

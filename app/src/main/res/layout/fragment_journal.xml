@@ -2,13 +2,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fl_journal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragment.journal.JournalView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_journal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -25,13 +23,11 @@
             app:layout_constraintVertical_bias="0.0">
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/ti_pulls_history"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tab_wishes" />
+                android:text="@string/tab_pulls" />
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/ti_piggy_bank"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab_piggy_bank" />

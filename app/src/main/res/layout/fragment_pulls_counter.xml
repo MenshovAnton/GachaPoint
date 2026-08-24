@@ -2,13 +2,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fl_pulls_counter"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragment.journal.pullscounter.PullsCounterView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_pulls_counter"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -37,7 +35,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_banner_dropdown"
                 style="@style/DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
@@ -122,10 +119,9 @@
             app:layout_constraintTop_toBottomOf="@+id/cl_control">
 
             <TextView
-                android:id="@+id/tv_empty_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/empty_wishes_log"
+                android:text="@string/empty_pulls_list"
                 android:textSize="16sp" />
 
         </LinearLayout>

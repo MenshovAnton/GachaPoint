@@ -4,18 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fl_info"
     tools:context=".ui.fragment.info.InfoView">
 
     <ScrollView
-        android:id="@+id/sv_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
         tools:ignore="UselessParent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -68,7 +65,6 @@
                 app:layout_constraintVertical_bias="0">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp">
@@ -101,7 +97,6 @@
                         tools:ignore="VisualLintLongText" />
 
                     <TextView
-                        android:id="@+id/tv_dev"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -118,7 +113,6 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_useful_links"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -134,7 +128,6 @@
                 app:layout_constraintVertical_bias="0">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_useful_links"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp">
@@ -189,13 +182,12 @@
                         app:tint="@color/white" />
 
                     <Button
-                        android:id="@+id/btn_feedback"
                         android:layout_width="wrap_content"
                         android:layout_height="55dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:backgroundTint="@color/accent"
-                        android:text="@string/review"
+                        android:text="@string/feedback"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"

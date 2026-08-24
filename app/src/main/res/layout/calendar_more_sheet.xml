@@ -2,20 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ll_calendar_more_sheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bottom_sheet_background"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/ll_actions_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tv_actions_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -40,7 +37,6 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:id="@+id/iv_add"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
@@ -49,7 +45,6 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/tv_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -67,7 +62,6 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:id="@+id/iv_delete"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
@@ -76,7 +70,6 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/tv_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -95,7 +88,6 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:id="@+id/iv_export"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
@@ -104,7 +96,6 @@
             app:tint="@color/check" />
 
         <TextView
-            android:id="@+id/tv_export"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -114,13 +105,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_edit_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tv_edit_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -144,7 +133,6 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:id="@+id/iv_mark_up_missed_day"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
@@ -153,7 +141,6 @@
             app:tint="@color/check" />
 
         <TextView
-            android:id="@+id/tv_mark_up_missed_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -174,7 +161,6 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:id="@+id/iv_cancel_mark"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="30dp"
@@ -183,7 +169,6 @@
             app:tint="@color/check" />
 
         <TextView
-            android:id="@+id/tv_cancel_mark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"

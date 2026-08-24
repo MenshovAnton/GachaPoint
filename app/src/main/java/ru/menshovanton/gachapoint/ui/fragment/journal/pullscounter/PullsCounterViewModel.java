@@ -94,7 +94,7 @@ public class PullsCounterViewModel extends AndroidViewModel {
 
     public void addOneAttempt() {
         String threeStar = getApplication().getString(R.string.three_star);
-        String defaultContent = getApplication().getString(R.string.default_wish_content);
+        String defaultContent = getApplication().getString(R.string.default_pull_content);
 
         databaseRepository.addPulls(
                 LocalDate.now().toString(),
@@ -110,7 +110,7 @@ public class PullsCounterViewModel extends AndroidViewModel {
 
     public void addTenAttempts() {
         String threeStar = getApplication().getString(R.string.three_star);
-        String defaultContent = getApplication().getString(R.string.default_wish_content);
+        String defaultContent = getApplication().getString(R.string.default_pull_content);
 
         databaseRepository.addPulls(
                 LocalDate.now().toString(),
@@ -130,7 +130,7 @@ public class PullsCounterViewModel extends AndroidViewModel {
     public void saveWishFromUi(@Nullable Pull wishToEdit, @NonNull LocalDate selectedDate,
                                @Nullable String dropType, @NonNull String dropRare, boolean isResetPity) {
 
-        String finalDropType = TextUtils.isEmpty(dropType) ? getApplication().getString(R.string.default_wish_content) : dropType;
+        String finalDropType = TextUtils.isEmpty(dropType) ? getApplication().getString(R.string.default_pull_content) : dropType;
         String dateForDb = selectedDate.toString();
 
         if (wishToEdit != null) {

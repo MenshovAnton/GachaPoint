@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="description">GachaPoint ваш удобный ассистент в мире аниме гача RPG. Отслеживайте награды Благословления полной Луны, Пропуска снабжения экспресса и Интертон-подписки. Ежедневные напоминания, счетчик наград, наглядный календарь.</string>
+    <string name="description">GachaPoint — ваш универсальный компаньон с открытым исходным кодом для аниме гача-RPG (Genshin Impact, Honkai: Star Rail, Zenless Zone Zero и др.). Приложение позволяет удобно, безопасно и полностью автономно отслеживать историю круток, рассчитывать накопления и контролировать прогресс игровых подписок прямо на вашем устройстве.</string>
     <string name="copyright_info">Все права принадлежат их правооблодателям (All rights belong to their copyright holders). Приложение не аффилировано компанией Hoyoverse.</string>
     <string name="dev_info">Разработчик: MenshovAnton (Меньшов. А. Р.)</string>
     <string name="sheet_header_actions">Действия</string>
@@ -17,25 +17,23 @@
     <string name="blessing_of_the_welkin_moon_count_header">Кол-во лун:</string>
     <string name="star_rail_special_pass_count_header">Кол-во пропусков экспресса:</string>
     <string name="inter_knot_member_count_header">Кол-во интертон-подписок:</string>
-    <string name="sub_type_selector_header">Тип отображаемой подписки:</string>
     <string name="notifications_settings_title">Уведомления</string>
     <string name="notifications_settings_time">Время оповещения:</string>
     <string name="db_settings_title">Хранилище</string>
     <string name="db_settings_backup_button">Экспорт данных</string>
-    <string name="db_settings_delete_button">Очистить все</string>
     <string name="nav_home">Домашняя</string>
     <string name="nav_tracker">Календарь</string>
     <string name="nav_settings">Настройки</string>
     <string name="nav_info">О приложении</string>
     <string name="nav_journal">Журнал круток</string>
     <string name="tab_piggy_bank">Накопления</string>
-    <string name="tab_wishes">Крутки</string>
+    <string name="tab_pulls">Крутки</string>
     <string name="add_sub">Подписка добавлена</string>
     <string name="del_sub">Подписка удалена</string>
     <string name="subs_limit">Достигнут лимит подписок</string>
     <string name="check_today">Отметка выполнена!</string>
     <string name="cancel_check_today">Отметка удалена</string>
-    <string name="already_cheked">Вы уже отмечались сегодня</string>
+    <string name="already_checked">Вы уже отмечались сегодня</string>
     <string name="active_subs_null">У вас нет активных подписок.</string>
     <string name="not_miss_day">Вчера вы уже отмечались</string>
     <string name="not_check_today">Сегодня вы еще не отмечались</string>
@@ -47,17 +45,13 @@
     <string name="calendar_fr">Пт</string>
     <string name="calendar_sa">Сб</string>
     <string name="calendar_su">Вс</string>
-    <string name="title_target">Откручено</string>
     <string name="title_bank">Накоплено</string>
     <string name="goal_edit_button">Цель</string>
     <string name="add_to_bank">Добавить</string>
-    <string name="fast_header">Быстрые действия</string>
-    <string name="review">Обратная связь</string>
-    <string name="wip">В разработке…</string>
-    <string name="logo">Логотип</string>
-    <string name="garant_1">На гарант 1x</string>
-    <string name="garant_2">На гарант 2x</string>
-    <string name="garant_6">На гарант 6x</string>
+    <string name="feedback">Обратная связь</string>
+    <string name="pity_1">На гарант 1x</string>
+    <string name="pity_2">На гарант 2x</string>
+    <string name="pity_6">На гарант 6x</string>
     <string name="reset">Сбросить</string>
     <string name="remark_piggy_bank">Гарант 1x = 77 круток</string>
     <string name="db_export_successful">Данные успешно выгружены!</string>
@@ -66,12 +60,12 @@
     <string name="notifications_description">Высылает напоминания о сборе наград.</string>
     <string name="notifications_title">Напоминание!</string>
     <string name="notifications_text">Не забудь собрать награды!</string>
-    <string name="add_one_wish">Добавить 1 крутку</string>
-    <string name="add_ten_wishes">Добавить 10 круток</string>
+    <string name="add_one_pull">Добавить 1 крутку</string>
+    <string name="add_ten_pulls">Добавить 10 круток</string>
     <string name="add_five_star">Выпал 5★</string>
     <string name="add_four_star">Выпал 4★</string>
-    <string name="empty_wishes_log">Круток еще нет :(</string>
-    <string name="default_wish_content">Неизвестно</string>
+    <string name="empty_pulls_list">Круток еще нет :(</string>
+    <string name="default_pull_content">Неизвестно</string>
     <string name="add_pull">Добавить запись</string>
     <string name="edit_pull">Редактировать запись</string>
     <string name="hint_input_content">Персонаж/Оружие</string>
@@ -83,7 +77,7 @@
     <string name="type_event">Ивент</string>
     <string name="type_std">Стандарт</string>
     <string name="type_spec">Особый</string>
-    <string name="type_novie">Новичок</string>
+    <string name="type_novice">Новичок</string>
     <string name="reset_pity">Сбросить гарант</string>
     <string name="goal_not_set_or_reached">Цель не установлена или не достигнута</string>
     <string name="ok_button">Да</string>

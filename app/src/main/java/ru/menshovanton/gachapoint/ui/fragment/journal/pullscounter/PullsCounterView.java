@@ -132,7 +132,7 @@ public class PullsCounterView extends Fragment {
                 getString(R.string.type_event),
                 getString(R.string.type_spec),
                 getString(R.string.type_std),
-                getString(R.string.type_novie)
+                getString(R.string.type_novice)
         };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, banners);
         bannerSelector.setAdapter(adapter);
@@ -318,7 +318,7 @@ public class PullsCounterView extends Fragment {
             String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
             if (TextUtils.isEmpty(currentText)) {
                 if (checkedId == R.id.rb_three_star) {
-                    editDropType.setText(getString(R.string.default_wish_content));
+                    editDropType.setText(getString(R.string.default_pull_content));
                 }
             }
         });

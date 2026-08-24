@@ -1,20 +1,16 @@
 <resources>
     <string name="app_name" translatable="false">GachaPoint</string>
     <string name="app_version" translatable="false">0.1.0</string>
-    <string name="description">GachaPoint is your convenient assistant in the world of anime gacha RPGs. Track rewards for Blessing of the Welkin Moon, Express Supply Pass, and Inter-Knot Membership. Features daily reminders, a reward counter, and a clear calendar visual.</string>
+    <string name="description">GachaPoint is your open-source, all-in-one companion app for anime gacha RPGs (such as Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, and more). Effortlessly track your wish history, manage savings, and keep tabs on daily pass rewards—all in one secure, fully offline application.</string>
     <string name="copyright_info">All rights belong to their respective copyright holders. This app is not affiliated with Hoyoverse.</string>
     <string name="dev_info">Developer: MenshovAnton (Anton Menshov)</string>
-    <string name="filler" translatable="false">[filler]</string>
-    <string name="num_filler" translatable="false">0</string>
     <string name="sheet_header_actions">Actions</string>
     <string name="sheet_header_edit">Edit</string>
     <string name="check_button_text">Mark</string>
     <string name="add_button_text">Add subscription</string>
     <string name="del_button_text">Delete subscription</string>
     <string name="cancel_button_text">Cancel mark</string>
-    <string name="change_status_button_text">Make up for a missed day</string>
-    <string name="next_month_button_text" translatable="false">&gt;</string>
-    <string name="previous_button_text" translatable="false">&lt;</string>
+    <string name="change_status_button_text">Mark up for a missed day</string>
     <string name="stat_header">Statistics</string>
     <string name="claim_column_header">Received</string>
     <string name="miss_column_header">Omitted</string>
@@ -22,12 +18,10 @@
     <string name="blessing_of_the_welkin_moon_count_header">Number of moons:</string>
     <string name="star_rail_special_pass_count_header">Number of express passes:</string>
     <string name="inter_knot_member_count_header">Number of inter-knot subs:</string>
-    <string name="sub_type_selector_header">Displayed subscription type:</string>
     <string name="notifications_settings_title">Notifications</string>
     <string name="notifications_settings_time">Notify time:</string>
     <string name="db_settings_title">Storage</string>
     <string name="db_settings_backup_button">Export data</string>
-    <string name="db_settings_delete_button">Wipe ALL</string>
     <string name="nav_home">Home</string>
     <string name="nav_tracker">Calendar</string>
     <string name="nav_settings">Settings</string>
@@ -37,13 +31,13 @@
     <string name="hsr" translatable="false">Honkai Star Rail</string>
     <string name="zzz" translatable="false">Zenless Zone Zero</string>
     <string name="tab_piggy_bank">Piggy bank</string>
-    <string name="tab_wishes">Pulls history</string>
+    <string name="tab_pulls">Pulls history</string>
     <string name="add_sub">Subscription added</string>
     <string name="del_sub">Subscription deleted</string>
     <string name="subs_limit">Subscription limit reached</string>
     <string name="check_today">Marking complete!</string>
     <string name="cancel_check_today">Mark removed</string>
-    <string name="already_cheked">You have already checked in today</string>
+    <string name="already_checked">You have already checked in today</string>
     <string name="active_subs_null">You have no active subscriptions.</string>
     <string name="not_miss_day">You already checked in yesterday</string>
     <string name="not_check_today">You haven\'t checked in yet today</string>
@@ -55,21 +49,16 @@
     <string name="calendar_fr">Fri</string>
     <string name="calendar_sa">Sat</string>
     <string name="calendar_su">Sun</string>
-    <string name="title_target">Pulled</string>
     <string name="title_bank">Saved</string>
     <string name="goal_edit_button">Target</string>
     <string name="add_to_bank">Add</string>
     <string name="plus_ten" translatable="false">+10</string>
     <string name="plus_one" translatable="false">+1</string>
-    <string name="tmp_counter" translatable="false">36/75</string>
-    <string name="fast_header">Quick actions</string>
-    <string name="review">Feedback</string>
-    <string name="wip">Coming soon…</string>
-    <string name="logo">Logo</string>
+    <string name="feedback">Feedback</string>
     <string name="time" translatable="false">:</string>
-    <string name="garant_1">Pity 1x</string>
-    <string name="garant_2">Pity 2x</string>
-    <string name="garant_6">Pity 6x</string>
+    <string name="pity_1">Pity 1x</string>
+    <string name="pity_2">Pity 2x</string>
+    <string name="pity_6">Pity 6x</string>
     <string name="reset">Reset</string>
     <string name="remark_piggy_bank">Pity 1x = 77 pulls</string>
     <string name="db_export_successful">Export success!</string>
@@ -81,12 +70,12 @@
     <string name="five_star" translatable="false">5★</string>
     <string name="four_star" translatable="false">4★</string>
     <string name="three_star" translatable="false">3★</string>
-    <string name="add_one_wish">Add 1 attempts</string>
-    <string name="add_ten_wishes">Add 10 attempts</string>
+    <string name="add_one_pull">Add 1 attempts</string>
+    <string name="add_ten_pulls">Add 10 attempts</string>
     <string name="add_five_star">Add drop 5★</string>
     <string name="add_four_star">Add drop 4★</string>
-    <string name="empty_wishes_log">No wishes yet :(</string>
-    <string name="default_wish_content">Unknown</string>
+    <string name="empty_pulls_list">No pulls yet :(</string>
+    <string name="default_pull_content">Unknown</string>
     <string name="add_pull">Add record</string>
     <string name="edit_pull">Edit record</string>
     <string name="hint_input_content">Character/Weapon</string>
@@ -96,9 +85,9 @@
     <string name="date">Date</string>
     <string name="select_date">Select date</string>
     <string name="type_event">Event</string>
-    <string name="type_std">Standart</string>
+    <string name="type_std">Standard</string>
     <string name="type_spec">Special</string>
-    <string name="type_novie">Novice</string>
+    <string name="type_novice">Novice</string>
     <string name="reset_pity">Reset pity</string>
     <string name="goal_not_set_or_reached">Target not set or reached</string>
     <string name="ok_button">Yes</string>

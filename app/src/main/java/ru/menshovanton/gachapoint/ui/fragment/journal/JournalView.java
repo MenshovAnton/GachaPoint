@@ -64,7 +64,7 @@ public class JournalView extends Fragment {
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             if (position == 0) {
-                tab.setText(getString(R.string.tab_wishes));
+                tab.setText(getString(R.string.tab_pulls));
             } else {
                 tab.setText(getString(R.string.tab_piggy_bank));
             }

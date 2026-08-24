@@ -10,7 +10,7 @@ public enum BannerType {
     EVENT("BANNER_EVENT", R.string.type_event),
     SPECIAL("BANNER_SPECIAL", R.string.type_spec),
     STANDARD("BANNER_STANDARD", R.string.type_std),
-    BEGINNER("BANNER_BEGINNER", R.string.type_novie);
+    BEGINNER("BANNER_BEGINNER", R.string.type_novice);
 
     private final String dbKey;
     private final int labelResId;
