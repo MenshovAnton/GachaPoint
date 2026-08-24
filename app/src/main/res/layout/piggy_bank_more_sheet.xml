@@ -13,7 +13,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/addText"
+            android:id="@+id/tv_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="viewStart"
@@ -116,7 +116,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/editHeader"
+            android:id="@+id/tv_edit_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="viewStart"
@@ -157,7 +157,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layoutCancelCheck"
+        android:id="@+id/ll_cancel_mark"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

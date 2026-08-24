@@ -41,9 +41,9 @@ public class InfoView extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
-        backToSettings = view.findViewById(R.id.backToSettings);
-        githubLink = view.findViewById(R.id.github);
-        telegramLink = view.findViewById(R.id.telegram);
+        backToSettings = view.findViewById(R.id.btn_back);
+        githubLink = view.findViewById(R.id.btn_github);
+        telegramLink = view.findViewById(R.id.btn_telegram);
         return view;
     }
 

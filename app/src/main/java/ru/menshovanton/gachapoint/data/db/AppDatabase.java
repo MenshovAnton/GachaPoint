@@ -13,12 +13,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ru.menshovanton.gachapoint.data.db.dao.CalendarDao;
-import ru.menshovanton.gachapoint.data.db.dao.WishDao;
+import ru.menshovanton.gachapoint.data.db.dao.PullDao;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarEntity;
-import ru.menshovanton.gachapoint.data.db.entities.WishEntity;
+import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
 
 @Database(
-        entities = {CalendarEntity.class, WishEntity.class},
+        entities = {CalendarEntity.class, PullEntity.class},
         version = 1,
         exportSchema = false
 )
@@ -31,7 +31,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
 
     public abstract CalendarDao calendarDao();
-    public abstract WishDao wishDao();
+    public abstract PullDao pullDao();
 
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {

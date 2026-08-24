@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_dialog_edit_pull"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="20dp">
 
     <TextView
-        android:id="@+id/dialogTitle"
+        android:id="@+id/tv_dialog_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -15,13 +16,14 @@
         android:textSize="18sp" />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:hint="@string/date">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editDate"
+            android:id="@+id/tiet_edit_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -31,13 +33,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_drop_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:hint="@string/hint_input_content">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editDropType"
+            android:id="@+id/tiet_drop_name_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:importantForAutofill="no"
@@ -45,6 +48,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
+        android:id="@+id/tv_rarity_select_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -52,38 +56,38 @@
         android:textSize="14sp" />
 
     <RadioGroup
-        android:id="@+id/radioGroupRarity"
+        android:id="@+id/rg_rarity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/radioThreeStar"
+            android:id="@+id/rb_three_star"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/three_star"
-            app:buttonTint="@color/radio_button_selector"/>
+            app:buttonTint="@color/radio_button_selector" />
 
         <RadioButton
-            android:id="@+id/radioFourStar"
+            android:id="@+id/rb_four_star"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/four_star"
-            app:buttonTint="@color/radio_button_selector"/>
+            app:buttonTint="@color/radio_button_selector" />
 
         <RadioButton
-            android:id="@+id/radioFiveStar"
+            android:id="@+id/rb_five_star"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/five_star"
-            app:buttonTint="@color/radio_button_selector"/>
+            app:buttonTint="@color/radio_button_selector" />
     </RadioGroup>
 
     <CheckBox
-        android:id="@+id/checkResetPity"
+        android:id="@+id/cb_reset_pity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"

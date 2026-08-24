@@ -8,17 +8,19 @@
     tools:context=".ui.fragment.settings.SettingsView">
 
     <ScrollView
+        android:id="@+id/sv_settings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
         tools:ignore="UselessParent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/header"
+                android:id="@+id/tv_settings_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -33,7 +35,7 @@
                 app:layout_constraintVertical_bias="0.0" />
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/notificationsCard"
+                android:id="@+id/mcv_notification_settings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,16 +47,17 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/header"
+                app:layout_constraintTop_toBottomOf="@+id/tv_settings_header"
                 app:layout_constraintVertical_bias="0.0">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_notification_settings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp">
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/notificationsSwitch"
+                        android:id="@+id/sm_notification_switch"
                         style="@style/Switch.GachaPoint.MaterialSwitch"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
@@ -72,7 +75,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
-                        android:id="@+id/notificationTimeHeader"
+                        android:id="@+id/tv_time_selector_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -83,11 +86,11 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/notificationsSwitch"
+                        app:layout_constraintTop_toBottomOf="@+id/sm_notification_switch"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <ImageButton
-                        android:id="@+id/editTime"
+                        android:id="@+id/btn_select_time"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_marginEnd="20dp"
@@ -96,14 +99,14 @@
                         android:padding="8dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/icon_edit"
-                        app:layout_constraintBottom_toBottomOf="@+id/minuteView"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_minutes_bg"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/notificationTimeHeader" />
+                        app:layout_constraintTop_toTopOf="@+id/tv_time_selector_header" />
 
                     <ImageView
-                        android:id="@+id/hourView"
+                        android:id="@+id/iv_hour_bg"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:layout_marginStart="20dp"
@@ -114,11 +117,11 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/notificationTimeHeader"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <ImageView
-                        android:id="@+id/minuteView"
+                        android:id="@+id/iv_minutes_bg"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:layout_marginStart="5dp"
@@ -128,12 +131,12 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/separator"
-                        app:layout_constraintTop_toBottomOf="@+id/notificationTimeHeader"
+                        app:layout_constraintStart_toEndOf="@+id/tv_time_separator"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
-                        android:id="@+id/separator"
+                        android:id="@+id/tv_time_separator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -144,12 +147,12 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/hourView"
-                        app:layout_constraintTop_toBottomOf="@+id/notificationTimeHeader"
+                        app:layout_constraintStart_toEndOf="@+id/iv_hour_bg"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
-                        android:id="@+id/hourTextView"
+                        android:id="@+id/tv_hour"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:layout_marginStart="20dp"
@@ -162,12 +165,12 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/notificationTimeHeader"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
                         app:layout_constraintVertical_bias="0.0"
                         tools:text="12" />
 
                     <TextView
-                        android:id="@+id/minutesTextView"
+                        android:id="@+id/tv_minutes"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:layout_marginStart="5dp"
@@ -178,10 +181,10 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/separator"
-                        app:layout_constraintTop_toBottomOf="@+id/notificationTimeHeader"
+                        app:layout_constraintStart_toEndOf="@+id/tv_time_separator"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
                         app:layout_constraintVertical_bias="0.0"
-                        tools:text="00"/>
+                        tools:text="00" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -189,7 +192,7 @@
 
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/dataManagerCard"
+                android:id="@+id/mcv_storage_settings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -201,16 +204,17 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notificationsCard"
+                app:layout_constraintTop_toBottomOf="@+id/mcv_notification_settings"
                 app:layout_constraintVertical_bias="0.0">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_storage_settings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp">
 
                     <TextView
-                        android:id="@+id/dbSettingsTitle"
+                        android:id="@+id/tv_storage_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -225,7 +229,7 @@
                         app:layout_constraintVertical_bias="0.0" />
 
                     <Button
-                        android:id="@+id/dbBackupButton"
+                        android:id="@+id/btn_export_database"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -236,7 +240,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/dbSettingsTitle"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_storage_header"
                         app:layout_constraintVertical_bias="0.0" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -244,7 +248,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <Button
-                android:id="@+id/infoButton"
+                android:id="@+id/btn_about_app"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -254,7 +258,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dataManagerCard"
+                app:layout_constraintTop_toBottomOf="@+id/mcv_storage_settings"
                 app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

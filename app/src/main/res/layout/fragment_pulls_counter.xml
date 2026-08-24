@@ -2,17 +2,18 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_pulls_counter"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.journal.wishescounter.WishesCounterView">
+    tools:context=".ui.fragment.journal.pullscounter.PullsCounterView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/contentRootView"
+        android:id="@+id/cl_pulls_counter"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/controlPanel"
+            android:id="@+id/cl_control"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
@@ -24,7 +25,7 @@
             app:layout_constraintVertical_bias="0.0">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/addActionsButton"
+                android:id="@+id/btn_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/accent"
@@ -36,20 +37,20 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/bannerDropdownLayout"
+                android:id="@+id/til_banner_dropdown"
                 style="@style/DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
-                app:layout_constraintBottom_toBottomOf="@id/addActionsButton"
-                app:layout_constraintEnd_toStartOf="@id/counterContainer"
-                app:layout_constraintStart_toEndOf="@id/addActionsButton"
-                app:layout_constraintTop_toTopOf="@id/addActionsButton">
+                app:layout_constraintBottom_toBottomOf="@id/btn_add"
+                app:layout_constraintEnd_toStartOf="@id/ll_counter"
+                app:layout_constraintStart_toEndOf="@id/btn_add"
+                app:layout_constraintTop_toTopOf="@id/btn_add">
 
                 <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    android:id="@+id/bannerSelector"
+                    android:id="@+id/mac_banner_selector"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
@@ -65,7 +66,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
-                android:id="@+id/counterContainer"
+                android:id="@+id/ll_counter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -76,7 +77,7 @@
                 tools:ignore="UseCompoundDrawables">
 
                 <TextView
-                    android:id="@+id/wishesCounter"
+                    android:id="@+id/tv_pull_counter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -85,7 +86,7 @@
                     tools:text="75" />
 
                 <ImageView
-                    android:id="@+id/wishIconWishCounter"
+                    android:id="@+id/iv_pull"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginStart="4dp"
@@ -97,19 +98,19 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/wishesLog"
+            android:id="@+id/rv_pulls_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/controlPanel"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/cl_control" />
 
         <LinearLayout
-            android:id="@+id/emptyStateView"
+            android:id="@+id/ll_empty_state"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
@@ -118,9 +119,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/controlPanel">
+            app:layout_constraintTop_toBottomOf="@+id/cl_control">
 
             <TextView
+                android:id="@+id/tv_empty_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/empty_wishes_log"

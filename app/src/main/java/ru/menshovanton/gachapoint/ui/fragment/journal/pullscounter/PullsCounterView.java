@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.fragment.journal.wishescounter;
+package ru.menshovanton.gachapoint.ui.fragment.journal.pullscounter;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -41,13 +41,13 @@ import java.util.Locale;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
-import ru.menshovanton.gachapoint.domain.models.Wish;
+import ru.menshovanton.gachapoint.domain.models.Pull;
 import ru.menshovanton.gachapoint.ui.fragment.journal.SharedJournalViewModel;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
-public class WishesCounterView extends Fragment {
+public class PullsCounterView extends Fragment {
 
-    private WishesCounterViewModel viewModel;
+    private PullsCounterViewModel viewModel;
     private SharedJournalViewModel sharedViewModel;
     private MainActivityView mainActivityView;
 
@@ -58,18 +58,18 @@ public class WishesCounterView extends Fragment {
     private ImageView wishIcon;
     private View emptyView;
 
-    private WishAdapter wishAdapter;
+    private PullsAdapter pullsAdapter;
 
     private boolean isFirstLaunch = true;
 
-    public WishesCounterView() {}
+    public PullsCounterView() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivityView = (MainActivityView) getActivity();
 
-        viewModel = new ViewModelProvider(this).get(WishesCounterViewModel.class);
+        viewModel = new ViewModelProvider(this).get(PullsCounterViewModel.class);
 
         Fragment parentFragment = getParentFragment();
         if (parentFragment != null) {
@@ -79,13 +79,13 @@ public class WishesCounterView extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_wishes_counter, container, false);
-        addActions = view.findViewById(R.id.addActionsButton);
-        savedWishesCounter = view.findViewById(R.id.wishesCounter);
-        recyclerView = view.findViewById(R.id.wishesLog);
-        bannerSelector = view.findViewById(R.id.bannerSelector);
-        wishIcon = view.findViewById(R.id.wishIconWishCounter);
-        emptyView = view.findViewById(R.id.emptyStateView);
+        View view = inflater.inflate(R.layout.fragment_pulls_counter, container, false);
+        addActions = view.findViewById(R.id.btn_add);
+        savedWishesCounter = view.findViewById(R.id.tv_pull_counter);
+        recyclerView = view.findViewById(R.id.rv_pulls_list);
+        bannerSelector = view.findViewById(R.id.mac_banner_selector);
+        wishIcon = view.findViewById(R.id.iv_pull);
+        emptyView = view.findViewById(R.id.ll_empty_state);
         return view;
     }
 
@@ -113,9 +113,9 @@ public class WishesCounterView extends Fragment {
         animator.setChangeDuration(150);
         recyclerView.setItemAnimator(animator);
 
-        wishAdapter = new WishAdapter();
-        wishAdapter.setOnItemClickListener(wish -> showWishDialog(wish, null, false));
-        recyclerView.setAdapter(wishAdapter);
+        pullsAdapter = new PullsAdapter();
+        pullsAdapter.setOnItemClickListener(pull -> showWishDialog(pull, null, false));
+        recyclerView.setAdapter(pullsAdapter);
     }
 
     @Override
@@ -145,10 +145,10 @@ public class WishesCounterView extends Fragment {
     }
 
     private void observeViewModels() {
-        viewModel.getWishesLiveData().observe(getViewLifecycleOwner(), wishes -> {
-            boolean isEmpty = (wishes == null || wishes.isEmpty());
+        viewModel.getWishesLiveData().observe(getViewLifecycleOwner(), pull -> {
+            boolean isEmpty = (pull == null || pull.isEmpty());
 
-            wishAdapter.submitList(wishes != null ? new ArrayList<>(wishes) : new ArrayList<>(), () -> {
+            pullsAdapter.submitList(pull != null ? new ArrayList<>(pull) : new ArrayList<>(), () -> {
                 if (recyclerView.getVisibility() == View.GONE && emptyView.getVisibility() == View.GONE) {
                     if (isEmpty) {
                         emptyView.setAlpha(1f);
@@ -255,21 +255,21 @@ public class WishesCounterView extends Fragment {
         });
     }
 
-    private void showWishDialog(@Nullable Wish wishToEdit, @Nullable String defaultRarity, boolean autoCheckResetPity) {
+    private void showWishDialog(@Nullable Pull wishToEdit, @Nullable String defaultRarity, boolean autoCheckResetPity) {
         Context contextThemeWrapper = new ContextThemeWrapper(requireContext(), R.style.Dialog_GachaPoint_AlertDialog);
-        View dialogView = LayoutInflater.from(contextThemeWrapper).inflate(R.layout.dialog_edit_wish, null);
+        View dialogView = LayoutInflater.from(contextThemeWrapper).inflate(R.layout.dialog_edit_pull_record, null);
 
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(contextThemeWrapper, R.style.Dialog_GachaPoint_AlertDialog);
         builder.setView(dialogView);
 
-        TextView dialogTitle = dialogView.findViewById(R.id.dialogTitle);
-        TextInputEditText editDate = dialogView.findViewById(R.id.editDate);
-        TextInputEditText editDropType = dialogView.findViewById(R.id.editDropType);
-        RadioGroup radioGroupRarity = dialogView.findViewById(R.id.radioGroupRarity);
-        MaterialRadioButton radioThreeStar = dialogView.findViewById(R.id.radioThreeStar);
-        MaterialRadioButton radioFourStar = dialogView.findViewById(R.id.radioFourStar);
-        MaterialRadioButton radioFiveStar = dialogView.findViewById(R.id.radioFiveStar);
-        CheckBox checkResetPity = dialogView.findViewById(R.id.checkResetPity);
+        TextView dialogTitle = dialogView.findViewById(R.id.tv_dialog_header);
+        TextInputEditText editDate = dialogView.findViewById(R.id.tiet_edit_date);
+        TextInputEditText editDropType = dialogView.findViewById(R.id.tiet_drop_name_edit);
+        RadioGroup radioGroupRarity = dialogView.findViewById(R.id.rg_rarity);
+        MaterialRadioButton radioThreeStar = dialogView.findViewById(R.id.rb_three_star);
+        MaterialRadioButton radioFourStar = dialogView.findViewById(R.id.rb_four_star);
+        MaterialRadioButton radioFiveStar = dialogView.findViewById(R.id.rb_five_star);
+        CheckBox checkResetPity = dialogView.findViewById(R.id.cb_reset_pity);
 
         DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.getDefault());
         DateTimeFormatter dbFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -317,7 +317,7 @@ public class WishesCounterView extends Fragment {
         radioGroupRarity.setOnCheckedChangeListener((group, checkedId) -> {
             String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
             if (TextUtils.isEmpty(currentText)) {
-                if (checkedId == R.id.radioThreeStar) {
+                if (checkedId == R.id.rb_three_star) {
                     editDropType.setText(getString(R.string.default_wish_content));
                 }
             }
@@ -350,9 +350,9 @@ public class WishesCounterView extends Fragment {
             int checkedRadioId = radioGroupRarity.getCheckedRadioButtonId();
 
             String dropRare;
-            if (checkedRadioId == R.id.radioFiveStar) {
+            if (checkedRadioId == R.id.rb_five_star) {
                 dropRare = getString(R.string.five_star);
-            } else if (checkedRadioId == R.id.radioFourStar) {
+            } else if (checkedRadioId == R.id.rb_four_star) {
                 dropRare = getString(R.string.four_star);
             } else {
                 dropRare = getString(R.string.three_star);

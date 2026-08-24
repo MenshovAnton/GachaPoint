@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_journal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.journal.JournalView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_journal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
+            android:id="@+id/tl_journal_tabs"
             style="@style/Tabs.GachaPoint.TabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,11 +25,13 @@
             app:layout_constraintVertical_bias="0.0">
 
             <com.google.android.material.tabs.TabItem
+                android:id="@+id/ti_pulls_history"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab_wishes" />
 
             <com.google.android.material.tabs.TabItem
+                android:id="@+id/ti_piggy_bank"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab_piggy_bank" />
@@ -35,7 +39,7 @@
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/gameTypeChangerJournal"
+            android:id="@+id/rv_game_types"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -45,17 +49,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+            app:layout_constraintTop_toBottomOf="@+id/tl_journal_tabs"
             app:layout_constraintVertical_bias="0.0" />
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/journalViewPager"
+            android:id="@+id/vp2_journal"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gameTypeChangerJournal" />
+            app:layout_constraintTop_toBottomOf="@+id/rv_game_types" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

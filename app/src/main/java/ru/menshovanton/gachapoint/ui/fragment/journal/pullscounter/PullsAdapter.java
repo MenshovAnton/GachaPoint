@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.fragment.journal.wishescounter;
+package ru.menshovanton.gachapoint.ui.fragment.journal.pullscounter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +14,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.domain.models.Wish;
+import ru.menshovanton.gachapoint.domain.models.Pull;
 
-public class WishAdapter extends ListAdapter<Wish, WishAdapter.WishViewHolder> {
+public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder> {
 
     private static final DateTimeFormatter DB_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
     private static final DateTimeFormatter DISPLAY_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -24,21 +24,21 @@ public class WishAdapter extends ListAdapter<Wish, WishAdapter.WishViewHolder> {
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(Wish wish);
+        void onItemClick(Pull pull);
     }
 
-    public WishAdapter() {
+    public PullsAdapter() {
         super(DIFF_CALLBACK);
     }
 
-    private static final DiffUtil.ItemCallback<Wish> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+    private static final DiffUtil.ItemCallback<Pull> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
         @Override
-        public boolean areItemsTheSame(@NonNull Wish oldItem, @NonNull Wish newItem) {
+        public boolean areItemsTheSame(@NonNull Pull oldItem, @NonNull Pull newItem) {
             return oldItem.getId() == newItem.getId();
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Wish oldItem, @NonNull Wish newItem) {
+        public boolean areContentsTheSame(@NonNull Pull oldItem, @NonNull Pull newItem) {
             return oldItem.getPityNumber() == newItem.getPityNumber()
                     && oldItem.isResetPity() == newItem.isResetPity()
                     && Objects.equals(oldItem.getDropRare(), newItem.getDropRare())
@@ -53,21 +53,21 @@ public class WishAdapter extends ListAdapter<Wish, WishAdapter.WishViewHolder> {
 
     @NonNull
     @Override
-    public WishViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PullsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_wishes, parent, false);
-        return new WishViewHolder(view);
+                .inflate(R.layout.item_pull, parent, false);
+        return new PullsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WishViewHolder holder, int position) {
-        Wish wish = getItem(position);
+    public void onBindViewHolder(@NonNull PullsViewHolder holder, int position) {
+        Pull pull = getItem(position);
 
-        holder.numberOfWish.setText(String.valueOf(wish.getPityNumber()));
-        holder.dropRare.setText(wish.getDropRare());
-        holder.dropType.setText(wish.getDropType());
+        holder.numberOfWish.setText(String.valueOf(pull.getPityNumber()));
+        holder.dropRare.setText(pull.getDropRare());
+        holder.dropType.setText(pull.getDropType());
 
-        String rawDate = wish.getDateTime();
+        String rawDate = pull.getDateTime();
         if (rawDate != null) {
             try {
                 LocalDate parsedDate = LocalDate.parse(rawDate, DB_FORMATTER);
@@ -81,18 +81,18 @@ public class WishAdapter extends ListAdapter<Wish, WishAdapter.WishViewHolder> {
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onItemClick(wish);
+                listener.onItemClick(pull);
             }
         });
     }
 
-    public static class WishViewHolder extends RecyclerView.ViewHolder {
+    public static class PullsViewHolder extends RecyclerView.ViewHolder {
         TextView numberOfWish;
         TextView dropRare;
         TextView dropType;
         TextView date;
 
-        public WishViewHolder(@NonNull View itemView) {
+        public PullsViewHolder(@NonNull View itemView) {
             super(itemView);
             numberOfWish = itemView.findViewById(R.id.numberOfWish);
             dropRare = itemView.findViewById(R.id.dropRare);

@@ -64,7 +64,7 @@ public class PillsAdapter extends RecyclerView.Adapter<PillsAdapter.PillViewHold
 
         public PillViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.textViewPill);
+            textView = itemView.findViewById(R.id.tv_pill);
         }
     }
 

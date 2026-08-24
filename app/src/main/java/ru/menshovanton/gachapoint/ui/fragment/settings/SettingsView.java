@@ -63,12 +63,12 @@ public class SettingsView extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        notificationsSwitch = view.findViewById(R.id.notificationsSwitch);
-        hourTextView = view.findViewById(R.id.hourTextView);
-        minuteTextView = view.findViewById(R.id.minutesTextView);
-        edit = view.findViewById(R.id.editTime);
-        dbBackupButton = view.findViewById(R.id.dbBackupButton);
-        infoButton = view.findViewById(R.id.infoButton);
+        notificationsSwitch = view.findViewById(R.id.sm_notification_switch);
+        hourTextView = view.findViewById(R.id.tv_hour);
+        minuteTextView = view.findViewById(R.id.tv_minutes);
+        edit = view.findViewById(R.id.btn_select_time);
+        dbBackupButton = view.findViewById(R.id.btn_export_database);
+        infoButton = view.findViewById(R.id.btn_about_app);
 
         return view;
     }

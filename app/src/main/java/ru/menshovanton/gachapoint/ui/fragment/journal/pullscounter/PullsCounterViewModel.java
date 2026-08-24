@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.fragment.journal.wishescounter;
+package ru.menshovanton.gachapoint.ui.fragment.journal.pullscounter;
 
 import android.app.Application;
 import android.text.TextUtils;
@@ -18,14 +18,14 @@ import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
-import ru.menshovanton.gachapoint.domain.models.Wish;
+import ru.menshovanton.gachapoint.domain.models.Pull;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 
-public class WishesCounterViewModel extends AndroidViewModel {
+public class PullsCounterViewModel extends AndroidViewModel {
 
     private final DatabaseRepository databaseRepository;
 
-    private final MutableLiveData<List<Wish>> wishesLiveData = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<Pull>> wishesLiveData = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Integer> currentPityLiveData = new MutableLiveData<>(0);
     private final MutableLiveData<String> currentBannerTypeLiveData = new MutableLiveData<>(BannerType.EVENT.getDbKey());
 
@@ -33,12 +33,12 @@ public class WishesCounterViewModel extends AndroidViewModel {
 
     private GameType currentGameType = GameType.GENSHIN;
 
-    public WishesCounterViewModel(@NonNull Application application) {
+    public PullsCounterViewModel(@NonNull Application application) {
         super(application);
         this.databaseRepository = new DatabaseRepository(application);
     }
 
-    public LiveData<List<Wish>> getWishesLiveData() { return wishesLiveData; }
+    public LiveData<List<Pull>> getWishesLiveData() { return wishesLiveData; }
     public LiveData<Integer> getCurrentPityLiveData() { return currentPityLiveData; }
     public LiveData<String> getCurrentBannerTypeLiveData() { return currentBannerTypeLiveData; }
     public SingleLiveEvent<Void> getOpenDialogEvent() { return openDialogEvent; }
@@ -63,23 +63,23 @@ public class WishesCounterViewModel extends AndroidViewModel {
     }
 
     public void refreshData() {
-        databaseRepository.getWishesByBanner(currentGameType, getCurrentBannerType(), rawWishes -> {
-            List<Wish> processedList = processWishesAndCalculatePity(rawWishes);
+        databaseRepository.getPullsByBanner(currentGameType, getCurrentBannerType(), rawWishes -> {
+            List<Pull> processedList = processWishesAndCalculatePity(rawWishes);
             wishesLiveData.setValue(processedList);
         });
     }
 
-    private List<Wish> processWishesAndCalculatePity(List<Wish> wishes) {
-        if (wishes == null || wishes.isEmpty()) {
+    private List<Pull> processWishesAndCalculatePity(List<Pull> pull) {
+        if (pull == null || pull.isEmpty()) {
             currentPityLiveData.setValue(0);
             return new ArrayList<>();
         }
 
-        List<Wish> listToProcess = new ArrayList<>(wishes);
+        List<Pull> listToProcess = new ArrayList<>(pull);
         Collections.reverse(listToProcess);
 
         int counter = 0;
-        for (Wish wish : listToProcess) {
+        for (Pull wish : listToProcess) {
             counter++;
             wish.setPityNumber(counter);
             if (wish.isResetPity()) {
@@ -96,7 +96,7 @@ public class WishesCounterViewModel extends AndroidViewModel {
         String threeStar = getApplication().getString(R.string.three_star);
         String defaultContent = getApplication().getString(R.string.default_wish_content);
 
-        databaseRepository.addWishes(
+        databaseRepository.addPulls(
                 LocalDate.now().toString(),
                 defaultContent,
                 threeStar,
@@ -112,7 +112,7 @@ public class WishesCounterViewModel extends AndroidViewModel {
         String threeStar = getApplication().getString(R.string.three_star);
         String defaultContent = getApplication().getString(R.string.default_wish_content);
 
-        databaseRepository.addWishes(
+        databaseRepository.addPulls(
                 LocalDate.now().toString(),
                 defaultContent,
                 threeStar,
@@ -127,14 +127,14 @@ public class WishesCounterViewModel extends AndroidViewModel {
         );
     }
 
-    public void saveWishFromUi(@Nullable Wish wishToEdit, @NonNull LocalDate selectedDate,
+    public void saveWishFromUi(@Nullable Pull wishToEdit, @NonNull LocalDate selectedDate,
                                @Nullable String dropType, @NonNull String dropRare, boolean isResetPity) {
 
         String finalDropType = TextUtils.isEmpty(dropType) ? getApplication().getString(R.string.default_wish_content) : dropType;
         String dateForDb = selectedDate.toString();
 
         if (wishToEdit != null) {
-            databaseRepository.updateWish(
+            databaseRepository.updatePull(
                     wishToEdit.getId(),
                     dateForDb,
                     finalDropType,
@@ -145,7 +145,7 @@ public class WishesCounterViewModel extends AndroidViewModel {
                     this::refreshData
             );
         } else {
-            databaseRepository.addWishes(
+            databaseRepository.addPulls(
                     dateForDb,
                     finalDropType,
                     dropRare,

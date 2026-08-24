@@ -55,12 +55,12 @@ public class PiggyBankView extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_piggy_bank, container, false);
 
-        addOne = view.findViewById(R.id.addOneSavedWish);
-        addTen = view.findViewById(R.id.addTenSavedWishes);
-        editGoal = view.findViewById(R.id.editTargetButton);
-        progressBar = view.findViewById(R.id.savingProgress);
-        savedWishesCounter = view.findViewById(R.id.savedWishesCounter);
-        wishIcon = view.findViewById(R.id.wishIconPiggyBank);
+        addOne = view.findViewById(R.id.btn_add_one_pull);
+        addTen = view.findViewById(R.id.btn_add_ten_pulls);
+        editGoal = view.findViewById(R.id.btn_edit_target);
+        progressBar = view.findViewById(R.id.pb_saving_progress);
+        savedWishesCounter = view.findViewById(R.id.tv_saved_counter);
+        wishIcon = view.findViewById(R.id.iv_pull);
 
         return view;
     }

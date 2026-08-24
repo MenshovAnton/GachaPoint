@@ -4,10 +4,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import ru.menshovanton.gachapoint.domain.models.Wish;
+import ru.menshovanton.gachapoint.domain.models.Pull;
 
-@Entity(tableName = "wishes")
-public class WishEntity {
+@Entity(tableName = "pulls")
+public class PullEntity {
 
     @PrimaryKey(autoGenerate = true)
     public int id;
@@ -30,9 +30,9 @@ public class WishEntity {
     @ColumnInfo(name = "is_reset_pity", defaultValue = "0")
     public boolean isResetPity;
 
-    public WishEntity() {}
+    public PullEntity() {}
 
-    public WishEntity(int gameType, String dateTime, String dropRare, String dropType, String bannerType, boolean isResetPity) {
+    public PullEntity(int gameType, String dateTime, String dropRare, String dropType, String bannerType, boolean isResetPity) {
         this.gameType = gameType;
         this.dateTime = dateTime;
         this.dropRare = dropRare;
@@ -41,7 +41,7 @@ public class WishEntity {
         this.isResetPity = isResetPity;
     }
 
-    public Wish toWishModel() {
-        return new Wish(id, dropRare, dropType, dateTime, bannerType, isResetPity);
+    public Pull toWishModel() {
+        return new Pull(id, dropRare, dropType, dateTime, bannerType, isResetPity);
     }
 }

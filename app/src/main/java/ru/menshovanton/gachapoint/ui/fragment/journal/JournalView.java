@@ -50,8 +50,8 @@ public class JournalView extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_journal, container, false);
-        tabLayout = view.findViewById(R.id.tabLayout);
-        viewPager = view.findViewById(R.id.journalViewPager);
+        tabLayout = view.findViewById(R.id.tl_journal_tabs);
+        viewPager = view.findViewById(R.id.vp2_journal);
         return view;
     }
 
@@ -70,7 +70,7 @@ public class JournalView extends Fragment {
             }
         }).attach();
 
-        RecyclerView gameTypeChanger = view.findViewById(R.id.gameTypeChangerJournal);
+        RecyclerView gameTypeChanger = view.findViewById(R.id.rv_game_types);
         List<String> categories = Arrays.asList(
                 getString(R.string.genshin),
                 getString(R.string.hsr),

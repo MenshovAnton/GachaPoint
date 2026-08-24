@@ -1,146 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_piggy_bank"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.journal.piggybank.PiggyBankView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_piggy_bank"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/piggyBankWidget"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tv_piggy_bank_header"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/title_bank"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="VisualLintSystemUi" />
+
+        <Button
+            android:id="@+id/btn_add_one_pull"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/accent"
+            android:backgroundTintMode="screen"
+            android:text="@string/plus_one"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pb_saving_progress"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/btn_add_ten_pulls"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/accent"
+            android:backgroundTintMode="screen"
+            android:text="@string/plus_ten"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/btn_add_one_pull"
+            app:layout_constraintTop_toBottomOf="@+id/pb_saving_progress"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/btn_edit_target"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
+            android:backgroundTint="@color/accent"
+            android:backgroundTintMode="screen"
+            android:text="@string/goal_edit_button"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/btn_add_ten_pulls"
+            app:layout_constraintTop_toBottomOf="@+id/pb_saving_progress"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/tv_saved_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_pull"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tv_piggy_bank_header"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="VisualLintSystemUi"
+            tools:text="0/77" />
+
+        <ImageView
+            android:id="@+id/iv_pull"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="15dp"
+            android:importantForAccessibility="no"
+            app:layout_constraintBottom_toTopOf="@+id/pb_saving_progress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/icon_intertwined_fate"
+            tools:ignore="ImageContrastCheck" />
+
+        <ProgressBar
+            android:id="@+id/pb_saving_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/progress_bar_layer"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0">
-
-            <Button
-                android:id="@+id/addOneSavedWish"
-                android:layout_width="wrap_content"
-                android:layout_height="55dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:backgroundTint="@color/accent"
-                android:backgroundTintMode="screen"
-                android:text="@string/plus_one"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/savingProgress"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <Button
-                android:id="@+id/addTenSavedWishes"
-                android:layout_width="wrap_content"
-                android:layout_height="55dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                android:backgroundTint="@color/accent"
-                android:backgroundTintMode="screen"
-                android:text="@string/plus_ten"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/addOneSavedWish"
-                app:layout_constraintTop_toBottomOf="@+id/savingProgress"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <Button
-                android:id="@+id/editTargetButton"
-                android:layout_width="wrap_content"
-                android:layout_height="55dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="15dp"
-                android:backgroundTint="@color/accent"
-                android:backgroundTintMode="screen"
-                android:text="@string/goal_edit_button"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/addTenSavedWishes"
-                app:layout_constraintTop_toBottomOf="@+id/savingProgress"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <TextView
-                android:id="@+id/titleSave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="5dp"
-                android:text="@string/title_bank"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                tools:ignore="VisualLintSystemUi" />
-
-            <TextView
-                android:id="@+id/savedWishesCounter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/wishIconPiggyBank"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/titleSave"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                tools:ignore="VisualLintSystemUi"
-                tools:text="0/77"/>
-
-            <ImageView
-                android:id="@+id/wishIconPiggyBank"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="15dp"
-                android:importantForAccessibility="no"
-                app:layout_constraintBottom_toTopOf="@+id/savingProgress"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/icon_intertwined_fate"
-                tools:ignore="ImageContrastCheck" />
-
-            <ProgressBar
-                android:id="@+id/savingProgress"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="15dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="15dp"
-                android:max="100"
-                android:progress="0"
-                android:progressDrawable="@drawable/progress_bar_layer"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleSave"
-                app:layout_constraintVertical_bias="0.0" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/tv_piggy_bank_header"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

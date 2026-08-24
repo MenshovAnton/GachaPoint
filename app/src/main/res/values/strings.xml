@@ -18,7 +18,7 @@
     <string name="stat_header">Statistics</string>
     <string name="claim_column_header">Received</string>
     <string name="miss_column_header">Omitted</string>
-    <string name="later_column_header">Wait</string>
+    <string name="later_column_header">Upcoming</string>
     <string name="blessing_of_the_welkin_moon_count_header">Number of moons:</string>
     <string name="star_rail_special_pass_count_header">Number of express passes:</string>
     <string name="inter_knot_member_count_header">Number of inter-knot subs:</string>

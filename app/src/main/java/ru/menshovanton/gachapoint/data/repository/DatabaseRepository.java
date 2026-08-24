@@ -7,10 +7,10 @@ import java.util.List;
 
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarEntity;
-import ru.menshovanton.gachapoint.data.db.entities.WishEntity;
+import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Date;
-import ru.menshovanton.gachapoint.domain.models.Wish;
+import ru.menshovanton.gachapoint.domain.models.Pull;
 
 public class DatabaseRepository {
 
@@ -26,31 +26,31 @@ public class DatabaseRepository {
     }
 
 
-    public void getWishesByBanner(GameType gameType, String bannerType, Callback<List<Wish>> callback) {
+    public void getPullsByBanner(GameType gameType, String bannerType, Callback<List<Pull>> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            List<WishEntity> entities = db.wishDao().getWishes(gameType.getCode(), bannerType);
-            List<Wish> wishes = new ArrayList<>(entities.size());
-            for (WishEntity entity : entities) {
-                wishes.add(entity.toWishModel());
+            List<PullEntity> entities = db.pullDao().getPulls(gameType.getCode(), bannerType);
+            List<Pull> pulls = new ArrayList<>(entities.size());
+            for (PullEntity entity : entities) {
+                pulls.add(entity.toWishModel());
             }
-            AppDatabase.postToMain(() -> callback.onResult(wishes));
+            AppDatabase.postToMain(() -> callback.onResult(pulls));
         });
     }
 
-    public void addWishes(String dateTime, String dropType, String dropRare, int count,
-                          GameType gameType, String bannerType, boolean isResetPity, Runnable onComplete) {
+    public void addPulls(String dateTime, String dropType, String dropRare, int count,
+                         GameType gameType, String bannerType, boolean isResetPity, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.wishDao().addWishesBatch(dateTime, dropType, dropRare, count, gameType.getCode(), bannerType, isResetPity);
+            db.pullDao().addPullsBatch(dateTime, dropType, dropRare, count, gameType.getCode(), bannerType, isResetPity);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
         });
     }
 
-    public void updateWish(int id, String dateTime, String dropType, String dropRare,
+    public void updatePull(int id, String dateTime, String dropType, String dropRare,
                            GameType gameType, String bannerType, boolean isResetPity, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.wishDao().updateWishFields(id, dateTime, dropType, dropRare, bannerType, isResetPity);
+            db.pullDao().updatePullFields(id, dateTime, dropType, dropRare, bannerType, isResetPity);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }

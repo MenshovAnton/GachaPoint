@@ -126,24 +126,24 @@ public class TrackerView extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tracker, container, false);
 
-        subsCounterView = view.findViewById(R.id.subsCount);
-        calendarGrid = view.findViewById(R.id.calendarGrid);
-        Button checkButton = view.findViewById(R.id.checkButton);
-        ImageButton moreButton = view.findViewById(R.id.moreButton);
+        subsCounterView = view.findViewById(R.id.tv_sub_counter);
+        calendarGrid = view.findViewById(R.id.cg_calendar_grid);
+        Button checkButton = view.findViewById(R.id.btn_mark_today);
+        ImageButton moreButton = view.findViewById(R.id.btn_more);
 
-        gemIcon = view.findViewById(R.id.gemIcon);
-        subsCountTitle = view.findViewById(R.id.subsCountHeader);
-        wishIcon = view.findViewById(R.id.wishIcon);
+        gemIcon = view.findViewById(R.id.iv_gem);
+        subsCountTitle = view.findViewById(R.id.tv_sub_counter_label);
+        wishIcon = view.findViewById(R.id.iv_pull);
 
-        monthHeader = view.findViewById(R.id.monthHeader);
-        yearHeader = view.findViewById(R.id.yearHeader);
+        monthHeader = view.findViewById(R.id.tv_month);
+        yearHeader = view.findViewById(R.id.tv_year);
 
-        claimPrimogems = view.findViewById(R.id.cliamsGemsCounter);
-        missedPrimogems = view.findViewById(R.id.missGemsCounter);
-        claimWishes = view.findViewById(R.id.claimWishesCounter);
-        missedWishes = view.findViewById(R.id.missWishesCounter);
-        laterPrimogems = view.findViewById(R.id.laterGemsCounter);
-        laterWishes = view.findViewById(R.id.laterWishesCounter);
+        claimPrimogems = view.findViewById(R.id.tv_received_gems);
+        missedPrimogems = view.findViewById(R.id.tv_omitted_gems);
+        claimWishes = view.findViewById(R.id.tv_received_pulls);
+        missedWishes = view.findViewById(R.id.tv_omitted_pulls);
+        laterPrimogems = view.findViewById(R.id.tv_upcoming_gems);
+        laterWishes = view.findViewById(R.id.tv_upcoming_pulls);
 
         viewModel = new ViewModelProvider(this).get(TrackerViewModel.class);
 
@@ -215,7 +215,7 @@ public class TrackerView extends Fragment {
     }
 
     private void initGameTypePills(View view) {
-        RecyclerView gameTypeChanger = view.findViewById(R.id.gameTypeChangerTracker);
+        RecyclerView gameTypeChanger = view.findViewById(R.id.rv_game_types);
 
         List<String> categories = Arrays.asList(
                 getString(R.string.genshin),
@@ -415,13 +415,7 @@ public class TrackerView extends Fragment {
 
             dayView.setGravity(Gravity.CENTER);
 
-            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
-                    dayView,
-                    12,
-                    18,
-                    1,
-                    TypedValue.COMPLEX_UNIT_SP
-            );
+            dayView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f);
 
             if (customTypeface != null) {
                 dayView.setTypeface(customTypeface);

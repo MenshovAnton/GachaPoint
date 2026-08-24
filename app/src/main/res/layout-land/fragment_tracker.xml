@@ -15,7 +15,7 @@
         tools:ignore="UselessParent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint"
+            android:id="@+id/cl_tracker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -27,7 +27,7 @@
                 app:layout_constraintGuide_percent="0.5" />
 
             <TextView
-                android:id="@+id/monthHeader"
+                android:id="@+id/tv_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -43,7 +43,7 @@
                 tools:text="May"/>
 
             <Button
-                android:id="@+id/checkButton"
+                android:id="@+id/btn_mark_today"
                 android:layout_width="140dp"
                 android:layout_height="55dp"
                 android:layout_marginTop="15dp"
@@ -55,25 +55,25 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/calendar"
-                app:layout_constraintTop_toBottomOf="@+id/calendar"
+                app:layout_constraintStart_toStartOf="@+id/cl_calendar"
+                app:layout_constraintTop_toBottomOf="@+id/cl_calendar"
                 app:layout_constraintVertical_bias="0.0" />
 
 
             <TextView
-                android:id="@+id/yearHeader"
+                android:id="@+id/tv_year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:textColor="@color/check"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/monthHeader"
+                app:layout_constraintStart_toEndOf="@+id/tv_month"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
                 tools:text="2008"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/calendar"
+                android:id="@+id/cl_calendar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -85,7 +85,7 @@
                 app:layout_constraintWidth_max="500dp">
 
                 <GridLayout
-                    android:id="@+id/calendarHeader"
+                    android:id="@+id/gl_calendar_header"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:columnCount="7"
@@ -96,7 +96,7 @@
                     app:layout_constraintVertical_bias="0">
 
                     <TextView
-                        android:id="@+id/tagMonday"
+                        android:id="@+id/tv_weekday_monday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="0"
@@ -106,7 +106,7 @@
                         android:text="@string/calendar_mon" />
 
                     <TextView
-                        android:id="@+id/tagTuesday"
+                        android:id="@+id/tv_weekday_tuesday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="1"
@@ -116,7 +116,7 @@
                         android:text="@string/calendar_tue" />
 
                     <TextView
-                        android:id="@+id/tagWednesday"
+                        android:id="@+id/tv_weekday_wednesday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="2"
@@ -126,7 +126,7 @@
                         android:text="@string/calendar_wed" />
 
                     <TextView
-                        android:id="@+id/tagThursday"
+                        android:id="@+id/tv_weekday_thursday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="3"
@@ -136,7 +136,7 @@
                         android:text="@string/calendar_th" />
 
                     <TextView
-                        android:id="@+id/tagFriday"
+                        android:id="@+id/tv_weekday_friday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="4"
@@ -146,7 +146,7 @@
                         android:text="@string/calendar_fr" />
 
                     <TextView
-                        android:id="@+id/tagSaturday"
+                        android:id="@+id/tv_weekday_saturday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="5"
@@ -157,7 +157,7 @@
                         android:textColor="#DD2C00" />
 
                     <TextView
-                        android:id="@+id/tagSunday"
+                        android:id="@+id/tv_weekday_sunday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_column="6"
@@ -170,7 +170,7 @@
                 </GridLayout>
 
                 <ru.menshovanton.gachapoint.ui.fragment.tracker.CalendarGrid
-                    android:id="@+id/calendarGrid"
+                    android:id="@+id/cg_calendar_grid"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -179,13 +179,13 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/calendarHeader"
+                    app:layout_constraintTop_toBottomOf="@+id/gl_calendar_header"
                     app:layout_constraintVertical_bias="0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/gameTypeChangerTracker"
+                android:id="@+id/rv_game_types"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -196,212 +196,205 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/yearHeader"
-                app:layout_constraintTop_toTopOf="@+id/monthHeader"
+                app:layout_constraintStart_toEndOf="@+id/tv_year"
+                app:layout_constraintTop_toTopOf="@+id/tv_month"
                 app:layout_constraintVertical_bias="0.0" />
 
             <ImageButton
-                android:id="@+id/moreButton"
+                android:id="@+id/btn_more"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/rounded_button"
                 android:importantForAccessibility="no"
                 android:src="@drawable/icon_more"
-                app:layout_constraintBottom_toBottomOf="@+id/checkButton"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_mark_today"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/checkButton"
-                app:layout_constraintTop_toTopOf="@+id/checkButton"
+                app:layout_constraintStart_toEndOf="@+id/btn_mark_today"
+                app:layout_constraintTop_toTopOf="@+id/btn_mark_today"
                 app:tint="@color/white"
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@id/statisticsCard"
+                android:id="@+id/mcv_stats_card"
                 style="@style/Widget.GachaPoint.MaterialCardView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/centerGuideline"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="450dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/stats"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/cl_stats"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="15dp">
+                    android:padding="12dp">
 
                     <TextView
-                        android:id="@+id/statisticsHeader"
+                        android:id="@+id/tv_stats_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/stat_header"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
-
-                    <GridLayout
-                        android:id="@+id/statsTable"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="10dp"
-                        android:columnCount="4"
-                        android:rowCount="3"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/statisticsHeader"
-                        app:layout_constraintVertical_bias="0">
-
-                        <TextView
-                            android:id="@+id/claimColumnHeader"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_row="0"
-                            android:layout_column="1"
-                            android:gravity="center"
-                            android:text="@string/claim_column_header" />
-
-                        <TextView
-                            android:id="@+id/missColumnHeader"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_row="0"
-                            android:layout_column="2"
-                            android:gravity="center"
-                            android:text="@string/miss_column_header"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.1"
-                            app:layout_constraintStart_toEndOf="@+id/claimColumnHeader"
-                            app:layout_constraintTop_toBottomOf="@+id/statisticsHeader"
-                            app:layout_constraintVertical_bias="0.050000012"
-                            tools:ignore="TextSizeCheck" />
-
-
-                        <TextView
-                            android:id="@+id/laterColumnHeader"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_row="0"
-                            android:layout_column="3"
-                            android:gravity="center"
-                            android:text="@string/later_column_header"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.2"
-                            app:layout_constraintStart_toEndOf="@+id/missColumnHeader"
-                            app:layout_constraintTop_toBottomOf="@+id/statisticsHeader"
-                            app:layout_constraintVertical_bias="0.050000012"
-                            tools:ignore="TextSizeCheck" />
-
-                        <ImageView
-                            android:id="@+id/gemIcon"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_row="1"
-                            android:layout_column="0"
-                            android:importantForAccessibility="no"
-                            app:srcCompat="@drawable/icon_primogem" />
-
-                        <TextView
-                            android:id="@+id/cliamsGemsCounter"
-                            android:layout_row="1"
-                            android:layout_column="1"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            tools:text="180" />
-
-                        <TextView
-                            android:id="@+id/missGemsCounter"
-                            android:layout_row="1"
-                            android:layout_column="2"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            tools:text="0" />
-
-                        <TextView
-                            android:id="@+id/laterGemsCounter"
-                            android:layout_row="1"
-                            android:layout_column="3"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            tools:text="2520" />
-
-                        <ImageView
-                            android:id="@+id/wishIcon"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_row="2"
-                            android:layout_column="0"
-                            android:importantForAccessibility="no"
-                            app:srcCompat="@drawable/icon_intertwined_fate" />
-
-                        <TextView
-                            android:id="@+id/claimWishesCounter"
-                            android:layout_row="2"
-                            android:layout_column="1"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            tools:text="1" />
-
-                        <TextView
-                            android:id="@+id/missWishesCounter"
-                            android:layout_row="2"
-                            android:layout_column="2"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            tools:text="0" />
-
-                        <TextView
-                            android:id="@+id/laterWishesCounter"
-                            android:layout_row="2"
-                            android:layout_column="3"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            tools:text="14" />
-
-                    </GridLayout>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/subsCountHeader"
+                        android:id="@+id/tv_received_column"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center"
+                        android:text="@string/claim_column_header"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_omitted_column"
+                        app:layout_constraintHorizontal_chainStyle="spread"
+                        app:layout_constraintStart_toEndOf="@+id/iv_gem"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_stats_header"
+                        app:layout_constraintWidth_max="80dp" />
+
+                    <TextView
+                        android:id="@+id/tv_omitted_column"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/miss_column_header"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_upcoming_column"
+                        app:layout_constraintStart_toEndOf="@+id/tv_received_column"
+                        app:layout_constraintTop_toTopOf="@+id/tv_received_column"
+                        app:layout_constraintWidth_max="80dp"
+                        tools:ignore="TextSizeCheck" />
+
+                    <TextView
+                        android:id="@+id/tv_upcoming_column"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/later_column_header"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tv_omitted_column"
+                        app:layout_constraintTop_toTopOf="@+id/tv_received_column"
+                        app:layout_constraintWidth_max="80dp"
+                        tools:ignore="TextSizeCheck" />
+
+                    <ImageView
+                        android:id="@+id/iv_gem"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginTop="4dp"
+                        android:importantForAccessibility="no"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_received_column"
+                        app:srcCompat="@drawable/icon_primogem" />
+
+                    <TextView
+                        android:id="@+id/tv_received_gems"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_gem"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_received_column"
+                        app:layout_constraintStart_toStartOf="@+id/tv_received_column"
+                        app:layout_constraintTop_toTopOf="@+id/iv_gem"
+                        tools:text="180" />
+
+                    <TextView
+                        android:id="@+id/tv_omitted_gems"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_gem"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_omitted_column"
+                        app:layout_constraintStart_toStartOf="@+id/tv_omitted_column"
+                        app:layout_constraintTop_toTopOf="@+id/iv_gem"
+                        tools:text="0" />
+
+                    <TextView
+                        android:id="@+id/tv_upcoming_gems"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_gem"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_upcoming_column"
+                        app:layout_constraintStart_toStartOf="@+id/tv_upcoming_column"
+                        app:layout_constraintTop_toTopOf="@+id/iv_gem"
+                        tools:text="2520" />
+
+                    <ImageView
+                        android:id="@+id/iv_pull"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginTop="4dp"
+                        android:importantForAccessibility="no"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_gem"
+                        app:srcCompat="@drawable/icon_intertwined_fate" />
+
+                    <TextView
+                        android:id="@+id/tv_received_pulls"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_pull"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_received_column"
+                        app:layout_constraintStart_toStartOf="@+id/tv_received_column"
+                        app:layout_constraintTop_toTopOf="@+id/iv_pull"
+                        tools:text="1" />
+
+                    <TextView
+                        android:id="@+id/tv_omitted_pulls"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_pull"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_omitted_column"
+                        app:layout_constraintStart_toStartOf="@+id/tv_omitted_column"
+                        app:layout_constraintTop_toTopOf="@+id/iv_pull"
+                        tools:text="0" />
+
+                    <TextView
+                        android:id="@+id/tv_upcoming_pulls"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_pull"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_upcoming_column"
+                        app:layout_constraintStart_toStartOf="@+id/tv_upcoming_column"
+                        app:layout_constraintTop_toTopOf="@+id/iv_pull"
+                        tools:text="14" />
+
+                    <TextView
+                        android:id="@+id/tv_sub_counter_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:textSize="12sp"
+                        android:layout_marginTop="8dp"
+                        android:textSize="11sp"
                         android:textStyle="italic"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/statsTable"
-                        app:layout_constraintVertical_bias="0"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_pull"
                         tools:text="Number of moons:" />
 
                     <TextView
-                        android:id="@+id/subsCount"
+                        android:id="@+id/tv_sub_counter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:textSize="12sp"
+                        android:layout_marginStart="4dp"
+                        android:textSize="11sp"
                         android:textStyle="italic"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintStart_toEndOf="@+id/subsCountHeader"
-                        app:layout_constraintTop_toTopOf="@+id/subsCountHeader"
-                        app:layout_constraintVertical_bias="0"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_sub_counter_label"
+                        app:layout_constraintStart_toEndOf="@+id/tv_sub_counter_label"
+                        app:layout_constraintTop_toTopOf="@+id/tv_sub_counter_label"
                         tools:text="1" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

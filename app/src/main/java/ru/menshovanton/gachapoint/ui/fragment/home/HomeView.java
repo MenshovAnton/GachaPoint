@@ -60,21 +60,21 @@ public class HomeView extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        subsCounterView = view.findViewById(R.id.subsCountHome);
-        piggyBankCounter = view.findViewById(R.id.piggyBankCounterHome);
-        piggyBankProgress = view.findViewById(R.id.piggyBankProgressHome);
+        subsCounterView = view.findViewById(R.id.tv_sub_counter);
+        piggyBankCounter = view.findViewById(R.id.tv_saved_counter);
+        piggyBankProgress = view.findViewById(R.id.pb_save_progress);
 
-        claimPrimogems = view.findViewById(R.id.cliamsGemsCounterHome);
-        missedPrimogems = view.findViewById(R.id.missGemsCounterHome);
-        claimWishes = view.findViewById(R.id.claimWishesCounterHome);
-        missedWishes = view.findViewById(R.id.missWishesCounterHome);
-        laterPrimogems = view.findViewById(R.id.laterGemsCounterHome);
-        laterWishes = view.findViewById(R.id.laterWishesCounterHome);
+        claimPrimogems = view.findViewById(R.id.tv_received_gems);
+        missedPrimogems = view.findViewById(R.id.tv_omitted_gems);
+        claimWishes = view.findViewById(R.id.tv_received_pulls);
+        missedWishes = view.findViewById(R.id.tv_omitted_pulls);
+        laterPrimogems = view.findViewById(R.id.tv_upcoming_gems);
+        laterWishes = view.findViewById(R.id.tv_upcoming_pulls);
 
-        gemIcon = view.findViewById(R.id.gemIconHome);
-        subsCountTitle = view.findViewById(R.id.subsCountHeaderHome);
-        wishIconStats = view.findViewById(R.id.wishIconHome);
-        wishIconPiggyBank = view.findViewById(R.id.wishIconHomeBank);
+        gemIcon = view.findViewById(R.id.iv_gem);
+        subsCountTitle = view.findViewById(R.id.tv_sub_counter_label);
+        wishIconStats = view.findViewById(R.id.iv_pull);
+        wishIconPiggyBank = view.findViewById(R.id.iv_saved_pulls);
 
         initGameTypePills(view);
 
@@ -92,7 +92,7 @@ public class HomeView extends Fragment {
     }
 
     private void initGameTypePills(View view) {
-        RecyclerView gameTypeChanger = view.findViewById(R.id.gameTypeChangerHome);
+        RecyclerView gameTypeChanger = view.findViewById(R.id.rv_game_types);
 
         List<String> categories = Arrays.asList(
                 getString(R.string.genshin),

@@ -1,6 +1,6 @@
 package ru.menshovanton.gachapoint.domain.models;
 
-public class Wish {
+public class Pull {
     private final int id;
     private final String dropRare;
     private final String dropType;
@@ -9,7 +9,7 @@ public class Wish {
     private int pityNumber;
     private boolean isResetPity;
 
-    public Wish(int id, String dropRare, String dropType, String dateTime, String bannerType, boolean isResetPity) {
+    public Pull(int id, String dropRare, String dropType, String dateTime, String bannerType, boolean isResetPity) {
         this.id = id;
         this.dropRare = dropRare;
         this.dropType = dropType;

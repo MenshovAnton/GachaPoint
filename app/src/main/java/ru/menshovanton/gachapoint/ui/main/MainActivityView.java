@@ -60,13 +60,13 @@ public class MainActivityView extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (view, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.cl_main), (view, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        NavigationBarView navigation = findViewById(R.id.bottomNavigationView);
+        NavigationBarView navigation = findViewById(R.id.bnv_main);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             navigation.setOnApplyWindowInsetsListener((v, insets) -> {
@@ -123,7 +123,7 @@ public class MainActivityView extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.frameLayout, fragment, tag)
+                .replace(R.id.fl_main, fragment, tag)
                 .commit();
     }
 
@@ -173,27 +173,27 @@ public class MainActivityView extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.calendar_more_sheet);
 
-        dialog.findViewById(R.id.layoutAddSub).setOnClickListener(v -> {
+        dialog.findViewById(R.id.ll_add).setOnClickListener(v -> {
             listener.onAdd();
             dialog.dismiss();
         });
 
-        dialog.findViewById(R.id.layoutDelSub).setOnClickListener(v -> {
+        dialog.findViewById(R.id.ll_delete).setOnClickListener(v -> {
             listener.onDel();
             dialog.dismiss();
         });
 
-        dialog.findViewById(R.id.layoutCreateBackup).setOnClickListener(v -> {
+        dialog.findViewById(R.id.ll_export).setOnClickListener(v -> {
             listener.onExport();
             dialog.dismiss();
         });
 
-        dialog.findViewById(R.id.layoutEditStatus).setOnClickListener(v -> {
+        dialog.findViewById(R.id.ll_mark_up_missed_day).setOnClickListener(v -> {
             listener.onRecovery();
             dialog.dismiss();
         });
 
-        dialog.findViewById(R.id.layoutCancelCheck).setOnClickListener(v -> {
+        dialog.findViewById(R.id.ll_cancel_mark).setOnClickListener(v -> {
             listener.onCancel();
             dialog.dismiss();
         });
@@ -260,22 +260,22 @@ public class MainActivityView extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.wishes_counter_more_sheet);
 
-        dialog.findViewById(R.id.layoutAddOneAttempt).setOnClickListener(v -> {
+        dialog.findViewById(R.id.ll_add_one_attempt).setOnClickListener(v -> {
             listener.onAddOneAttempt();
             dialog.dismiss();
         });
 
-        dialog.findViewById(R.id.layoutAddTenAttempts).setOnClickListener(v -> {
+        dialog.findViewById(R.id.ll_add_ten_attempts).setOnClickListener(v -> {
             listener.onAddTenAttempts();
             dialog.dismiss();
         });
 
-        dialog.findViewById(R.id.layoutAddFiveStarDrop).setOnClickListener(v -> {
+        dialog.findViewById(R.id.ll_add_five_star_drop).setOnClickListener(v -> {
             listener.onAddFiveStarDrop();
             dialog.dismiss();
         });
 
-        dialog.findViewById(R.id.layoutAddFourStarDrop).setOnClickListener(v -> {
+        dialog.findViewById(R.id.ll_add_four_start_drop).setOnClickListener(v -> {
             listener.onAddFourStarDrop();
             dialog.dismiss();
         });

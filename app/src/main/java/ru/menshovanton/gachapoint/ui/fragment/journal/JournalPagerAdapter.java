@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import ru.menshovanton.gachapoint.ui.fragment.journal.piggybank.PiggyBankView;
-import ru.menshovanton.gachapoint.ui.fragment.journal.wishescounter.WishesCounterView;
+import ru.menshovanton.gachapoint.ui.fragment.journal.pullscounter.PullsCounterView;
 
 public class JournalPagerAdapter extends FragmentStateAdapter {
     public JournalPagerAdapter(@NonNull Fragment fragment) {
@@ -17,7 +17,7 @@ public class JournalPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new WishesCounterView();
+                return new PullsCounterView();
             case 1:
                 return new PiggyBankView();
             default:
