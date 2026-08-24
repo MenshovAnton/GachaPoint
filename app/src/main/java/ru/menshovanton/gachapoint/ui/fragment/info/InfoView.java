@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ public class InfoView extends Fragment {
 
     private ImageButton githubLink;
     private ImageButton telegramLink;
+    private Button feedbackLink;
 
     public InfoView() {}
 
@@ -44,6 +46,7 @@ public class InfoView extends Fragment {
         backToSettings = view.findViewById(R.id.btn_back);
         githubLink = view.findViewById(R.id.btn_github);
         telegramLink = view.findViewById(R.id.btn_telegram);
+        feedbackLink = view.findViewById(R.id.btn_feedback);
         return view;
     }
 
@@ -56,6 +59,7 @@ public class InfoView extends Fragment {
         backToSettings.setOnClickListener(v -> viewModel.onBackToSettingsClicked());
         githubLink.setOnClickListener(v -> openUrl("https://github.com/MenshovAnton/GachaPoint/"));
         telegramLink.setOnClickListener(v -> openUrl("https://t.me/GachaPoint_official"));
+        feedbackLink.setOnClickListener(v -> openUrl("https://docs.google.com/forms/d/e/1FAIpQLSdURkqnmX6zi5o26U5C4AUQ-MV-3MWY4UQRAsxuS1Y0hve1xg/viewform?usp=dialog"));
 
         observeViewModel();
     }
