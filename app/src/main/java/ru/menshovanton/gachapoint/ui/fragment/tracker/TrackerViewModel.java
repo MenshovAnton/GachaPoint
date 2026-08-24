@@ -246,6 +246,7 @@ public class TrackerViewModel extends AndroidViewModel {
                         if (remaining == 0) {
                             toastMessageEvent.setValue(R.string.active_subs_null);
                         } else {
+                            playSoundEvent.setValue(R.raw.success);
                             performCheck(yesterday, R.string.check_today);
                         }
                     });
