@@ -19,9 +19,8 @@ import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
-import ru.menshovanton.gachapoint.receiver.DailyNotificationReceiver;
-import ru.menshovanton.gachapoint.service.AlarmService;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
+import ru.menshovanton.gachapoint.worker.NotificationScheduler;
 
 public class SettingsViewModel extends AndroidViewModel {
 
@@ -67,20 +66,23 @@ public class SettingsViewModel extends AndroidViewModel {
 
     public void loadSettings() {
         notificationsEnabled.setValue(preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS));
-        alarmHour.setValue(AlarmService.alarmHour);
-        alarmMinute.setValue(AlarmService.alarmMinute);
+        alarmHour.setValue(preferences.getIntPreference(Preferences.ALARM_HOURS));
+        alarmMinute.setValue(preferences.getIntPreference(Preferences.ALARM_MINUTES));
     }
 
     public void onNotificationsChanged(boolean allow) {
         preferences.saveBooleanPreference(Preferences.ALLOW_NOTIFICATIONS, allow);
-        DailyNotificationReceiver.allowNotifications = allow;
         notificationsEnabled.setValue(allow);
+
+        Context context = getApplication().getApplicationContext();
+        if (allow) {
+            NotificationScheduler.scheduleDailyNotification(context);
+        } else {
+            NotificationScheduler.cancelDailyNotification(context);
+        }
     }
 
     public void onTimeSelected(int hour, int minute) {
-        AlarmService.alarmHour = hour;
-        AlarmService.alarmMinute = minute;
-
         preferences.saveIntPreference(Preferences.ALARM_HOURS, hour);
         preferences.saveIntPreference(Preferences.ALARM_MINUTES, minute);
 
@@ -88,8 +90,7 @@ public class SettingsViewModel extends AndroidViewModel {
         alarmMinute.setValue(minute);
 
         Context context = getApplication().getApplicationContext();
-        AlarmService.cancelAlarm(context);
-        AlarmService.setDailyAlarm(context);
+        NotificationScheduler.scheduleDailyNotification(context);
     }
 
     public void onInfoButtonClicked() {

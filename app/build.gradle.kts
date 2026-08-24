@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.splashscreen)
     implementation(libs.viewpager2)
+    implementation(libs.work.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -1,10 +1,10 @@
 [versions]
-agp = "9.3.1"
+agp = "9.3.2"
 gson = "2.14.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
-appcompat = "1.7.1"
+appcompat = "1.8.0"
 material = "1.14.0"
 activity = "1.13.0"
 constraintlayout = "2.2.2"
@@ -14,6 +14,7 @@ recyclerview = "1.4.0"
 roomCommon = "2.8.4"
 roomRuntime = "2.8.4"
 roomCompiler = "2.8.4"
+workRuntime = "2.11.2"
 
 [libraries]
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
@@ -30,6 +31,7 @@ recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version
 room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

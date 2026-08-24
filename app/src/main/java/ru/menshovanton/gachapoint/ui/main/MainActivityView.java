@@ -2,7 +2,6 @@ package ru.menshovanton.gachapoint.ui.main;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -32,11 +31,11 @@ import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
-import ru.menshovanton.gachapoint.service.AlarmService;
 import ru.menshovanton.gachapoint.ui.fragment.home.HomeView;
 import ru.menshovanton.gachapoint.ui.fragment.journal.JournalView;
 import ru.menshovanton.gachapoint.ui.fragment.settings.SettingsView;
 import ru.menshovanton.gachapoint.ui.fragment.tracker.TrackerView;
+import ru.menshovanton.gachapoint.worker.NotificationScheduler;
 
 public class MainActivityView extends AppCompatActivity {
 
@@ -95,7 +94,7 @@ public class MainActivityView extends AppCompatActivity {
             checkAndRequestPermissions();
         }
 
-        startService(new Intent(this, AlarmService.class));
+        NotificationScheduler.scheduleDailyNotification(this);
     }
 
     private void observeViewModel() {

@@ -19,7 +19,6 @@ import ru.menshovanton.gachapoint.domain.enums.DayState;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Date;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
-import ru.menshovanton.gachapoint.receiver.DailyNotificationReceiver;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 import ru.menshovanton.gachapoint.ui.fragment.tracker.model.CalendarCellUiModel;
 
@@ -90,7 +89,6 @@ public class TrackerViewModel extends AndroidViewModel {
     public void refreshData() {
         calendarRepository.init(currentGameType, selectedYear, () -> {
             int count = calendarRepository.getSubsCount();
-            DailyNotificationReceiver.subsCount = count;
             subsCountLiveData.setValue(count);
 
             loadCalendarGrid();
