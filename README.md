@@ -4,15 +4,19 @@
   <img alt="GachaPoint" src="./media/logo.png">
 </p>
 
-**GachaPoint** is a companion app for gacha games (such as *Genshin Impact* and *Honkai: Star Rail*). It offers a convenient and secure way to track your pull history, savings progress, and daily subscription rewards (e.g., Blessing of the Welkin Moon, Express Supply Pass, Inter-Knot Membership) directly on your device.
+**GachaPoint** is your open-source, all-in-one companion app for anime gacha RPGs (such as Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, and more). Effortlessly track your wish history, manage savings, and keep tabs on daily pass rewards—all in one secure, fully offline application.
 
-## Features
-- **Subscription Tracker** — Clear visual statistics for your active subscriptions, including a calendar and primogem/pull counters.
-- **Pull History** — Save your wish/warp history and track your pity progress.
-- **Savings Manager** — Set targets and monitor your progress toward saving up for upcoming banners.
-- **Daily Reminders** — Timely notifications to claim your in-game daily rewards.
-- **100% Offline & Private** — All your data is stored locally on your device.
-- **Native UI** — Built with pure Jetpack Compose without relying on web views.
+## Key Features
+* **Subscription Calendar:** Easily track daily pass reward claims, review collected gems, and estimate upcoming yields over active periods.
+* **Pity & Pull Counter:** Save and organize your summon/wish history with instant access to your roll statistics and pity counters.
+* **Savings Manager:** Calculate total saved resources with automatic integration of active daily subscription payouts.
+* **Daily Reminders:** Configurable notifications ensuring you never miss claiming your daily in-game rewards.
+* **Privacy-First & Offline:** All your game data and historical stats are stored entirely locally on your device.
+
+## Screenshots
+<p align="center">
+  <img alt="GachaPoint" src="./media/screenshots_EN.png">
+</p>
 
 ## Tech Stack
 - Java
