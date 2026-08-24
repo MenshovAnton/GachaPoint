@@ -50,10 +50,16 @@ public class HomeViewModel extends AndroidViewModel {
         int manualProgress = piggyBankRepository.getManualProgress(gameType);
         int subsProgress = piggyBankRepository.getSubsProgress(gameType);
         int totalProgress = manualProgress + subsProgress;
+
         int target = piggyBankRepository.getTarget(gameType);
 
-        piggyProgressLiveData.setValue(totalProgress);
         piggyTargetLiveData.setValue(target);
+        if (target > 0) {
+            piggyProgressLiveData.setValue(totalProgress);
+        }
+        else {
+            piggyProgressLiveData.setValue(0);
+        }
     }
 
     public LiveData<GameType> getGameTypeLiveData() { return gameTypeLiveData; }

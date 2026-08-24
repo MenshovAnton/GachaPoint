@@ -87,10 +87,16 @@ public class PiggyBankView extends Fragment {
     private void observeViewModels() {
         viewModel.getStateLiveData().observe(getViewLifecycleOwner(), state -> {
             if (state == null) return;
-            progressBar.setMax(state.getTarget());
-            progressBar.setProgress(state.getProgress(), false);
 
-            String counterText = state.getProgress() + "/" + state.getTarget();
+            int target = state.getTarget();
+            int progress = 0;
+
+            if (target > 0) { progress = state.getProgress(); }
+
+            progressBar.setMax(target);
+            progressBar.setProgress(progress, false);
+
+            String counterText = progress + "/" + target;
             savedWishesCounter.setText(counterText);
         });
 

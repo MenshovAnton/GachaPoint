@@ -127,8 +127,8 @@ public class HomeView extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void updatePiggyProgress(@Nullable Integer progress, @Nullable Integer target) {
-        if (progress != null) lastProgress = progress;
         if (target != null) lastTarget = target;
+        if (progress != null) lastProgress = progress;
 
         if (piggyBankProgress != null && piggyBankCounter != null) {
             piggyBankProgress.setMax(lastTarget);
