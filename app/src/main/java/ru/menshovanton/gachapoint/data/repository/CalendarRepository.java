@@ -45,25 +45,32 @@ public class CalendarRepository {
     public void calculateMissesAndClaims(GameType gameType, int year, Runnable onComplete) {
         missesDays = 0;
         claimsDays = 0;
-        int todayOfYear = LocalDate.now().getDayOfYear();
+        LocalDate now = LocalDate.now();
+        int todayOfYear = now.getDayOfYear();
 
-        if (todayOfYear > 1) {
-            calendar.getDaysRange(year, 1, todayOfYear - 1, gameType, pastDays -> {
-                for (Date date : pastDays) {
-                    if (date.status == 0 && date.subDaysRemaining > 0) missesDays++;
-                    if (date.status == 1 && date.subDaysRemaining > 0) claimsDays++;
+        calendar.getDay(year, todayOfYear, gameType, today -> {
+            int subDaysRemaining = today != null ? today.subDaysRemaining : 0;
+
+            if (subDaysRemaining <= 0 && (today == null || today.status == 0)) {
+                if (onComplete != null) onComplete.run();
+                return;
+            }
+
+            int startDayOfYear = Math.max(1, todayOfYear - (180 - subDaysRemaining));
+
+            calendar.getDaysRange(year, startDayOfYear, todayOfYear, gameType, currentPeriodDays -> {
+                for (Date date : currentPeriodDays) {
+                    if (date.subDaysRemaining > 0 || (date.dayOfYear == todayOfYear && subDaysRemaining > 0)) {
+                        if (date.status == 0 && date.dayOfYear < todayOfYear) {
+                            missesDays++;
+                        } else if (date.status == 1) {
+                            claimsDays++;
+                        }
+                    }
                 }
-                calendar.getDay(year, todayOfYear, gameType, today -> {
-                    if (today != null && today.status == 1) claimsDays++;
-                    if (onComplete != null) onComplete.run();
-                });
-            });
-        } else {
-            calendar.getDay(year, todayOfYear, gameType, today -> {
-                if (today != null && today.status == 1) claimsDays++;
                 if (onComplete != null) onComplete.run();
             });
-        }
+        });
     }
 
     public void getStatistic(GameType gameType, int year, DatabaseRepository.Callback<Statistic> callback) {
@@ -74,17 +81,15 @@ public class CalendarRepository {
 
             int missedPrimogemsCount = missesDays * primogemsPerDay;
             int claimPrimogemsCount = claimsDays * primogemsPerDay;
-            int laterPrimogemsCount = summaryClaim * subsCount - claimPrimogemsCount - missedPrimogemsCount;
-            int claimWishesCount = claimPrimogemsCount / wishesCost;
-
-            piggyBankRepository.saveSubsProgress(gameType, claimWishesCount);
+            int totalPromogemsInActiveSubs = summaryClaim * subsCount;
+            int laterPrimogemsCount = Math.max(0, totalPromogemsInActiveSubs - claimPrimogemsCount - missedPrimogemsCount);
 
             Statistic statistic = new Statistic(
                     missedPrimogemsCount,
                     claimPrimogemsCount,
                     laterPrimogemsCount,
                     missedPrimogemsCount / wishesCost,
-                    claimWishesCount,
+                    claimPrimogemsCount / wishesCost,
                     laterPrimogemsCount / wishesCost
             );
 
@@ -132,9 +137,32 @@ public class CalendarRepository {
 
     public void setDayStatus(int year, int dayOfYear, GameType gameType, int status, Runnable onComplete) {
         calendar.getDay(year, dayOfYear, gameType, date -> {
+            int oldStatus = date != null ? date.status : 0;
             int rem = date != null ? date.subDaysRemaining : 0;
-            calendar.updateDay(year, dayOfYear, gameType, status, rem, onComplete);
+
+            calendar.updateDay(year, dayOfYear, gameType, status, rem, () -> {
+                if (oldStatus == 0 && status == 1) {
+                    checkAndAddWishFromClaim(gameType);
+                }
+                if (onComplete != null) onComplete.run();
+            });
         });
+    }
+
+    private void checkAndAddWishFromClaim(GameType gameType) {
+        int primogemsPerDay = 90;
+        int wishesCost = 160;
+
+        int currentClaimedGems = claimsDays * primogemsPerDay;
+        int previousClaimedGems = (claimsDays - 1) * primogemsPerDay;
+
+        int currentWishes = currentClaimedGems / wishesCost;
+        int previousWishes = previousClaimedGems / wishesCost;
+
+        int newWishes = currentWishes - previousWishes;
+        if (newWishes > 0) {
+            piggyBankRepository.addSubsProgress(gameType, newWishes);
+        }
     }
 
     public void getDaySubDaysRemaining(int year, int dayOfYear, GameType gameType, DatabaseRepository.Callback<Integer> callback) {

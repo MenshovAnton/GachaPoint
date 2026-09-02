@@ -67,6 +67,12 @@ public class PiggyBankRepository {
         preferences.saveIntPreference(getSubsProgressPrefTag(gameType), progress);
     }
 
+    public void addSubsProgress(GameType gameType, int wishes) {
+        if (wishes <= 0) return;
+        int current = getSubsProgress(gameType);
+        saveSubsProgress(gameType, current + wishes);
+    }
+
     public int getTarget(GameType gameType) {
         return preferences.getIntPreference(getTargetPrefTag(gameType));
     }
