@@ -8,7 +8,8 @@ import ru.menshovanton.gachapoint.R;
 
 public enum RareType {
     LEGENDARY(R.color.rare_legendary),
-    EPIC(R.color.rare_epic);
+    EPIC(R.color.rare_epic),
+    DEFAULT(R.color.text);
 
     @ColorRes
     private final int colorResId;
@@ -26,8 +27,8 @@ public enum RareType {
             return EPIC;
         } else if (context.getString(R.string.five_star).equalsIgnoreCase(rarity)) {
             return LEGENDARY;
+        } else {
+            return DEFAULT;
         }
-
-        return null;
     }
 }

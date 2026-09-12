@@ -13,5 +13,5 @@
     <color name="check">#537497</color>
     <color name="background_night">#181818</color>
     <color name="nav_bar_background_night">#0D0D0D</color>
-    <color name="text">#000000</color>
+    <color name="text">#FFFFFF</color>
 </resources>

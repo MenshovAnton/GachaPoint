@@ -116,6 +116,18 @@ public class PullsCounterView extends Fragment {
         pullsAdapter = new PullsAdapter();
         pullsAdapter.setOnItemClickListener(pull -> showWishDialog(pull, null, false));
         recyclerView.setAdapter(pullsAdapter);
+        pullsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+
+                int targetPosition = positionStart + itemCount - 1;
+
+                if (targetPosition >= 0) {
+                    recyclerView.smoothScrollToPosition(targetPosition);
+                }
+            }
+        });
     }
 
     @Override
