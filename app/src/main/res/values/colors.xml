@@ -6,6 +6,8 @@
     <color name="checked">#4CAF50</color>
     <color name="missed">#BA2525</color>
     <color name="dark_grey">#161616</color>
+    <color name="rare_epic">#6E488E</color>
+    <color name="rare_legendary">#E1A142</color>
     <color name="grey">#282828</color>
     <color name="light_grey">#BCBCBC</color>
     <color name="check">#537497</color>

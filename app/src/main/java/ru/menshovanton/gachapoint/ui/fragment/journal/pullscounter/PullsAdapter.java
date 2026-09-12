@@ -1,5 +1,6 @@
 package ru.menshovanton.gachapoint.ui.fragment.journal.pullscounter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.domain.enums.RareType;
 import ru.menshovanton.gachapoint.domain.models.Pull;
 
 public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder> {
@@ -66,6 +68,13 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
         holder.numberOfWish.setText(String.valueOf(pull.getPityNumber()));
         holder.dropRare.setText(pull.getDropRare());
         holder.dropType.setText(pull.getDropType());
+
+        Context context = holder.dropRare.getContext();
+        RareType rareType = RareType.from(pull.getDropRare(), context);
+        if (rareType != null) {
+            holder.dropRare.setTextColor(context.getColor(rareType.getColorResId()));
+            holder.dropType.setTextColor(context.getColor(rareType.getColorResId()));
+        }
 
         String rawDate = pull.getDateTime();
         if (rawDate != null) {
