@@ -92,7 +92,7 @@ public class PullsCounterViewModel extends AndroidViewModel {
         return listToProcess;
     }
 
-    public void addOneAttempt() {
+    public void saveOneWish() {
         String threeStar = getApplication().getString(R.string.three_star);
         String defaultContent = getApplication().getString(R.string.default_pull_content);
 
@@ -108,30 +108,14 @@ public class PullsCounterViewModel extends AndroidViewModel {
         );
     }
 
-    public void addTenAttempts() {
-        String threeStar = getApplication().getString(R.string.three_star);
-        String defaultContent = getApplication().getString(R.string.default_pull_content);
-
-        databaseRepository.addPulls(
-                LocalDate.now().toString(),
-                defaultContent,
-                threeStar,
-                9,
-                currentGameType,
-                getCurrentBannerType(),
-                false,
-                () -> {
-                    refreshData();
-                    openDialogEvent.call();
-                }
-        );
-    }
-
     public void saveWishFromUi(@Nullable Pull wishToEdit, @NonNull LocalDate selectedDate,
-                               @Nullable String dropType, @NonNull String dropRare, boolean isResetPity) {
+                               @Nullable String dropType, @NonNull String dropRare, boolean isResetPity, boolean isBatch) {
 
         String finalDropType = TextUtils.isEmpty(dropType) ? getApplication().getString(R.string.default_pull_content) : dropType;
         String dateForDb = selectedDate.toString();
+
+        String threeStar = getApplication().getString(R.string.three_star);
+        String defaultContent = getApplication().getString(R.string.default_pull_content);
 
         if (wishToEdit != null) {
             databaseRepository.updatePull(
@@ -145,6 +129,18 @@ public class PullsCounterViewModel extends AndroidViewModel {
                     this::refreshData
             );
         } else {
+            if (isBatch) {
+                databaseRepository.addPulls(
+                        dateForDb,
+                        defaultContent,
+                        threeStar,
+                        9,
+                        currentGameType,
+                        getCurrentBannerType(),
+                        false,
+                        this::refreshData
+                );
+            }
             databaseRepository.addPulls(
                     dateForDb,
                     finalDropType,

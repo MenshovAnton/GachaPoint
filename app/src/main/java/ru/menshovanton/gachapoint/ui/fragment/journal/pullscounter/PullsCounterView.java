@@ -114,7 +114,7 @@ public class PullsCounterView extends Fragment {
         recyclerView.setItemAnimator(animator);
 
         pullsAdapter = new PullsAdapter();
-        pullsAdapter.setOnItemClickListener(pull -> showWishDialog(pull, null, false));
+        pullsAdapter.setOnItemClickListener(pull -> showWishDialog(pull, null, false, false));
         recyclerView.setAdapter(pullsAdapter);
         pullsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -189,7 +189,7 @@ public class PullsCounterView extends Fragment {
         });
 
         viewModel.getOpenDialogEvent().observe(getViewLifecycleOwner(), unused ->
-                showWishDialog(null, getString(R.string.four_star), false)
+                showWishDialog(null, getString(R.string.four_star), false, false)
         );
 
         if (sharedViewModel != null) {
@@ -247,27 +247,27 @@ public class PullsCounterView extends Fragment {
         mainActivityView.showWishCounterMenu(new MainActivityView.OnWishCounterMenuClickListener() {
             @Override
             public void onAddOneAttempt() {
-                viewModel.addOneAttempt();
+                viewModel.saveOneWish();
             }
 
             @Override
             public void onAddTenAttempts() {
-                viewModel.addTenAttempts();
+                showWishDialog(null, getString(R.string.five_star), true, true);
             }
 
             @Override
             public void onAddFiveStarDrop() {
-                showWishDialog(null, getString(R.string.five_star), true);
+                showWishDialog(null, getString(R.string.five_star), true, false);
             }
 
             @Override
             public void onAddFourStarDrop() {
-                showWishDialog(null, getString(R.string.four_star), false);
+                showWishDialog(null, getString(R.string.four_star), false, false);
             }
         });
     }
 
-    private void showWishDialog(@Nullable Pull wishToEdit, @Nullable String defaultRarity, boolean autoCheckResetPity) {
+    private void showWishDialog(@Nullable Pull wishToEdit, @Nullable String defaultRarity, boolean autoCheckResetPity, boolean isBatch) {
         Context contextThemeWrapper = new ContextThemeWrapper(requireContext(), R.style.Dialog_GachaPoint_AlertDialog);
         View dialogView = LayoutInflater.from(contextThemeWrapper).inflate(R.layout.dialog_edit_pull_record, null);
 
@@ -377,7 +377,8 @@ public class PullsCounterView extends Fragment {
                     selectedDate[0],
                     dropType,
                     dropRare,
-                    isResetPity
+                    isResetPity,
+                    isBatch
             );
         });
 
