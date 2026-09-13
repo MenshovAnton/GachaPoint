@@ -19,6 +19,7 @@
         <item name="textAppearanceDisplayMedium">@style/Typography.GachaPoint.TimePicker</item>
         <item name="textAppearanceTitleMedium">@style/Typography.GachaPoint.TimePicker</item>
         <item name="materialClockStyle">@style/TimePickerClock.GachaPoint.Clock</item>
+        <item name="android:textColorHighlight">@color/check_30</item>
     </style>
     <style name="Typography.GachaPoint.TimePicker" parent="TextAppearance.Material3.LabelLarge">
         <item name="fontFamily">@font/genshin_font</item>
