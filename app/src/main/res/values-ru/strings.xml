@@ -84,4 +84,7 @@
     <string name="cancel_button">Нет, спасибо</string>
     <string name="active_subs_null_question">У вас нет активных подписок. Добавить одну?</string>
     <string name="links">Полезные ссылки</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_confirm_message">Вы действительно хотите удалить эту запись?  Это действие нельзя отменить, и данные будут потеряны навсегда.</string>
+    <string name="warning">Внимание!</string>
 </resources>

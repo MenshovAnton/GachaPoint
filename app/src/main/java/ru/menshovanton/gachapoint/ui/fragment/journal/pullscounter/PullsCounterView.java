@@ -36,6 +36,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import ru.menshovanton.gachapoint.R;
@@ -116,18 +117,6 @@ public class PullsCounterView extends Fragment {
         pullsAdapter = new PullsAdapter();
         pullsAdapter.setOnItemClickListener(pull -> showWishDialog(pull, null, false, false));
         recyclerView.setAdapter(pullsAdapter);
-        pullsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-
-                int targetPosition = positionStart + itemCount - 1;
-
-                if (targetPosition >= 0) {
-                    recyclerView.smoothScrollToPosition(targetPosition);
-                }
-            }
-        });
     }
 
     @Override
@@ -159,8 +148,10 @@ public class PullsCounterView extends Fragment {
     private void observeViewModels() {
         viewModel.getWishesLiveData().observe(getViewLifecycleOwner(), pull -> {
             boolean isEmpty = (pull == null || pull.isEmpty());
+            int previousSize = pullsAdapter.getItemCount();
+            List<Pull> newList = pull != null ? new ArrayList<>(pull) : new ArrayList<>();
 
-            pullsAdapter.submitList(pull != null ? new ArrayList<>(pull) : new ArrayList<>(), () -> {
+            pullsAdapter.submitList(newList, () -> {
                 if (recyclerView.getVisibility() == View.GONE && emptyView.getVisibility() == View.GONE) {
                     if (isEmpty) {
                         emptyView.setAlpha(1f);
@@ -175,6 +166,14 @@ public class PullsCounterView extends Fragment {
                     } else {
                         crossFadeViews(emptyView, recyclerView);
                     }
+                }
+
+                if (!isEmpty && newList.size() > previousSize) {
+                    recyclerView.post(() -> {
+                        if (pullsAdapter.getItemCount() > 0) {
+                            recyclerView.smoothScrollToPosition(0);
+                        }
+                    });
                 }
             });
         });
@@ -252,7 +251,7 @@ public class PullsCounterView extends Fragment {
 
             @Override
             public void onAddTenAttempts() {
-                showWishDialog(null, getString(R.string.five_star), true, true);
+                showWishDialog(null, getString(R.string.five_star), false, true);
             }
 
             @Override
@@ -381,6 +380,16 @@ public class PullsCounterView extends Fragment {
                     isBatch
             );
         });
+
+        if (isEditMode) {
+            builder.setNeutralButton(R.string.delete, (dialog, which) ->
+                    new MaterialAlertDialogBuilder(contextThemeWrapper, R.style.Dialog_GachaPoint_AlertDialog)
+                        .setTitle(R.string.warning)
+                        .setMessage(R.string.delete_confirm_message)
+                        .setPositiveButton(R.string.delete, (confirmDialog, w) -> viewModel.deleteWish(wishToEdit.getId()))
+                        .setNegativeButton(R.string.cancel, null)
+                        .show());
+        }
 
         builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
         builder.show();

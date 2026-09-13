@@ -38,4 +38,7 @@ public interface PullDao {
             insert(entity);
         }
     }
+
+    @Query("DELETE FROM pulls WHERE id = :id")
+    void deletePull(int id);
 }

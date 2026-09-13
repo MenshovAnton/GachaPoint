@@ -153,4 +153,8 @@ public class PullsCounterViewModel extends AndroidViewModel {
             );
         }
     }
+
+    public void deleteWish(int id) {
+        databaseRepository.deletePull(id, this::refreshData);
+    }
 }

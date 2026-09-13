@@ -97,4 +97,7 @@
     <string name="one" translatable="false">1</string>
     <string name="two" translatable="false">2</string>
     <string name="six" translatable="false">6</string>
+    <string name="delete">Delete</string>
+    <string name="delete_confirm_message">Do you really want to delete this record? This action cannot be undone, and the data will be lost forever.</string>
+    <string name="warning">Warning!</string>
 </resources>

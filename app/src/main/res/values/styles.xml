@@ -53,6 +53,7 @@
         <item name="colorSurfaceContainerHigh">@color/white</item>
         <item name="colorPrimary">@color/accent</item>
         <item name="colorOnSurface">@color/black</item>
+        <item name="android:textColorHighlight">@color/check_30</item>
     </style>
     <style name="DatePicker.GachaPoint.MaterialCalendar" parent="ThemeOverlay.Material3.MaterialCalendar">
         <item name="colorSurfaceContainerHigh">@color/white</item>
@@ -60,6 +61,7 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnSurface">@color/black</item>
         <item name="colorOnSurfaceVariant">@color/grey</item>
+        <item name="android:textColorHighlight">@color/check_30</item>
     </style>
     <style name="DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">

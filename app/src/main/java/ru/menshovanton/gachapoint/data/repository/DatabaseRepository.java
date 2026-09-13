@@ -57,6 +57,15 @@ public class DatabaseRepository {
         });
     }
 
+    public void deletePull(int id, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            db.pullDao().deletePull(id);
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
 
     public void hasDataForYear(int year, Callback<Boolean> callback) {
         AppDatabase.getExecutor().execute(() -> {
