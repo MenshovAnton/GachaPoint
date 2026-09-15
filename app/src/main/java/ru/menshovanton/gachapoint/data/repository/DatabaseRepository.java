@@ -129,4 +129,13 @@ public class DatabaseRepository {
     public AppDatabase getDb() {
         return db;
     }
+
+    public void updateSubscribeDaysBatch(int year, int dayOfYear, GameType gameType, int status, int totalDays, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            db.calendarDao().updateSubscribeDaysTransaction(year, dayOfYear, gameType, status, totalDays);
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
 }

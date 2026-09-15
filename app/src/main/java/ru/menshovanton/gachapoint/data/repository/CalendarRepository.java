@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.calendar.Calendar;
-import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Date;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
@@ -16,6 +15,7 @@ import ru.menshovanton.gachapoint.domain.models.Statistic;
 public class CalendarRepository {
     private final Calendar calendar;
     private final PiggyBankRepository piggyBankRepository;
+    private final DatabaseRepository databaseRepository;
 
     private int missesDays = 0;
     private int claimsDays = 0;
@@ -25,6 +25,7 @@ public class CalendarRepository {
         Context appContext = context.getApplicationContext();
         this.calendar = new Calendar(appContext);
         this.piggyBankRepository = new PiggyBankRepository(appContext);
+        this.databaseRepository = new DatabaseRepository(appContext);
     }
 
     public void init(GameType gameType, int year, Runnable onComplete) {
@@ -102,31 +103,17 @@ public class CalendarRepository {
     public enum UpdateSubscribeDaysActions { Add, Delete }
 
     public void updateSubscribeDays(int year, int dayOfYear, GameType gameType, UpdateSubscribeDaysActions action, int totalDays, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
-            LocalDate currentDate = LocalDate.ofYearDay(year, dayOfYear);
+        LocalDate startDate = LocalDate.ofYearDay(year, dayOfYear);
+        LocalDate endDate = startDate.plusDays(180);
 
-            calendar.getDay(year, dayOfYear, gameType, todayDate -> {
-                int newStatus;
-                if (action == UpdateSubscribeDaysActions.Add) {
-                    newStatus = 1;
-                } else {
-                    newStatus = (totalDays > 0 && todayDate != null) ? todayDate.status : 0;
-                }
-
-                calendar.updateDay(year, dayOfYear, gameType, newStatus, totalDays, null);
-
-                for (int i = 1; i <= 180; i++) {
-                    LocalDate targetDate = currentDate.plusDays(i);
-                    int targetSubDays = Math.max(0, totalDays - i);
-
-                    calendar.updateDay(targetDate.getYear(), targetDate.getDayOfYear(), gameType, 0, targetSubDays, null);
-                }
-
-                if (onComplete != null) {
-                    AppDatabase.postToMain(onComplete);
-                }
-            });
-        });
+        calendar.ensureYearInitialized(year, () ->
+                calendar.ensureYearInitialized(endDate.getYear(), () ->
+                        getDayStatus(year, dayOfYear, gameType, currentStatus -> {
+                            int newStatus = (action == UpdateSubscribeDaysActions.Add) ? 1 : ((totalDays > 0) ? currentStatus : 0);
+                            databaseRepository.updateSubscribeDaysBatch(year, dayOfYear, gameType, newStatus, totalDays, onComplete);
+                        })
+                )
+        );
     }
 
     public void getDayStatus(int year, int dayOfYear, GameType gameType, DatabaseRepository.Callback<Integer> callback) {
