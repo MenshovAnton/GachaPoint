@@ -87,4 +87,12 @@
     <string name="delete">Удалить</string>
     <string name="delete_confirm_message">Вы действительно хотите удалить эту запись?  Это действие нельзя отменить, и данные будут потеряны навсегда.</string>
     <string name="warning">Внимание!</string>
+    <string name="ui_setting_title">Интерфейс</string>
+    <string name="ui_settings_language">Язык</string>
+    <string name="ui_settings_theme">Тема</string>
+    <string name="ui_settings_accessibility">Специальные возможности</string>
+    <string name="vibration">Вибрация</string>
+    <string name="theme_day">День</string>
+    <string name="theme_night">Ночь</string>
+    <string name="theme_default">Системная</string>
 </resources>

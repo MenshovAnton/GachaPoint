@@ -100,4 +100,12 @@
     <string name="delete">Delete</string>
     <string name="delete_confirm_message">Do you really want to delete this record? This action cannot be undone, and the data will be lost forever.</string>
     <string name="warning">Warning!</string>
+    <string name="ui_setting_title">UI</string>
+    <string name="ui_settings_language">Language</string>
+    <string name="ui_settings_theme">Theme</string>
+    <string name="ui_settings_accessibility">Accessibility</string>
+    <string name="vibration">Vibration</string>
+    <string name="theme_day">Day</string>
+    <string name="theme_night">Night</string>
+    <string name="theme_default">Use system</string>
 </resources>
