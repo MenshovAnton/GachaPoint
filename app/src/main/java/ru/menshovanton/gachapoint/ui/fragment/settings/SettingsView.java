@@ -44,6 +44,7 @@ public class SettingsView extends Fragment {
     private SettingsViewModel viewModel;
 
     private AutoCompleteTextView themeSelector;
+    private AutoCompleteTextView languageSelector;
 
     private final ActivityResultLauncher<String> exportDbLauncher =
             registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
@@ -75,6 +76,7 @@ public class SettingsView extends Fragment {
         dbBackupButton = view.findViewById(R.id.btn_export_database);
         infoButton = view.findViewById(R.id.btn_about_app);
         themeSelector = view.findViewById(R.id.mac_theme_selector);
+        languageSelector = view.findViewById(R.id.mac_lang_selector);
 
         return view;
     }
@@ -87,6 +89,7 @@ public class SettingsView extends Fragment {
 
         setupListeners();
         setupThemesSelector();
+        setupLanguageSelector();
         observeViewModel();
     }
 
@@ -115,6 +118,22 @@ public class SettingsView extends Fragment {
         themeSelector.setOnItemClickListener((parent, view, position, id) -> viewModel.onThemeSelected(position));
     }
 
+    private void setupLanguageSelector() {
+        String[] languages = new String[]{
+                getString(R.string.lang_default),
+                getString(R.string.lang_eng),
+                getString(R.string.lang_ru)
+        };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, languages);
+        languageSelector.setAdapter(adapter);
+
+        languageSelector.setOnItemClickListener((parent, view, position, id) -> {
+            languageSelector.clearFocus();
+            languageSelector.postDelayed(() -> viewModel.onLanguageSelected(position), 150);
+        });
+    }
+
     private void observeViewModel() {
         viewModel.getSelectedTheme().observe(getViewLifecycleOwner(), mode -> {
             if (mode == null) return;
@@ -129,6 +148,28 @@ public class SettingsView extends Fragment {
             }
 
             themeSelector.setText(themeSelector.getAdapter().getItem(index).toString(), false);
+        });
+
+        viewModel.getSelectedLanguage().observe(getViewLifecycleOwner(), langCode -> {
+            if (langCode == null) return;
+
+            int index;
+            switch (langCode) {
+                case "en":
+                    index = 1;
+                    break;
+                case "ru":
+                    index = 2;
+                    break;
+                case "sys":
+                default:
+                    index = 0;
+                    break;
+            }
+
+            if (languageSelector.getAdapter() != null) {
+                languageSelector.setText(languageSelector.getAdapter().getItem(index).toString(), false);
+            }
         });
 
         viewModel.getNotificationsEnabled().observe(getViewLifecycleOwner(), enabled -> {

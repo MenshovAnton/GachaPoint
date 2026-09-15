@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 public class Preferences {
     public static final String APP_THEME = "App Theme";
+    public static final String APP_LANGUAGE = "App Language";
 
     private static final String PREF_FILE = "Settings";
 
@@ -67,6 +68,20 @@ public class Preferences {
             return settings.getBoolean(key, true);
         } catch (Exception e) {
             return true;
+        }
+    }
+
+    public void saveStringPreference(String key, String value) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public String getStringPreference(String key, String defValue) {
+        try {
+            return settings.getString(key, defValue);
+        } catch (Exception e) {
+            return defValue;
         }
     }
 }

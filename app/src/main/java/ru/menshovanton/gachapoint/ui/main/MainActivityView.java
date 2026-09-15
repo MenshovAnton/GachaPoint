@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.os.LocaleListCompat;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.core.graphics.Insets;
@@ -58,6 +59,14 @@ public class MainActivityView extends AppCompatActivity {
         Preferences preferences = new Preferences(this);
         int themeMode = preferences.getIntPreference(Preferences.APP_THEME);
         AppCompatDelegate.setDefaultNightMode(themeMode);
+
+        String langCode = preferences.getStringPreference(Preferences.APP_LANGUAGE, "sys");
+
+        if (langCode.equals("sys")) {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList());
+        } else {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langCode));
+        }
 
         super.onCreate(savedInstanceState);
 
@@ -102,6 +111,17 @@ public class MainActivityView extends AppCompatActivity {
         }
 
         NotificationScheduler.scheduleDailyNotification(this);
+    }
+
+    @Override
+    public void recreate() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, 0, 0);
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, 0, 0);
+        } else {
+            overridePendingTransition(0, 0);
+        }
+        super.recreate();
     }
 
     private void observeViewModel() {

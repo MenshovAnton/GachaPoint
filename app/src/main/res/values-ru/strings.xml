@@ -95,4 +95,7 @@
     <string name="theme_day">День</string>
     <string name="theme_night">Ночь</string>
     <string name="theme_default">Системная</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_eng">Английский</string>
+    <string name="lang_default">Язык системы</string>
 </resources>

@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -28,6 +29,7 @@ public class SettingsViewModel extends AndroidViewModel {
     private final Preferences preferences;
 
     private final MutableLiveData<Integer> selectedTheme = new MutableLiveData<>();
+    private final MutableLiveData<String> selectedLanguage = new MutableLiveData<>();
 
     private final MutableLiveData<Boolean> notificationsEnabled = new MutableLiveData<>();
     private final MutableLiveData<Integer> alarmHour = new MutableLiveData<>();
@@ -45,6 +47,10 @@ public class SettingsViewModel extends AndroidViewModel {
 
     public LiveData<Integer> getSelectedTheme() {
         return selectedTheme;
+    }
+
+    public LiveData<String> getSelectedLanguage() {
+        return selectedLanguage;
     }
 
     public LiveData<Boolean> getNotificationsEnabled() {
@@ -76,6 +82,7 @@ public class SettingsViewModel extends AndroidViewModel {
         alarmHour.setValue(preferences.getIntPreference(Preferences.ALARM_HOURS));
         alarmMinute.setValue(preferences.getIntPreference(Preferences.ALARM_MINUTES));
         selectedTheme.setValue(preferences.getIntPreference(Preferences.APP_THEME));
+        selectedLanguage.setValue(preferences.getStringPreference(Preferences.APP_LANGUAGE, "sys"));
     }
 
     public void onThemeSelected(int position) {
@@ -97,6 +104,34 @@ public class SettingsViewModel extends AndroidViewModel {
             preferences.saveIntPreference(Preferences.APP_THEME, mode);
             selectedTheme.setValue(mode);
             AppCompatDelegate.setDefaultNightMode(mode);
+        }
+    }
+
+    public void onLanguageSelected(int position) {
+        String langCode;
+        switch (position) {
+            case 1:
+                langCode = "en";
+                break;
+            case 2:
+                langCode = "ru";
+                break;
+            case 0:
+            default:
+                langCode = "sys";
+                break;
+        }
+
+        String currentLang = preferences.getStringPreference(Preferences.APP_LANGUAGE, "sys");
+        if (!currentLang.equals(langCode)) {
+            preferences.saveStringPreference(Preferences.APP_LANGUAGE, langCode);
+            selectedLanguage.setValue(langCode);
+
+            if ("sys".equals(langCode)) {
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList());
+            } else {
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langCode));
+            }
         }
     }
 

@@ -108,4 +108,7 @@
     <string name="theme_day">Day</string>
     <string name="theme_night">Night</string>
     <string name="theme_default">Use system</string>
+    <string name="lang_ru">Russian</string>
+    <string name="lang_eng">English</string>
+    <string name="lang_default">System language</string>
 </resources>
