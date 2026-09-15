@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 public class Preferences {
     public static final String APP_THEME = "App Theme";
     public static final String APP_LANGUAGE = "App Language";
+    public static final String VIBRATION_MODE = "Vibration Mode";
+
 
     private static final String PREF_FILE = "Settings";
 

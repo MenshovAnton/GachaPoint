@@ -46,6 +46,8 @@ public class SettingsView extends Fragment {
     private AutoCompleteTextView themeSelector;
     private AutoCompleteTextView languageSelector;
 
+    private SwitchMaterial vibrationSwitch;
+
     private final ActivityResultLauncher<String> exportDbLauncher =
             registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
                 if (uri != null && viewModel != null) {
@@ -77,6 +79,7 @@ public class SettingsView extends Fragment {
         infoButton = view.findViewById(R.id.btn_about_app);
         themeSelector = view.findViewById(R.id.mac_theme_selector);
         languageSelector = view.findViewById(R.id.mac_lang_selector);
+        vibrationSwitch = view.findViewById(R.id.sm_vibro_switch);
 
         return view;
     }
@@ -94,6 +97,12 @@ public class SettingsView extends Fragment {
     }
 
     private void setupListeners() {
+        vibrationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (buttonView.isPressed()) {
+                viewModel.onVibrationModeChanged(isChecked);
+            }
+        });
+
         notificationsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (buttonView.isPressed()) {
                 viewModel.onNotificationsChanged(isChecked);
@@ -169,6 +178,12 @@ public class SettingsView extends Fragment {
 
             if (languageSelector.getAdapter() != null) {
                 languageSelector.setText(languageSelector.getAdapter().getItem(index).toString(), false);
+            }
+        });
+
+        viewModel.getVibrationMode().observe(getViewLifecycleOwner(), mode -> {
+            if (mode != null) {
+                vibrationSwitch.setChecked(mode);
             }
         });
 

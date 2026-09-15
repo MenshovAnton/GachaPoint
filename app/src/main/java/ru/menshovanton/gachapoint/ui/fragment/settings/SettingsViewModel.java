@@ -30,6 +30,7 @@ public class SettingsViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Integer> selectedTheme = new MutableLiveData<>();
     private final MutableLiveData<String> selectedLanguage = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> vibrationMode = new MutableLiveData<>();
 
     private final MutableLiveData<Boolean> notificationsEnabled = new MutableLiveData<>();
     private final MutableLiveData<Integer> alarmHour = new MutableLiveData<>();
@@ -51,6 +52,10 @@ public class SettingsViewModel extends AndroidViewModel {
 
     public LiveData<String> getSelectedLanguage() {
         return selectedLanguage;
+    }
+
+    public LiveData<Boolean> getVibrationMode() {
+        return vibrationMode;
     }
 
     public LiveData<Boolean> getNotificationsEnabled() {
@@ -83,6 +88,7 @@ public class SettingsViewModel extends AndroidViewModel {
         alarmMinute.setValue(preferences.getIntPreference(Preferences.ALARM_MINUTES));
         selectedTheme.setValue(preferences.getIntPreference(Preferences.APP_THEME));
         selectedLanguage.setValue(preferences.getStringPreference(Preferences.APP_LANGUAGE, "sys"));
+        vibrationMode.setValue(preferences.getBooleanPreference(Preferences.VIBRATION_MODE));
     }
 
     public void onThemeSelected(int position) {
@@ -133,6 +139,11 @@ public class SettingsViewModel extends AndroidViewModel {
                 AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langCode));
             }
         }
+    }
+
+    public void onVibrationModeChanged(boolean mode) {
+        preferences.saveBooleanPreference(Preferences.VIBRATION_MODE, mode);
+        vibrationMode.setValue(mode);
     }
 
     public void onNotificationsChanged(boolean allow) {
