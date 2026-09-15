@@ -14,6 +14,7 @@ import android.view.Window;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.ui.fragment.home.HomeView;
 import ru.menshovanton.gachapoint.ui.fragment.journal.JournalView;
@@ -52,6 +54,11 @@ public class MainActivityView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen.installSplashScreen(this);
+
+        Preferences preferences = new Preferences(this);
+        int themeMode = preferences.getIntPreference(Preferences.APP_THEME);
+        AppCompatDelegate.setDefaultNightMode(themeMode);
+
         super.onCreate(savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);

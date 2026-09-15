@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -39,6 +42,8 @@ public class SettingsView extends Fragment {
 
     private MainActivityView mainActivityView;
     private SettingsViewModel viewModel;
+
+    private AutoCompleteTextView themeSelector;
 
     private final ActivityResultLauncher<String> exportDbLauncher =
             registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
@@ -69,6 +74,7 @@ public class SettingsView extends Fragment {
         edit = view.findViewById(R.id.btn_select_time);
         dbBackupButton = view.findViewById(R.id.btn_export_database);
         infoButton = view.findViewById(R.id.btn_about_app);
+        themeSelector = view.findViewById(R.id.mac_theme_selector);
 
         return view;
     }
@@ -80,6 +86,7 @@ public class SettingsView extends Fragment {
         viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
 
         setupListeners();
+        setupThemesSelector();
         observeViewModel();
     }
 
@@ -95,7 +102,35 @@ public class SettingsView extends Fragment {
         infoButton.setOnClickListener(v -> viewModel.onInfoButtonClicked());
     }
 
+    private void setupThemesSelector() {
+        String[] themes = new String[]{
+                getString(R.string.theme_default),
+                getString(R.string.theme_day),
+                getString(R.string.theme_night)
+        };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, themes);
+        themeSelector.setAdapter(adapter);
+
+        themeSelector.setOnItemClickListener((parent, view, position, id) -> viewModel.onThemeSelected(position));
+    }
+
     private void observeViewModel() {
+        viewModel.getSelectedTheme().observe(getViewLifecycleOwner(), mode -> {
+            if (mode == null) return;
+
+            int index;
+            if (mode == AppCompatDelegate.MODE_NIGHT_NO) {
+                index = 1;
+            } else if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
+                index = 2;
+            } else {
+                index = 0;
+            }
+
+            themeSelector.setText(themeSelector.getAdapter().getItem(index).toString(), false);
+        });
+
         viewModel.getNotificationsEnabled().observe(getViewLifecycleOwner(), enabled -> {
             if (enabled != null) {
                 notificationsSwitch.setChecked(enabled);

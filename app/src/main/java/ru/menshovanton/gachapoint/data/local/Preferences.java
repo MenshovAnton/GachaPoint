@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Preferences {
+    public static final String APP_THEME = "App Theme";
+
     private static final String PREF_FILE = "Settings";
 
     public static final String ALARM_HOURS = "Alarm Hours";
@@ -41,6 +43,8 @@ public class Preferences {
         int defValue;
         if (key.equals(ALARM_HOURS)) {
             defValue = 12;
+        } else if (key.equals(APP_THEME)) {
+            defValue = androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
         } else {
             defValue = 0;
         }

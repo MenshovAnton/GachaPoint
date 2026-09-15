@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -26,6 +27,8 @@ public class SettingsViewModel extends AndroidViewModel {
 
     private final Preferences preferences;
 
+    private final MutableLiveData<Integer> selectedTheme = new MutableLiveData<>();
+
     private final MutableLiveData<Boolean> notificationsEnabled = new MutableLiveData<>();
     private final MutableLiveData<Integer> alarmHour = new MutableLiveData<>();
     private final MutableLiveData<Integer> alarmMinute = new MutableLiveData<>();
@@ -38,6 +41,10 @@ public class SettingsViewModel extends AndroidViewModel {
         super(application);
         this.preferences = new Preferences(application);
         loadSettings();
+    }
+
+    public LiveData<Integer> getSelectedTheme() {
+        return selectedTheme;
     }
 
     public LiveData<Boolean> getNotificationsEnabled() {
@@ -68,6 +75,29 @@ public class SettingsViewModel extends AndroidViewModel {
         notificationsEnabled.setValue(preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS));
         alarmHour.setValue(preferences.getIntPreference(Preferences.ALARM_HOURS));
         alarmMinute.setValue(preferences.getIntPreference(Preferences.ALARM_MINUTES));
+        selectedTheme.setValue(preferences.getIntPreference(Preferences.APP_THEME));
+    }
+
+    public void onThemeSelected(int position) {
+        int mode;
+        switch (position) {
+            case 1:
+                mode = AppCompatDelegate.MODE_NIGHT_NO;
+                break;
+            case 2:
+                mode = AppCompatDelegate.MODE_NIGHT_YES;
+                break;
+            case 0:
+            default:
+                mode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+                break;
+        }
+
+        if (preferences.getIntPreference(Preferences.APP_THEME) != mode) {
+            preferences.saveIntPreference(Preferences.APP_THEME, mode);
+            selectedTheme.setValue(mode);
+            AppCompatDelegate.setDefaultNightMode(mode);
+        }
     }
 
     public void onNotificationsChanged(boolean allow) {
