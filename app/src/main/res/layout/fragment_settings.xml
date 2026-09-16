@@ -95,92 +95,84 @@
                         android:padding="8dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/icon_edit"
-                        app:layout_constraintBottom_toBottomOf="@+id/iv_minutes_bg"
+                        app:layout_constraintBottom_toBottomOf="@+id/fl_minutes_container"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/tv_time_selector_header" />
-
-                    <ImageView
-                        android:id="@+id/iv_hour_bg"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/calendar_cell"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
-                        app:layout_constraintVertical_bias="0.0" />
-
-                    <ImageView
-                        android:id="@+id/iv_minutes_bg"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="10dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/calendar_cell"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/tv_time_separator"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
-                        app:layout_constraintVertical_bias="0.0" />
 
                     <TextView
                         android:id="@+id/tv_time_separator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="10dp"
                         android:fontFamily="@font/genshin_font"
                         android:text="@string/time"
                         android:textSize="20sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/iv_hour_bg"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
-                        app:layout_constraintVertical_bias="0.0" />
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/fl_hour_container"
+                        app:layout_constraintStart_toEndOf="@+id/fl_hour_container"
+                        app:layout_constraintTop_toTopOf="@+id/fl_hour_container" />
 
-                    <TextView
-                        android:id="@+id/tv_hour"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                    <FrameLayout
+                        android:id="@+id/fl_hour_container"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="12dp"
                         android:layout_marginBottom="10dp"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
+                        android:background="@drawable/calendar_cell"
+                        android:minWidth="35dp"
+                        android:minHeight="35dp"
+                        app:layout_constrainedHeight="true"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:text="12" />
+                        app:layout_constraintVertical_bias="0.0">
 
-                    <TextView
-                        android:id="@+id/tv_minutes"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        <TextView
+                            android:id="@+id/tv_hour"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:padding="4dp"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            tools:text="12" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/fl_minutes_container"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="12dp"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
+                        android:layout_marginBottom="10dp"
+                        android:minWidth="35dp"
+                        android:minHeight="35dp"
+                        android:background="@drawable/calendar_cell"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constrainedHeight="true"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/tv_time_separator"
                         app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:text="00" />
+                        app:layout_constraintVertical_bias="0.0">
+
+                        <TextView
+                            android:id="@+id/tv_minutes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:padding="4dp"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            tools:text="00" />
+
+                    </FrameLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -442,7 +434,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_storage_settings"
+                app:layout_constraintTop_toBottomOf="@+id/mcv_accessibility_settings"
                 app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
