@@ -11,16 +11,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
+import ru.menshovanton.gachapoint.data.db.DatabaseExporter;
 import ru.menshovanton.gachapoint.data.local.Preferences;
-import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 import ru.menshovanton.gachapoint.worker.NotificationScheduler;
 
@@ -179,46 +173,11 @@ public class SettingsViewModel extends AndroidViewModel {
 
     public void writeDatabaseToUri(Uri targetUri) {
         Context context = getApplication().getApplicationContext();
-
         AppDatabase.getExecutor().execute(() -> {
-            try {
-                AppDatabase.getInstance(context)
-                        .getOpenHelper()
-                        .getWritableDatabase()
-                        .query("PRAGMA wal_checkpoint(TRUNCATE)")
-                        .close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            File dbFile = context.getDatabasePath(DatabaseRepository.DATABASE_NAME);
-
-            if (!dbFile.exists()) {
-                toastMessageEvent.postValue(R.string.db_export_failed);
-                return;
-            }
-
-            try (InputStream in = new FileInputStream(dbFile);
-                 OutputStream out = context.getContentResolver().openOutputStream(targetUri)) {
-
-                if (out == null) {
-                    toastMessageEvent.postValue(R.string.db_export_failed);
-                    return;
-                }
-
-                byte[] buffer = new byte[8192];
-                int length;
-                while ((length = in.read(buffer)) > 0) {
-                    out.write(buffer, 0, length);
-                }
-                out.flush();
-
-                toastMessageEvent.postValue(R.string.db_export_successful);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                toastMessageEvent.postValue(R.string.db_export_failed);
-            }
+            boolean ok = DatabaseExporter.export(context, targetUri);
+            toastMessageEvent.postValue(ok
+                    ? R.string.db_export_successful
+                    : R.string.db_export_failed);
         });
     }
 }

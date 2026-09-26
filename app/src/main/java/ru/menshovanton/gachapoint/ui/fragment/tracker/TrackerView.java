@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.LocaleList;
@@ -38,11 +37,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -52,7 +46,6 @@ import java.util.Locale;
 import java.util.stream.IntStream;
 
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
@@ -96,7 +89,7 @@ public class TrackerView extends Fragment {
     private final ActivityResultLauncher<String> exportDbLauncher =
             registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
                 if (uri != null) {
-                    writeDatabaseToUri(uri);
+                    viewModel.writeDatabaseToUri(uri);
                 }
             });
 
@@ -459,50 +452,6 @@ public class TrackerView extends Fragment {
         exportDbLauncher.launch(DatabaseRepository.DATABASE_NAME);
     }
 
-    private void writeDatabaseToUri(Uri targetUri) {
-        if (!isAdded()) return;
-        Context context = requireContext();
-
-        try {
-            AppDatabase.getInstance(context)
-                    .getOpenHelper()
-                    .getWritableDatabase()
-                    .query("PRAGMA wal_checkpoint(TRUNCATE)")
-                    .close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        File dbFile = context.getDatabasePath(DatabaseRepository.DATABASE_NAME);
-
-        if (!dbFile.exists()) {
-            Toast.makeText(context, R.string.db_export_failed, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        try (InputStream in = new FileInputStream(dbFile);
-             OutputStream out = context.getContentResolver().openOutputStream(targetUri)) {
-
-            if (out == null) {
-                Toast.makeText(context, R.string.db_export_failed, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            byte[] buffer = new byte[8192];
-            int length;
-            while ((length = in.read(buffer)) > 0) {
-                out.write(buffer, 0, length);
-            }
-            out.flush();
-
-            Toast.makeText(context, R.string.db_export_successful, Toast.LENGTH_SHORT).show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(context, R.string.db_export_failed, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public void showQuestionDialog(Context context) {
         new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
                 .setTitle(getString(R.string.check_button_text))
@@ -512,6 +461,14 @@ public class TrackerView extends Fragment {
                     dialog.dismiss();
                 })
                 .setNegativeButton(getString(R.string.cancel_button), (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    public void showMessageDialog(Context context, String title, String message) {
+        new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.ok_button), null)
                 .show();
     }
 

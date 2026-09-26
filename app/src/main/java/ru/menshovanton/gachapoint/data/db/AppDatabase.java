@@ -1,7 +1,6 @@
 package ru.menshovanton.gachapoint.data.db;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -55,13 +54,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static void postToMain(Runnable runnable) {
         MAIN_HANDLER.post(runnable);
-    }
-
-    public void checkpoint() {
-        DB_EXECUTOR.execute(() -> runInTransaction(() -> {
-            try (Cursor cursor = query("PRAGMA wal_checkpoint(FULL)", null)) {
-                cursor.moveToFirst();
-            }
-        }));
     }
 }
