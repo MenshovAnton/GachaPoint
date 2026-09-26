@@ -63,6 +63,18 @@ public class CalendarEntity {
         return new Date(0, day, dayOfYear, dayOfWeek, status, subDays, month, year);
     }
 
+    public int getStatusForGame(GameType gameType) {
+        switch (gameType) {
+            case HSR:
+                return this.statusHsr;
+            case ZZZ:
+                return this.statusZzz;
+            case GENSHIN:
+            default:
+                return this.statusGenshin;
+        }
+    }
+
     public void updateForGame(GameType gameType, int status, int subDaysRemaining) {
         switch (gameType) {
             case HSR:

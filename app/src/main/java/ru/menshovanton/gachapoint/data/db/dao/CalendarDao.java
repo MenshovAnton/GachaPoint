@@ -47,7 +47,13 @@ public interface CalendarDao {
             CalendarEntity entity = getDay(targetYear, targetDayOfYear);
             if (entity != null) {
                 int targetSubDays = Math.max(0, totalDays - i);
-                int statusToSet = (i == 0) ? todayStatus : 0;
+
+                int statusToSet;
+                if (totalDays == 0) {
+                    statusToSet = 0;
+                } else {
+                    statusToSet = (i == 0) ? todayStatus : (targetSubDays > 0 ? entity.getStatusForGame(gameType) : 0);
+                }
 
                 entity.updateForGame(gameType, statusToSet, targetSubDays);
                 batchList.add(entity);

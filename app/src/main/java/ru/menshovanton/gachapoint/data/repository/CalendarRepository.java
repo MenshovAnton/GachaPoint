@@ -32,7 +32,7 @@ public class CalendarRepository {
         LocalDate now = LocalDate.now();
         calendar.getDay(now.getYear(), now.getDayOfYear(), gameType, todayDate -> {
             int daysRemaining = todayDate != null ? todayDate.subDaysRemaining : 0;
-            subsCount = (daysRemaining <= 0 || daysRemaining > 180) ? 0 : (daysRemaining + 29) / 30;
+            subsCount = daysRemaining > 0 ? (int) Math.ceil(daysRemaining / 30.0) : 0;
             if (onComplete != null) {
                 onComplete.run();
             }
@@ -52,21 +52,22 @@ public class CalendarRepository {
         calendar.getDay(year, todayOfYear, gameType, today -> {
             int subDaysRemaining = today != null ? today.subDaysRemaining : 0;
 
+            subsCount = subDaysRemaining > 0 ? (int) Math.ceil(subDaysRemaining / 30.0) : 0;
+
             if (subDaysRemaining <= 0 && (today == null || today.status == 0)) {
                 if (onComplete != null) onComplete.run();
                 return;
             }
 
-            int startDayOfYear = Math.max(1, todayOfYear - (180 - subDaysRemaining));
+            int daysPassedInCurrentSubChain = 180 - subDaysRemaining;
+            int startDayOfYear = Math.max(1, todayOfYear - daysPassedInCurrentSubChain);
 
             calendar.getDaysRange(year, startDayOfYear, todayOfYear, gameType, currentPeriodDays -> {
                 for (Date date : currentPeriodDays) {
-                    if (date.subDaysRemaining > 0 || (date.dayOfYear == todayOfYear && subDaysRemaining > 0)) {
-                        if (date.status == 0 && date.dayOfYear < todayOfYear) {
-                            missesDays++;
-                        } else if (date.status == 1) {
-                            claimsDays++;
-                        }
+                    if (date.status == 0 && date.dayOfYear < todayOfYear) {
+                        missesDays++;
+                    } else if (date.status == 1) {
+                        claimsDays++;
                     }
                 }
                 if (onComplete != null) onComplete.run();
@@ -82,8 +83,10 @@ public class CalendarRepository {
 
             int missedPrimogemsCount = missesDays * primogemsPerDay;
             int claimPrimogemsCount = claimsDays * primogemsPerDay;
+
             int totalPromogemsInActiveSubs = summaryClaim * subsCount;
-            int laterPrimogemsCount = Math.max(0, totalPromogemsInActiveSubs - claimPrimogemsCount - missedPrimogemsCount);
+
+            int laterPrimogemsCount = Math.max(0, totalPromogemsInActiveSubs - claimPrimogemsCount);
 
             Statistic statistic = new Statistic(
                     missedPrimogemsCount,
