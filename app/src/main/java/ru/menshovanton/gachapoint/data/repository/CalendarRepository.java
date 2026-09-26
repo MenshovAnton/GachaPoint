@@ -64,10 +64,12 @@ public class CalendarRepository {
 
             calendar.getDaysRange(year, startDayOfYear, todayOfYear, gameType, currentPeriodDays -> {
                 for (Date date : currentPeriodDays) {
-                    if (date.status == 0 && date.dayOfYear < todayOfYear) {
-                        missesDays++;
-                    } else if (date.status == 1) {
-                        claimsDays++;
+                    if (date.subDaysRemaining > 0 || (date.dayOfYear == todayOfYear && subDaysRemaining > 0)) {
+                        if (date.status == 0 && date.dayOfYear < todayOfYear) {
+                            missesDays++;
+                        } else if (date.status == 1) {
+                            claimsDays++;
+                        }
                     }
                 }
                 if (onComplete != null) onComplete.run();
