@@ -86,6 +86,7 @@
     <string name="links">Полезные ссылки</string>
     <string name="delete">Удалить</string>
     <string name="delete_confirm_message">Вы действительно хотите удалить эту запись? Это действие нельзя отменить, и данные будут потеряны навсегда.</string>
+    <string name="delete_sub_confirm_message">Вы действительно хотите удалить подписку? Это действие нельзя отменить, и данные будут потеряны навсегда.</string>
     <string name="warning">Внимание!</string>
     <string name="ui_setting_title">Интерфейс</string>
     <string name="ui_settings_language">Язык</string>

@@ -99,6 +99,7 @@
     <string name="six" translatable="false">6</string>
     <string name="delete">Delete</string>
     <string name="delete_confirm_message">Do you really want to delete this record? This action cannot be undone, and the data will be lost forever.</string>
+    <string name="delete_sub_confirm_message">Do you really want to delete subscription? This action cannot be undone, and the data will be lost forever.</string>
     <string name="warning">Warning!</string>
     <string name="ui_setting_title">Interface</string>
     <string name="ui_settings_language">Language</string>

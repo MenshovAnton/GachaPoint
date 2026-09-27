@@ -181,8 +181,12 @@ public class TrackerView extends Fragment {
             }
         });
 
-        viewModel.getOpenQuestionDialogEvent().observe(getViewLifecycleOwner(), unused ->
-                showQuestionDialog(requireContext())
+        viewModel.getOpenSubAddingDialogEvent().observe(getViewLifecycleOwner(), unused ->
+                showAddingSubDialog(requireContext())
+        );
+
+        viewModel.getOpenSubDeletingDialogEvent().observe(getViewLifecycleOwner(), unused ->
+                showDeletingSubDialog(requireContext())
         );
 
         viewModel.getVibrateEvent().observe(getViewLifecycleOwner(), unused -> triggerVibration());
@@ -452,7 +456,7 @@ public class TrackerView extends Fragment {
         exportDbLauncher.launch(DatabaseRepository.DATABASE_NAME);
     }
 
-    public void showQuestionDialog(Context context) {
+    public void showAddingSubDialog(Context context) {
         new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
                 .setTitle(getString(R.string.check_button_text))
                 .setMessage(R.string.active_subs_null_question)
@@ -461,6 +465,18 @@ public class TrackerView extends Fragment {
                     dialog.dismiss();
                 })
                 .setNegativeButton(getString(R.string.cancel_button), (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    public void showDeletingSubDialog(Context context) {
+        new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
+                .setTitle(getString(R.string.warning))
+                .setMessage(R.string.delete_sub_confirm_message)
+                .setPositiveButton(getString(R.string.ok_button), (dialog, which) -> {
+                    viewModel.deletingSub();
+                    dialog.dismiss();
+                })
+                .setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
                 .show();
     }
 

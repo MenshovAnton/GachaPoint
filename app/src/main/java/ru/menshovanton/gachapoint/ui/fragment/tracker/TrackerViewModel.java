@@ -43,7 +43,8 @@ public class TrackerViewModel extends AndroidViewModel {
 
     private final SingleLiveEvent<Integer> toastMessageEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> vibrateEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Void> openQuestionDialogEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> openSubAddingDialogEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> openSubDeletingDialogEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Integer> playSoundEvent = new SingleLiveEvent<>();
 
     private final MutableLiveData<List<Date>> monthDates = new MutableLiveData<>();
@@ -75,7 +76,8 @@ public class TrackerViewModel extends AndroidViewModel {
     public LiveData<List<CalendarCellUiModel>> getCalendarCellsLiveData() { return calendarCellsLiveData; }
     public LiveData<Integer> getToastMessageEvent() { return toastMessageEvent; }
     public LiveData<Void> getVibrateEvent() { return vibrateEvent; }
-    public SingleLiveEvent<Void> getOpenQuestionDialogEvent() { return openQuestionDialogEvent; }
+    public SingleLiveEvent<Void> getOpenSubAddingDialogEvent() { return openSubAddingDialogEvent; }
+    public SingleLiveEvent<Void> getOpenSubDeletingDialogEvent() { return openSubDeletingDialogEvent; }
     public LiveData<Integer> getPlaySoundEvent() { return playSoundEvent; }
 
     public void setGameType(GameType gameType) {
@@ -175,7 +177,7 @@ public class TrackerViewModel extends AndroidViewModel {
             } else {
                 calendarRepository.getDaySubDaysRemaining(selectedYear, today, currentGameType, remaining -> {
                     if (remaining == 0) {
-                        openQuestionDialogEvent.call();
+                        openSubAddingDialogEvent.call();
                     } else {
                         playSoundEvent.setValue(R.raw.success);
                         performCheck(today, R.string.check_today);
@@ -224,6 +226,10 @@ public class TrackerViewModel extends AndroidViewModel {
     }
 
     public void onDelClick() {
+        openSubDeletingDialogEvent.call();
+    }
+
+    public void deletingSub() {
         int today = todayOfYear();
         int currentYear = LocalDate.now().getYear();
 
