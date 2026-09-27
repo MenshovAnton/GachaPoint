@@ -2,6 +2,7 @@ package ru.menshovanton.gachapoint.ui.main;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -325,5 +326,14 @@ public class MainActivityView extends AppCompatActivity {
 
     public void setSubType(int code) {
         viewModel.setSubType(code);
+    }
+
+    public void restartApp() {
+        Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            Runtime.getRuntime().exit(0);
+        }
     }
 }

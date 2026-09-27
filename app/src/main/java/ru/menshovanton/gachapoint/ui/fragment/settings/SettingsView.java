@@ -1,6 +1,8 @@
 package ru.menshovanton.gachapoint.ui.fragment.settings;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -34,7 +37,8 @@ public class SettingsView extends Fragment {
     private TextView hourTextView;
     private TextView minuteTextView;
 
-    private Button dbBackupButton;
+    private Button dbImportButton;
+    private Button dbExportButton;
     private Button infoButton;
 
     private SwitchMaterial notificationsSwitch;
@@ -49,11 +53,20 @@ public class SettingsView extends Fragment {
     private SwitchMaterial vibrationSwitch;
 
     private final ActivityResultLauncher<String> exportDbLauncher =
-            registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
+            registerForActivityResult(new ActivityResultContracts.CreateDocument("*/*"), uri -> {
                 if (uri != null && viewModel != null) {
                     viewModel.writeDatabaseToUri(uri);
                 }
             });
+
+    private final ActivityResultLauncher<String[]> filePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.OpenDocument(),
+            uri -> {
+                if (uri != null) {
+                    showQuestionDialog(requireContext(), uri);
+                }
+            }
+    );
 
     public SettingsView() {}
 
@@ -75,7 +88,8 @@ public class SettingsView extends Fragment {
         hourTextView = view.findViewById(R.id.tv_hour);
         minuteTextView = view.findViewById(R.id.tv_minutes);
         edit = view.findViewById(R.id.btn_select_time);
-        dbBackupButton = view.findViewById(R.id.btn_export_database);
+        dbImportButton = view.findViewById(R.id.btn_import_database);
+        dbExportButton = view.findViewById(R.id.btn_export_database);
         infoButton = view.findViewById(R.id.btn_about_app);
         themeSelector = view.findViewById(R.id.mac_theme_selector);
         languageSelector = view.findViewById(R.id.mac_lang_selector);
@@ -110,7 +124,8 @@ public class SettingsView extends Fragment {
         });
 
         edit.setOnClickListener(v -> showTimePicker());
-        dbBackupButton.setOnClickListener(v -> viewModel.onExportDatabaseClicked());
+        dbExportButton.setOnClickListener(v -> viewModel.onExportDatabaseClicked());
+        dbImportButton.setOnClickListener(v -> viewModel.onImportDatabaseClicked());
         infoButton.setOnClickListener(v -> viewModel.onInfoButtonClicked());
     }
 
@@ -214,6 +229,25 @@ public class SettingsView extends Fragment {
         viewModel.getExportDbEvent().observe(getViewLifecycleOwner(), unused ->
                 exportDbLauncher.launch(DatabaseRepository.DATABASE_NAME));
 
+        viewModel.getImportDbEvent().observe(getViewLifecycleOwner(), unused ->
+                filePickerLauncher.launch(new String[]{"*/*"}));
+
+        viewModel.getRestartAppEvent().observe(getViewLifecycleOwner(), unused -> {
+            if (mainActivityView != null) {
+                mainActivityView.restartApp();
+            }
+        });
+
+        viewModel.getImportErrorEvent().observe(getViewLifecycleOwner(), errorMessage -> {
+            if (errorMessage != null && getContext() != null) {
+                new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog_GachaPoint_AlertDialog)
+                        .setTitle(getString(R.string.db_import_failed))
+                        .setMessage(errorMessage)
+                        .setPositiveButton(getString(R.string.ok_button), (dialog, which) -> dialog.dismiss())
+                        .show();
+            }
+        });
+
         viewModel.getToastMessageEvent().observe(getViewLifecycleOwner(), resId -> {
             if (resId != null && getContext() != null) {
                 Toast.makeText(getContext(), resId, Toast.LENGTH_SHORT).show();
@@ -240,5 +274,17 @@ public class SettingsView extends Fragment {
                 viewModel.onTimeSelected(picker.getHour(), picker.getMinute()));
 
         picker.show(getParentFragmentManager(), "MATERIAL_TIME_PICKER");
+    }
+
+    public void showQuestionDialog(Context context, Uri fileUri) {
+        new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
+                .setTitle(getString(R.string.db_import))
+                .setMessage(R.string.db_import_message)
+                .setPositiveButton(getString(R.string.ok_button), (dialog, which) -> {
+                    viewModel.importDatabaseFromUri(fileUri);
+                    dialog.dismiss();
+                })
+                .setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
+                .show();
     }
 }

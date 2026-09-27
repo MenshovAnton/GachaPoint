@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.db.DatabaseExporter;
+import ru.menshovanton.gachapoint.data.db.DatabaseImporter;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 import ru.menshovanton.gachapoint.worker.NotificationScheduler;
@@ -32,6 +33,9 @@ public class SettingsViewModel extends AndroidViewModel {
 
     private final SingleLiveEvent<Void> navigateToInfoEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> exportDbEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> importDbEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> restartAppEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<String> importErrorEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Integer> toastMessageEvent = new SingleLiveEvent<>();
 
     public SettingsViewModel(@NonNull Application application) {
@@ -70,6 +74,17 @@ public class SettingsViewModel extends AndroidViewModel {
 
     public LiveData<Void> getExportDbEvent() {
         return exportDbEvent;
+    }
+    public LiveData<Void> getImportDbEvent() {
+        return importDbEvent;
+    }
+
+    public LiveData<Void> getRestartAppEvent() {
+        return restartAppEvent;
+    }
+
+    public LiveData<String> getImportErrorEvent() {
+        return importErrorEvent;
     }
 
     public LiveData<Integer> getToastMessageEvent() {
@@ -170,6 +185,9 @@ public class SettingsViewModel extends AndroidViewModel {
     public void onExportDatabaseClicked() {
         exportDbEvent.call();
     }
+    public void onImportDatabaseClicked() {
+        importDbEvent.call();
+    }
 
     public void writeDatabaseToUri(Uri targetUri) {
         Context context = getApplication().getApplicationContext();
@@ -178,6 +196,23 @@ public class SettingsViewModel extends AndroidViewModel {
             toastMessageEvent.postValue(ok
                     ? R.string.db_export_successful
                     : R.string.db_export_failed);
+        });
+    }
+
+    public void importDatabaseFromUri(Uri fileUri) {
+        Context context = getApplication().getApplicationContext();
+        DatabaseImporter.importDatabase(context, fileUri, new DatabaseImporter.ImportCallback() {
+            @Override
+            public void onSuccess() {
+                toastMessageEvent.setValue(R.string.db_import_successful);
+                restartAppEvent.call();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                String error = e.getLocalizedMessage() != null ? e.getLocalizedMessage() : e.getMessage();
+                importErrorEvent.setValue(error);
+            }
         });
     }
 }

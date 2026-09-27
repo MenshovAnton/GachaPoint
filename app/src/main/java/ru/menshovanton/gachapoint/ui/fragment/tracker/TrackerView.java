@@ -87,7 +87,7 @@ public class TrackerView extends Fragment {
     private int successSound;
 
     private final ActivityResultLauncher<String> exportDbLauncher =
-            registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
+            registerForActivityResult(new ActivityResultContracts.CreateDocument("*/*"), uri -> {
                 if (uri != null) {
                     viewModel.writeDatabaseToUri(uri);
                 }

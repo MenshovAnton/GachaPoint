@@ -20,7 +20,7 @@
     <string name="notifications_settings_title">Уведомления</string>
     <string name="notifications_settings_time">Время оповещения:</string>
     <string name="db_settings_title">Хранилище</string>
-    <string name="db_settings_backup_button">Экспорт данных</string>
+    <string name="db_settings_backup_button">Экспорт</string>
     <string name="nav_home">Домашняя</string>
     <string name="nav_tracker">Календарь</string>
     <string name="nav_settings">Настройки</string>
@@ -98,4 +98,12 @@
     <string name="lang_ru">Русский</string>
     <string name="lang_eng">Английский</string>
     <string name="lang_default">Язык системы</string>
+    <string name="db_settings_import_button">Импорт</string>
+    <string name="db_import">Импорт данных</string>
+    <string name="db_import_message">Импортировать содержимое в приложение? Текущие данные могут быть заменены!</string>
+    <string name="db_import_successful">Импорт успешно выполнен!</string>
+    <string name="db_import_failed">Ошибка импорта!</string>
+    <string name="db_error_cannot_open_file">Не удалось открыть выбранный файл.</string>
+    <string name="db_error_invalid_sqlite">Выбранный файл не является базой данных SQLite.</string>
+    <string name="db_error_incompatible_schema">Файл базы данных не содержит таблиц приложения GachaPoint.</string>
 </resources>

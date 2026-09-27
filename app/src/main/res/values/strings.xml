@@ -21,7 +21,7 @@
     <string name="notifications_settings_title">Notifications</string>
     <string name="notifications_settings_time">Notification time:</string>
     <string name="db_settings_title">Storage</string>
-    <string name="db_settings_backup_button">Export data</string>
+    <string name="db_settings_backup_button">Export</string>
     <string name="nav_home">Home</string>
     <string name="nav_tracker">Calendar</string>
     <string name="nav_settings">Settings</string>
@@ -111,4 +111,12 @@
     <string name="lang_ru">Russian</string>
     <string name="lang_eng">English</string>
     <string name="lang_default">System language</string>
+    <string name="db_settings_import_button">Import</string>
+    <string name="db_import">Data import</string>
+    <string name="db_import_message">Import content into the app? Current data may be overwritten!</string>
+    <string name="db_import_successful">Import successful!</string>
+    <string name="db_import_failed">Import failed!</string>
+    <string name="db_error_cannot_open_file">Failed to open the selected file.</string>
+    <string name="db_error_invalid_sqlite">The selected file is not a valid SQLite database.</string>
+    <string name="db_error_incompatible_schema">The database does not contain GachaPoint app tables.</string>
 </resources>

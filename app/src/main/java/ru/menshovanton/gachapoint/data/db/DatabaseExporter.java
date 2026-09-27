@@ -22,11 +22,7 @@ public final class DatabaseExporter {
         AppDatabase room = AppDatabase.getInstance(context);
 
         try {
-            if (checkpoint(room, "TRUNCATE")) {
-                if (checkpoint(room, "FULL") || checkpoint(room, "TRUNCATE")) {
-                    return false;
-                }
-            }
+            checkpoint(room);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -57,17 +53,15 @@ public final class DatabaseExporter {
         }
     }
 
-    private static boolean checkpoint(RoomDatabase room, String mode) {
+    private static void checkpoint(RoomDatabase room) {
         SupportSQLiteDatabase db = room.getOpenHelper().getWritableDatabase();
 
-        String sql = "PRAGMA wal_checkpoint(" + mode + ")";
+        String sql = "PRAGMA wal_checkpoint(" + "TRUNCATE" + ")";
 
         try {
             db.execSQL(sql);
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
     }
 }
