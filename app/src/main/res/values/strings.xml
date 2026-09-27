@@ -10,16 +10,16 @@
     <string name="add_button_text">Add subscription</string>
     <string name="del_button_text">Delete subscription</string>
     <string name="cancel_button_text">Cancel mark</string>
-    <string name="change_status_button_text">Mark up for a missed day</string>
+    <string name="change_status_button_text">Recover missed day</string>
     <string name="stat_header">Statistics</string>
     <string name="claim_column_header">Received</string>
-    <string name="miss_column_header">Omitted</string>
+    <string name="miss_column_header">Missed</string>
     <string name="later_column_header">Upcoming</string>
     <string name="blessing_of_the_welkin_moon_count_header">Number of moons:</string>
     <string name="star_rail_special_pass_count_header">Number of express passes:</string>
-    <string name="inter_knot_member_count_header">Number of inter-knot subs:</string>
+    <string name="inter_knot_member_count_header">Number of Inter-Knot subs:</string>
     <string name="notifications_settings_title">Notifications</string>
-    <string name="notifications_settings_time">Notify time:</string>
+    <string name="notifications_settings_time">Notification time:</string>
     <string name="db_settings_title">Storage</string>
     <string name="db_settings_backup_button">Export data</string>
     <string name="nav_home">Home</string>
@@ -61,8 +61,8 @@
     <string name="pity_6">Pity 6x</string>
     <string name="reset">Reset</string>
     <string name="remark_piggy_bank">Pity 1x = 77 pulls</string>
-    <string name="db_export_successful">Export success!</string>
-    <string name="db_export_failed">Export error!</string>
+    <string name="db_export_successful">Export successful!</string>
+    <string name="db_export_failed">Export failed!</string>
     <string name="notifications_name">Notifications</string>
     <string name="notifications_description">Sends reminders to collect rewards</string>
     <string name="notifications_title">Reminder!</string>
@@ -70,16 +70,16 @@
     <string name="five_star" translatable="false">5★</string>
     <string name="four_star" translatable="false">4★</string>
     <string name="three_star" translatable="false">3★</string>
-    <string name="add_one_pull">Add 1 attempts</string>
-    <string name="add_ten_pulls">Add 10 attempts</string>
-    <string name="add_five_star">Add drop 5★</string>
-    <string name="add_four_star">Add drop 4★</string>
+    <string name="add_one_pull">Add 1 pull</string>
+    <string name="add_ten_pulls">Add 10 pulls</string>
+    <string name="add_five_star">Got 5★</string>
+    <string name="add_four_star">Got 4★</string>
     <string name="empty_pulls_list">No pulls yet :(</string>
     <string name="default_pull_content">Unknown</string>
     <string name="add_pull">Add record</string>
     <string name="edit_pull">Edit record</string>
     <string name="hint_input_content">Character/Weapon</string>
-    <string name="select_rare">Select item rare</string>
+    <string name="select_rare">Select item rarity</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="date">Date</string>
@@ -100,14 +100,14 @@
     <string name="delete">Delete</string>
     <string name="delete_confirm_message">Do you really want to delete this record? This action cannot be undone, and the data will be lost forever.</string>
     <string name="warning">Warning!</string>
-    <string name="ui_setting_title">UI</string>
+    <string name="ui_setting_title">Interface</string>
     <string name="ui_settings_language">Language</string>
     <string name="ui_settings_theme">Theme</string>
     <string name="ui_settings_accessibility">Accessibility</string>
     <string name="vibration">Vibration</string>
     <string name="theme_day">Day</string>
     <string name="theme_night">Night</string>
-    <string name="theme_default">Use system</string>
+    <string name="theme_default">System default</string>
     <string name="lang_ru">Russian</string>
     <string name="lang_eng">English</string>
     <string name="lang_default">System language</string>

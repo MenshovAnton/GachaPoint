@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="description">GachaPoint — ваш универсальный компаньон с открытым исходным кодом для аниме гача-RPG (Genshin Impact, Honkai: Star Rail, Zenless Zone Zero и др.). Приложение позволяет удобно, безопасно и полностью автономно отслеживать историю круток, рассчитывать накопления и контролировать прогресс игровых подписок прямо на вашем устройстве.</string>
-    <string name="copyright_info">Все права принадлежат их правооблодателям (All rights belong to their copyright holders). Приложение не аффилировано компанией Hoyoverse.</string>
-    <string name="dev_info">Разработчик: MenshovAnton (Меньшов. А. Р.)</string>
+    <string name="copyright_info">Все права принадлежат их правообладателям. Приложение не аффилировано с компанией Hoyoverse.</string>
+    <string name="dev_info">Разработчик: MenshovAnton (Меньшов А. Р.)</string>
     <string name="sheet_header_actions">Действия</string>
     <string name="sheet_header_edit">Правка</string>
     <string name="check_button_text">Отметка</string>
@@ -13,10 +13,10 @@
     <string name="stat_header">Статистика</string>
     <string name="claim_column_header">Получено</string>
     <string name="miss_column_header">Пропущено</string>
-    <string name="later_column_header">Получишь</string>
+    <string name="later_column_header">Ожидается</string>
     <string name="blessing_of_the_welkin_moon_count_header">Кол-во лун:</string>
     <string name="star_rail_special_pass_count_header">Кол-во пропусков экспресса:</string>
-    <string name="inter_knot_member_count_header">Кол-во интертон-подписок:</string>
+    <string name="inter_knot_member_count_header">Кол-во интернот-подписок:</string>
     <string name="notifications_settings_title">Уведомления</string>
     <string name="notifications_settings_time">Время оповещения:</string>
     <string name="db_settings_title">Хранилище</string>
@@ -69,11 +69,11 @@
     <string name="add_pull">Добавить запись</string>
     <string name="edit_pull">Редактировать запись</string>
     <string name="hint_input_content">Персонаж/Оружие</string>
-    <string name="select_rare">Выберете редкость</string>
+    <string name="select_rare">Выберите редкость</string>
     <string name="save">Сохранить</string>
     <string name="cancel">Отмена</string>
     <string name="date">Дата</string>
-    <string name="select_date">Выбирете дату</string>
+    <string name="select_date">Выберите дату</string>
     <string name="type_event">Ивент</string>
     <string name="type_std">Стандарт</string>
     <string name="type_spec">Особый</string>
@@ -85,7 +85,7 @@
     <string name="active_subs_null_question">У вас нет активных подписок. Добавить одну?</string>
     <string name="links">Полезные ссылки</string>
     <string name="delete">Удалить</string>
-    <string name="delete_confirm_message">Вы действительно хотите удалить эту запись?  Это действие нельзя отменить, и данные будут потеряны навсегда.</string>
+    <string name="delete_confirm_message">Вы действительно хотите удалить эту запись? Это действие нельзя отменить, и данные будут потеряны навсегда.</string>
     <string name="warning">Внимание!</string>
     <string name="ui_setting_title">Интерфейс</string>
     <string name="ui_settings_language">Язык</string>
