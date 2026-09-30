@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
@@ -484,11 +485,16 @@ public class TrackerView extends Fragment {
         new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(getString(R.string.ok_button), null)
+                .setPositiveButton(getString(R.string.ok_button), (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
     private void playSound(int resId) {
-        soundPool.play(successSound, 1.0f, 1.0f, 0, 0, 1.0f);
+        AudioManager am = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
+        boolean isSilent = am.getRingerMode() != AudioManager.RINGER_MODE_NORMAL;
+
+        if (!isSilent) {
+            soundPool.play(successSound, 1.0f, 1.0f, 0, 0, 1.0f);
+        }
     }
 }
