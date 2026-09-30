@@ -135,6 +135,10 @@ public class CalendarRepository {
 
             calendar.updateDay(year, dayOfYear, gameType, status, rem, () -> {
                 if (oldStatus == 0 && status == 1) {
+                    claimsDays++;
+                    checkAndAddWishFromClaim(gameType);
+                } else if (oldStatus == 1 && status == 0) {
+                    claimsDays = Math.max(0, claimsDays - 1);
                     checkAndAddWishFromClaim(gameType);
                 }
                 if (onComplete != null) onComplete.run();
@@ -146,15 +150,12 @@ public class CalendarRepository {
         int primogemsPerDay = 90;
         int wishesCost = 160;
 
-        int currentClaimedGems = claimsDays * primogemsPerDay;
-        int previousClaimedGems = (claimsDays - 1) * primogemsPerDay;
+        int totalGems = claimsDays * primogemsPerDay;
+        int totalWishes = totalGems / wishesCost;
 
-        int currentWishes = currentClaimedGems / wishesCost;
-        int previousWishes = previousClaimedGems / wishesCost;
-
-        int newWishes = currentWishes - previousWishes;
-        if (newWishes > 0) {
-            piggyBankRepository.addSubsProgress(gameType, newWishes);
+        int currentProgress = piggyBankRepository.getSubsProgress(gameType);
+        if (totalWishes > currentProgress) {
+            piggyBankRepository.saveSubsProgress(gameType, totalWishes);
         }
     }
 
