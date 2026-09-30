@@ -30,12 +30,13 @@ public class CalendarRepository {
 
     public void init(GameType gameType, int year, Runnable onComplete) {
         LocalDate now = LocalDate.now();
-        calendar.getDay(now.getYear(), now.getDayOfYear(), gameType, todayDate -> {
+        int targetYear = year > 0 ? year : now.getYear();
+        int targetDay = (targetYear == now.getYear()) ? now.getDayOfYear() : 1;
+
+        calendar.getDay(targetYear, targetDay, gameType, todayDate -> {
             int daysRemaining = todayDate != null ? todayDate.subDaysRemaining : 0;
             subsCount = daysRemaining > 0 ? (int) Math.ceil(daysRemaining / 30.0) : 0;
-            if (onComplete != null) {
-                onComplete.run();
-            }
+            if (onComplete != null) onComplete.run();
         });
     }
 
