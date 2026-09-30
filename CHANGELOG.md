@@ -16,3 +16,8 @@
 - Accessibility: vibration feedback can now be disabled
 - Optimization
 - Minor UI fixes and improvements.
+
+# v0.1.4
+- Database import and export: you can now export data and restore progress from a file (.db).
+- Silent mode compliance: when silent mode is enabled, sound effects will not be played.
+- Minor fixes and UI improvements.
