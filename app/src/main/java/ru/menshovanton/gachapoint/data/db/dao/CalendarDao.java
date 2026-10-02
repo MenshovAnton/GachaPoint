@@ -34,30 +34,43 @@ public interface CalendarDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrUpdate(CalendarEntity entity);
 
+    @Query("SELECT * FROM calendar WHERE year = :year AND day_of_year BETWEEN :from AND :to ORDER BY day_of_year ASC")
+    List<CalendarEntity> getDaysRangeInclusive(int year, int from, int to);
+
     @Transaction
     default void updateSubscribeDaysTransaction(int startYear, int startDayOfYear, GameType gameType, int todayStatus, int totalDays) {
-        List<CalendarEntity> batchList = new ArrayList<>(181);
+
+        int span = (totalDays > 0) ? totalDays : 180;
+
         LocalDate startDate = LocalDate.ofYearDay(startYear, startDayOfYear);
+        LocalDate endDate = startDate.plusDays(span - 1);
 
-        for (int i = 0; i <= 180; i++) {
-            LocalDate targetDate = startDate.plusDays(i);
-            int targetYear = targetDate.getYear();
-            int targetDayOfYear = targetDate.getDayOfYear();
+        List<CalendarEntity> all = new ArrayList<>(span);
+        if (startDate.getYear() == endDate.getYear()) {
+            all.addAll(getDaysRangeInclusive(startDate.getYear(),
+                    startDate.getDayOfYear(), endDate.getDayOfYear()));
+        } else {
+            all.addAll(getDaysRangeInclusive(startDate.getYear(),
+                    startDate.getDayOfYear(), startDate.lengthOfYear()));
+            all.addAll(getDaysRangeInclusive(endDate.getYear(),
+                    1, endDate.getDayOfYear()));
+        }
 
-            CalendarEntity entity = getDay(targetYear, targetDayOfYear);
-            if (entity != null) {
-                int targetSubDays = Math.max(0, totalDays - i);
-
-                int statusToSet;
-                if (totalDays == 0) {
-                    statusToSet = 0;
-                } else {
-                    statusToSet = (i == 0) ? todayStatus : (targetSubDays > 0 ? entity.getStatusForGame(gameType) : 0);
-                }
-
-                entity.updateForGame(gameType, statusToSet, targetSubDays);
-                batchList.add(entity);
+        List<CalendarEntity> batchList = new ArrayList<>(all.size());
+        int i = 0;
+        for (CalendarEntity entity : all) {
+            int targetSubDays = Math.max(0, totalDays - i);
+            int statusToSet;
+            if (totalDays == 0) {
+                statusToSet = 0;
+            } else {
+                statusToSet = (i == 0)
+                        ? todayStatus
+                        : (targetSubDays > 0 ? entity.getStatusForGame(gameType) : 0);
             }
+            entity.updateForGame(gameType, statusToSet, targetSubDays);
+            batchList.add(entity);
+            i++;
         }
 
         if (!batchList.isEmpty()) {
