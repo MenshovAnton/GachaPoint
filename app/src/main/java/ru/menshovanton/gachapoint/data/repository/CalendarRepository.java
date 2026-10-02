@@ -89,7 +89,7 @@ public class CalendarRepository {
 
             int totalPromogemsInActiveSubs = summaryClaim * subsCount;
 
-            int laterPrimogemsCount = Math.max(0, totalPromogemsInActiveSubs - claimPrimogemsCount);
+            int laterPrimogemsCount = Math.max(0, totalPromogemsInActiveSubs - claimPrimogemsCount) - missedPrimogemsCount;
 
             Statistic statistic = new Statistic(
                     missedPrimogemsCount,
