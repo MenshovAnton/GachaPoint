@@ -2,11 +2,12 @@ package ru.menshovanton.gachapoint.data.db.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import ru.menshovanton.gachapoint.domain.models.Pull;
 
-@Entity(tableName = "pulls")
+@Entity(tableName = "pulls", indices = {@Index(value = {"game_type", "banner_type"}, name = "idx_pull_game_banner")})
 public class PullEntity {
 
     @PrimaryKey(autoGenerate = true)

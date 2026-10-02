@@ -18,7 +18,7 @@ import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
 
 @Database(
         entities = {CalendarEntity.class, PullEntity.class},
-        version = 1,
+        version = 2,
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
@@ -41,6 +41,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                     AppDatabase.class,
                                     DATABASE_NAME
                             )
+                            .addMigrations(MigrationHelper.MIGRATION_1_2)
                             .build();
                 }
             }

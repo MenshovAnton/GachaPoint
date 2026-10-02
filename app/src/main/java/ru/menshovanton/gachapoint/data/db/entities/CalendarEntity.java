@@ -2,11 +2,12 @@ package ru.menshovanton.gachapoint.data.db.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Date;
 
-@Entity(tableName = "calendar", primaryKeys = {"year", "day_of_year"})
+@Entity(tableName = "calendar", primaryKeys = {"year", "day_of_year"}, indices = {@Index(value = {"year", "month"}, name = "idx_calendar_year_month"), @Index(value = {"day_of_year"}, name = "idx_calendar_day_of_year")})
 public class CalendarEntity {
 
     public int day;
