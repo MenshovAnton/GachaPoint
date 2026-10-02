@@ -47,8 +47,8 @@ import java.util.Locale;
 import java.util.stream.IntStream;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.local.Preferences;
-import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
@@ -454,7 +454,7 @@ public class TrackerView extends Fragment {
     }
 
     public void exportDatabase() {
-        exportDbLauncher.launch(DatabaseRepository.DATABASE_NAME);
+        exportDbLauncher.launch(AppDatabase.DATABASE_NAME);
     }
 
     public void showAddingSubDialog(Context context) {

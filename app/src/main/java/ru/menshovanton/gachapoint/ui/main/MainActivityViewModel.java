@@ -12,7 +12,6 @@ import java.io.File;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
-import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 
@@ -72,7 +71,7 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     private void ensureDatabaseInitialized() {
         Context context = getApplication().getApplicationContext();
-        File dbFile = context.getDatabasePath(DatabaseRepository.DATABASE_NAME);
+        File dbFile = context.getDatabasePath(AppDatabase.DATABASE_NAME);
         if (!dbFile.exists()) {
             AppDatabase.getExecutor().execute(() ->
                     AppDatabase.getInstance(context).getOpenHelper().getWritableDatabase());

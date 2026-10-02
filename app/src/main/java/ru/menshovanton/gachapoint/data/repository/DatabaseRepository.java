@@ -18,7 +18,6 @@ public class DatabaseRepository {
         void onResult(T result);
     }
 
-    public static final String DATABASE_NAME = AppDatabase.DATABASE_NAME;
     private final AppDatabase db;
 
     public DatabaseRepository(Context context) {

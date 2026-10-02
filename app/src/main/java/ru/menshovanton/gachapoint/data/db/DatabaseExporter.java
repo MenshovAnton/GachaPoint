@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
-
 public final class DatabaseExporter {
 
     private DatabaseExporter() {}
@@ -28,7 +26,7 @@ public final class DatabaseExporter {
             return false;
         }
 
-        File dbFile = context.getDatabasePath(DatabaseRepository.DATABASE_NAME);
+        File dbFile = context.getDatabasePath(AppDatabase.DATABASE_NAME);
         if (!dbFile.exists()) return false;
 
         File walFile = new File(dbFile.getPath() + "-wal");

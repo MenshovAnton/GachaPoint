@@ -28,7 +28,7 @@ import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
+import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.ui.fragment.info.InfoView;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
@@ -227,7 +227,7 @@ public class SettingsView extends Fragment {
         });
 
         viewModel.getExportDbEvent().observe(getViewLifecycleOwner(), unused ->
-                exportDbLauncher.launch(DatabaseRepository.DATABASE_NAME));
+                exportDbLauncher.launch(AppDatabase.DATABASE_NAME));
 
         viewModel.getImportDbEvent().observe(getViewLifecycleOwner(), unused ->
                 filePickerLauncher.launch(new String[]{"*/*"}));
