@@ -169,26 +169,28 @@ public class TrackerViewModel extends AndroidViewModel {
 
     public void onCheckClick() {
         vibrateEvent.call();
-        int today = LocalDate.now().getDayOfYear();
+        LocalDate today = LocalDate.now();
+        int currentYear = today.getYear();
+        int todayDay = today.getDayOfYear();
 
-        calendarRepository.getDayStatus(selectedYear, today, currentGameType, status -> {
+        calendarRepository.getDayStatus(currentYear, todayDay, currentGameType, status -> {
             if (status == 1) {
                 toastMessageEvent.setValue(R.string.already_checked);
             } else {
-                calendarRepository.getDaySubDaysRemaining(selectedYear, today, currentGameType, remaining -> {
+                calendarRepository.getDaySubDaysRemaining(currentYear, todayDay, currentGameType, remaining -> {
                     if (remaining == 0) {
                         openSubAddingDialogEvent.call();
                     } else {
                         playSoundEvent.setValue(R.raw.success);
-                        performCheck(today, R.string.check_today);
+                        performCheck(currentYear, todayDay, R.string.check_today);
                     }
                 });
             }
         });
     }
 
-    private void performCheck(int dayOfYear, @StringRes int messageRes) {
-        calendarRepository.setDayStatus(selectedYear, dayOfYear, currentGameType, 1, () -> {
+    private void performCheck(int year, int dayOfYear, @StringRes int messageRes) {
+        calendarRepository.setDayStatus(year, dayOfYear, currentGameType, 1, () -> {
             calendarRepository.addClaimDay();
             toastMessageEvent.setValue(messageRes);
             refreshData();
@@ -196,20 +198,14 @@ public class TrackerViewModel extends AndroidViewModel {
     }
 
     public void onAddClick() {
-        int today = todayOfYear();
-        int currentYear = LocalDate.now().getYear();
-
         if (calendarRepository.getSubsCount() < 6) {
             playSoundEvent.setValue(R.raw.success);
-            calendarRepository.getDaySubDaysRemaining(currentYear, today, currentGameType, remaining -> {
-                if (remaining == 0) {
-                    calendarRepository.setSubsCount(1);
-                    calendarRepository.setMissesDays(0);
-                    calendarRepository.setClaimsDays(0);
-                    executeSubAction(today, 30, CalendarRepository.UpdateSubscribeDaysActions.Add);
+            calendarRepository.addSubscription(currentGameType, success -> {
+                if (Boolean.TRUE.equals(success)) {
+                    toastMessageEvent.setValue(R.string.add_sub);
+                    refreshData();
                 } else {
-                    calendarRepository.addSub();
-                    executeSubAction(today, remaining + 30, CalendarRepository.UpdateSubscribeDaysActions.Add);
+                    toastMessageEvent.setValue(R.string.subs_limit);
                 }
             });
         } else {
@@ -217,28 +213,15 @@ public class TrackerViewModel extends AndroidViewModel {
         }
     }
 
-    private void executeSubAction(int dayOfYear, int subDays, CalendarRepository.UpdateSubscribeDaysActions action) {
-        int currentYear = LocalDate.now().getYear();
-        calendarRepository.updateSubscribeDays(currentYear, dayOfYear, currentGameType, action, subDays, () -> {
-            toastMessageEvent.setValue(action == CalendarRepository.UpdateSubscribeDaysActions.Add ? R.string.add_sub : R.string.del_sub);
-            refreshData();
-        });
-    }
-
     public void onDelClick() {
         openSubDeletingDialogEvent.call();
     }
 
     public void deletingSub() {
-        int today = todayOfYear();
-        int currentYear = LocalDate.now().getYear();
-
-        calendarRepository.getDaySubDaysRemaining(currentYear, today, currentGameType, remaining -> {
-            if (remaining > 0) {
-                int newRemaining = Math.max(0, remaining - 30);
-
-                calendarRepository.delSub();
-                executeSubAction(today, newRemaining, CalendarRepository.UpdateSubscribeDaysActions.Delete);
+        calendarRepository.deleteSubscription(currentGameType, success -> {
+            if (Boolean.TRUE.equals(success)) {
+                toastMessageEvent.setValue(R.string.del_sub);
+                refreshData();
             } else {
                 toastMessageEvent.setValue(R.string.active_subs_null);
             }
@@ -246,36 +229,40 @@ public class TrackerViewModel extends AndroidViewModel {
     }
 
     public void recoveryMissDay() {
-        int yesterday = todayOfYear() - 1;
-        if (yesterday >= 1) {
-            calendarRepository.getDayStatus(selectedYear, yesterday, currentGameType, status -> {
-                if (status == 1) {
-                    toastMessageEvent.setValue(R.string.not_miss_day);
-                } else {
-                    calendarRepository.getDaySubDaysRemaining(selectedYear, yesterday, currentGameType, remaining -> {
-                        if (remaining == 0) {
-                            toastMessageEvent.setValue(R.string.active_subs_null);
-                        } else {
-                            playSoundEvent.setValue(R.raw.success);
-                            performCheck(yesterday, R.string.check_today);
-                        }
-                    });
-                }
-            });
-        }
-    }
+        LocalDate yesterdayDate = LocalDate.now().minusDays(1);
+        int yesterdayYear = yesterdayDate.getYear();
+        int yesterdayDay = yesterdayDate.getDayOfYear();
 
-    public void onCancelCheck() {
-        int today = todayOfYear();
-        calendarRepository.getDayStatus(selectedYear, today, currentGameType, status -> {
-            if (status == 0) {
-                toastMessageEvent.setValue(R.string.not_check_today);
+        calendarRepository.getDayStatus(yesterdayYear, yesterdayDay, currentGameType, status -> {
+            if (status == 1) {
+                toastMessageEvent.setValue(R.string.not_miss_day);
             } else {
-                calendarRepository.getDaySubDaysRemaining(selectedYear, today, currentGameType, remaining -> {
+                calendarRepository.getDaySubDaysRemaining(yesterdayYear, yesterdayDay, currentGameType, remaining -> {
                     if (remaining == 0) {
                         toastMessageEvent.setValue(R.string.active_subs_null);
                     } else {
-                        cancelCheckInternal(today, () -> {
+                        playSoundEvent.setValue(R.raw.success);
+                        performCheck(yesterdayYear, yesterdayDay, R.string.check_today);
+                    }
+                });
+            }
+        });
+    }
+
+    public void onCancelCheck() {
+        LocalDate today = LocalDate.now();
+        int currentYear = today.getYear();
+        int todayDay = today.getDayOfYear();
+
+        calendarRepository.getDayStatus(currentYear, todayDay, currentGameType, status -> {
+            if (status == 0) {
+                toastMessageEvent.setValue(R.string.not_check_today);
+            } else {
+                calendarRepository.getDaySubDaysRemaining(currentYear, todayDay, currentGameType, remaining -> {
+                    if (remaining == 0) {
+                        toastMessageEvent.setValue(R.string.active_subs_null);
+                    } else {
+                        cancelCheckInternal(currentYear, todayDay, () -> {
                             toastMessageEvent.setValue(R.string.cancel_check_today);
                             refreshData();
                         });
@@ -285,8 +272,8 @@ public class TrackerViewModel extends AndroidViewModel {
         });
     }
 
-    private void cancelCheckInternal(int dayOfYear, Runnable onComplete) {
-        calendarRepository.setDayStatus(selectedYear, dayOfYear, currentGameType, 0, () -> {
+    private void cancelCheckInternal(int year, int dayOfYear, Runnable onComplete) {
+        calendarRepository.setDayStatus(year, dayOfYear, currentGameType, 0, () -> {
             calendarRepository.subtractClaimDay();
             if (onComplete != null) onComplete.run();
         });

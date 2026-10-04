@@ -8,6 +8,7 @@ import java.util.List;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarEntity;
 import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
+import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Date;
 import ru.menshovanton.gachapoint.domain.models.Pull;
@@ -132,6 +133,63 @@ public class DatabaseRepository {
     public void updateSubscribeDaysBatch(int year, int dayOfYear, GameType gameType, int status, int totalDays, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
             db.calendarDao().updateSubscribeDaysTransaction(year, dayOfYear, gameType, status, totalDays);
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void getActiveSubscription(GameType gameType, long epochDay, Callback<SubscriptionEntity> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            SubscriptionEntity entity = db.subscriptionDao().getActiveSubscription(gameType.getCode(), epochDay);
+            AppDatabase.postToMain(() -> callback.onResult(entity));
+        });
+    }
+
+    public void getSubscriptionsInRange(GameType gameType, long startEpoch, long endEpoch, Callback<List<SubscriptionEntity>> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            List<SubscriptionEntity> list = db.subscriptionDao().getSubscriptionsInRange(gameType.getCode(), startEpoch, endEpoch);
+            AppDatabase.postToMain(() -> callback.onResult(list));
+        });
+    }
+
+    public void getAllSubscriptions(GameType gameType, Callback<List<SubscriptionEntity>> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            List<SubscriptionEntity> list = db.subscriptionDao().getAllSubscriptionsForGame(gameType.getCode());
+            AppDatabase.postToMain(() -> callback.onResult(list));
+        });
+    }
+
+    public void insertSubscription(SubscriptionEntity entity, Callback<Long> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            long id = db.subscriptionDao().insert(entity);
+            if (callback != null) {
+                AppDatabase.postToMain(() -> callback.onResult(id));
+            }
+        });
+    }
+
+    public void updateSubscription(SubscriptionEntity entity, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            db.subscriptionDao().update(entity);
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void deleteSubscription(SubscriptionEntity entity, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            db.subscriptionDao().delete(entity);
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void deleteSubscriptionById(int id, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            db.subscriptionDao().deleteById(id);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }

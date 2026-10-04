@@ -2,6 +2,7 @@ package ru.menshovanton.gachapoint.data.db.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -33,6 +34,7 @@ public class PullEntity {
 
     public PullEntity() {}
 
+    @Ignore
     public PullEntity(int gameType, String dateTime, String dropRare, String dropType, String bannerType, boolean isResetPity) {
         this.gameType = gameType;
         this.dateTime = dateTime;
