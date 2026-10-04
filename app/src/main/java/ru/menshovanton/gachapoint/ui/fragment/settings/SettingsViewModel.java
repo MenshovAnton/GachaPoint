@@ -205,6 +205,11 @@ public class SettingsViewModel extends AndroidViewModel {
             @Override
             public void onSuccess() {
                 toastMessageEvent.setValue(R.string.db_import_successful);
+
+                preferences.saveBooleanPreference(Preferences.GENSHIN_NEED_MIGRATION, true);
+                preferences.saveBooleanPreference(Preferences.HSR_NEED_MIGRATION, true);
+                preferences.saveBooleanPreference(Preferences.ZZZ_NEED_MIGRATION, true);
+
                 restartAppEvent.call();
             }
 

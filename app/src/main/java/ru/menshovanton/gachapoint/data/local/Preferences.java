@@ -2,6 +2,7 @@ package ru.menshovanton.gachapoint.data.local;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class Preferences {
     public static final String APP_THEME = "App Theme";
@@ -29,6 +30,10 @@ public class Preferences {
     public static final String PIGGY_BANK_SUBS_PROGRESS_GENSHIN = "Piggy Bank subs progress Genshin Impact";
     public static final String PIGGY_BANK_SUBS_PROGRESS_HSR = "Piggy Bank subs progress HSR";
     public static final String PIGGY_BANK_SUBS_PROGRESS_ZZZ = "Piggy Bank subs progress ZZZ";
+
+    public static final String GENSHIN_NEED_MIGRATION = "Genshin need migration";
+    public static final String HSR_NEED_MIGRATION = "HSR need migration";
+    public static final String ZZZ_NEED_MIGRATION = "ZZZ need migration";
 
     private final SharedPreferences settings;
 
@@ -63,11 +68,20 @@ public class Preferences {
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(key, value);
         editor.apply();
+        Log.d("Preferences", "saveBooleanPreference: " + key + " = " + value);
+    }
+
+    public boolean saveBooleanPreferenceSync(String key, boolean value) {
+        return settings.edit()
+                .putBoolean(key, value)
+                .commit();
     }
 
     public boolean getBooleanPreference(String key) {
         try {
-            return settings.getBoolean(key, true);
+            boolean value = settings.getBoolean(key, true);
+            Log.d("Preferences", "getBooleanPreference: " + key + " = " + value);
+            return value;
         } catch (Exception e) {
             return true;
         }

@@ -146,6 +146,13 @@ public class DatabaseRepository {
         });
     }
 
+    public void getSubscriptionsCountForGame(GameType gameType, Callback<Integer> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            int count = db.subscriptionDao().getSubscriptionsCountForGame(gameType.getCode());
+            AppDatabase.postToMain(() -> callback.onResult(count));
+        });
+    }
+
     public void getSubscriptionsInRange(GameType gameType, long startEpoch, long endEpoch, Callback<List<SubscriptionEntity>> callback) {
         AppDatabase.getExecutor().execute(() -> {
             List<SubscriptionEntity> list = db.subscriptionDao().getSubscriptionsInRange(gameType.getCode(), startEpoch, endEpoch);

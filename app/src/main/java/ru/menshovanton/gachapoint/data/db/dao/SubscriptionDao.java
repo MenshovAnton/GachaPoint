@@ -17,6 +17,9 @@ public interface SubscriptionDao {
     @Query("SELECT * FROM subscriptions WHERE game_type = :gameType AND :epochDay BETWEEN start_date AND end_date LIMIT 1")
     SubscriptionEntity getActiveSubscription(int gameType, long epochDay);
 
+    @Query("SELECT COUNT(*) FROM subscriptions WHERE game_type = :gameType")
+    int getSubscriptionsCountForGame(int gameType);
+
     @Query("SELECT * FROM subscriptions WHERE game_type = :gameType AND NOT (end_date < :startEpoch OR start_date > :endEpoch) ORDER BY start_date ASC")
     List<SubscriptionEntity> getSubscriptionsInRange(int gameType, long startEpoch, long endEpoch);
 

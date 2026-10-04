@@ -11,6 +11,7 @@ import java.util.List;
 
 import ru.menshovanton.gachapoint.calendar.Calendar;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
+import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Date;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
@@ -19,6 +20,7 @@ public class CalendarRepository {
     private final Calendar calendar;
     private final PiggyBankRepository piggyBankRepository;
     private final DatabaseRepository databaseRepository;
+    private final Preferences preferences;
 
     private int missesDays = 0;
     private int claimsDays = 0;
@@ -29,6 +31,7 @@ public class CalendarRepository {
         this.calendar = new Calendar(appContext);
         this.piggyBankRepository = new PiggyBankRepository(appContext);
         this.databaseRepository = new DatabaseRepository(appContext);
+        this.preferences = new Preferences(appContext);
     }
 
     public void init(GameType gameType, int year, Runnable onComplete) {
@@ -40,35 +43,86 @@ public class CalendarRepository {
                 subsCount = activeSub.count;
                 if (onComplete != null) onComplete.run();
             } else {
-                // Check legacy subscription data in calendar for migration
-                calendar.getDay(now.getYear(), now.getDayOfYear(), gameType, todayDate -> {
-                    if (todayDate != null && todayDate.subDaysRemaining > 0) {
-                        int rem = todayDate.subDaysRemaining;
-                        int count = (int) Math.ceil(rem / 30.0);
-                        int totalDays = count * 30;
-                        int daysPassed = Math.max(0, totalDays - rem);
-                        LocalDate startDate = now.minusDays(daysPassed);
-                        LocalDate endDate = now.plusDays(rem - 1);
+                boolean needMigration;
+                switch (gameType) {
+                    case GENSHIN:
+                        needMigration = preferences.getBooleanPreference(Preferences.GENSHIN_NEED_MIGRATION);
+                        break;
+                    case HSR:
+                        needMigration = preferences.getBooleanPreference(Preferences.HSR_NEED_MIGRATION);
+                        break;
+                    case ZZZ:
+                        needMigration = preferences.getBooleanPreference(Preferences.ZZZ_NEED_MIGRATION);
+                        break;
+                    default:
+                        needMigration = true;
+                        break;
+                }
 
-                        SubscriptionEntity migrated = new SubscriptionEntity(
-                                gameType.getCode(),
-                                count,
-                                startDate.toEpochDay(),
-                                endDate.toEpochDay(),
-                                0,
-                                0,
-                                rem * 90
-                        );
-                        databaseRepository.insertSubscription(migrated, id -> {
-                            subsCount = count;
-                            calculateMissesAndClaims(gameType, year, () -> {
-                                if (onComplete != null) onComplete.run();
-                            });
-                        });
-                    } else {
+                if (!needMigration) {
+                    subsCount = 0;
+                    if (onComplete != null) onComplete.run();
+                    return;
+                }
+
+                databaseRepository.getSubscriptionsCountForGame(gameType, countInDb -> {
+                    if (countInDb > 0) {
+                        switch (gameType) {
+                            case GENSHIN:
+                                preferences.saveBooleanPreference(Preferences.GENSHIN_NEED_MIGRATION, false);
+                                break;
+                            case HSR:
+                                preferences.saveBooleanPreference(Preferences.HSR_NEED_MIGRATION, false);
+                                break;
+                            case ZZZ:
+                                preferences.saveBooleanPreference(Preferences.ZZZ_NEED_MIGRATION, false);
+                                break;
+                        }
                         subsCount = 0;
                         if (onComplete != null) onComplete.run();
+                        return;
                     }
+                    calendar.getDay(now.getYear(), now.getDayOfYear(), gameType, todayDate -> {
+                        if (todayDate != null && todayDate.subDaysRemaining > 0) {
+                            int rem = todayDate.subDaysRemaining;
+                            int count = (int) Math.ceil(rem / 30.0);
+                            int totalDays = count * 30;
+                            int daysPassed = Math.max(0, totalDays - rem);
+                            LocalDate startDate = now.minusDays(daysPassed);
+                            LocalDate endDate = now.plusDays(rem - 1);
+
+                            SubscriptionEntity migrated = new SubscriptionEntity(
+                                    gameType.getCode(),
+                                    count,
+                                    startDate.toEpochDay(),
+                                    endDate.toEpochDay(),
+                                    0,
+                                    0,
+                                    rem * 90
+                            );
+                            databaseRepository.insertSubscription(migrated, id -> {
+                                subsCount = count;
+                                calculateMissesAndClaims(gameType, year, () -> {
+                                    if (onComplete != null) onComplete.run();
+                                });
+                            });
+
+                            switch (gameType) {
+                                case GENSHIN:
+                                    preferences.saveBooleanPreference(Preferences.GENSHIN_NEED_MIGRATION, false);
+                                    break;
+                                case HSR:
+                                    preferences.saveBooleanPreference(Preferences.HSR_NEED_MIGRATION, false);
+                                    break;
+                                case ZZZ:
+                                    preferences.saveBooleanPreference(Preferences.ZZZ_NEED_MIGRATION, false);
+                                    break;
+                            }
+                        } else {
+                            subsCount = 0;
+                            if (onComplete != null) onComplete.run();
+                        }
+                    });
                 });
             }
         });
@@ -171,17 +225,15 @@ public class CalendarRepository {
         if (start.getYear() == end.getYear()) {
             calendar.getDaysRange(start.getYear(), start.getDayOfYear(), end.getDayOfYear(), gameType, callback);
         } else {
-            calendar.getDaysRange(start.getYear(), start.getDayOfYear(), start.lengthOfYear(), gameType, firstYearDates -> {
-                calendar.getDaysRange(end.getYear(), 1, end.getDayOfYear(), gameType, secondYearDates -> {
-                    List<Date> combined = new ArrayList<>(
-                            (firstYearDates != null ? firstYearDates.size() : 0) +
-                            (secondYearDates != null ? secondYearDates.size() : 0)
-                    );
-                    if (firstYearDates != null) combined.addAll(firstYearDates);
-                    if (secondYearDates != null) combined.addAll(secondYearDates);
-                    if (callback != null) callback.onResult(combined);
-                });
-            });
+            calendar.getDaysRange(start.getYear(), start.getDayOfYear(), start.lengthOfYear(), gameType, firstYearDates -> calendar.getDaysRange(end.getYear(), 1, end.getDayOfYear(), gameType, secondYearDates -> {
+                List<Date> combined = new ArrayList<>(
+                        (firstYearDates != null ? firstYearDates.size() : 0) +
+                        (secondYearDates != null ? secondYearDates.size() : 0)
+                );
+                if (firstYearDates != null) combined.addAll(firstYearDates);
+                if (secondYearDates != null) combined.addAll(secondYearDates);
+                if (callback != null) callback.onResult(combined);
+            }));
         }
     }
 
