@@ -15,6 +15,17 @@ public enum GameType {
         return code;
     }
 
+    public String getName() {
+        switch (this) {
+            case HSR:
+                return "HSR";
+            case ZZZ:
+                return "ZZZ";
+            default:
+                return "Genshin";
+        }
+    }
+
     public static GameType fromCode(int code) {
         for (GameType type : values()) {
             if (type.getCode() == code) {

@@ -43,21 +43,7 @@ public class CalendarRepository {
                 subsCount = activeSub.count;
                 if (onComplete != null) onComplete.run();
             } else {
-                boolean needMigration;
-                switch (gameType) {
-                    case GENSHIN:
-                        needMigration = preferences.getBooleanPreference(Preferences.GENSHIN_NEED_MIGRATION);
-                        break;
-                    case HSR:
-                        needMigration = preferences.getBooleanPreference(Preferences.HSR_NEED_MIGRATION);
-                        break;
-                    case ZZZ:
-                        needMigration = preferences.getBooleanPreference(Preferences.ZZZ_NEED_MIGRATION);
-                        break;
-                    default:
-                        needMigration = true;
-                        break;
-                }
+                boolean needMigration = preferences.getBooleanPreference(gameType.getName() + Preferences.NEED_MIGRATION);
 
                 if (!needMigration) {
                     subsCount = 0;
@@ -67,17 +53,7 @@ public class CalendarRepository {
 
                 databaseRepository.getSubscriptionsCountForGame(gameType, countInDb -> {
                     if (countInDb > 0) {
-                        switch (gameType) {
-                            case GENSHIN:
-                                preferences.saveBooleanPreference(Preferences.GENSHIN_NEED_MIGRATION, false);
-                                break;
-                            case HSR:
-                                preferences.saveBooleanPreference(Preferences.HSR_NEED_MIGRATION, false);
-                                break;
-                            case ZZZ:
-                                preferences.saveBooleanPreference(Preferences.ZZZ_NEED_MIGRATION, false);
-                                break;
-                        }
+                        preferences.saveBooleanPreference(gameType.getName() + Preferences.NEED_MIGRATION, false);
                         subsCount = 0;
                         if (onComplete != null) onComplete.run();
                         return;
@@ -107,17 +83,7 @@ public class CalendarRepository {
                                 });
                             });
 
-                            switch (gameType) {
-                                case GENSHIN:
-                                    preferences.saveBooleanPreference(Preferences.GENSHIN_NEED_MIGRATION, false);
-                                    break;
-                                case HSR:
-                                    preferences.saveBooleanPreference(Preferences.HSR_NEED_MIGRATION, false);
-                                    break;
-                                case ZZZ:
-                                    preferences.saveBooleanPreference(Preferences.ZZZ_NEED_MIGRATION, false);
-                                    break;
-                            }
+                            preferences.saveBooleanPreference(gameType.getName() + Preferences.NEED_MIGRATION, false);
                         } else {
                             subsCount = 0;
                             if (onComplete != null) onComplete.run();
