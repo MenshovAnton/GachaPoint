@@ -9,25 +9,25 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
-
 import android.view.ViewGroup;
 import android.view.Window;
+
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
 import androidx.core.os.LocaleListCompat;
 import androidx.core.splashscreen.SplashScreen;
-import androidx.fragment.app.Fragment;
-import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,21 +35,9 @@ import java.util.List;
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
-import ru.menshovanton.gachapoint.ui.fragment.home.HomeView;
-import ru.menshovanton.gachapoint.ui.fragment.journal.JournalView;
-import ru.menshovanton.gachapoint.ui.fragment.settings.SettingsView;
-import ru.menshovanton.gachapoint.ui.fragment.tracker.TrackerView;
 import ru.menshovanton.gachapoint.worker.NotificationScheduler;
 
 public class MainActivityView extends AppCompatActivity {
-
-    public static final String HOME_TAG = "HOME";
-    public static final String INFO_TAG = "INFO";
-    public static final String JOURNAL_TAG = "JOURNAL";
-    public static final String SETTINGS_TAG = "SETTINGS";
-    public static final String TRACKER_TAG = "TRACKER";
-
-    private static final String KEY_SELECTED_NAV_ID = "selected_nav_id";
 
     private MainActivityViewModel viewModel;
 
@@ -82,7 +70,7 @@ public class MainActivityView extends AppCompatActivity {
             return insets;
         });
 
-        NavigationBarView navigation = findViewById(R.id.bnv_main);
+        BottomNavigationView navigation = findViewById(R.id.bnv_main);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             navigation.setOnApplyWindowInsetsListener((v, insets) -> {
@@ -96,15 +84,12 @@ public class MainActivityView extends AppCompatActivity {
             });
         }
 
-        navigation.setOnItemSelectedListener(item -> viewModel.onNavigationItemSelected(item.getItemId()));
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
 
-        observeViewModel();
-
-        if (savedInstanceState != null) {
-            int currentNavId = savedInstanceState.getInt(KEY_SELECTED_NAV_ID, R.id.nav_home);
-            navigation.setSelectedItemId(currentNavId);
-        } else {
-            replaceFragment(HomeView.newInstance(), HOME_TAG);
+        if (navHostFragment != null) {
+            NavController navController = navHostFragment.getNavController();
+            NavigationUI.setupWithNavController(navigation, navController);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -125,38 +110,8 @@ public class MainActivityView extends AppCompatActivity {
         super.recreate();
     }
 
-    private void observeViewModel() {
-        viewModel.getNavigateToTagEvent().observe(this, tag -> {
-            if (tag == null) return;
-
-            switch (tag) {
-                case HOME_TAG:
-                    replaceFragment(HomeView.newInstance(), HOME_TAG);
-                    break;
-                case TRACKER_TAG:
-                    replaceFragment(TrackerView.newInstance(), TRACKER_TAG);
-                    break;
-                case JOURNAL_TAG:
-                    replaceFragment(JournalView.newInstance(), JOURNAL_TAG);
-                    break;
-                case SETTINGS_TAG:
-                    replaceFragment(SettingsView.newInstance(), SETTINGS_TAG);
-                    break;
-            }
-        });
-    }
-
-    public void replaceFragment(Fragment fragment, String tag) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.fl_main, fragment, tag)
-                .commit();
-    }
-
     private void checkAndRequestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-
             String[] permissions = {
                     Manifest.permission.POST_NOTIFICATIONS
             };
@@ -178,13 +133,6 @@ public class MainActivityView extends AppCompatActivity {
                 );
             }
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Integer navId = viewModel.getSelectedNavId().getValue();
-        outState.putInt(KEY_SELECTED_NAV_ID, navId != null ? navId : R.id.nav_home);
     }
 
     public interface OnCalendarMenuClickListener {

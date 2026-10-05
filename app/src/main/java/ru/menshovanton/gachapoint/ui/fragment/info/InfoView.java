@@ -13,14 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.ui.fragment.settings.SettingsView;
-import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
 public class InfoView extends Fragment {
 
-    private MainActivityView mainActivityView;
     private InfoViewModel viewModel;
     private ImageButton backToSettings;
 
@@ -32,12 +30,6 @@ public class InfoView extends Fragment {
 
     public static InfoView newInstance() {
         return new InfoView();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mainActivityView = (MainActivityView) getActivity();
     }
 
     @Override
@@ -65,11 +57,8 @@ public class InfoView extends Fragment {
     }
 
     private void observeViewModel() {
-        viewModel.getNavigateToSettingsEvent().observe(getViewLifecycleOwner(), unused -> {
-            if (mainActivityView != null) {
-                mainActivityView.replaceFragment(SettingsView.newInstance(), MainActivityView.SETTINGS_TAG);
-            }
-        });
+        viewModel.getNavigateToSettingsEvent().observe(getViewLifecycleOwner(), unused ->
+                NavHostFragment.findNavController(this).popBackStack());
     }
 
     private void openUrl(String url) {

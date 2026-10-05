@@ -43,6 +43,8 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.gson)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
     implementation(libs.recyclerview)
     implementation(libs.room.common)
     implementation(libs.room.runtime)

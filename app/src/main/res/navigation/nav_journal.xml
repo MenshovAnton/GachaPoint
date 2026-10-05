@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_journal"
+    app:startDestination="@+id/journalView">
+
+    <fragment
+        android:id="@+id/journalView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.journal.JournalView"
+        android:label="@string/nav_journal"
+        tools:layout="@layout/fragment_journal" />
+
+</navigation>

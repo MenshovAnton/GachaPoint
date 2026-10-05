@@ -49,9 +49,6 @@ public class TrackerViewModel extends AndroidViewModel {
 
     private final MutableLiveData<List<Date>> monthDates = new MutableLiveData<>();
 
-    private final int currentYear = LocalDate.now().getYear();
-    private final int currentMonth = LocalDate.now().getMonthValue();
-
     public TrackerViewModel(@NonNull Application application) {
         super(application);
         this.calendarRepository = new CalendarRepository(application);
@@ -62,10 +59,6 @@ public class TrackerViewModel extends AndroidViewModel {
 
         this.selectedMonthLiveData.setValue(selectedMonth);
         this.selectedYearLiveData.setValue(selectedYear);
-    }
-
-    public LiveData<List<Date>> getMonthDates() {
-        return monthDates;
     }
 
     public LiveData<GameType> getGameTypeLiveData() { return gameTypeLiveData; }

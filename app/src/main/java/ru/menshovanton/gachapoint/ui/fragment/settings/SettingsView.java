@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -29,7 +30,6 @@ import com.google.android.material.timepicker.TimeFormat;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
-import ru.menshovanton.gachapoint.ui.fragment.info.InfoView;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
 public class SettingsView extends Fragment {
@@ -220,11 +220,8 @@ public class SettingsView extends Fragment {
             }
         });
 
-        viewModel.getNavigateToInfoEvent().observe(getViewLifecycleOwner(), unused -> {
-            if (mainActivityView != null) {
-                mainActivityView.replaceFragment(InfoView.newInstance(), MainActivityView.INFO_TAG);
-            }
-        });
+        viewModel.getNavigateToInfoEvent().observe(getViewLifecycleOwner(), unused ->
+                NavHostFragment.findNavController(this).navigate(R.id.action_settings_to_info));
 
         viewModel.getExportDbEvent().observe(getViewLifecycleOwner(), unused ->
                 exportDbLauncher.launch(AppDatabase.DATABASE_NAME));
