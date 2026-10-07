@@ -61,7 +61,7 @@ public class CalendarEntity {
                 break;
         }
 
-        return new Date(0, day, dayOfYear, dayOfWeek, status, subDays, month, year);
+        return new Date(day, dayOfYear, dayOfWeek, status, subDays, month, year);
     }
 
     public int getStatusForGame(GameType gameType) {
