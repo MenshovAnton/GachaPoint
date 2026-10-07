@@ -168,6 +168,13 @@ public class TrackerView extends Fragment {
         isFirstLaunch = false;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        isAnimating = false;
+        calendarGrid.removeCallbacks(null);
+    }
+
     private void observeViewModel() {
         viewModel.getGameTypeLiveData().observe(getViewLifecycleOwner(), this::updateGameTypeUi);
         viewModel.getSelectedMonthLiveData().observe(getViewLifecycleOwner(), this::updateHeaderMonth);
@@ -177,22 +184,29 @@ public class TrackerView extends Fragment {
         viewModel.getCalendarCellsLiveData().observe(getViewLifecycleOwner(), this::renderCalendarGrid);
 
         viewModel.getToastMessageEvent().observe(getViewLifecycleOwner(), resId -> {
-            if (resId != null) {
-                Toast.makeText(requireContext(), resId, Toast.LENGTH_SHORT).show();
+            Context context = getContext();
+            if (resId != null && context != null) {
+                Toast.makeText(context, resId, Toast.LENGTH_SHORT).show();
             }
         });
 
-        viewModel.getOpenSubAddingDialogEvent().observe(getViewLifecycleOwner(), unused ->
-                showAddingSubDialog(requireContext())
-        );
+        viewModel.getOpenSubAddingDialogEvent().observe(getViewLifecycleOwner(), unused -> {
+            Context context = getContext();
+            if (context != null) {
+                showAddingSubDialog(context);
+            }
+        });
 
-        viewModel.getOpenSubDeletingDialogEvent().observe(getViewLifecycleOwner(), unused ->
-                showDeletingSubDialog(requireContext())
-        );
+        viewModel.getOpenSubDeletingDialogEvent().observe(getViewLifecycleOwner(), unused -> {
+            Context context = getContext();
+            if (context != null) {
+                showDeletingSubDialog(context);
+            }
+        });
 
         viewModel.getVibrateEvent().observe(getViewLifecycleOwner(), unused -> triggerVibration());
 
-        viewModel.getPlaySoundEvent().observe(requireActivity(), this::playSound);
+        viewModel.getPlaySoundEvent().observe(getViewLifecycleOwner(), this::playSound);
     }
 
     private void triggerVibration() {
@@ -320,8 +334,9 @@ public class TrackerView extends Fragment {
     }
 
     private void renderCalendarGrid(List<CalendarCellUiModel> cells) {
-        if (cells == null || cells.size() < 42) return;
+        if (!isAdded() || getContext() == null || cells == null || cells.size() < 42) return;
 
+        Context context = requireContext();
         int activeRows = IntStream.range(35, 42).anyMatch(i -> cells.get(i).isVisible) ? 6 : 5;
 
         for (int i = 0; i < 42; i++) {
@@ -343,7 +358,7 @@ public class TrackerView extends Fragment {
                 cellView.setVisibility(View.VISIBLE);
                 cellView.setText(String.valueOf(model.dayOfMonth));
                 cellView.setBackgroundResource(model.backgroundRes);
-                cellView.setTextColor(ContextCompat.getColor(requireContext(), model.textColorRes));
+                cellView.setTextColor(ContextCompat.getColor(context, model.textColorRes));
             }
         }
 
@@ -490,11 +505,15 @@ public class TrackerView extends Fragment {
     }
 
     private void playSound(int resId) {
-        AudioManager am = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
-        boolean isSilent = am.getRingerMode() != AudioManager.RINGER_MODE_NORMAL;
+        Context context = getContext();
+        if (context == null) return;
 
-        if (!isSilent) {
-            soundPool.play(successSound, 1.0f, 1.0f, 0, 0, 1.0f);
+        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (am != null) {
+            boolean isSilent = am.getRingerMode() != AudioManager.RINGER_MODE_NORMAL;
+            if (!isSilent && soundPool != null) {
+                soundPool.play(successSound, 1.0f, 1.0f, 0, 0, 1.0f);
+            }
         }
     }
 }
