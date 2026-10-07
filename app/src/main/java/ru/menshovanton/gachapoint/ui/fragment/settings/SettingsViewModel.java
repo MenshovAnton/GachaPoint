@@ -31,7 +31,7 @@ public class SettingsViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> alarmHour = new MutableLiveData<>();
     private final MutableLiveData<Integer> alarmMinute = new MutableLiveData<>();
 
-    private final SingleLiveEvent<Void> navigateToInfoEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> navigateToSettingsEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> exportDbEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> importDbEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> restartAppEvent = new SingleLiveEvent<>();
@@ -68,10 +68,9 @@ public class SettingsViewModel extends AndroidViewModel {
         return alarmMinute;
     }
 
-    public LiveData<Void> getNavigateToInfoEvent() {
-        return navigateToInfoEvent;
+    public LiveData<Void> getNavigateToMenuEvent() {
+        return navigateToSettingsEvent;
     }
-
     public LiveData<Void> getExportDbEvent() {
         return exportDbEvent;
     }
@@ -178,8 +177,8 @@ public class SettingsViewModel extends AndroidViewModel {
         NotificationScheduler.scheduleDailyNotification(context);
     }
 
-    public void onInfoButtonClicked() {
-        navigateToInfoEvent.call();
+    public void onBackToMenuClicked() {
+        navigateToSettingsEvent.call();
     }
 
     public void onExportDatabaseClicked() {

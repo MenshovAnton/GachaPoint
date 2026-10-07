@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_menu"
+    app:startDestination="@+id/moreView">
+
+    <fragment
+        android:id="@+id/moreView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.more.MoreView"
+        android:label="@string/nav_menu"
+        tools:layout="@layout/fragment_more">
+
+        <action
+            android:id="@+id/action_to_info"
+            app:destination="@id/infoView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+
+        <action
+            android:id="@+id/action_to_settings"
+            app:destination="@id/settingsView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+
+        <action
+            android:id="@+id/action_to_feedback"
+            app:destination="@id/feedbackView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/infoView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.info.InfoView"
+        android:label="@string/nav_info"
+        tools:layout="@layout/fragment_info" />
+
+    <fragment
+        android:id="@+id/settingsView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.settings.SettingsView"
+        android:label="@string/nav_settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/feedbackView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.feedback.FeedbackView"
+        android:label="@string/feedback"
+        tools:layout="@layout/fragment_feedback" />
+
+</navigation>

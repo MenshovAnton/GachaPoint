@@ -95,7 +95,6 @@
     <style name="ShapeAppearance.GachaPoint.RoundedPopup" parent="ShapeAppearance.Material3.Corner.Medium">
         <item name="cornerSize">16dp</item>
     </style>
-
     <style name="Widget.GachaPoint.MaterialCardView" parent="Widget.Material3.CardView.Filled">
         <item name="cardBackgroundColor">@color/white</item>
         <item name="strokeWidth">2dp</item>
@@ -107,5 +106,13 @@
         <item name="iconTint">@color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="switchPadding">10dp</item>
+    </style>
+    <style name="Logo.GachaPoint.Image" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerSize">8dp</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+    <style name="Avatar.GachaPoint.Image" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerSize">24dp</item>
+        <item name="cornerFamily">rounded</item>
     </style>
 </resources>

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -20,11 +19,10 @@ import ru.menshovanton.gachapoint.R;
 public class InfoView extends Fragment {
 
     private InfoViewModel viewModel;
-    private ImageButton backToSettings;
+    private ImageButton back;
 
     private ImageButton githubLink;
     private ImageButton telegramLink;
-    private Button feedbackLink;
 
     public InfoView() {}
 
@@ -35,10 +33,9 @@ public class InfoView extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
-        backToSettings = view.findViewById(R.id.btn_back);
+        back = view.findViewById(R.id.btn_back);
         githubLink = view.findViewById(R.id.btn_github);
         telegramLink = view.findViewById(R.id.btn_telegram);
-        feedbackLink = view.findViewById(R.id.btn_feedback);
         return view;
     }
 
@@ -48,16 +45,15 @@ public class InfoView extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(InfoViewModel.class);
 
-        backToSettings.setOnClickListener(v -> viewModel.onBackToSettingsClicked());
+        back.setOnClickListener(v -> viewModel.onBackToMenuClicked());
         githubLink.setOnClickListener(v -> openUrl("https://github.com/MenshovAnton/GachaPoint/"));
         telegramLink.setOnClickListener(v -> openUrl("https://t.me/GachaPoint_official"));
-        feedbackLink.setOnClickListener(v -> openUrl("https://docs.google.com/forms/d/e/1FAIpQLSdURkqnmX6zi5o26U5C4AUQ-MV-3MWY4UQRAsxuS1Y0hve1xg/viewform?usp=dialog"));
 
         observeViewModel();
     }
 
     private void observeViewModel() {
-        viewModel.getNavigateToSettingsEvent().observe(getViewLifecycleOwner(), unused ->
+        viewModel.getNavigateToMenuEvent().observe(getViewLifecycleOwner(), unused ->
                 NavHostFragment.findNavController(this).popBackStack());
     }
 

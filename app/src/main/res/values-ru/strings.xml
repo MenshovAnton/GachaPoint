@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="description">GachaPoint — ваш универсальный компаньон с открытым исходным кодом для аниме гача-RPG (Genshin Impact, Honkai: Star Rail, Zenless Zone Zero и др.). Приложение позволяет удобно, безопасно и полностью автономно отслеживать историю круток, рассчитывать накопления и контролировать прогресс игровых подписок прямо на вашем устройстве.</string>
+    <string name="description">Ваш универсальный компаньон с открытым исходным кодом для аниме гача-RPG (Genshin Impact, Honkai: Star Rail, Zenless Zone Zero и др.). Приложение позволяет удобно, безопасно и полностью автономно отслеживать историю круток, рассчитывать накопления и контролировать прогресс игровых подписок прямо на вашем устройстве.</string>
     <string name="copyright_info">Все права принадлежат их правообладателям. Приложение не аффилировано с компанией Hoyoverse.</string>
-    <string name="dev_info">Разработчик: MenshovAnton (Меньшов А. Р.)</string>
     <string name="sheet_header_actions">Действия</string>
     <string name="sheet_header_edit">Правка</string>
     <string name="check_button_text">Отметка</string>
@@ -26,6 +25,7 @@
     <string name="nav_settings">Настройки</string>
     <string name="nav_info">О приложении</string>
     <string name="nav_journal">Журнал круток</string>
+    <string name="nav_menu">Меню</string>
     <string name="tab_piggy_bank">Накопления</string>
     <string name="tab_pulls">Крутки</string>
     <string name="add_sub">Подписка добавлена</string>
@@ -107,4 +107,6 @@
     <string name="db_error_cannot_open_file">Не удалось открыть выбранный файл.</string>
     <string name="db_error_invalid_sqlite">Выбранный файл не является базой данных SQLite.</string>
     <string name="db_error_incompatible_schema">Файл базы данных не содержит таблиц приложения GachaPoint.</string>
+    <string name="developer_card_title">Разработчик</string>
+    <string name="form_load_error">Ошибка загрузки формы!</string>
 </resources>

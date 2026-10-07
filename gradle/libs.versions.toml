@@ -17,6 +17,7 @@ roomCompiler = "2.8.5"
 workRuntime = "2.12.0"
 navigationFragmentKtx = "2.10.2"
 navigationUiKtx = "2.10.2"
+webkit = "1.17.1"
 
 [libraries]
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
@@ -36,6 +37,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
+webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

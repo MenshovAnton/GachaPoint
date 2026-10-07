@@ -1,0 +1,7 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="24dp" android:viewportHeight="512" android:viewportWidth="512" android:width="24dp">
+        
+    <path android:fillColor="#fff" android:name="Прямоугольник 2" android:pathData="m86.9 70.6h338.3c16.6 0 30 13.4 30 30v239.6c0 16.6 -13.4 30 -30 30h-338.3c-16.6 0 -30 -13.4 -30 -30v-239.6c0 -16.6 13.4 -30 30 -30z"/>
+        
+    <path android:fillColor="#fff" android:name="Треугольник 1" android:pathData="m114.1 440.4c-7.2 2.8 -14.7 -3.1 -13.6 -10.7l27.7 -189.6c1.1 -7.6 10.1 -11.2 16.1 -6.4l150.3 118.8c6 4.8 4.6 14.3 -2.5 17.1l-178 70.8z"/>
+    
+</vector>

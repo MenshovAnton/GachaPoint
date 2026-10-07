@@ -9,11 +9,11 @@ public class InfoViewModel extends ViewModel {
 
     private final SingleLiveEvent<Void> navigateToSettingsEvent = new SingleLiveEvent<>();
 
-    public LiveData<Void> getNavigateToSettingsEvent() {
+    public LiveData<Void> getNavigateToMenuEvent() {
         return navigateToSettingsEvent;
     }
 
-    public void onBackToSettingsClicked() {
+    public void onBackToMenuClicked() {
         navigateToSettingsEvent.call();
     }
 }

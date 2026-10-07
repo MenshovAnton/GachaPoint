@@ -25,11 +25,13 @@ public class PullsCounterViewModel extends AndroidViewModel {
 
     private final DatabaseRepository databaseRepository;
 
-    private final MutableLiveData<List<Pull>> wishesLiveData = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<Pull>> wishesLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> currentPityLiveData = new MutableLiveData<>(0);
     private final MutableLiveData<String> currentBannerTypeLiveData = new MutableLiveData<>(BannerType.EVENT.getDbKey());
 
     private final SingleLiveEvent<Void> openDialogEvent = new SingleLiveEvent<>();
+
+    private final MutableLiveData<Boolean> isLoadingLiveData = new MutableLiveData<>(false);
 
     private GameType currentGameType = GameType.GENSHIN;
 
@@ -42,6 +44,7 @@ public class PullsCounterViewModel extends AndroidViewModel {
     public LiveData<Integer> getCurrentPityLiveData() { return currentPityLiveData; }
     public LiveData<String> getCurrentBannerTypeLiveData() { return currentBannerTypeLiveData; }
     public SingleLiveEvent<Void> getOpenDialogEvent() { return openDialogEvent; }
+    public LiveData<Boolean> getIsLoadingLiveData() { return isLoadingLiveData; }
 
     public void setGameType(GameType gameType) {
         if (gameType != null) {
@@ -63,8 +66,10 @@ public class PullsCounterViewModel extends AndroidViewModel {
     }
 
     public void refreshData() {
+        isLoadingLiveData.setValue(true);
         databaseRepository.getPullsByBanner(currentGameType, getCurrentBannerType(), rawWishes -> {
             List<Pull> processedList = processWishesAndCalculatePity(rawWishes);
+            isLoadingLiveData.setValue(false);
             wishesLiveData.setValue(processedList);
         });
     }

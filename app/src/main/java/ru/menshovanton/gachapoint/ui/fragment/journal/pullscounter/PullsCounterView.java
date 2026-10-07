@@ -58,6 +58,7 @@ public class PullsCounterView extends Fragment {
     private AutoCompleteTextView bannerSelector;
     private ImageView wishIcon;
     private View emptyView;
+    private View progressBar;
 
     private PullsAdapter pullsAdapter;
 
@@ -87,6 +88,7 @@ public class PullsCounterView extends Fragment {
         bannerSelector = view.findViewById(R.id.mac_banner_selector);
         wishIcon = view.findViewById(R.id.iv_pull);
         emptyView = view.findViewById(R.id.ll_empty_state);
+        progressBar = view.findViewById(R.id.progress_loading);
         return view;
     }
 
@@ -146,12 +148,28 @@ public class PullsCounterView extends Fragment {
     }
 
     private void observeViewModels() {
+        viewModel.getIsLoadingLiveData().observe(getViewLifecycleOwner(), isLoading -> {
+            if (Boolean.TRUE.equals(isLoading)) {
+                recyclerView.animate().cancel();
+                emptyView.animate().cancel();
+                progressBar.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.GONE);
+            } else {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
         viewModel.getWishesLiveData().observe(getViewLifecycleOwner(), pull -> {
-            boolean isEmpty = (pull == null || pull.isEmpty());
+            if (pull == null) {
+                return;
+            }
+            boolean isEmpty = pull.isEmpty();
             int previousSize = pullsAdapter.getItemCount();
-            List<Pull> newList = pull != null ? new ArrayList<>(pull) : new ArrayList<>();
-
+            List<Pull> newList = new ArrayList<>(pull);
             pullsAdapter.submitList(newList, () -> {
+                if (Boolean.TRUE.equals(viewModel.getIsLoadingLiveData().getValue())) {
+                    return;
+                }
                 if (recyclerView.getVisibility() == View.GONE && emptyView.getVisibility() == View.GONE) {
                     if (isEmpty) {
                         emptyView.setAlpha(1f);
@@ -167,7 +185,6 @@ public class PullsCounterView extends Fragment {
                         crossFadeViews(emptyView, recyclerView);
                     }
                 }
-
                 if (!isEmpty && newList.size() > previousSize) {
                     recyclerView.post(() -> {
                         if (pullsAdapter.getItemCount() > 0) {

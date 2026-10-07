@@ -10,20 +10,6 @@
         android:name="ru.menshovanton.gachapoint.ui.fragment.settings.SettingsView"
         android:label="@string/nav_settings"
         tools:layout="@layout/fragment_settings">
-
-        <action
-            android:id="@+id/action_settings_to_info"
-            app:destination="@id/infoView"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"/>
     </fragment>
-
-    <fragment
-        android:id="@+id/infoView"
-        android:name="ru.menshovanton.gachapoint.ui.fragment.info.InfoView"
-        android:label="@string/nav_info"
-        tools:layout="@layout/fragment_info" />
 
 </navigation>

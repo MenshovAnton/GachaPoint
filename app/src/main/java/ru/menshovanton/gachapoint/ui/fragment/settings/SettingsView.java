@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +40,7 @@ public class SettingsView extends Fragment {
 
     private Button dbImportButton;
     private Button dbExportButton;
-    private Button infoButton;
+    private ImageButton back;
 
     private SwitchMaterial notificationsSwitch;
     private ImageView edit;
@@ -90,7 +91,7 @@ public class SettingsView extends Fragment {
         edit = view.findViewById(R.id.btn_select_time);
         dbImportButton = view.findViewById(R.id.btn_import_database);
         dbExportButton = view.findViewById(R.id.btn_export_database);
-        infoButton = view.findViewById(R.id.btn_about_app);
+        back = view.findViewById(R.id.btn_back);
         themeSelector = view.findViewById(R.id.mac_theme_selector);
         languageSelector = view.findViewById(R.id.mac_lang_selector);
         vibrationSwitch = view.findViewById(R.id.sm_vibro_switch);
@@ -126,7 +127,7 @@ public class SettingsView extends Fragment {
         edit.setOnClickListener(v -> showTimePicker());
         dbExportButton.setOnClickListener(v -> viewModel.onExportDatabaseClicked());
         dbImportButton.setOnClickListener(v -> viewModel.onImportDatabaseClicked());
-        infoButton.setOnClickListener(v -> viewModel.onInfoButtonClicked());
+        back.setOnClickListener(view -> viewModel.onBackToMenuClicked());
     }
 
     private void setupThemesSelector() {
@@ -220,8 +221,8 @@ public class SettingsView extends Fragment {
             }
         });
 
-        viewModel.getNavigateToInfoEvent().observe(getViewLifecycleOwner(), unused ->
-                NavHostFragment.findNavController(this).navigate(R.id.action_settings_to_info));
+        viewModel.getNavigateToMenuEvent().observe(getViewLifecycleOwner(), unused ->
+                NavHostFragment.findNavController(this).popBackStack());
 
         viewModel.getExportDbEvent().observe(getViewLifecycleOwner(), unused ->
                 exportDbLauncher.launch(AppDatabase.DATABASE_NAME));

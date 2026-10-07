@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name" translatable="false">GachaPoint</string>
-    <string name="app_version" translatable="false">0.1.4</string>
-    <string name="description">GachaPoint is your open-source, all-in-one companion app for anime gacha RPGs (such as Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, and more). Effortlessly track your wish history, manage savings, and keep tabs on daily pass rewards—all in one secure, fully offline application.</string>
+    <string name="app_version" translatable="false">0.2.0</string>
+    <string name="description">Your open-source, all-in-one companion app for anime gacha RPGs (such as Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, and more). Effortlessly track your wish history, manage savings, and keep tabs on daily pass rewards—all in one secure, fully offline application.</string>
     <string name="copyright_info">All rights belong to their respective copyright holders. This app is not affiliated with Hoyoverse.</string>
-    <string name="dev_info">Developer: MenshovAnton (Anton Menshov)</string>
     <string name="sheet_header_actions">Actions</string>
     <string name="sheet_header_edit">Edit</string>
     <string name="check_button_text">Mark</string>
@@ -27,6 +26,7 @@
     <string name="nav_settings">Settings</string>
     <string name="nav_info">About app</string>
     <string name="nav_journal">Pulls history</string>
+    <string name="nav_menu">Menu</string>
     <string name="genshin" translatable="false">Genshin Impact</string>
     <string name="hsr" translatable="false">Honkai Star Rail</string>
     <string name="zzz" translatable="false">Zenless Zone Zero</string>
@@ -120,4 +120,7 @@
     <string name="db_error_cannot_open_file">Failed to open the selected file.</string>
     <string name="db_error_invalid_sqlite">The selected file is not a valid SQLite database.</string>
     <string name="db_error_incompatible_schema">The database does not contain GachaPoint app tables.</string>
+    <string name="developer_card_title">Developer</string>
+    <string name="developer_username" translatable="false">MenshovAnton</string>
+    <string name="form_load_error">Form load error!</string>
 </resources>
