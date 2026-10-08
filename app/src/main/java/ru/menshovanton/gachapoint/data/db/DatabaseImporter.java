@@ -88,6 +88,9 @@ public class DatabaseImporter {
                 if (tempWalFile.exists()) tempWalFile.delete();
                 if (tempShmFile.exists()) tempShmFile.delete();
 
+                AppDatabase newDb = AppDatabase.getInstance(context);
+                newDb.getOpenHelper().getWritableDatabase();
+
                 AppDatabase.postToMain(callback::onSuccess);
 
             } catch (Exception e) {
@@ -114,7 +117,7 @@ public class DatabaseImporter {
 
             try (Cursor cursor = rawDb.rawQuery(
                     "SELECT count(*) FROM sqlite_master WHERE type='table' AND name IN ('calendar', 'pulls', 'subscriptions')", null)) {
-                if (!cursor.moveToFirst() || cursor.getInt(0) == 0) {
+                if (!cursor.moveToFirst() || cursor.getInt(0) < 2) {
                     throw new Exception(context.getString(R.string.db_error_missing_tables));
                 }
             }

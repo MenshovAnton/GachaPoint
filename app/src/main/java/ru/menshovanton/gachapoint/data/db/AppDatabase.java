@@ -59,7 +59,7 @@ public abstract class AppDatabase extends RoomDatabase {
         MAIN_HANDLER.post(runnable);
     }
 
-    public static void destroyInstance() {
+    public static synchronized void destroyInstance() {
         if (INSTANCE != null && INSTANCE.isOpen()) {
             INSTANCE.close();
         }
