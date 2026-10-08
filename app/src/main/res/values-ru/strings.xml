@@ -105,8 +105,11 @@
     <string name="db_import_successful">Импорт успешно выполнен!</string>
     <string name="db_import_failed">Ошибка импорта!</string>
     <string name="db_error_cannot_open_file">Не удалось открыть выбранный файл.</string>
-    <string name="db_error_invalid_sqlite">Выбранный файл не является базой данных SQLite.</string>
-    <string name="db_error_incompatible_schema">Файл базы данных не содержит таблиц приложения GachaPoint.</string>
+    <string name="db_error_invalid_sqlite">Выбранный файл поврежден или не является базой данных SQLite: </string>
+    <string name="db_error_incompatible_schema">Несовместимая схема базы данных!</string>
+    <string name="db_error_incorrect_db_version">Некоректная версия базы данных</string>
+    <string name="db_error_missing_tables">Отсутствуют необохдимые таблицы</string>
+    <string name="db_error_invalid_file">Выбранный файл не является базой данных SQLite</string>
     <string name="developer_card_title">Разработчик</string>
     <string name="form_load_error">Ошибка загрузки формы!</string>
 </resources>

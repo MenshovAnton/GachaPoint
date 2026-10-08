@@ -20,8 +20,7 @@ import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
 
 @Database(
         entities = {CalendarEntity.class, PullEntity.class, SubscriptionEntity.class},
-        version = 3,
-        exportSchema = false
+        version = 3
 )
 public abstract class AppDatabase extends RoomDatabase {
 

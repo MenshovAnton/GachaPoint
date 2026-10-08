@@ -1,0 +1,253 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "2711e264e795c3997678b7542832a193",
+    "entities": [
+      {
+        "tableName": "calendar",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`day` INTEGER NOT NULL, `day_of_year` INTEGER NOT NULL, `day_of_week` INTEGER NOT NULL, `month` INTEGER NOT NULL, `year` INTEGER NOT NULL, `status_genshin` INTEGER NOT NULL, `moon_days_remaining` INTEGER NOT NULL, `status_hsr` INTEGER NOT NULL, `express_pass_days_remaining` INTEGER NOT NULL, `status_zzz` INTEGER NOT NULL, `interknot_days_remaining` INTEGER NOT NULL, PRIMARY KEY(`year`, `day_of_year`))",
+        "fields": [
+          {
+            "fieldPath": "day",
+            "columnName": "day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayOfYear",
+            "columnName": "day_of_year",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayOfWeek",
+            "columnName": "day_of_week",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "month",
+            "columnName": "month",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statusGenshin",
+            "columnName": "status_genshin",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "moonDaysRemaining",
+            "columnName": "moon_days_remaining",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statusHsr",
+            "columnName": "status_hsr",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expressPassDaysRemaining",
+            "columnName": "express_pass_days_remaining",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statusZzz",
+            "columnName": "status_zzz",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interknotDaysRemaining",
+            "columnName": "interknot_days_remaining",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "year",
+            "day_of_year"
+          ]
+        },
+        "indices": [
+          {
+            "name": "idx_calendar_year_month",
+            "unique": false,
+            "columnNames": [
+              "year",
+              "month"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_calendar_year_month` ON `${TABLE_NAME}` (`year`, `month`)"
+          },
+          {
+            "name": "idx_calendar_day_of_year",
+            "unique": false,
+            "columnNames": [
+              "day_of_year"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_calendar_day_of_year` ON `${TABLE_NAME}` (`day_of_year`)"
+          }
+        ]
+      },
+      {
+        "tableName": "pulls",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `game_type` INTEGER NOT NULL, `date_time` TEXT, `drop_rare` TEXT, `drop_type` TEXT, `banner_type` TEXT DEFAULT 'event', `is_reset_pity` INTEGER NOT NULL DEFAULT 0)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gameType",
+            "columnName": "game_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateTime",
+            "columnName": "date_time",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "dropRare",
+            "columnName": "drop_rare",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "dropType",
+            "columnName": "drop_type",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "bannerType",
+            "columnName": "banner_type",
+            "affinity": "TEXT",
+            "defaultValue": "'event'"
+          },
+          {
+            "fieldPath": "isResetPity",
+            "columnName": "is_reset_pity",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "idx_pull_game_banner",
+            "unique": false,
+            "columnNames": [
+              "game_type",
+              "banner_type"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_pull_game_banner` ON `${TABLE_NAME}` (`game_type`, `banner_type`)"
+          }
+        ]
+      },
+      {
+        "tableName": "subscriptions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `game_type` INTEGER NOT NULL, `count` INTEGER NOT NULL, `start_date` INTEGER NOT NULL, `end_date` INTEGER NOT NULL, `claimed` INTEGER NOT NULL DEFAULT 0, `missed` INTEGER NOT NULL DEFAULT 0, `wait` INTEGER NOT NULL DEFAULT 0)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gameType",
+            "columnName": "game_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "count",
+            "columnName": "count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startDate",
+            "columnName": "start_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endDate",
+            "columnName": "end_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "claimed",
+            "columnName": "claimed",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "missed",
+            "columnName": "missed",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "wait",
+            "columnName": "wait",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "idx_subscription_game_dates",
+            "unique": false,
+            "columnNames": [
+              "game_type",
+              "start_date",
+              "end_date"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_subscription_game_dates` ON `${TABLE_NAME}` (`game_type`, `start_date`, `end_date`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2711e264e795c3997678b7542832a193')"
+    ]
+  }
+}

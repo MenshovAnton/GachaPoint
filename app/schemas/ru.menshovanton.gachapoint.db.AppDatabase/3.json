@@ -1,0 +1,148 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "e21b6bc18d29730c109cf7f45ad3996c",
+    "entities": [
+      {
+        "tableName": "calendar",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `day` INTEGER NOT NULL, `day_of_year` INTEGER NOT NULL, `day_of_week` INTEGER NOT NULL, `month` INTEGER NOT NULL, `year` INTEGER NOT NULL, `status_genshin` INTEGER NOT NULL, `moon_days_remaining` INTEGER NOT NULL, `status_hsr` INTEGER NOT NULL, `express_pass_days_remaining` INTEGER NOT NULL, `status_zzz` INTEGER NOT NULL, `interknot_days_remaining` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "day",
+            "columnName": "day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayOfYear",
+            "columnName": "day_of_year",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayOfWeek",
+            "columnName": "day_of_week",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "month",
+            "columnName": "month",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statusGenshin",
+            "columnName": "status_genshin",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "moonDaysRemaining",
+            "columnName": "moon_days_remaining",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statusHsr",
+            "columnName": "status_hsr",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expressPassDaysRemaining",
+            "columnName": "express_pass_days_remaining",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statusZzz",
+            "columnName": "status_zzz",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interknotDaysRemaining",
+            "columnName": "interknot_days_remaining",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "wishes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `game_type` INTEGER, `date_time` TEXT, `drop_rare` TEXT, `drop_type` TEXT, `banner_type` TEXT DEFAULT 'event', `is_reset_pity` INTEGER NOT NULL DEFAULT 0)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gameType",
+            "columnName": "game_type",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "dateTime",
+            "columnName": "date_time",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "dropRare",
+            "columnName": "drop_rare",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "dropType",
+            "columnName": "drop_type",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "bannerType",
+            "columnName": "banner_type",
+            "affinity": "TEXT",
+            "defaultValue": "'event'"
+          },
+          {
+            "fieldPath": "isResetPity",
+            "columnName": "is_reset_pity",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e21b6bc18d29730c109cf7f45ad3996c')"
+    ]
+  }
+}

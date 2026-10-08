@@ -118,8 +118,11 @@
     <string name="db_import_successful">Import successful!</string>
     <string name="db_import_failed">Import failed!</string>
     <string name="db_error_cannot_open_file">Failed to open the selected file.</string>
-    <string name="db_error_invalid_sqlite">The selected file is not a valid SQLite database.</string>
-    <string name="db_error_incompatible_schema">The database does not contain GachaPoint app tables.</string>
+    <string name="db_error_invalid_sqlite">The selected file is broken or not a valid SQLite database: </string>
+    <string name="db_error_incompatible_schema">Incompatible data base schema!</string>
+    <string name="db_error_incorrect_db_version">Incorrect data base version</string>
+    <string name="db_error_invalid_file">The selected file is not a valid SQLite database</string>
+    <string name="db_error_missing_tables">Missing app tables</string>
     <string name="developer_card_title">Developer</string>
     <string name="developer_username" translatable="false">MenshovAnton</string>
     <string name="form_load_error">Form load error!</string>

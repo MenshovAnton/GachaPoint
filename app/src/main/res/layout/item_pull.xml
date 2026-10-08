@@ -47,7 +47,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="5★" />
+                tools:text="5★"
+                tools:textColor="@color/rare_legendary"/>
 
             <TextView
                 android:id="@+id/dropType"
@@ -62,7 +63,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/dropRare"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Nilou" />
+                tools:text="Nilou"
+                tools:textColor="@color/rare_legendary"/>
 
             <TextView
                 android:id="@+id/date"
