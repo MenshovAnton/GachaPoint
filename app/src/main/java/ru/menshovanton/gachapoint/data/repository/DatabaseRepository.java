@@ -7,6 +7,7 @@ import java.util.List;
 
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarEntity;
+import ru.menshovanton.gachapoint.data.db.entities.CalendarGameStatusEntity;
 import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
@@ -76,7 +77,7 @@ public class DatabaseRepository {
 
     public void saveCalendarEntities(List<CalendarEntity> entities, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.calendarDao().insertOrUpdateBatch(entities);
+            db.calendarDao().insertCalendarDays(entities);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
@@ -85,40 +86,34 @@ public class DatabaseRepository {
 
     public void getMonthCalendarData(int year, int month, GameType gameType, Callback<List<Date>> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            List<CalendarEntity> entities = db.calendarDao().getCalendarForMonth(year, month);
-            List<Date> dates = new ArrayList<>(entities.size());
-            for (CalendarEntity entity : entities) {
-                dates.add(entity.toDateModel(gameType));
-            }
+            int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
+            List<Date> dates = db.calendarDao().getCalendarForMonth(year, month, code);
             AppDatabase.postToMain(() -> callback.onResult(dates));
         });
     }
 
     public void getDayCalendarData(int year, int dayOfYear, GameType gameType, Callback<Date> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            CalendarEntity entity = db.calendarDao().getDay(year, dayOfYear);
-            Date date = entity != null ? entity.toDateModel(gameType) : null;
+            int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
+            Date date = db.calendarDao().getDay(year, dayOfYear, code);
             AppDatabase.postToMain(() -> callback.onResult(date));
         });
     }
 
     public void getDaysRangeData(int year, int startDay, int endDay, GameType gameType, Callback<List<Date>> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            List<CalendarEntity> entities = db.calendarDao().getDaysRange(year, startDay, endDay);
-            List<Date> dates = new ArrayList<>(entities.size());
-            for (CalendarEntity entity : entities) {
-                dates.add(entity.toDateModel(gameType));
-            }
+            int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
+            List<Date> dates = db.calendarDao().getDaysRange(year, startDay, endDay, code);
             AppDatabase.postToMain(() -> callback.onResult(dates));
         });
     }
 
     public void updateCalendarDay(int year, int dayOfYear, GameType gameType, int status, int subDaysRemaining, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            CalendarEntity entity = db.calendarDao().getDay(year, dayOfYear);
-            if (entity != null) {
-                entity.updateForGame(gameType, status, subDaysRemaining);
-                db.calendarDao().insertOrUpdate(entity);
+            if (gameType != null) {
+                db.calendarDao().insertOrUpdateGameStatus(
+                        new CalendarGameStatusEntity(year, dayOfYear, gameType.getCode(), status, subDaysRemaining)
+                );
             }
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);

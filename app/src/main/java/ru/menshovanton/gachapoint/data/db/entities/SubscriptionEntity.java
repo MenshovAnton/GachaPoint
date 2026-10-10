@@ -2,6 +2,7 @@ package ru.menshovanton.gachapoint.data.db.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
@@ -10,8 +11,15 @@ import ru.menshovanton.gachapoint.domain.enums.GameType;
 
 @Entity(
         tableName = "subscriptions",
+        foreignKeys = @ForeignKey(
+                entity = GameEntity.class,
+                parentColumns = "id",
+                childColumns = "game_type",
+                onDelete = ForeignKey.RESTRICT
+        ),
         indices = {
-                @Index(value = {"game_type", "start_date", "end_date"}, name = "idx_subscription_game_dates")
+                @Index(value = {"game_type", "start_date", "end_date"}, name = "idx_subscription_game_dates"),
+                @Index(value = "game_type", name = "idx_subscription_game_type")
         }
 )
 public class SubscriptionEntity {

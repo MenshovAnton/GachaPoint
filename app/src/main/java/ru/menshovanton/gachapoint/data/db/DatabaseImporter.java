@@ -138,7 +138,7 @@ public class DatabaseImporter {
             tempDb.getOpenHelper().getWritableDatabase();
 
         } catch (Throwable t) {
-            throw new Exception(context.getString(R.string.db_error_incompatible_schema));
+            throw new Exception(context.getString(R.string.db_error_incompatible_schema) + " (" + t.getMessage() + ")", t);
         } finally {
             if (tempDb != null && tempDb.isOpen()) {
                 tempDb.close();

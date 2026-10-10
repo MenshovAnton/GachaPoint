@@ -2,13 +2,26 @@ package ru.menshovanton.gachapoint.data.db.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import ru.menshovanton.gachapoint.domain.models.Pull;
 
-@Entity(tableName = "pulls", indices = {@Index(value = {"game_type", "banner_type"}, name = "idx_pull_game_banner")})
+@Entity(
+        tableName = "pulls",
+        foreignKeys = @ForeignKey(
+                entity = GameEntity.class,
+                parentColumns = "id",
+                childColumns = "game_type",
+                onDelete = ForeignKey.RESTRICT
+        ),
+        indices = {
+                @Index(value = {"game_type", "banner_type"}, name = "idx_pull_game_banner"),
+                @Index(value = "game_type", name = "idx_pull_game_type")
+        }
+)
 public class PullEntity {
 
     @PrimaryKey(autoGenerate = true)

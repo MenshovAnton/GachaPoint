@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "2711e264e795c3997678b7542832a193",
+    "identityHash": "e389ffd1c9934eba157eb222da1caebc",
     "entities": [
       {
         "tableName": "calendar",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`day` INTEGER NOT NULL, `day_of_year` INTEGER NOT NULL, `day_of_week` INTEGER NOT NULL, `month` INTEGER NOT NULL, `year` INTEGER NOT NULL, `status_genshin` INTEGER NOT NULL, `moon_days_remaining` INTEGER NOT NULL, `status_hsr` INTEGER NOT NULL, `express_pass_days_remaining` INTEGER NOT NULL, `status_zzz` INTEGER NOT NULL, `interknot_days_remaining` INTEGER NOT NULL, PRIMARY KEY(`year`, `day_of_year`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`day` INTEGER NOT NULL, `day_of_year` INTEGER NOT NULL, `day_of_week` INTEGER NOT NULL, `month` INTEGER NOT NULL, `year` INTEGER NOT NULL, PRIMARY KEY(`year`, `day_of_year`))",
         "fields": [
           {
             "fieldPath": "day",
@@ -35,42 +35,6 @@
           {
             "fieldPath": "year",
             "columnName": "year",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "statusGenshin",
-            "columnName": "status_genshin",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "moonDaysRemaining",
-            "columnName": "moon_days_remaining",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "statusHsr",
-            "columnName": "status_hsr",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "expressPassDaysRemaining",
-            "columnName": "express_pass_days_remaining",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "statusZzz",
-            "columnName": "status_zzz",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "interknotDaysRemaining",
-            "columnName": "interknot_days_remaining",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -105,8 +69,101 @@
         ]
       },
       {
+        "tableName": "calendar_game_status",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`year` INTEGER NOT NULL, `day_of_year` INTEGER NOT NULL, `game_type` INTEGER NOT NULL, `status` INTEGER NOT NULL DEFAULT 0, `sub_days_remaining` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`year`, `day_of_year`, `game_type`), FOREIGN KEY(`year`, `day_of_year`) REFERENCES `calendar`(`year`, `day_of_year`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`game_type`) REFERENCES `games`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayOfYear",
+            "columnName": "day_of_year",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gameType",
+            "columnName": "game_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "subDaysRemaining",
+            "columnName": "sub_days_remaining",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "year",
+            "day_of_year",
+            "game_type"
+          ]
+        },
+        "indices": [
+          {
+            "name": "idx_calendar_status_day",
+            "unique": false,
+            "columnNames": [
+              "year",
+              "day_of_year"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_calendar_status_day` ON `${TABLE_NAME}` (`year`, `day_of_year`)"
+          },
+          {
+            "name": "idx_calendar_status_game",
+            "unique": false,
+            "columnNames": [
+              "game_type"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_calendar_status_game` ON `${TABLE_NAME}` (`game_type`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "calendar",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "year",
+              "day_of_year"
+            ],
+            "referencedColumns": [
+              "year",
+              "day_of_year"
+            ]
+          },
+          {
+            "table": "games",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "game_type"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
         "tableName": "pulls",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `game_type` INTEGER NOT NULL, `date_time` TEXT, `drop_rare` TEXT, `drop_type` TEXT, `banner_type` TEXT DEFAULT 'event', `is_reset_pity` INTEGER NOT NULL DEFAULT 0)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `game_type` INTEGER NOT NULL, `date_time` TEXT, `drop_rare` TEXT, `drop_type` TEXT, `banner_type` TEXT DEFAULT 'event', `is_reset_pity` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`game_type`) REFERENCES `games`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
         "fields": [
           {
             "fieldPath": "id",
@@ -165,12 +222,34 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `idx_pull_game_banner` ON `${TABLE_NAME}` (`game_type`, `banner_type`)"
+          },
+          {
+            "name": "idx_pull_game_type",
+            "unique": false,
+            "columnNames": [
+              "game_type"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_pull_game_type` ON `${TABLE_NAME}` (`game_type`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "games",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "game_type"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
           }
         ]
       },
       {
         "tableName": "subscriptions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `game_type` INTEGER NOT NULL, `count` INTEGER NOT NULL, `start_date` INTEGER NOT NULL, `end_date` INTEGER NOT NULL, `claimed` INTEGER NOT NULL DEFAULT 0, `missed` INTEGER NOT NULL DEFAULT 0, `wait` INTEGER NOT NULL DEFAULT 0)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `game_type` INTEGER NOT NULL, `count` INTEGER NOT NULL, `start_date` INTEGER NOT NULL, `end_date` INTEGER NOT NULL, `claimed` INTEGER NOT NULL DEFAULT 0, `missed` INTEGER NOT NULL DEFAULT 0, `wait` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`game_type`) REFERENCES `games`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
         "fields": [
           {
             "fieldPath": "id",
@@ -241,13 +320,65 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `idx_subscription_game_dates` ON `${TABLE_NAME}` (`game_type`, `start_date`, `end_date`)"
+          },
+          {
+            "name": "idx_subscription_game_type",
+            "unique": false,
+            "columnNames": [
+              "game_type"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `idx_subscription_game_type` ON `${TABLE_NAME}` (`game_type`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "games",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "game_type"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
           }
         ]
+      },
+      {
+        "tableName": "games",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `code_name` TEXT NOT NULL, `display_name` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "codeName",
+            "columnName": "code_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayName",
+            "columnName": "display_name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2711e264e795c3997678b7542832a193')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e389ffd1c9934eba157eb222da1caebc')"
     ]
   }
 }

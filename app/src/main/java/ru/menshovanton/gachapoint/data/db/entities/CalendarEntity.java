@@ -2,12 +2,19 @@ package ru.menshovanton.gachapoint.data.db.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 
-import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Date;
 
-@Entity(tableName = "calendar", primaryKeys = {"year", "day_of_year"}, indices = {@Index(value = {"year", "month"}, name = "idx_calendar_year_month"), @Index(value = {"day_of_year"}, name = "idx_calendar_day_of_year")})
+@Entity(
+        tableName = "calendar",
+        primaryKeys = {"year", "day_of_year"},
+        indices = {
+                @Index(value = {"year", "month"}, name = "idx_calendar_year_month"),
+                @Index(value = {"day_of_year"}, name = "idx_calendar_day_of_year")
+        }
+)
 public class CalendarEntity {
 
     public int day;
@@ -21,76 +28,18 @@ public class CalendarEntity {
     public int month;
     public int year;
 
-    @ColumnInfo(name = "status_genshin")
-    public int statusGenshin;
-
-    @ColumnInfo(name = "moon_days_remaining")
-    public int moonDaysRemaining;
-
-    @ColumnInfo(name = "status_hsr")
-    public int statusHsr;
-
-    @ColumnInfo(name = "express_pass_days_remaining")
-    public int expressPassDaysRemaining;
-
-    @ColumnInfo(name = "status_zzz")
-    public int statusZzz;
-
-    @ColumnInfo(name = "interknot_days_remaining")
-    public int interknotDaysRemaining;
-
     public CalendarEntity() {}
 
-    public Date toDateModel(GameType gameType) {
-        int status;
-        int subDays;
-
-        switch (gameType) {
-            case HSR:
-                status = this.statusHsr;
-                subDays = this.expressPassDaysRemaining;
-                break;
-            case ZZZ:
-                status = this.statusZzz;
-                subDays = this.interknotDaysRemaining;
-                break;
-            case GENSHIN:
-            default:
-                status = this.statusGenshin;
-                subDays = this.moonDaysRemaining;
-                break;
-        }
-
-        return new Date(day, dayOfYear, dayOfWeek, status, subDays, month, year);
+    @Ignore
+    public CalendarEntity(int day, int dayOfYear, int dayOfWeek, int month, int year) {
+        this.day = day;
+        this.dayOfYear = dayOfYear;
+        this.dayOfWeek = dayOfWeek;
+        this.month = month;
+        this.year = year;
     }
 
-    public int getStatusForGame(GameType gameType) {
-        switch (gameType) {
-            case HSR:
-                return this.statusHsr;
-            case ZZZ:
-                return this.statusZzz;
-            case GENSHIN:
-            default:
-                return this.statusGenshin;
-        }
-    }
-
-    public void updateForGame(GameType gameType, int status, int subDaysRemaining) {
-        switch (gameType) {
-            case HSR:
-                this.statusHsr = status;
-                this.expressPassDaysRemaining = subDaysRemaining;
-                break;
-            case ZZZ:
-                this.statusZzz = status;
-                this.interknotDaysRemaining = subDaysRemaining;
-                break;
-            case GENSHIN:
-            default:
-                this.statusGenshin = status;
-                this.moonDaysRemaining = subDaysRemaining;
-                break;
-        }
+    public Date toDateModel(int status, int subDaysRemaining) {
+        return new Date(day, dayOfYear, dayOfWeek, status, subDaysRemaining, month, year);
     }
 }
