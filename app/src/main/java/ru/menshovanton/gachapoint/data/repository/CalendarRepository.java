@@ -12,6 +12,7 @@ import java.util.List;
 import ru.menshovanton.gachapoint.calendar.Calendar;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
 import ru.menshovanton.gachapoint.data.local.Preferences;
+import ru.menshovanton.gachapoint.domain.enums.DayState;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Date;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
@@ -159,13 +160,13 @@ public class CalendarRepository {
                     long dEpoch = d.toEpochDay();
 
                     if (dEpoch < todayEpoch) {
-                        if (date.status == 1 || date.status == 3) {
+                        if (date.status == DayState.STATUS_RECEIVED || date.status == DayState.STATUS_OLD_RECEIVED) {
                             claims++;
                         } else {
                             misses++;
                         }
                     } else if (dEpoch == todayEpoch) {
-                        if (date.status == 1 || date.status == 3) {
+                        if (date.status == DayState.STATUS_RECEIVED || date.status == DayState.STATUS_OLD_RECEIVED) {
                             claims++;
                         }
                     }
@@ -251,7 +252,7 @@ public class CalendarRepository {
                         calendar.ensureYearInitialized(endDate.getYear(), () ->
                                 databaseRepository.insertSubscription(newSub, id -> {
                                     subsCount = 1;
-                                    setDayStatus(today.getYear(), today.getDayOfYear(), gameType, 1, () -> {
+                                    setDayStatus(today.getYear(), today.getDayOfYear(), gameType, DayState.STATUS_RECEIVED, () -> {
                                         if (callback != null) callback.onResult(true);
                                     });
                                 })
@@ -311,20 +312,20 @@ public class CalendarRepository {
 
     public void getDayStatus(int year, int dayOfYear, GameType gameType, DatabaseRepository.Callback<Integer> callback) {
         calendar.getDay(year, dayOfYear, gameType, date -> {
-            if (callback != null) callback.onResult(date != null ? date.status : 0);
+            if (callback != null) callback.onResult(date != null ? date.status : DayState.STATUS_MISSED);
         });
     }
 
     public void setDayStatus(int year, int dayOfYear, GameType gameType, int status, Runnable onComplete) {
         calendar.getDay(year, dayOfYear, gameType, date -> {
-            int oldStatus = date != null ? date.status : 0;
-            int rem = date != null ? date.subDaysRemaining : 0;
+            int oldStatus = date != null ? date.status : DayState.STATUS_MISSED;
+            int rem = date != null ? date.subDaysRemaining : DayState.STATUS_MISSED;
 
             calendar.updateDay(year, dayOfYear, gameType, status, rem, () -> {
-                if (oldStatus == 0 && status == 1) {
+                if (oldStatus == DayState.STATUS_MISSED && status == DayState.STATUS_RECEIVED) {
                     claimsDays++;
                     checkAndAddWishFromClaim(gameType);
-                } else if (oldStatus == 1 && status == 0) {
+                } else if (oldStatus == DayState.STATUS_RECEIVED && status == DayState.STATUS_MISSED) {
                     claimsDays = Math.max(0, claimsDays - 1);
                     checkAndAddWishFromClaim(gameType);
                 }
@@ -362,7 +363,7 @@ public class CalendarRepository {
 
     public void setDaySubDaysRemaining(int year, int dayOfYear, GameType gameType, int value, Runnable onComplete) {
         calendar.getDay(year, dayOfYear, gameType, date -> {
-            int status = date != null ? date.status : 0;
+            int status = date != null ? date.status : DayState.STATUS_MISSED;
             calendar.updateDay(year, dayOfYear, gameType, status, value, onComplete);
         });
     }

@@ -13,6 +13,11 @@ public enum DayState {
     CHECK(R.color.check),
     DEFAULT(R.color.white);
 
+    public static final int STATUS_MISSED = 0;
+    public static final int STATUS_RECEIVED = 1;
+    public static final int STATUS_OLD_MISSED = 2;
+    public static final int STATUS_OLD_RECEIVED = 3;
+
     @ColorRes
     private final int colorResId;
 
@@ -29,7 +34,7 @@ public enum DayState {
             return DEFAULT;
         }
 
-        if (dateObj.status == 1 || dateObj.status == 3) {
+        if (dateObj.status == STATUS_RECEIVED || dateObj.status == STATUS_OLD_RECEIVED) {
             return CHECKED;
         }
 
@@ -38,11 +43,11 @@ public enum DayState {
         boolean isPastDay = dateObj.year < todayYear
                 || (dateObj.year == todayYear && dateObj.dayOfYear < toDayOfYear);
 
-        if (isPastDay && (dateObj.status == 0 || dateObj.status == 2) && dateObj.subDaysRemaining > 0) {
+        if (isPastDay && (dateObj.status == STATUS_MISSED || dateObj.status == STATUS_OLD_MISSED) && dateObj.subDaysRemaining > 0) {
             return MISSED;
         }
 
-        if (dateObj.status == 0 && dateObj.subDaysRemaining > 0) {
+        if (dateObj.status == STATUS_MISSED && dateObj.subDaysRemaining > 0) {
             return CHECK;
         }
 
