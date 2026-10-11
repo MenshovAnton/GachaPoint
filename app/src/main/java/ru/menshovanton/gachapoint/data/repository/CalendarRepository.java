@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.calendar.Calendar;
+import ru.menshovanton.gachapoint.data.db.entities.CalendarGameStatusEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.DayState;
@@ -366,6 +367,59 @@ public class CalendarRepository {
             int status = date != null ? date.status : DayState.STATUS_MISSED;
             calendar.updateDay(year, dayOfYear, gameType, status, value, onComplete);
         });
+    }
+
+    public void updateSubscribeDays(int startYear, int startDayOfYear, GameType gameType, int todayStatus, int totalDays) {
+        updateSubscribeDays(startYear, startDayOfYear, gameType, todayStatus, totalDays, null);
+    }
+
+    public void updateSubscribeDays(int startYear, int startDayOfYear, GameType gameType, int todayStatus, int totalDays, Runnable onComplete) {
+        if (gameType == null) {
+            if (onComplete != null) onComplete.run();
+            return;
+        }
+
+        int span = (totalDays > 0) ? totalDays : 180;
+        LocalDate startDate = LocalDate.ofYearDay(startYear, startDayOfYear);
+        LocalDate endDate = startDate.plusDays(span - 1);
+
+        fetchDatesInRange(startDate, endDate, gameType, all -> {
+            if (all == null || all.isEmpty()) {
+                if (onComplete != null) onComplete.run();
+                return;
+            }
+
+            int gameTypeCode = gameType.getCode();
+            List<CalendarGameStatusEntity> batchList = new ArrayList<>(all.size());
+            int i = 0;
+            for (Date date : all) {
+                int targetSubDays = Math.max(0, totalDays - i);
+                int statusToSet;
+                if (totalDays == 0) {
+                    statusToSet = 0;
+                } else {
+                    statusToSet = (i == 0)
+                            ? todayStatus
+                            : (targetSubDays > 0 ? date.status : 0);
+                }
+                batchList.add(new CalendarGameStatusEntity(date.year, date.dayOfYear, gameTypeCode, statusToSet, targetSubDays));
+                i++;
+            }
+
+            if (!batchList.isEmpty()) {
+                databaseRepository.updateSubscribeDaysBatch(batchList, onComplete);
+            } else {
+                if (onComplete != null) onComplete.run();
+            }
+        });
+    }
+
+    public void updateSubscribeDaysTransaction(int startYear, int startDayOfYear, GameType gameType, int todayStatus, int totalDays) {
+        updateSubscribeDays(startYear, startDayOfYear, gameType, todayStatus, totalDays, null);
+    }
+
+    public void updateSubscribeDaysTransaction(int startYear, int startDayOfYear, GameType gameType, int todayStatus, int totalDays, Runnable onComplete) {
+        updateSubscribeDays(startYear, startDayOfYear, gameType, todayStatus, totalDays, onComplete);
     }
 
     public int getSubsCount() { return subsCount; }

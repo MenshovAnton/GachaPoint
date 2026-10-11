@@ -6,13 +6,10 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.data.db.entities.CalendarEntity;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarGameStatusEntity;
-import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.Date;
 
 @Dao
@@ -71,43 +68,9 @@ public interface CalendarDao {
     void insertOrUpdateGameStatusBatch(List<CalendarGameStatusEntity> statusEntities);
 
     @Transaction
-    default void updateSubscribeDaysTransaction(int startYear, int startDayOfYear, GameType gameType, int todayStatus, int totalDays) {
-        if (gameType == null) return;
-        int gameTypeCode = gameType.getCode();
-        int span = (totalDays > 0) ? totalDays : 180;
-
-        LocalDate startDate = LocalDate.ofYearDay(startYear, startDayOfYear);
-        LocalDate endDate = startDate.plusDays(span - 1);
-
-        List<Date> all = new ArrayList<>(span);
-        if (startDate.getYear() == endDate.getYear()) {
-            all.addAll(getDaysRangeInclusive(startDate.getYear(),
-                    startDate.getDayOfYear(), endDate.getDayOfYear(), gameTypeCode));
-        } else {
-            all.addAll(getDaysRangeInclusive(startDate.getYear(),
-                    startDate.getDayOfYear(), startDate.lengthOfYear(), gameTypeCode));
-            all.addAll(getDaysRangeInclusive(endDate.getYear(),
-                    1, endDate.getDayOfYear(), gameTypeCode));
-        }
-
-        List<CalendarGameStatusEntity> batchList = new ArrayList<>(all.size());
-        int i = 0;
-        for (Date date : all) {
-            int targetSubDays = Math.max(0, totalDays - i);
-            int statusToSet;
-            if (totalDays == 0) {
-                statusToSet = 0;
-            } else {
-                statusToSet = (i == 0)
-                        ? todayStatus
-                        : (targetSubDays > 0 ? date.status : 0);
-            }
-            batchList.add(new CalendarGameStatusEntity(date.year, date.dayOfYear, gameTypeCode, statusToSet, targetSubDays));
-            i++;
-        }
-
-        if (!batchList.isEmpty()) {
-            insertOrUpdateGameStatusBatch(batchList);
+    default void updateSubscribeDaysTransaction(List<CalendarGameStatusEntity> statusEntities) {
+        if (statusEntities != null && !statusEntities.isEmpty()) {
+            insertOrUpdateGameStatusBatch(statusEntities);
         }
     }
 }

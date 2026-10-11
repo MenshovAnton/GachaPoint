@@ -126,13 +126,17 @@ public class DatabaseRepository {
         return db;
     }
 
-    public void updateSubscribeDaysBatch(int year, int dayOfYear, GameType gameType, int status, int totalDays, Runnable onComplete) {
+    public void updateSubscribeDaysBatch(List<CalendarGameStatusEntity> statusEntities, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.calendarDao().updateSubscribeDaysTransaction(year, dayOfYear, gameType, status, totalDays);
+            db.calendarDao().updateSubscribeDaysTransaction(statusEntities);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
         });
+    }
+
+    public void insertOrUpdateGameStatusBatch(List<CalendarGameStatusEntity> statusEntities, Runnable onComplete) {
+        updateSubscribeDaysBatch(statusEntities, onComplete);
     }
 
     public void getActiveSubscription(GameType gameType, long epochDay, Callback<SubscriptionEntity> callback) {
