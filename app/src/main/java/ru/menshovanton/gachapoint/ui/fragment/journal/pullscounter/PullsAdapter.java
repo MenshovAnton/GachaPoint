@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -88,7 +90,7 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
             holder.date.setText("");
         }
 
-        holder.itemView.setOnClickListener(v -> {
+        holder.cardView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(pull);
             }
@@ -96,6 +98,7 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
     }
 
     public static class PullsViewHolder extends RecyclerView.ViewHolder {
+        MaterialCardView cardView;
         TextView numberOfWish;
         TextView dropRare;
         TextView dropType;
@@ -103,6 +106,7 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
 
         public PullsViewHolder(@NonNull View itemView) {
             super(itemView);
+            cardView = itemView.findViewById(R.id.card_pull);
             numberOfWish = itemView.findViewById(R.id.numberOfWish);
             dropRare = itemView.findViewById(R.id.dropRare);
             dropType = itemView.findViewById(R.id.dropType);

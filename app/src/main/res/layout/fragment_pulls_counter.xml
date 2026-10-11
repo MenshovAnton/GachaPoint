@@ -57,6 +57,7 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="0dp"
                     android:popupBackground="@drawable/bg_dropdown_popup"
+                    android:dropDownWidth="wrap_content"
                     android:textColor="@color/dropdown_text_selector"
                     android:textSize="14sp"
                     tools:ignore="LabelFor" />

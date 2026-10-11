@@ -44,7 +44,7 @@ public class CalendarRepository {
                 subsCount = activeSub.count;
                 if (onComplete != null) onComplete.run();
             } else {
-                boolean needMigration = preferences.getBooleanPreference(gameType.getName() + Preferences.NEED_MIGRATION);
+                boolean needMigration = preferences.getNeedMigration(gameType);
 
                 if (!needMigration) {
                     subsCount = 0;
@@ -54,7 +54,7 @@ public class CalendarRepository {
 
                 databaseRepository.getSubscriptionsCountForGame(gameType, countInDb -> {
                     if (countInDb > 0) {
-                        preferences.saveBooleanPreference(gameType.getName() + Preferences.NEED_MIGRATION, false);
+                        preferences.saveNeedMigration(gameType, false);
                         subsCount = 0;
                         if (onComplete != null) onComplete.run();
                         return;
@@ -75,7 +75,7 @@ public class CalendarRepository {
                                     endDate.toEpochDay(),
                                     0,
                                     0,
-                                    rem * 90
+                                    rem * gameType.getCurrencyPerDay()
                             );
                             databaseRepository.insertSubscription(migrated, id -> {
                                 subsCount = count;
@@ -84,7 +84,7 @@ public class CalendarRepository {
                                 });
                             });
 
-                            preferences.saveBooleanPreference(gameType.getName() + Preferences.NEED_MIGRATION, false);
+                            preferences.saveNeedMigration(gameType, false);
                         } else {
                             subsCount = 0;
                             if (onComplete != null) onComplete.run();
@@ -175,7 +175,7 @@ public class CalendarRepository {
                 missesDays = misses;
                 claimsDays = claims;
 
-                int primogemsPerDay = 90;
+                int primogemsPerDay = gameType.getCurrencyPerDay();
                 activeSub.claimed = claimsDays * primogemsPerDay;
                 activeSub.missed = missesDays * primogemsPerDay;
                 int totalPrimogems = activeSub.count * 30 * primogemsPerDay;
@@ -206,9 +206,9 @@ public class CalendarRepository {
 
     public void getStatistic(GameType gameType, int year, DatabaseRepository.Callback<Statistic> callback) {
         calculateMissesAndClaims(gameType, year, () -> {
-            int wishesCost = 160;
-            int primogemsPerDay = 90;
-            int summaryClaim = 2700;
+            int wishesCost = gameType.getPullCost();
+            int primogemsPerDay = gameType.getCurrencyPerDay();
+            int summaryClaim = primogemsPerDay * 30;
 
             int missedPrimogemsCount = missesDays * primogemsPerDay;
             int claimPrimogemsCount = claimsDays * primogemsPerDay;
@@ -243,9 +243,9 @@ public class CalendarRepository {
                         1,
                         todayEpoch,
                         endDate.toEpochDay(),
-                        90,
+                        gameType.getCurrencyPerDay(),
                         0,
-                        29 * 90
+                        gameType.getCurrencyPerDay() * 29
                 );
 
                 calendar.ensureYearInitialized(today.getYear(), () ->
@@ -259,7 +259,7 @@ public class CalendarRepository {
                         )
                 );
             } else {
-                if (activeSub.count >= 6) {
+                if (activeSub.count >= gameType.getMaxSubs()) {
                     if (callback != null) callback.onResult(false);
                     return;
                 }
@@ -268,7 +268,7 @@ public class CalendarRepository {
                 LocalDate curEnd = LocalDate.ofEpochDay(activeSub.endDate);
                 LocalDate newEnd = curEnd.plusDays(30);
                 activeSub.endDate = newEnd.toEpochDay();
-                activeSub.wait += 30 * 90;
+                activeSub.wait += gameType.getCurrencyPerDay() * 30;
 
                 calendar.ensureYearInitialized(newEnd.getYear(), () ->
                         databaseRepository.updateSubscription(activeSub, () -> {
@@ -295,7 +295,7 @@ public class CalendarRepository {
                 LocalDate curEnd = LocalDate.ofEpochDay(activeSub.endDate);
                 LocalDate newEnd = curEnd.minusDays(30);
                 activeSub.endDate = newEnd.toEpochDay();
-                activeSub.wait = Math.max(0, activeSub.wait - 30 * 90);
+                activeSub.wait = Math.max(0, activeSub.wait - gameType.getCurrencyPerDay() * 30);
 
                 databaseRepository.updateSubscription(activeSub, () -> {
                     subsCount = activeSub.count;
@@ -335,8 +335,8 @@ public class CalendarRepository {
     }
 
     private void checkAndAddWishFromClaim(GameType gameType) {
-        int primogemsPerDay = 90;
-        int wishesCost = 160;
+        int primogemsPerDay = gameType.getCurrencyPerDay();
+        int wishesCost = gameType.getPullCost();
 
         int totalGems = claimsDays * primogemsPerDay;
         int totalWishes = totalGems / wishesCost;

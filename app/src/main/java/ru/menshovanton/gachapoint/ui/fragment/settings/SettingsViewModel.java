@@ -16,6 +16,7 @@ import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.db.DatabaseExporter;
 import ru.menshovanton.gachapoint.data.db.DatabaseImporter;
 import ru.menshovanton.gachapoint.data.local.Preferences;
+import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 import ru.menshovanton.gachapoint.worker.NotificationScheduler;
 
@@ -205,9 +206,9 @@ public class SettingsViewModel extends AndroidViewModel {
             public void onSuccess() {
                 toastMessageEvent.setValue(R.string.db_import_successful);
 
-                preferences.saveBooleanPreference(Preferences.GENSHIN_NEED_MIGRATION, true);
-                preferences.saveBooleanPreference(Preferences.HSR_NEED_MIGRATION, true);
-                preferences.saveBooleanPreference(Preferences.ZZZ_NEED_MIGRATION, true);
+                for (GameType gameType : GameType.values()) {
+                    preferences.saveNeedMigration(gameType, true);
+                }
 
                 restartAppEvent.call();
             }

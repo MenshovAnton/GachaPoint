@@ -40,8 +40,8 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
+import ru.menshovanton.gachapoint.domain.models.BannerInfo;
 import ru.menshovanton.gachapoint.domain.models.Pull;
 import ru.menshovanton.gachapoint.ui.fragment.journal.SharedJournalViewModel;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
@@ -131,20 +131,28 @@ public class PullsCounterView extends Fragment {
     }
 
     private void setupBannerSelector() {
-        String[] banners = new String[]{
-                getString(R.string.type_event),
-                getString(R.string.type_spec),
-                getString(R.string.type_std),
-                getString(R.string.type_novice)
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, banners);
-        bannerSelector.setAdapter(adapter);
+        updateBannerSelector(viewModel.getCurrentGameType());
 
         bannerSelector.setOnItemClickListener((parent, itemView, position, id) -> {
             String selectedLabel = (String) parent.getItemAtPosition(position);
-            String bannerKey = BannerType.getKeyByLabel(requireContext(), selectedLabel);
+            String bannerKey = viewModel.getCurrentGameType().getBannerKeyByLabel(requireContext(), selectedLabel);
             viewModel.setBannerType(bannerKey);
         });
+    }
+
+    private void updateBannerSelector(GameType gameType) {
+        if (gameType == null) return;
+        List<BannerInfo> banners = gameType.getBanners();
+        List<String> bannerLabels = new ArrayList<>(banners.size());
+        for (BannerInfo banner : banners) {
+            bannerLabels.add(getString(banner.getLabelResId()));
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.item_dropdown_banner, bannerLabels);
+        bannerSelector.setAdapter(adapter);
+
+        String currentKey = viewModel.getCurrentBannerType();
+        String currentLabel = gameType.getBannerLabel(requireContext(), currentKey);
+        bannerSelector.setText(currentLabel, false);
     }
 
     private void observeViewModels() {
@@ -200,7 +208,7 @@ public class PullsCounterView extends Fragment {
         );
 
         viewModel.getCurrentBannerTypeLiveData().observe(getViewLifecycleOwner(), bannerKey -> {
-            String label = BannerType.getLabelByKey(requireContext(), bannerKey);
+            String label = viewModel.getCurrentGameType().getBannerLabel(requireContext(), bannerKey);
             bannerSelector.setText(label, false);
         });
 
@@ -212,6 +220,7 @@ public class PullsCounterView extends Fragment {
             sharedViewModel.getSelectedGameType().observe(getViewLifecycleOwner(), gameType -> {
                 updateGameIcon(gameType);
                 viewModel.setGameType(gameType);
+                updateBannerSelector(gameType);
             });
         }
     }
@@ -244,17 +253,7 @@ public class PullsCounterView extends Fragment {
 
     private void updateGameIcon(GameType gameType) {
         if (gameType == null) return;
-        switch (gameType) {
-            case GENSHIN:
-                wishIcon.setImageResource(R.drawable.icon_intertwined_fate);
-                break;
-            case HSR:
-                wishIcon.setImageResource(R.drawable.icon_star_rail_special_pass);
-                break;
-            case ZZZ:
-                wishIcon.setImageResource(R.drawable.icon_encrypted_master_tape);
-                break;
-        }
+        wishIcon.setImageResource(gameType.getPullIconResId());
     }
 
     private void showMoreMenu(View view) {

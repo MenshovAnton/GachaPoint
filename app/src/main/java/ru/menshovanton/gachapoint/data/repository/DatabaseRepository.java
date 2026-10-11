@@ -8,6 +8,7 @@ import java.util.List;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarEntity;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarGameStatusEntity;
+import ru.menshovanton.gachapoint.data.db.entities.GameEntity;
 import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
@@ -194,6 +195,24 @@ public class DatabaseRepository {
             db.subscriptionDao().deleteById(id);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void syncGames(Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            db.syncGames();
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void getAllGames(Callback<List<GameEntity>> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            List<GameEntity> games = db.gameDao().getAllGames();
+            if (callback != null) {
+                AppDatabase.postToMain(() -> callback.onResult(games));
             }
         });
     }

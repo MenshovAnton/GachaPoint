@@ -114,17 +114,7 @@ public class PiggyBankView extends Fragment {
 
     private void updateGameIcon(GameType gameType) {
         if (gameType == null) return;
-        switch (gameType) {
-            case GENSHIN:
-                wishIcon.setImageResource(R.drawable.icon_intertwined_fate);
-                break;
-            case HSR:
-                wishIcon.setImageResource(R.drawable.icon_star_rail_special_pass);
-                break;
-            case ZZZ:
-                wishIcon.setImageResource(R.drawable.icon_encrypted_master_tape);
-                break;
-        }
+        wishIcon.setImageResource(gameType.getPullIconResId());
     }
 
     private void showMoreMenu(View view) {

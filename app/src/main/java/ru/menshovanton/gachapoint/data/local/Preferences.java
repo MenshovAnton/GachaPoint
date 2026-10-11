@@ -3,11 +3,12 @@ package ru.menshovanton.gachapoint.data.local;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import ru.menshovanton.gachapoint.domain.enums.GameType;
+
 public class Preferences {
     public static final String APP_THEME = "App Theme";
     public static final String APP_LANGUAGE = "App Language";
     public static final String VIBRATION_MODE = "Vibration Mode";
-
 
     private static final String PREF_FILE = "Settings";
 
@@ -19,26 +20,75 @@ public class Preferences {
     public static final String SUB_TYPE = "Selected sub type";
 
     public static final String PIGGY_BANK_TARGET_GENSHIN = "Piggy Bank target Genshin Impact";
-    public static final String PIGGY_BANK_TARGET_HSR = "Piggy Bank target HSR";
-    public static final String PIGGY_BANK_TARGET_ZZZ = "Piggy Bank target ZZZ";
-
     public static final String PIGGY_BANK_MANUAL_PROGRESS_GENSHIN = "Piggy Bank manual progress Genshin Impact";
-    public static final String PIGGY_BANK_MANUAL_PROGRESS_HSR = "Piggy Bank manual progress HSR";
-    public static final String PIGGY_BANK_MANUAL_PROGRESS_ZZZ = "Piggy Bank manual progress ZZZ";
-
     public static final String PIGGY_BANK_SUBS_PROGRESS_GENSHIN = "Piggy Bank subs progress Genshin Impact";
-    public static final String PIGGY_BANK_SUBS_PROGRESS_HSR = "Piggy Bank subs progress HSR";
-    public static final String PIGGY_BANK_SUBS_PROGRESS_ZZZ = "Piggy Bank subs progress ZZZ";
 
-    public static final String GENSHIN_NEED_MIGRATION = "Genshin need migration";
-    public static final String HSR_NEED_MIGRATION = "HSR need migration";
-    public static final String ZZZ_NEED_MIGRATION = "ZZZ need migration";
-    public static final String NEED_MIGRATION = " need migration";
+    private static final String PREFIX_PIGGY_TARGET = "Piggy Bank target ";
+    private static final String PREFIX_PIGGY_MANUAL = "Piggy Bank manual progress ";
+    private static final String PREFIX_PIGGY_SUBS = "Piggy Bank subs progress ";
+    private static final String SUFFIX_NEED_MIGRATION = " need migration";
 
     private final SharedPreferences settings;
 
     public Preferences(Context context) {
         settings = context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
+    }
+
+    public static String getPiggyBankTargetKey(GameType gameType) {
+        if (gameType == GameType.GENSHIN) {
+            return PIGGY_BANK_TARGET_GENSHIN;
+        }
+        return PREFIX_PIGGY_TARGET + gameType.getName();
+    }
+
+    public static String getPiggyBankManualProgressKey(GameType gameType) {
+        if (gameType == GameType.GENSHIN) {
+            return PIGGY_BANK_MANUAL_PROGRESS_GENSHIN;
+        }
+        return PREFIX_PIGGY_MANUAL + gameType.getName();
+    }
+
+    public static String getPiggyBankSubsProgressKey(GameType gameType) {
+        if (gameType == GameType.GENSHIN) {
+            return PIGGY_BANK_SUBS_PROGRESS_GENSHIN;
+        }
+        return PREFIX_PIGGY_SUBS + gameType.getName();
+    }
+
+    public static String getNeedMigrationKey(GameType gameType) {
+        return gameType.getName() + SUFFIX_NEED_MIGRATION;
+    }
+
+    public int getPiggyBankTarget(GameType gameType) {
+        return getIntPreference(getPiggyBankTargetKey(gameType));
+    }
+
+    public void savePiggyBankTarget(GameType gameType, int value) {
+        saveIntPreference(getPiggyBankTargetKey(gameType), value);
+    }
+
+    public int getPiggyBankManualProgress(GameType gameType) {
+        return getIntPreference(getPiggyBankManualProgressKey(gameType));
+    }
+
+    public void savePiggyBankManualProgress(GameType gameType, int value) {
+        saveIntPreference(getPiggyBankManualProgressKey(gameType), value);
+    }
+
+    public int getPiggyBankSubsProgress(GameType gameType) {
+        return getIntPreference(getPiggyBankSubsProgressKey(gameType));
+    }
+
+    public void savePiggyBankSubsProgress(GameType gameType, int value) {
+        saveIntPreference(getPiggyBankSubsProgressKey(gameType), value);
+    }
+
+    public boolean getNeedMigration(GameType gameType) {
+        return getBooleanPreference(getNeedMigrationKey(gameType));
+    }
+
+    public void saveNeedMigration(GameType gameType, boolean value) {
+        saveBooleanPreference(getNeedMigrationKey(gameType), value);
     }
 
     public void saveIntPreference(String key, int value) {

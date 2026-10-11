@@ -18,6 +18,7 @@ import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
+import ru.menshovanton.gachapoint.domain.models.BannerInfo;
 import ru.menshovanton.gachapoint.domain.models.Pull;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 
@@ -49,8 +50,23 @@ public class PullsCounterViewModel extends AndroidViewModel {
     public void setGameType(GameType gameType) {
         if (gameType != null) {
             this.currentGameType = gameType;
+            List<BannerInfo> bannersInfo = gameType.getBanners();
+            boolean banners = false;
+            for (BannerInfo banner : bannersInfo) {
+                if (banner.getDbKey().equals(getCurrentBannerType())) {
+                    banners = true;
+                    break;
+                }
+            }
+            if (!banners && !bannersInfo.isEmpty()) {
+                currentBannerTypeLiveData.setValue(bannersInfo.get(0).getDbKey());
+            }
             refreshData();
         }
+    }
+
+    public GameType getCurrentGameType() {
+        return currentGameType;
     }
 
     public void setBannerType(String bannerTypeKey) {

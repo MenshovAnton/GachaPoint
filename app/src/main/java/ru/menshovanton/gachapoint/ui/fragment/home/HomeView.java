@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
@@ -94,11 +94,10 @@ public class HomeView extends Fragment {
     private void initGameTypePills(View view) {
         RecyclerView gameTypeChanger = view.findViewById(R.id.rv_game_types);
 
-        List<String> categories = Arrays.asList(
-                getString(R.string.genshin),
-                getString(R.string.hsr),
-                getString(R.string.zzz)
-        );
+        List<String> categories = new ArrayList<>();
+        for (GameType type : GameType.values()) {
+            categories.add(getString(type.getNameResId()));
+        }
 
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         gameTypeChanger.setLayoutManager(layoutManager);
@@ -152,26 +151,10 @@ public class HomeView extends Fragment {
     private void updateGameTheme(GameType gameType) {
         selectAndScrollIfNeeded(gameType.getCode());
 
-        switch (gameType) {
-            case GENSHIN:
-                gemIcon.setImageResource(R.drawable.icon_primogem);
-                wishIconStats.setImageResource(R.drawable.icon_intertwined_fate);
-                wishIconPiggyBank.setImageResource(R.drawable.icon_intertwined_fate);
-                subsCountTitle.setText(R.string.blessing_of_the_welkin_moon_count_header);
-                break;
-            case HSR:
-                gemIcon.setImageResource(R.drawable.icon_stellar_jade);
-                wishIconStats.setImageResource(R.drawable.icon_star_rail_special_pass);
-                wishIconPiggyBank.setImageResource(R.drawable.icon_star_rail_special_pass);
-                subsCountTitle.setText(R.string.star_rail_special_pass_count_header);
-                break;
-            case ZZZ:
-                gemIcon.setImageResource(R.drawable.icon_polychrome);
-                wishIconStats.setImageResource(R.drawable.icon_encrypted_master_tape);
-                wishIconPiggyBank.setImageResource(R.drawable.icon_encrypted_master_tape);
-                subsCountTitle.setText(R.string.inter_knot_member_count_header);
-                break;
-        }
+        gemIcon.setImageResource(gameType.getCurrencyIconResId());
+        wishIconStats.setImageResource(gameType.getPullIconResId());
+        wishIconPiggyBank.setImageResource(gameType.getPullIconResId());
+        subsCountTitle.setText(gameType.getSubTitleResId());
     }
 
     private void selectAndScrollIfNeeded(int targetPosition) {

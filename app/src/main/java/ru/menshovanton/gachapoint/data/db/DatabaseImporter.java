@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import androidx.room.Room;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -127,14 +125,7 @@ public class DatabaseImporter {
 
         AppDatabase tempDb = null;
         try {
-            tempDb = Room.databaseBuilder(
-                            context.getApplicationContext(),
-                            AppDatabase.class,
-                            DatabaseImporter.TEMP_DB_NAME
-                    )
-                    .addMigrations(MigrationHelper.MIGRATION_1_2, MigrationHelper.MIGRATION_2_3)
-                    .build();
-
+            tempDb = AppDatabase.createDatabaseBuilder(context, DatabaseImporter.TEMP_DB_NAME).build();
             tempDb.getOpenHelper().getWritableDatabase();
 
         } catch (Throwable t) {

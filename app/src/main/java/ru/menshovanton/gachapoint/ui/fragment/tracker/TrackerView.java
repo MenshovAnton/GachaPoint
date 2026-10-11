@@ -41,7 +41,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.IntStream;
@@ -232,11 +231,10 @@ public class TrackerView extends Fragment {
     private void initGameTypePills(View view) {
         RecyclerView gameTypeChanger = view.findViewById(R.id.rv_game_types);
 
-        List<String> categories = Arrays.asList(
-                getString(R.string.genshin),
-                getString(R.string.hsr),
-                getString(R.string.zzz)
-        );
+        List<String> categories = new ArrayList<>();
+        for (GameType type : GameType.values()) {
+            categories.add(getString(type.getNameResId()));
+        }
 
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         gameTypeChanger.setLayoutManager(layoutManager);
@@ -255,23 +253,9 @@ public class TrackerView extends Fragment {
     private void updateGameTypeUi(GameType gameType) {
         selectAndScrollIfNeeded(gameType.getCode());
 
-        switch (gameType) {
-            case GENSHIN:
-                gemIcon.setImageResource(R.drawable.icon_primogem);
-                wishIcon.setImageResource(R.drawable.icon_intertwined_fate);
-                subsCountTitle.setText(R.string.blessing_of_the_welkin_moon_count_header);
-                break;
-            case HSR:
-                gemIcon.setImageResource(R.drawable.icon_stellar_jade);
-                wishIcon.setImageResource(R.drawable.icon_star_rail_special_pass);
-                subsCountTitle.setText(R.string.star_rail_special_pass_count_header);
-                break;
-            case ZZZ:
-                gemIcon.setImageResource(R.drawable.icon_polychrome);
-                wishIcon.setImageResource(R.drawable.icon_encrypted_master_tape);
-                subsCountTitle.setText(R.string.inter_knot_member_count_header);
-                break;
-        }
+        gemIcon.setImageResource(gameType.getCurrencyIconResId());
+        wishIcon.setImageResource(gameType.getPullIconResId());
+        subsCountTitle.setText(gameType.getSubTitleResId());
     }
 
     private void animateGridHeight(int targetHeight) {

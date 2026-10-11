@@ -8,7 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,39 +43,56 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract SubscriptionDao subscriptionDao();
     public abstract GameDao gameDao();
 
+    public static RoomDatabase.Builder<AppDatabase> createDatabaseBuilder(Context context, String databaseName) {
+        return Room.databaseBuilder(
+                        context.getApplicationContext(),
+                        AppDatabase.class,
+                        databaseName
+                )
+                .addMigrations(MigrationHelper.MIGRATION_1_2, MigrationHelper.MIGRATION_2_3)
+                .addCallback(new RoomDatabase.Callback() {
+                    @Override
+                    public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                        super.onCreate(db);
+                        syncGamesRaw(db);
+                    }
+
+                    @Override
+                    public void onOpen(@NonNull SupportSQLiteDatabase db) {
+                        super.onOpen(db);
+                        syncGamesRaw(db);
+                    }
+                });
+    }
+
+    public static void syncGamesRaw(SupportSQLiteDatabase db) {
+        db.beginTransaction();
+        try {
+            String insertSql = "INSERT OR IGNORE INTO `games` (`id`, `code_name`, `display_name`) VALUES (?, ?, ?)";
+            String updateSql = "UPDATE `games` SET `code_name` = ?, `display_name` = ? WHERE `id` = ?";
+            for (GameType type : GameType.values()) {
+                db.execSQL(insertSql, new Object[]{type.getCode(), type.name(), type.getName()});
+                db.execSQL(updateSql, new Object[]{type.name(), type.getName(), type.getCode()});
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void syncGames() {
+        List<GameEntity> entities = new ArrayList<>(GameType.values().length);
+        for (GameType type : GameType.values()) {
+            entities.add(new GameEntity(type));
+        }
+        gameDao().upsertAll(entities);
+    }
+
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(
-                                    context.getApplicationContext(),
-                                    AppDatabase.class,
-                                    DATABASE_NAME
-                            )
-                            .addMigrations(MigrationHelper.MIGRATION_1_2, MigrationHelper.MIGRATION_2_3)
-                            .addCallback(new RoomDatabase.Callback() {
-                                @Override
-                                public void onCreate(@NonNull androidx.sqlite.db.SupportSQLiteDatabase db) {
-                                    super.onCreate(db);
-                                    syncGames(db);
-                                }
-
-                                @Override
-                                public void onOpen(@NonNull androidx.sqlite.db.SupportSQLiteDatabase db) {
-                                    super.onOpen(db);
-                                    syncGames(db);
-                                }
-
-                                private void syncGames(androidx.sqlite.db.SupportSQLiteDatabase db) {
-                                    for (GameType type : GameType.values()) {
-                                        String sql = "INSERT INTO `games` (`id`, `code_name`, `display_name`) " +
-                                                "VALUES (" + type.getCode() + ", '" + type.name() + "', '" + type.getName() + "') " +
-                                                "ON CONFLICT(`id`) DO UPDATE SET `code_name` = excluded.`code_name`, `display_name` = excluded.`display_name`";
-                                        db.execSQL(sql);
-                                    }
-                                }
-                            })
-                            .build();
+                    INSTANCE = createDatabaseBuilder(context, DATABASE_NAME).build();
                 }
             }
         }

@@ -16,7 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
@@ -71,11 +71,10 @@ public class JournalView extends Fragment {
         }).attach();
 
         RecyclerView gameTypeChanger = view.findViewById(R.id.rv_game_types);
-        List<String> categories = Arrays.asList(
-                getString(R.string.genshin),
-                getString(R.string.hsr),
-                getString(R.string.zzz)
-        );
+        List<String> categories = new ArrayList<>();
+        for (GameType type : GameType.values()) {
+            categories.add(getString(type.getNameResId()));
+        }
 
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         gameTypeChanger.setLayoutManager(layoutManager);
