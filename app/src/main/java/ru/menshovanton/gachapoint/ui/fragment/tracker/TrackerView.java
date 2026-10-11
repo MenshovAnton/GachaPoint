@@ -34,6 +34,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -99,9 +100,12 @@ public class TrackerView extends Fragment {
         return new TrackerView();
     }
 
+    private MainActivityView mainActivityView;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainActivityView = (MainActivityView) getActivity();
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -160,8 +164,15 @@ public class TrackerView extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (mainActivityView != null && mainActivityView.getSubType() != null) {
+            GameType current = mainActivityView.getSubType();
+            if (pillsAdapter != null && pillsAdapter.getSelectedPosition() != current.getCode()) {
+                pillsAdapter.setSelectedPosition(current.getCode());
+                centerPositionInstantly(current.getCode());
+            }
+            viewModel.setGameType(current);
+        }
         if (!isFirstLaunch && viewModel != null) {
-            observeViewModel();
             viewModel.refreshData();
         }
         isFirstLaunch = false;
@@ -239,20 +250,24 @@ public class TrackerView extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         gameTypeChanger.setLayoutManager(layoutManager);
 
-        pillsAdapter = new PillsAdapter(categories, (item, position) -> {
+        GameType currentType = (mainActivityView != null && mainActivityView.getSubType() != null)
+                ? mainActivityView.getSubType()
+                : viewModel.getCurrentGameType();
+
+        pillsAdapter = new PillsAdapter(categories, currentType.getCode(), (item, position) -> {
             GameType selected = GameType.fromCode(position);
+            if (mainActivityView != null) mainActivityView.setSubType(selected);
             viewModel.setGameType(selected);
+            smoothScrollToCenter(position);
         });
 
         gameTypeChanger.setAdapter(pillsAdapter);
 
-        GameType currentType = viewModel.getCurrentGameType();
-        selectAndScrollIfNeeded(currentType.getCode());
+        viewModel.setGameType(currentType);
+        centerPositionInstantly(currentType.getCode());
     }
 
     private void updateGameTypeUi(GameType gameType) {
-        selectAndScrollIfNeeded(gameType.getCode());
-
         gemIcon.setImageResource(gameType.getCurrencyIconResId());
         wishIcon.setImageResource(gameType.getPullIconResId());
         subsCountTitle.setText(gameType.getSubTitleResId());
@@ -426,18 +441,49 @@ public class TrackerView extends Fragment {
         }
     }
 
-    private void selectAndScrollIfNeeded(int targetPosition) {
-        if (pillsAdapter == null || layoutManager == null) return;
+    private void centerPositionInstantly(int position) {
+        if (layoutManager == null) return;
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int estimatedPillWidth = (int) (130 * getResources().getDisplayMetrics().density);
+        int centerOffsetPx = Math.max(0, (screenWidth - estimatedPillWidth) / 2);
+        layoutManager.scrollToPositionWithOffset(position, centerOffsetPx);
+    }
 
+    private void smoothScrollToCenter(int targetPosition) {
+        if (pillsAdapter == null || layoutManager == null) return;
         pillsAdapter.setSelectedPosition(targetPosition);
 
-        int firstCompletelyVisible = layoutManager.findFirstCompletelyVisibleItemPosition();
-        int lastCompletelyVisible = layoutManager.findLastCompletelyVisibleItemPosition();
+        RecyclerView recyclerView = getView() != null ? getView().findViewById(R.id.rv_game_types) : null;
+        if (recyclerView == null || getContext() == null) return;
 
-        if (targetPosition < firstCompletelyVisible || targetPosition > lastCompletelyVisible) {
-            int offsetPx = (int) (16 * getResources().getDisplayMetrics().density);
-            layoutManager.scrollToPositionWithOffset(targetPosition, offsetPx);
+        View targetChild = layoutManager.findViewByPosition(targetPosition);
+        if (targetChild != null) {
+            int childCenter = (targetChild.getLeft() + targetChild.getRight()) / 2;
+            int rvCenter = (recyclerView.getPaddingStart() + (recyclerView.getWidth() - recyclerView.getPaddingEnd())) / 2;
+            int dx = childCenter - rvCenter;
+
+            if (Math.abs(dx) <= 3) {
+                return;
+            }
+            if (dx < 0 && !recyclerView.canScrollHorizontally(-1)) {
+                return;
+            }
+            if (dx > 0 && !recyclerView.canScrollHorizontally(1)) {
+                return;
+            }
+
+            recyclerView.smoothScrollBy(dx, 0);
+            return;
         }
+
+        LinearSmoothScroller smoothScroller = new LinearSmoothScroller(requireContext()) {
+            @Override
+            public int calculateDtToFit(int viewStart, int viewEnd, int boxStart, int boxEnd, int snapPreference) {
+                return (boxStart + (boxEnd - boxStart) / 2) - (viewStart + (viewEnd - viewStart) / 2);
+            }
+        };
+        smoothScroller.setTargetPosition(targetPosition);
+        layoutManager.startSmoothScroll(smoothScroller);
     }
 
     private void showMoreMenu(View view) {

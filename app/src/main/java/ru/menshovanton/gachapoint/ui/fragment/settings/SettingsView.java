@@ -11,8 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,10 +22,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.material.timepicker.MaterialTimePicker;
-import com.google.android.material.timepicker.TimeFormat;
+import com.google.android.material.materialswitch.MaterialSwitch;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
@@ -35,15 +33,14 @@ import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
 public class SettingsView extends Fragment {
 
-    private TextView hourTextView;
-    private TextView minuteTextView;
+    private Chip timeChip;
+    private View rowSelectTime;
 
     private Button dbImportButton;
     private Button dbExportButton;
     private ImageButton back;
 
-    private SwitchMaterial notificationsSwitch;
-    private ImageView edit;
+    private MaterialSwitch notificationsSwitch;
 
     private MainActivityView mainActivityView;
     private SettingsViewModel viewModel;
@@ -51,7 +48,7 @@ public class SettingsView extends Fragment {
     private AutoCompleteTextView themeSelector;
     private AutoCompleteTextView languageSelector;
 
-    private SwitchMaterial vibrationSwitch;
+    private MaterialSwitch vibrationSwitch;
 
     private final ActivityResultLauncher<String> exportDbLauncher =
             registerForActivityResult(new ActivityResultContracts.CreateDocument("*/*"), uri -> {
@@ -86,9 +83,8 @@ public class SettingsView extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         notificationsSwitch = view.findViewById(R.id.sm_notification_switch);
-        hourTextView = view.findViewById(R.id.tv_hour);
-        minuteTextView = view.findViewById(R.id.tv_minutes);
-        edit = view.findViewById(R.id.btn_select_time);
+        timeChip = view.findViewById(R.id.btn_time_chip);
+        rowSelectTime = view.findViewById(R.id.row_select_time);
         dbImportButton = view.findViewById(R.id.btn_import_database);
         dbExportButton = view.findViewById(R.id.btn_export_database);
         back = view.findViewById(R.id.btn_back);
@@ -124,7 +120,14 @@ public class SettingsView extends Fragment {
             }
         });
 
-        edit.setOnClickListener(v -> showTimePicker());
+        View.OnClickListener timeClickListener = v -> showTimePicker();
+        if (timeChip != null) {
+            timeChip.setOnClickListener(timeClickListener);
+        }
+        if (rowSelectTime != null) {
+            rowSelectTime.setOnClickListener(timeClickListener);
+        }
+
         dbExportButton.setOnClickListener(v -> viewModel.onExportDatabaseClicked());
         dbImportButton.setOnClickListener(v -> viewModel.onImportDatabaseClicked());
         back.setOnClickListener(view -> viewModel.onBackToMenuClicked());
@@ -206,20 +209,19 @@ public class SettingsView extends Fragment {
         viewModel.getNotificationsEnabled().observe(getViewLifecycleOwner(), enabled -> {
             if (enabled != null) {
                 notificationsSwitch.setChecked(enabled);
+                if (rowSelectTime != null) {
+                    rowSelectTime.setEnabled(enabled);
+                    rowSelectTime.setAlpha(enabled ? 1.0f : 0.4f);
+                }
+                if (timeChip != null) {
+                    timeChip.setEnabled(enabled);
+                }
             }
         });
 
-        viewModel.getAlarmHour().observe(getViewLifecycleOwner(), hour -> {
-            if (hour != null) {
-                hourTextView.setText(String.valueOf(hour));
-            }
-        });
+        viewModel.getAlarmHour().observe(getViewLifecycleOwner(), hour -> updateAlarmTimeDisplay());
 
-        viewModel.getAlarmMinute().observe(getViewLifecycleOwner(), minute -> {
-            if (minute != null) {
-                minuteTextView.setText(minute < 10 ? "0" + minute : String.valueOf(minute));
-            }
-        });
+        viewModel.getAlarmMinute().observe(getViewLifecycleOwner(), minute -> updateAlarmTimeDisplay());
 
         viewModel.getNavigateToMenuEvent().observe(getViewLifecycleOwner(), unused ->
                 NavHostFragment.findNavController(this).popBackStack());
@@ -253,25 +255,49 @@ public class SettingsView extends Fragment {
         });
     }
 
+    @SuppressLint("DefaultLocale")
+    private void updateAlarmTimeDisplay() {
+        if (timeChip == null) return;
+        Integer hour = viewModel.getAlarmHour().getValue();
+        Integer minute = viewModel.getAlarmMinute().getValue();
+        int h = hour != null ? hour : 12;
+        int m = minute != null ? minute : 0;
+        timeChip.setText(String.format("%02d:%02d", h, m));
+    }
+
     @SuppressLint("SetTextI18n")
     public void showTimePicker() {
-        if (!isAdded() || getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()) {
+        if (!isAdded() || getContext() == null || getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()) {
             return;
         }
 
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext(), R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
+        View sheetView = getLayoutInflater().inflate(R.layout.dialog_time_picker_sheet, null);
+        bottomSheetDialog.setContentView(sheetView);
+
+        android.widget.NumberPicker npHours = sheetView.findViewById(R.id.np_hours);
+        android.widget.NumberPicker npMinutes = sheetView.findViewById(R.id.np_minutes);
+        Button btnSave = sheetView.findViewById(R.id.btn_save_time);
+
+        npHours.setMinValue(0);
+        npHours.setMaxValue(23);
+        npHours.setFormatter(val -> String.format("%02d", val));
+
+        npMinutes.setMinValue(0);
+        npMinutes.setMaxValue(59);
+        npMinutes.setFormatter(val -> String.format("%02d", val));
+
         Integer currentHour = viewModel.getAlarmHour().getValue();
         Integer currentMinute = viewModel.getAlarmMinute().getValue();
+        npHours.setValue(currentHour != null ? currentHour : 12);
+        npMinutes.setValue(currentMinute != null ? currentMinute : 0);
 
-        MaterialTimePicker picker = new MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setHour(currentHour != null ? currentHour : 12)
-                .setMinute(currentMinute != null ? currentMinute : 0)
-                .build();
+        btnSave.setOnClickListener(v -> {
+            viewModel.onTimeSelected(npHours.getValue(), npMinutes.getValue());
+            bottomSheetDialog.dismiss();
+        });
 
-        picker.addOnPositiveButtonClickListener(v ->
-                viewModel.onTimeSelected(picker.getHour(), picker.getMinute()));
-
-        picker.show(getParentFragmentManager(), "MATERIAL_TIME_PICKER");
+        bottomSheetDialog.show();
     }
 
     public void showQuestionDialog(Context context, Uri fileUri) {

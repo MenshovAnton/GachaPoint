@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.card.MaterialCardView;
+import android.widget.Toast;
 
 import ru.menshovanton.gachapoint.R;
 
@@ -20,10 +20,13 @@ public class MoreView extends Fragment {
 
     private MoreViewModel viewModel;
 
-    private MaterialCardView infoButton;
-    private MaterialCardView settingsButton;
-    private MaterialCardView feedbackButton;
+    private View infoButton;
+    private View settingsButton;
+    private View feedbackButton;
 
+    private View rowStatistics;
+    private View rowCalculator;
+    private View rowPromocodes;
 
     public MoreView() {}
 
@@ -44,6 +47,10 @@ public class MoreView extends Fragment {
         infoButton = view.findViewById(R.id.mcv_item_about);
         settingsButton = view.findViewById(R.id.mcv_item_settings);
         feedbackButton = view.findViewById(R.id.mcv_item_feedback);
+
+        rowStatistics = view.findViewById(R.id.row_statistics);
+        rowCalculator = view.findViewById(R.id.row_calculator);
+        rowPromocodes = view.findViewById(R.id.row_promocodes);
 
         return view;
     }
@@ -70,8 +77,21 @@ public class MoreView extends Fragment {
     }
 
     private void setupListeners() {
-        infoButton.setOnClickListener(v -> viewModel.onInfoButtonClicked());
-        settingsButton.setOnClickListener(v -> viewModel.onSettingsButtonClicked());
-        feedbackButton.setOnClickListener(v -> viewModel.onFeedbackButtonClicked());
+        if (infoButton != null) {
+            infoButton.setOnClickListener(v -> viewModel.onInfoButtonClicked());
+        }
+        if (settingsButton != null) {
+            settingsButton.setOnClickListener(v -> viewModel.onSettingsButtonClicked());
+        }
+        if (feedbackButton != null) {
+            feedbackButton.setOnClickListener(v -> viewModel.onFeedbackButtonClicked());
+        }
+
+        View.OnClickListener comingSoonListener = v ->
+                Toast.makeText(requireContext(), R.string.menu_feature_in_dev, Toast.LENGTH_SHORT).show();
+
+        if (rowStatistics != null) rowStatistics.setOnClickListener(comingSoonListener);
+        if (rowCalculator != null) rowCalculator.setOnClickListener(comingSoonListener);
+        if (rowPromocodes != null) rowPromocodes.setOnClickListener(comingSoonListener);
     }
 }

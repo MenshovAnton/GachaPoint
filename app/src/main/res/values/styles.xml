@@ -2,22 +2,26 @@
 <resources>
     <style name="NavMenuIndicator.GachaPoint.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/accent</item>
+        <item name="android:width">56dp</item>
+        <item name="android:height">32dp</item>
     </style>
     <style name="ThemeOverlay.GachaPoint.TimePicker" parent="ThemeOverlay.Material3.MaterialTimePicker">
         <item name="elevationOverlayEnabled">false</item>
+        <item name="colorSurface">@color/white</item>
         <item name="colorSurfaceContainerHigh">@color/white</item>
         <item name="colorSurfaceContainerHighest">@color/accent</item>
         <item name="colorPrimary">@color/check</item>
         <item name="colorPrimaryContainer">@color/check</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnPrimaryContainer">@color/white</item>
-        <item name="colorOnSurface">@color/white</item>
-        <item name="colorOnSurfaceVariant">@color/black</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="colorOnSurfaceVariant">@color/grey</item>
+        <item name="textAppearanceTitleLarge">@style/Typography.GachaPoint.TimePicker</item>
+        <item name="textAppearanceTitleMedium">@style/Typography.GachaPoint.TimePicker</item>
         <item name="textAppearanceLabelLarge">@style/Typography.GachaPoint.TimePicker</item>
         <item name="textAppearanceLabelMedium">@style/Typography.GachaPoint.TimePicker</item>
-        <item name="textAppearanceDisplayLarge">@style/Typography.GachaPoint.TimePicker</item>
-        <item name="textAppearanceDisplayMedium">@style/Typography.GachaPoint.TimePicker</item>
-        <item name="textAppearanceTitleMedium">@style/Typography.GachaPoint.TimePicker</item>
+        <item name="textAppearanceDisplayLarge">@style/Typography.GachaPoint.TimePickerNumbers</item>
+        <item name="textAppearanceDisplayMedium">@style/Typography.GachaPoint.TimePickerNumbers</item>
         <item name="materialClockStyle">@style/TimePickerClock.GachaPoint.Clock</item>
         <item name="android:textColorHighlight">@color/check_30</item>
     </style>
@@ -25,19 +29,39 @@
         <item name="fontFamily">@font/genshin_font</item>
         <item name="android:fontFamily">@font/genshin_font</item>
     </style>
+    <style name="Typography.GachaPoint.TimePickerNumbers" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
     <style name="TimePickerClock.GachaPoint.Clock" parent="Widget.Material3.MaterialTimePicker.Clock">
         <item name="clockNumberTextColor">@color/white</item>
     </style>
-    <style name="Navigation.GachaPoint.BottomNavBar" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="backgroundTint">@color/white</item>
+    <style name="Navigation.GachaPoint.BottomNavBar" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/card_background_light</item>
+        <item name="itemActiveIndicatorStyle">@style/NavMenuIndicator.GachaPoint.Indicator</item>
+        <item name="itemPaddingTop">10dp</item>
+        <item name="itemPaddingBottom">10dp</item>
     </style>
-    <style name="ProgressBar.GachaPoint.ProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:progressTint">@color/accent</item>
-        <item name="android:progressBackgroundTint">@color/white</item>
-        <item name="android:minHeight">10dp</item>
+    <style name="Widget.GachaPoint.LinearProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="indicatorColor">@color/accent</item>
+        <item name="trackColor">#E0E0E0</item>
+        <item name="trackThickness">14dp</item>
+        <item name="trackCornerRadius">7dp</item>
     </style>
-    <style name="CalendarMenu.GachaPoint.MenuSheet" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="android:textColor">@color/black</item>
+    <style name="Widget.GachaPoint.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
+        <item name="indicatorColor">@color/contrast_wb_tint</item>
+        <item name="trackThickness">4dp</item>
+    </style>
+    <style name="ThemeOverlay.GachaPoint.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="colorSurface">@color/card_background_light</item>
+        <item name="colorSurfaceContainerLow">@color/card_background_light</item>
+        <item name="colorOnSurface">@color/black</item>
+    </style>
+    <style name="ThemeOverlay.GachaPoint.NumberPicker" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorControlNormal">@color/accent</item>
+        <item name="android:textColorPrimary">@color/black</item>
     </style>
     <style name="Tabs.GachaPoint.TabLayout" parent="Widget.Material3.TabLayout">
         <item name="tabIndicatorColor">@color/accent</item>
@@ -51,13 +75,13 @@
         <item name="android:tabStripEnabled">true</item>
     </style>
     <style name="Dialog.GachaPoint.AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="colorSurfaceContainerHigh">@color/white</item>
+        <item name="colorSurfaceContainerHigh">@color/card_background_light</item>
         <item name="colorPrimary">@color/accent</item>
         <item name="colorOnSurface">@color/black</item>
         <item name="android:textColorHighlight">@color/check_30</item>
     </style>
     <style name="DatePicker.GachaPoint.MaterialCalendar" parent="ThemeOverlay.Material3.MaterialCalendar">
-        <item name="colorSurfaceContainerHigh">@color/white</item>
+        <item name="colorSurfaceContainerHigh">@color/card_background_light</item>
         <item name="colorPrimary">@color/accent</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnSurface">@color/black</item>
@@ -79,9 +103,9 @@
         <item name="endIconTint">@color/accent</item>
     </style>
     <style name="ThemeOverlay.GachaPoint.DropdownMenu" parent="ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox">
-        <item name="colorSurfaceContainerHigh">@color/white</item>
-        <item name="colorSurfaceContainer">@color/white</item>
-        <item name="colorSurface">@color/white</item>
+        <item name="colorSurfaceContainerHigh">@color/card_background_light</item>
+        <item name="colorSurfaceContainer">@color/card_background_light</item>
+        <item name="colorSurface">@color/card_background_light</item>
         <item name="colorOnSurface">@color/black</item>
         <item name="colorOnSurfaceVariant">@color/accent</item>
         <item name="colorPrimary">@color/accent</item>
@@ -96,23 +120,69 @@
         <item name="cornerSize">16dp</item>
     </style>
     <style name="Widget.GachaPoint.MaterialCardView" parent="Widget.Material3.CardView.Filled">
-        <item name="cardBackgroundColor">@color/white</item>
-        <item name="strokeWidth">2dp</item>
-        <item name="strokeColor">@color/accent</item>
+        <item name="cardBackgroundColor">@color/card_background_light</item>
+        <item name="strokeWidth">0dp</item>
     </style>
-    <style name="Switch.GachaPoint.MaterialSwitch" parent="TextAppearance.AppCompat.Widget.Switch">
+    <style name="Switch.GachaPoint.MaterialSwitch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
         <item name="thumbTint">@color/switch_thumb_selector</item>
         <item name="trackTint">@color/switch_track_selector</item>
-        <item name="iconTint">@color/white</item>
+        <item name="thumbIconTint">@color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="switchPadding">10dp</item>
     </style>
-    <style name="Logo.GachaPoint.Image" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+    <style name="Logo.GachaPoint.Image" parent="ShapeAppearance.Material3.Corner.Small">
         <item name="cornerSize">8dp</item>
         <item name="cornerFamily">rounded</item>
     </style>
-    <style name="Avatar.GachaPoint.Image" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+    <style name="Logo.GachaPoint.Hero" parent="ShapeAppearance.Material3.Corner.Medium">
+        <item name="cornerSize">20dp</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+    <style name="Avatar.GachaPoint.Image" parent="ShapeAppearance.Material3.Corner.Large">
         <item name="cornerSize">24dp</item>
         <item name="cornerFamily">rounded</item>
+    </style>
+    <style name="TextAppearance.GachaPoint.Chip" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/genshin_font</item>
+        <item name="android:fontFamily">@font/genshin_font</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="Chip.GachaPoint.Time" parent="Widget.Material3.Chip.Assist">
+        <item name="chipBackgroundColor">@color/accent</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">@style/TextAppearance.GachaPoint.Chip</item>
+        <item name="chipCornerRadius">12dp</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/genshin_font</item>
+        <item name="android:fontFamily">@font/genshin_font</item>
+    </style>
+    <style name="Button.GachaPoint.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="backgroundTint">@color/accent</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/genshin_font</item>
+        <item name="android:fontFamily">@font/genshin_font</item>
+    </style>
+    <style name="Button.GachaPoint.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/accent</item>
+        <item name="strokeWidth">1.5dp</item>
+        <item name="android:textColor">@color/accent</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/genshin_font</item>
+        <item name="android:fontFamily">@font/genshin_font</item>
+    </style>
+    <style name="Widget.GachaPoint.BottomSheetCard" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/sheet_card_background</item>
+        <item name="cardCornerRadius">18dp</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="cardElevation">0dp</item>
     </style>
 </resources>

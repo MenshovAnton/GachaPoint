@@ -21,8 +21,9 @@ public class InfoView extends Fragment {
     private InfoViewModel viewModel;
     private ImageButton back;
 
-    private ImageButton githubLink;
-    private ImageButton telegramLink;
+    private View rowGithub;
+    private View rowTelegram;
+    private View rowDeveloper;
 
     public InfoView() {}
 
@@ -34,8 +35,9 @@ public class InfoView extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
         back = view.findViewById(R.id.btn_back);
-        githubLink = view.findViewById(R.id.btn_github);
-        telegramLink = view.findViewById(R.id.btn_telegram);
+        rowGithub = view.findViewById(R.id.row_github);
+        rowTelegram = view.findViewById(R.id.row_telegram);
+        rowDeveloper = view.findViewById(R.id.row_developer);
         return view;
     }
 
@@ -46,8 +48,15 @@ public class InfoView extends Fragment {
         viewModel = new ViewModelProvider(this).get(InfoViewModel.class);
 
         back.setOnClickListener(v -> viewModel.onBackToMenuClicked());
-        githubLink.setOnClickListener(v -> openUrl("https://github.com/MenshovAnton/GachaPoint/"));
-        telegramLink.setOnClickListener(v -> openUrl("https://t.me/GachaPoint_official"));
+        if (rowGithub != null) {
+            rowGithub.setOnClickListener(v -> openUrl("https://github.com/MenshovAnton/GachaPoint/"));
+        }
+        if (rowTelegram != null) {
+            rowTelegram.setOnClickListener(v -> openUrl("https://t.me/GachaPoint_official"));
+        }
+        if (rowDeveloper != null) {
+            rowDeveloper.setOnClickListener(v -> openUrl("https://github.com/MenshovAnton"));
+        }
 
         observeViewModel();
     }

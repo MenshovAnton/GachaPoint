@@ -28,6 +28,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,8 +145,7 @@ public class MainActivityView extends AppCompatActivity {
     }
 
     public void showCalendarMenu(OnCalendarMenuClickListener listener) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        final BottomSheetDialog dialog = new BottomSheetDialog(this, R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
         dialog.setContentView(R.layout.calendar_more_sheet);
 
         dialog.findViewById(R.id.ll_add).setOnClickListener(v -> {
@@ -174,12 +174,6 @@ public class MainActivityView extends AppCompatActivity {
         });
 
         dialog.show();
-
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.getWindow().setGravity(Gravity.BOTTOM);
-        }
     }
 
     public interface OnPiggyBankMenuClickListener {
@@ -190,8 +184,7 @@ public class MainActivityView extends AppCompatActivity {
     }
 
     public void showPiggyBankMenu(OnPiggyBankMenuClickListener listener) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        final BottomSheetDialog dialog = new BottomSheetDialog(this, R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
         dialog.setContentView(R.layout.piggy_bank_more_sheet);
 
         dialog.findViewById(R.id.layoutAddOneGarant).setOnClickListener(v -> {
@@ -215,12 +208,6 @@ public class MainActivityView extends AppCompatActivity {
         });
 
         dialog.show();
-
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.getWindow().setGravity(Gravity.BOTTOM);
-        }
     }
 
     public interface OnWishCounterMenuClickListener {
@@ -231,8 +218,7 @@ public class MainActivityView extends AppCompatActivity {
     }
 
     public void showWishCounterMenu(OnWishCounterMenuClickListener listener) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        final BottomSheetDialog dialog = new BottomSheetDialog(this, R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
         dialog.setContentView(R.layout.wishes_counter_more_sheet);
 
         dialog.findViewById(R.id.ll_add_one_attempt).setOnClickListener(v -> {
@@ -256,12 +242,6 @@ public class MainActivityView extends AppCompatActivity {
         });
 
         dialog.show();
-
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.getWindow().setGravity(Gravity.BOTTOM);
-        }
     }
 
     public GameType getSubType() {

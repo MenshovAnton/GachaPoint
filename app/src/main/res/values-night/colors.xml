@@ -15,4 +15,13 @@
     <color name="background_night">#181818</color>
     <color name="nav_bar_background_night">#0D0D0D</color>
     <color name="text">#FFFFFF</color>
+    <color name="text_secondary">#9E9E9E</color>
+    <color name="divider_color">#1FFFFFFF</color>
+    <color name="card_background_light">#EAEDF0</color>
+    <color name="sheet_card_background">#222222</color>
+    <color name="badge_gold_bg">#332510</color>
+    <color name="badge_purple_bg">#281636</color>
+    <color name="badge_green_bg">#152A19</color>
+    <color name="badge_red_bg">#311414</color>
+    <color name="badge_blue_bg">#152436</color>
 </resources>

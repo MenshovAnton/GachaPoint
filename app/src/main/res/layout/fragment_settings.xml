@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp"
         tools:ignore="UselessParent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,8 +29,6 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_left_arrow"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_settings_header"
-                app:layout_constraintEnd_toStartOf="@+id/tv_settings_header"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_settings_header" />
 
@@ -47,418 +47,467 @@
                 app:autoSizeMinTextSize="18sp"
                 app:autoSizeStepGranularity="1sp"
                 app:autoSizeTextType="uniform"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btn_back"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- КАРТОЧКА: УВЕДОМЛЕНИЯ -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_notification_settings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="15dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_settings_header"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintTop_toBottomOf="@+id/tv_settings_header">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="15dp">
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
 
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/sm_notification_switch"
-                        style="@style/Switch.GachaPoint.MaterialSwitch"
+                    <!-- Заголовок карточки -->
+                    <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="20dp"
-                        android:checked="true"
-                        android:fontFamily="@font/genshin_font"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp"
                         android:text="@string/notifications_settings_title"
+                        android:textColor="@color/text"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
+                        android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tv_time_selector_header"
-                        android:layout_width="wrap_content"
+                    <!-- Строка 1: Главный свитч напоминаний -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/notifications_settings_time"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/sm_notification_switch"
-                        app:layout_constraintVertical_bias="0.0" />
-
-                    <ImageButton
-                        android:id="@+id/btn_select_time"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginEnd="20dp"
-                        android:background="@drawable/rounded_button"
-                        android:importantForAccessibility="no"
-                        android:padding="8dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/icon_edit"
-                        app:layout_constraintBottom_toBottomOf="@+id/fl_minutes_container"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tv_time_selector_header" />
-
-                    <TextView
-                        android:id="@+id/tv_time_separator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:fontFamily="@font/genshin_font"
-                        android:text="@string/time"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/fl_hour_container"
-                        app:layout_constraintStart_toEndOf="@+id/fl_hour_container"
-                        app:layout_constraintTop_toTopOf="@+id/fl_hour_container" />
-
-                    <FrameLayout
-                        android:id="@+id/fl_hour_container"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@drawable/calendar_cell"
-                        android:minWidth="35dp"
-                        android:minHeight="35dp"
-                        app:layout_constrainedHeight="true"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
-                        app:layout_constraintVertical_bias="0.0">
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="12dp">
 
                         <TextView
-                            android:id="@+id/tv_hour"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/tv_notif_title"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:padding="4dp"
-                            android:textColor="@color/white"
-                            android:textSize="20sp"
-                            tools:text="12" />
-
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:id="@+id/fl_minutes_container"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@drawable/calendar_cell"
-                        android:minWidth="35dp"
-                        android:minHeight="35dp"
-                        app:layout_constrainedHeight="true"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/tv_time_separator"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_time_selector_header"
-                        app:layout_constraintVertical_bias="0.0">
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/notifications_title"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toStartOf="@+id/sm_notification_switch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/tv_minutes"
+                            android:id="@+id/tv_notif_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/notifications_settings_desc"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/sm_notification_switch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_notif_title" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/sm_notification_switch"
+                            style="@style/Switch.GachaPoint.MaterialSwitch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:padding="4dp"
-                            android:textColor="@color/white"
-                            android:textSize="20sp"
-                            tools:text="00" />
+                            android:checked="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    </FrameLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!-- Разделитель -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:background="@color/divider_color" />
+
+                    <!-- Строка 2: Время напоминания -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_select_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="12dp">
+
+                        <TextView
+                            android:id="@+id/tv_time_header"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/notifications_settings_time"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_time_chip"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/btn_time_chip"
+                            style="@style/Chip.GachaPoint.Time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/genshin_font"
+                            app:chipCornerRadius="12dp"
+                            app:chipStrokeWidth="0dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="12:00" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-
+            <!-- КАРТОЧКА: ВНЕШНИЙ ВИД И ПОВЕДЕНИЕ -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_ui_settings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="14dp"
                 android:layout_marginEnd="15dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_notification_settings"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintTop_toBottomOf="@+id/mcv_notification_settings">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="15dp">
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
 
+                    <!-- Заголовок карточки -->
                     <TextView
-                        android:id="@+id/tv_ui_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp"
                         android:text="@string/ui_setting_title"
+                        android:textColor="@color/text"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
+                        android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tv_language_selector_header"
-                        android:layout_width="wrap_content"
+                    <!-- Строка 1: Тема -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/ui_settings_language"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_ui_header"
-                        app:layout_constraintVertical_bias="0.0" />
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="10dp">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_lang_selector"
-                        style="@style/DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
-                        android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_language_selector_header"
-                        app:layout_constraintVertical_bias="0.0">
+                        <TextView
+                            android:id="@+id/tv_theme_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:text="@string/ui_settings_theme"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/til_theme_selector"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/mac_lang_selector"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:saveEnabled="false"
-                            android:inputType="none"
-                            android:minHeight="0dp"
-                            android:paddingHorizontal="16dp"
-                            android:paddingVertical="0dp"
-                            android:popupBackground="@drawable/bg_dropdown_popup"
-                            android:textColor="@color/dropdown_text_selector"
-                            android:textSize="14sp"
-                            tools:ignore="LabelFor" />
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_theme_selector"
+                            style="@style/DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="160dp"
+                            android:layout_height="44dp"
+                            android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/mac_theme_selector"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:inputType="none"
+                                android:minHeight="0dp"
+                                android:paddingHorizontal="14dp"
+                                android:paddingVertical="0dp"
+                                android:popupBackground="@drawable/bg_dropdown_popup"
+                                android:saveEnabled="false"
+                                android:textColor="@color/dropdown_text_selector"
+                                android:textSize="14sp"
+                                tools:ignore="LabelFor" />
 
-                    <TextView
-                        android:id="@+id/tv_theme_selector_header"
-                        android:layout_width="wrap_content"
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Разделитель -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:background="@color/divider_color" />
+
+                    <!-- Строка 2: Язык -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/ui_settings_theme"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/til_lang_selector"
-                        app:layout_constraintVertical_bias="0.0" />
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="10dp">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_theme_selector"
-                        style="@style/DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
-                        android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_theme_selector_header"
-                        app:layout_constraintVertical_bias="0.0">
+                        <TextView
+                            android:id="@+id/tv_lang_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:text="@string/ui_settings_language"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/til_lang_selector"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/mac_theme_selector"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:saveEnabled="false"
-                            android:inputType="none"
-                            android:minHeight="0dp"
-                            android:paddingHorizontal="16dp"
-                            android:paddingVertical="0dp"
-                            android:popupBackground="@drawable/bg_dropdown_popup"
-                            android:textColor="@color/dropdown_text_selector"
-                            android:textSize="14sp"
-                            tools:ignore="LabelFor" />
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_lang_selector"
+                            style="@style/DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="160dp"
+                            android:layout_height="44dp"
+                            android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/mac_lang_selector"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:inputType="none"
+                                android:minHeight="0dp"
+                                android:paddingHorizontal="14dp"
+                                android:paddingVertical="0dp"
+                                android:popupBackground="@drawable/bg_dropdown_popup"
+                                android:saveEnabled="false"
+                                android:textColor="@color/dropdown_text_selector"
+                                android:textSize="14sp"
+                                tools:ignore="LabelFor" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Разделитель -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:background="@color/divider_color" />
+
+                    <!-- Строка 3: Вибрация -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="12dp">
+
+                        <TextView
+                            android:id="@+id/tv_vibro_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/vibration"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toStartOf="@+id/sm_vibro_switch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_vibro_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/ui_settings_vibration_desc"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/sm_vibro_switch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_vibro_title" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/sm_vibro_switch"
+                            style="@style/Switch.GachaPoint.MaterialSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- КАРТОЧКА: ДАННЫЕ И ХРАНИЛИЩЕ -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_storage_settings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="14dp"
                 android:layout_marginEnd="15dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_ui_settings"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintTop_toBottomOf="@+id/mcv_ui_settings">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="15dp">
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
 
+                    <!-- Заголовок карточки -->
                     <TextView
-                        android:id="@+id/tv_storage_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp"
                         android:text="@string/db_settings_title"
+                        android:textColor="@color/text"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
+                        android:textStyle="bold" />
 
-                    <Button
-                        android:id="@+id/btn_export_database"
-                        android:layout_width="wrap_content"
+                    <!-- Строка 1: Экспорт -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/accent"
-                        android:text="@string/db_settings_backup_button"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_storage_header"
-                        app:layout_constraintVertical_bias="0.0" />
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="10dp">
 
-                    <Button
-                        android:id="@+id/btn_import_database"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/tv_backup_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/db_settings_backup_button"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_export_database"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_backup_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/db_settings_backup_desc"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_export_database"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_backup_title" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_export_database"
+                            style="@style/Button.GachaPoint.Tonal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:minWidth="105dp"
+                            android:text="@string/db_settings_backup_button"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Разделитель -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:background="@color/divider_color" />
+
+                    <!-- Строка 2: Импорт -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/accent"
-                        android:text="@string/db_settings_import_button"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/btn_export_database"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_storage_header"
-                        app:layout_constraintVertical_bias="0.0" />
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="10dp">
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/tv_import_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/db_settings_import_button"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_import_database"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-            </com.google.android.material.card.MaterialCardView>
+                        <TextView
+                            android:id="@+id/tv_import_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/db_settings_import_desc"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_import_database"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_import_title" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_accessibility_settings"
-                style="@style/Widget.GachaPoint.MaterialCardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="15dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_storage_settings"
-                app:layout_constraintVertical_bias="0.0">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_import_database"
+                            style="@style/Button.GachaPoint.Outlined"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:minWidth="105dp"
+                            android:text="@string/db_settings_import_button"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="15dp">
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
-                        android:id="@+id/tv_accessibility_header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:text="@string/ui_settings_accessibility"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/sm_vibro_switch"
-                        style="@style/Switch.GachaPoint.MaterialSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="5dp"
-                        android:checked="true"
-                        android:fontFamily="@font/genshin_font"
-                        android:text="@string/vibration"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_accessibility_header"
-                        app:layout_constraintVertical_bias="0.0" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 

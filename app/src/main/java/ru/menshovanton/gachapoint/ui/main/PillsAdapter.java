@@ -13,7 +13,7 @@ import ru.menshovanton.gachapoint.R;
 public class PillsAdapter extends RecyclerView.Adapter<PillsAdapter.PillViewHolder> {
 
     private final List<String> items;
-    private int selectedPosition = 0;
+    private int selectedPosition;
     private final OnPillClickListener listener;
 
     public interface OnPillClickListener {
@@ -21,7 +21,12 @@ public class PillsAdapter extends RecyclerView.Adapter<PillsAdapter.PillViewHold
     }
 
     public PillsAdapter(List<String> items, OnPillClickListener listener) {
+        this(items, 0, listener);
+    }
+
+    public PillsAdapter(List<String> items, int initialSelectedPosition, OnPillClickListener listener) {
         this.items = items;
+        this.selectedPosition = initialSelectedPosition;
         this.listener = listener;
     }
 

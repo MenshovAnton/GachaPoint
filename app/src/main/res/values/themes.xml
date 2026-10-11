@@ -5,16 +5,50 @@
         <item name="postSplashScreenTheme">@style/Base.Theme.GachaPoint</item>
     </style>
     <style name="Base.Theme.GachaPoint" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:windowBackground">@color/white</item>
+        <!-- Brand / Identity -->
         <item name="fontFamily">@font/genshin_font</item>
+        <item name="android:fontFamily">@font/genshin_font</item>
+
+        <!-- Base Surface & Background (Crisp Pure White) -->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="colorSurfaceVariant">@color/card_background_light</item>
+        <item name="colorOnSurfaceVariant">@color/black</item>
+        <item name="colorSurfaceContainerLowest">@color/white</item>
+        <item name="colorSurfaceContainerLow">@color/card_background_light</item>
+        <item name="colorSurfaceContainer">@color/card_background_light</item>
+        <item name="colorSurfaceContainerHigh">@color/card_background_light</item>
+        <item name="colorSurfaceContainerHighest">@color/card_background_light</item>
+
+        <!-- Primary Accent -->
+        <item name="colorPrimary">@color/accent</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/accent</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
+
+        <!-- Secondary & Tertiary -->
+        <item name="colorSecondary">@color/check</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/check</item>
+        <item name="colorOnSecondaryContainer">@color/white</item>
+
+        <!-- Outline / Borders -->
+        <item name="colorOutline">@color/accent</item>
+        <item name="colorOutlineVariant">@color/light_grey</item>
+
+        <!-- Navigation Bar & Controls -->
+        <item name="bottomNavigationStyle">@style/Navigation.GachaPoint.BottomNavBar</item>
         <item name="itemTextColor">@drawable/bottom_navigation_text_selector</item>
         <item name="itemIconTint">@drawable/bottom_navigation_selector</item>
+
+        <!-- Component Themes -->
         <item name="materialTimePickerTheme">@style/ThemeOverlay.GachaPoint.TimePicker</item>
-        <item name="bottomNavigationStyle">@style/Navigation.GachaPoint.BottomNavBar</item>
-        <item name="progressBarStyle">@style/ProgressBar.GachaPoint.ProgressBar</item>
-        <item name="bottomSheetStyle">@style/CalendarMenu.GachaPoint.MenuSheet</item>
-        <item name="android:trackTint">@color/light_grey</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.GachaPoint.BottomSheetDialog</item>
+        <item name="materialAlertDialogTheme">@style/Dialog.GachaPoint.AlertDialog</item>
+        <item name="materialCalendarTheme">@style/DatePicker.GachaPoint.MaterialCalendar</item>
+        <item name="linearProgressIndicatorStyle">@style/Widget.GachaPoint.LinearProgressIndicator</item>
+        <item name="circularProgressIndicatorStyle">@style/Widget.GachaPoint.CircularProgressIndicator</item>
     </style>
 </resources>

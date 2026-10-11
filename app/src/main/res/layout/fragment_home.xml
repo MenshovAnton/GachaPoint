@@ -118,15 +118,14 @@
                     app:srcCompat="@drawable/icon_intertwined_fate"
                     tools:ignore="ImageContrastCheck" />
 
-                <ProgressBar
+                <com.google.android.material.progressindicator.LinearProgressIndicator
                     android:id="@+id/pb_save_progress"
-                    style="?android:attr/progressBarStyleHorizontal"
+                    style="@style/Widget.GachaPoint.LinearProgressIndicator"
                     android:layout_width="0dp"
-                    android:layout_height="15dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:max="100"
                     android:progress="0"
-                    android:progressDrawable="@drawable/progress_bar_layer"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

@@ -17,8 +17,6 @@
     <string name="star_rail_special_pass_count_header">Кол-во пропусков экспресса:</string>
     <string name="inter_knot_member_count_header">Кол-во интернот-подписок:</string>
     <string name="notifications_settings_title">Уведомления</string>
-    <string name="notifications_settings_time">Время оповещения:</string>
-    <string name="db_settings_title">Хранилище</string>
     <string name="db_settings_backup_button">Экспорт</string>
     <string name="nav_home">Домашняя</string>
     <string name="nav_tracker">Календарь</string>
@@ -100,7 +98,15 @@
     <string name="delete_confirm_message">Вы действительно хотите удалить эту запись? Это действие нельзя отменить, и данные будут потеряны навсегда.</string>
     <string name="delete_sub_confirm_message">Вы действительно хотите удалить подписку? Это действие нельзя отменить, и данные будут потеряны навсегда.</string>
     <string name="warning">Внимание!</string>
-    <string name="ui_setting_title">Интерфейс</string>
+    <string name="notifications_settings_desc">Напоминания о ежедневных отметках</string>
+    <string name="notifications_settings_time">Время напоминания</string>
+    <string name="time_picker_title">Время напоминания</string>
+    <string name="time_picker_save">Готово</string>
+    <string name="ui_settings_vibration_desc">Тактильный отклик при нажатиях и отметках</string>
+    <string name="db_settings_title">Данные и хранилище</string>
+    <string name="db_settings_backup_desc">Сохранить отметки и крутки в файл</string>
+    <string name="db_settings_import_desc">Восстановить историю из файла базы</string>
+    <string name="ui_setting_title">Внешний вид и поведение</string>
     <string name="ui_settings_language">Язык</string>
     <string name="ui_settings_theme">Тема</string>
     <string name="ui_settings_accessibility">Специальные возможности</string>
@@ -124,4 +130,47 @@
     <string name="db_error_invalid_file">Выбранный файл не является базой данных SQLite</string>
     <string name="developer_card_title">Разработчик</string>
     <string name="form_load_error">Ошибка загрузки формы!</string>
+
+    <!-- Subtitles and headers for bottom sheets -->
+    <string name="sheet_add_ten_desc">+10 к текущей истории</string>
+    <string name="sheet_add_one_desc">+1 к текущей истории</string>
+    <string name="sheet_add_five_star_desc">Сбросить счетчик 5★ гаранта</string>
+    <string name="sheet_add_four_star_desc">Сбросить счетчик 4★ гаранта</string>
+    <string name="sheet_pity_1_desc">+77 круток к цели</string>
+    <string name="sheet_pity_2_desc">+154 крутки к цели</string>
+    <string name="sheet_pity_6_desc">+462 крутки к цели</string>
+    <string name="sheet_reset_desc">Обнулить текущий прогресс цели</string>
+    <string name="sheet_add_sub_desc">+1 активная подписка на 30 дней</string>
+    <string name="sheet_del_sub_desc">Удалить добавленную сегодня подписку</string>
+    <string name="sheet_export_desc">Сохранить резервную копию базы</string>
+    <string name="sheet_recover_desc">Отметить вчерашний день как полученный</string>
+    <string name="sheet_cancel_mark_desc">Снять отметку за сегодняшний день</string>
+    <string name="sheet_section_add_wishes">Добавить попытки</string>
+    <string name="sheet_section_drops">Выпадение редкостей</string>
+    <string name="sheet_section_quick_add">Быстрое добавление</string>
+
+    <!-- About screen strings -->
+    <string name="about_version_badge">v0.2.0 • Offline &amp; Open Source</string>
+    <string name="about_section_project">О проекте</string>
+    <string name="about_section_links">Ссылки и сообщество</string>
+    <string name="about_github_title">Исходный код</string>
+    <string name="about_github_desc">github.com/MenshovAnton/GachaPoint</string>
+    <string name="about_telegram_title">Telegram-канал</string>
+    <string name="about_telegram_desc">Новости и обсуждение проекта</string>
+    <string name="about_developer_desc">MenshovAnton • Автор проекта</string>
+
+    <!-- Menu Hub strings -->
+    <string name="menu_section_tools">Инструменты и сервисы</string>
+    <string name="menu_section_app">Приложение</string>
+    <string name="menu_stats_title">Общая статистика</string>
+    <string name="menu_stats_desc">Аналитика круток, шансов и расходов</string>
+    <string name="menu_calc_title">Калькулятор гемов и круток</string>
+    <string name="menu_calc_desc">Расчет накоплений к баннерам</string>
+    <string name="menu_promo_title">Агрегатор промокодов</string>
+    <string name="menu_promo_desc">Свежие коды на примогемы и нефрит</string>
+    <string name="menu_badge_soon">Скоро</string>
+    <string name="menu_settings_desc">Оповещения, темы и база данных</string>
+    <string name="menu_feedback_desc">Сообщить об ошибке или предложить идею</string>
+    <string name="menu_about_desc">Версия, репозиторий и разработчик</string>
+    <string name="menu_feature_in_dev">Раздел находится в разработке!</string>
 </resources>

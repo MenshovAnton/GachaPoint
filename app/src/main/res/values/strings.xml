@@ -18,8 +18,14 @@
     <string name="star_rail_special_pass_count_header">Number of express passes:</string>
     <string name="inter_knot_member_count_header">Number of Inter-Knot subs:</string>
     <string name="notifications_settings_title">Notifications</string>
-    <string name="notifications_settings_time">Notification time:</string>
-    <string name="db_settings_title">Storage</string>
+    <string name="notifications_settings_desc">Reminders to claim daily check-ins</string>
+    <string name="notifications_settings_time">Notification time</string>
+    <string name="time_picker_title">Set reminder time</string>
+    <string name="time_picker_save">Done</string>
+    <string name="ui_settings_vibration_desc">Haptic feedback on clicks and marks</string>
+    <string name="db_settings_title">Data &amp; Storage</string>
+    <string name="db_settings_backup_desc">Backup marks and pulls to SQLite file</string>
+    <string name="db_settings_import_desc">Restore history from a backup file</string>
     <string name="db_settings_backup_button">Export</string>
     <string name="nav_home">Home</string>
     <string name="nav_tracker">Calendar</string>
@@ -138,4 +144,47 @@
     <string name="developer_card_title">Developer</string>
     <string name="developer_username" translatable="false">MenshovAnton</string>
     <string name="form_load_error">Form load error!</string>
+
+    <!-- Subtitles and headers for bottom sheets -->
+    <string name="sheet_add_ten_desc">+10 to current history</string>
+    <string name="sheet_add_one_desc">+1 to current history</string>
+    <string name="sheet_add_five_star_desc">Reset 5★ pity counter</string>
+    <string name="sheet_add_four_star_desc">Reset 4★ pity counter</string>
+    <string name="sheet_pity_1_desc">+77 pulls towards target</string>
+    <string name="sheet_pity_2_desc">+154 pulls towards target</string>
+    <string name="sheet_pity_6_desc">+462 pulls towards target</string>
+    <string name="sheet_reset_desc">Reset target savings progress</string>
+    <string name="sheet_add_sub_desc">+1 active 30-day subscription</string>
+    <string name="sheet_del_sub_desc">Delete subscription added today</string>
+    <string name="sheet_export_desc">Save SQLite database backup</string>
+    <string name="sheet_recover_desc">Mark yesterday as claimed</string>
+    <string name="sheet_cancel_mark_desc">Remove today\'s check-in mark</string>
+    <string name="sheet_section_add_wishes">Add Pulls</string>
+    <string name="sheet_section_drops">Rarity Drops</string>
+    <string name="sheet_section_quick_add">Quick Add</string>
+
+    <!-- About screen strings -->
+    <string name="about_version_badge">v0.2.0 • Offline &amp; Open Source</string>
+    <string name="about_section_project">About Project</string>
+    <string name="about_section_links">Links &amp; Community</string>
+    <string name="about_github_title">Source Code</string>
+    <string name="about_github_desc">github.com/MenshovAnton/GachaPoint</string>
+    <string name="about_telegram_title">Telegram Channel</string>
+    <string name="about_telegram_desc">Project news and discussion</string>
+    <string name="about_developer_desc">MenshovAnton • Project author</string>
+
+    <!-- Menu Hub strings -->
+    <string name="menu_section_tools">Tools &amp; Services</string>
+    <string name="menu_section_app">Application</string>
+    <string name="menu_stats_title">Overall Statistics</string>
+    <string name="menu_stats_desc">Pulls, probability and expense analytics</string>
+    <string name="menu_calc_title">Pulls &amp; Gems Calculator</string>
+    <string name="menu_calc_desc">Savings planner for future banners</string>
+    <string name="menu_promo_title">Promo Codes Hub</string>
+    <string name="menu_promo_desc">Latest codes for primogems and jade</string>
+    <string name="menu_badge_soon">Soon</string>
+    <string name="menu_settings_desc">Notifications, themes and backups</string>
+    <string name="menu_feedback_desc">Report a bug or suggest a feature</string>
+    <string name="menu_about_desc">Version, open source and contacts</string>
+    <string name="menu_feature_in_dev">This feature is currently under development!</string>
 </resources>
