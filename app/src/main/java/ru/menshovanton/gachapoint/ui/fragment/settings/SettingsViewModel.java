@@ -16,7 +16,6 @@ import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.db.DatabaseExporter;
 import ru.menshovanton.gachapoint.data.db.DatabaseImporter;
 import ru.menshovanton.gachapoint.data.local.Preferences;
-import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 import ru.menshovanton.gachapoint.worker.NotificationScheduler;
 
@@ -205,11 +204,6 @@ public class SettingsViewModel extends AndroidViewModel {
             @Override
             public void onSuccess() {
                 toastMessageEvent.setValue(R.string.db_import_successful);
-
-                for (GameType gameType : GameType.values()) {
-                    preferences.saveNeedMigration(gameType, true);
-                }
-
                 restartAppEvent.call();
             }
 

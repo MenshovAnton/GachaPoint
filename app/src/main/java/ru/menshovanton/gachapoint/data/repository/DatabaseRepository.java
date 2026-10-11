@@ -21,16 +21,20 @@ public class DatabaseRepository {
         void onResult(T result);
     }
 
-    private final AppDatabase db;
+    private final Context context;
 
     public DatabaseRepository(Context context) {
-        this.db = AppDatabase.getInstance(context);
+        this.context = context.getApplicationContext();
+    }
+
+    private AppDatabase getDb() {
+        return AppDatabase.getInstance(context);
     }
 
 
     public void getPullsByBanner(GameType gameType, String bannerType, Callback<List<Pull>> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            List<PullEntity> entities = db.pullDao().getPulls(gameType.getCode(), bannerType);
+            List<PullEntity> entities = getDb().pullDao().getPulls(gameType.getCode(), bannerType);
             List<Pull> pulls = new ArrayList<>(entities.size());
             for (PullEntity entity : entities) {
                 pulls.add(entity.toWishModel());
@@ -42,7 +46,7 @@ public class DatabaseRepository {
     public void addPulls(String dateTime, String dropType, String dropRare, int count,
                          GameType gameType, String bannerType, boolean isResetPity, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.pullDao().addPullsBatch(dateTime, dropType, dropRare, count, gameType.getCode(), bannerType, isResetPity);
+            getDb().pullDao().addPullsBatch(dateTime, dropType, dropRare, count, gameType.getCode(), bannerType, isResetPity);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
@@ -52,7 +56,7 @@ public class DatabaseRepository {
     public void updatePull(int id, String dateTime, String dropType, String dropRare,
                            GameType gameType, String bannerType, boolean isResetPity, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.pullDao().updatePullFields(id, dateTime, dropType, dropRare, bannerType, isResetPity);
+            getDb().pullDao().updatePullFields(id, dateTime, dropType, dropRare, bannerType, isResetPity);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
@@ -61,7 +65,7 @@ public class DatabaseRepository {
 
     public void deletePull(int id, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.pullDao().deletePull(id);
+            getDb().pullDao().deletePull(id);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
@@ -71,14 +75,14 @@ public class DatabaseRepository {
 
     public void hasDataForYear(int year, Callback<Boolean> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            boolean hasData = db.calendarDao().getYearEntriesCount(year) > 0;
+            boolean hasData = getDb().calendarDao().getYearEntriesCount(year) > 0;
             AppDatabase.postToMain(() -> callback.onResult(hasData));
         });
     }
 
     public void saveCalendarEntities(List<CalendarEntity> entities, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.calendarDao().insertCalendarDays(entities);
+            getDb().calendarDao().insertCalendarDays(entities);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
@@ -88,7 +92,7 @@ public class DatabaseRepository {
     public void getMonthCalendarData(int year, int month, GameType gameType, Callback<List<Date>> callback) {
         AppDatabase.getExecutor().execute(() -> {
             int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
-            List<Date> dates = db.calendarDao().getCalendarForMonth(year, month, code);
+            List<Date> dates = getDb().calendarDao().getCalendarForMonth(year, month, code);
             AppDatabase.postToMain(() -> callback.onResult(dates));
         });
     }
@@ -96,7 +100,7 @@ public class DatabaseRepository {
     public void getDayCalendarData(int year, int dayOfYear, GameType gameType, Callback<Date> callback) {
         AppDatabase.getExecutor().execute(() -> {
             int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
-            Date date = db.calendarDao().getDay(year, dayOfYear, code);
+            Date date = getDb().calendarDao().getDay(year, dayOfYear, code);
             AppDatabase.postToMain(() -> callback.onResult(date));
         });
     }
@@ -104,7 +108,7 @@ public class DatabaseRepository {
     public void getDaysRangeData(int year, int startDay, int endDay, GameType gameType, Callback<List<Date>> callback) {
         AppDatabase.getExecutor().execute(() -> {
             int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
-            List<Date> dates = db.calendarDao().getDaysRange(year, startDay, endDay, code);
+            List<Date> dates = getDb().calendarDao().getDaysRange(year, startDay, endDay, code);
             AppDatabase.postToMain(() -> callback.onResult(dates));
         });
     }
@@ -112,7 +116,7 @@ public class DatabaseRepository {
     public void updateCalendarDay(int year, int dayOfYear, GameType gameType, int status, int subDaysRemaining, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
             if (gameType != null) {
-                db.calendarDao().insertOrUpdateGameStatus(
+                getDb().calendarDao().insertOrUpdateGameStatus(
                         new CalendarGameStatusEntity(year, dayOfYear, gameType.getCode(), status, subDaysRemaining)
                 );
             }
@@ -122,54 +126,69 @@ public class DatabaseRepository {
         });
     }
 
-    public AppDatabase getDb() {
-        return db;
-    }
-
     public void updateSubscribeDaysBatch(List<CalendarGameStatusEntity> statusEntities, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.calendarDao().updateSubscribeDaysTransaction(statusEntities);
+            getDb().calendarDao().updateSubscribeDaysTransaction(statusEntities);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
         });
     }
 
-    public void insertOrUpdateGameStatusBatch(List<CalendarGameStatusEntity> statusEntities, Runnable onComplete) {
-        updateSubscribeDaysBatch(statusEntities, onComplete);
+    public void clearCalendarStatusesInRange(GameType gameType, java.time.LocalDate startDate, java.time.LocalDate endDate, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            if (gameType != null && startDate != null && endDate != null) {
+                int gameCode = gameType.getCode();
+                int startYear = startDate.getYear();
+                int endYear = endDate.getYear();
+
+                if (startYear == endYear) {
+                    getDb().calendarDao().resetStatusesInRangeSameYear(gameCode, startYear, startDate.getDayOfYear(), endDate.getDayOfYear());
+                } else {
+                    getDb().calendarDao().resetStatusesInRangeSameYear(gameCode, startYear, startDate.getDayOfYear(), startDate.lengthOfYear());
+                    for (int y = startYear + 1; y < endYear; y++) {
+                        getDb().calendarDao().resetStatusesInRangeSameYear(gameCode, y, 1, java.time.LocalDate.of(y, 1, 1).lengthOfYear());
+                    }
+                    getDb().calendarDao().resetStatusesInRangeSameYear(gameCode, endYear, 1, endDate.getDayOfYear());
+                }
+            }
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
     }
 
     public void getActiveSubscription(GameType gameType, long epochDay, Callback<SubscriptionEntity> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            SubscriptionEntity entity = db.subscriptionDao().getActiveSubscription(gameType.getCode(), epochDay);
+            SubscriptionEntity entity = getDb().subscriptionDao().getActiveSubscription(gameType.getCode(), epochDay);
             AppDatabase.postToMain(() -> callback.onResult(entity));
         });
     }
 
     public void getSubscriptionsCountForGame(GameType gameType, Callback<Integer> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            int count = db.subscriptionDao().getSubscriptionsCountForGame(gameType.getCode());
+            int count = getDb().subscriptionDao().getSubscriptionsCountForGame(gameType.getCode());
             AppDatabase.postToMain(() -> callback.onResult(count));
         });
     }
 
     public void getSubscriptionsInRange(GameType gameType, long startEpoch, long endEpoch, Callback<List<SubscriptionEntity>> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            List<SubscriptionEntity> list = db.subscriptionDao().getSubscriptionsInRange(gameType.getCode(), startEpoch, endEpoch);
+            List<SubscriptionEntity> list = getDb().subscriptionDao().getSubscriptionsInRange(gameType.getCode(), startEpoch, endEpoch);
             AppDatabase.postToMain(() -> callback.onResult(list));
         });
     }
 
     public void getAllSubscriptions(GameType gameType, Callback<List<SubscriptionEntity>> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            List<SubscriptionEntity> list = db.subscriptionDao().getAllSubscriptionsForGame(gameType.getCode());
+            List<SubscriptionEntity> list = getDb().subscriptionDao().getAllSubscriptionsForGame(gameType.getCode());
             AppDatabase.postToMain(() -> callback.onResult(list));
         });
     }
 
     public void insertSubscription(SubscriptionEntity entity, Callback<Long> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            long id = db.subscriptionDao().insert(entity);
+            long id = getDb().subscriptionDao().insert(entity);
             if (callback != null) {
                 AppDatabase.postToMain(() -> callback.onResult(id));
             }
@@ -178,7 +197,7 @@ public class DatabaseRepository {
 
     public void updateSubscription(SubscriptionEntity entity, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.subscriptionDao().update(entity);
+            getDb().subscriptionDao().update(entity);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
@@ -187,7 +206,7 @@ public class DatabaseRepository {
 
     public void deleteSubscription(SubscriptionEntity entity, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.subscriptionDao().delete(entity);
+            getDb().subscriptionDao().delete(entity);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
@@ -196,7 +215,7 @@ public class DatabaseRepository {
 
     public void deleteSubscriptionById(int id, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.subscriptionDao().deleteById(id);
+            getDb().subscriptionDao().deleteById(id);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
@@ -205,7 +224,7 @@ public class DatabaseRepository {
 
     public void syncGames(Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            db.syncGames();
+            getDb().syncGames();
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
@@ -214,7 +233,7 @@ public class DatabaseRepository {
 
     public void getAllGames(Callback<List<GameEntity>> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            List<GameEntity> games = db.gameDao().getAllGames();
+            List<GameEntity> games = getDb().gameDao().getAllGames();
             if (callback != null) {
                 AppDatabase.postToMain(() -> callback.onResult(games));
             }

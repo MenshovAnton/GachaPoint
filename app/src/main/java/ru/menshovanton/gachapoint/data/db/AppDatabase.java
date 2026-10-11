@@ -55,12 +55,14 @@ public abstract class AppDatabase extends RoomDatabase {
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
                         syncGamesRaw(db);
+                        syncSubscriptionsRaw(db);
                     }
 
                     @Override
                     public void onOpen(@NonNull SupportSQLiteDatabase db) {
                         super.onOpen(db);
                         syncGamesRaw(db);
+                        syncSubscriptionsRaw(db);
                     }
                 });
     }
@@ -75,6 +77,108 @@ public abstract class AppDatabase extends RoomDatabase {
                 db.execSQL(updateSql, new Object[]{type.name(), type.getName(), type.getCode()});
             }
             db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public static void syncSubscriptionsRaw(SupportSQLiteDatabase db) {
+        try (android.database.Cursor countCheck = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
+                "SELECT COUNT(*) FROM `subscriptions`"))) {
+            if (countCheck.moveToFirst() && countCheck.getInt(0) > 0) {
+                return;
+            }
+        } catch (Exception ignored) {
+            return;
+        }
+
+        db.beginTransaction();
+        try {
+            java.time.LocalDate today = java.time.LocalDate.now();
+            long todayEpoch = today.toEpochDay();
+
+            for (GameType gameType : GameType.values()) {
+                int gameCode = gameType.getCode();
+                int countInSubs = 0;
+                try (android.database.Cursor countCursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
+                        "SELECT COUNT(*) FROM `subscriptions` WHERE `game_type` = ?",
+                        new Object[]{gameCode}))) {
+                    if (countCursor.moveToFirst()) {
+                        countInSubs = countCursor.getInt(0);
+                    }
+                }
+
+                if (countInSubs > 0) {
+                    continue;
+                }
+
+                int remDays = 0;
+                try (android.database.Cursor statusCursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
+                        "SELECT `sub_days_remaining` FROM `calendar_game_status` " +
+                                "WHERE `game_type` = ? AND `year` = ? AND `day_of_year` = ?",
+                        new Object[]{gameCode, today.getYear(), today.getDayOfYear()}))) {
+                    if (statusCursor.moveToFirst()) {
+                        remDays = statusCursor.getInt(0);
+                    }
+                }
+
+                if (remDays <= 0) {
+                    continue;
+                }
+
+                int count = (int) Math.ceil(remDays / 30.0);
+                int totalDays = count * 30;
+                int daysPassed = Math.max(0, totalDays - remDays);
+                java.time.LocalDate startDate = today.minusDays(daysPassed);
+                java.time.LocalDate endDate = today.plusDays(remDays - 1);
+                long startEpoch = startDate.toEpochDay();
+                long endEpoch = endDate.toEpochDay();
+
+                int claims = 0;
+                int misses = 0;
+
+                try (android.database.Cursor datesCursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
+                        "SELECT c.`year`, c.`day_of_year`, COALESCE(s.`status`, 0) AS `status` " +
+                                "FROM `calendar` c " +
+                                "LEFT JOIN `calendar_game_status` s " +
+                                "ON c.`year` = s.`year` AND c.`day_of_year` = s.`day_of_year` AND s.`game_type` = ? " +
+                                "WHERE (c.`year` > ? OR (c.`year` = ? AND c.`day_of_year` >= ?)) " +
+                                "AND (c.`year` < ? OR (c.`year` = ? AND c.`day_of_year` <= ?))",
+                        new Object[]{
+                                gameCode,
+                                startDate.getYear(), startDate.getYear(), startDate.getDayOfYear(),
+                                today.getYear(), today.getYear(), today.getDayOfYear()
+                        }))) {
+                    while (datesCursor.moveToNext()) {
+                        int yr = datesCursor.getInt(0);
+                        int doy = datesCursor.getInt(1);
+                        int status = datesCursor.getInt(2);
+                        boolean isToday = (yr == today.getYear() && doy == today.getDayOfYear());
+
+                        if (status == ru.menshovanton.gachapoint.domain.enums.DayState.STATUS_RECEIVED
+                                || status == ru.menshovanton.gachapoint.domain.enums.DayState.STATUS_OLD_RECEIVED) {
+                            claims++;
+                        } else if (!isToday) {
+                            misses++;
+                        }
+                    }
+                }
+
+                int primogemsPerDay = gameType.getCurrencyPerDay();
+                int claimed = claims * primogemsPerDay;
+                int missed = misses * primogemsPerDay;
+                int totalPrimogems = count * 30 * primogemsPerDay;
+                int wait = Math.max(0, totalPrimogems - claimed - missed);
+
+                String insertSubSql = "INSERT INTO `subscriptions` " +
+                        "(`game_type`, `count`, `start_date`, `end_date`, `claimed`, `missed`, `wait`) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                db.execSQL(insertSubSql, new Object[]{gameCode, count, startEpoch, endEpoch, claimed, missed, wait});
+            }
+
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }

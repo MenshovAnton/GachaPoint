@@ -21,6 +21,8 @@ public interface CalendarDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertCalendarDays(List<CalendarEntity> entities);
 
+    // Note: Room directly maps SQL column aliases into ru.menshovanton.gachapoint.domain.models.Date
+    // by matching field names (dayOfMonth, dayOfYear, dayOfWeek, year, month, status, subDaysRemaining).
     @Query("SELECT c.day AS dayOfMonth, c.day_of_year AS dayOfYear, c.day_of_week AS dayOfWeek, " +
             "c.year AS year, c.month AS month, " +
             "COALESCE(s.status, 0) AS status, " +
@@ -51,15 +53,6 @@ public interface CalendarDao {
             "ORDER BY c.day_of_year ASC")
     List<Date> getDaysRange(int year, int startDay, int endDay, int gameType);
 
-    @Query("SELECT c.day AS dayOfMonth, c.day_of_year AS dayOfYear, c.day_of_week AS dayOfWeek, " +
-            "c.year AS year, c.month AS month, " +
-            "COALESCE(s.status, 0) AS status, " +
-            "COALESCE(s.sub_days_remaining, 0) AS subDaysRemaining " +
-            "FROM calendar c " +
-            "LEFT JOIN calendar_game_status s ON c.year = s.year AND c.day_of_year = s.day_of_year AND s.game_type = :gameType " +
-            "WHERE c.year = :year AND c.day_of_year BETWEEN :from AND :to " +
-            "ORDER BY c.day_of_year ASC")
-    List<Date> getDaysRangeInclusive(int year, int from, int to, int gameType);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrUpdateGameStatus(CalendarGameStatusEntity statusEntity);
@@ -73,4 +66,8 @@ public interface CalendarDao {
             insertOrUpdateGameStatusBatch(statusEntities);
         }
     }
+
+    @Query("UPDATE calendar_game_status SET status = 0, sub_days_remaining = 0 " +
+            "WHERE game_type = :gameType AND year = :year AND day_of_year BETWEEN :startDay AND :endDay")
+    void resetStatusesInRangeSameYear(int gameType, int year, int startDay, int endDay);
 }

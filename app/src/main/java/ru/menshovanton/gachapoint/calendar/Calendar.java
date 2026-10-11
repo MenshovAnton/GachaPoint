@@ -16,7 +16,11 @@ public class Calendar {
     private final DatabaseRepository dbHelper;
 
     public Calendar(Context context) {
-        this.dbHelper = new DatabaseRepository(context);
+        this(new DatabaseRepository(context));
+    }
+
+    public Calendar(DatabaseRepository dbHelper) {
+        this.dbHelper = dbHelper;
     }
 
     public void ensureYearInitialized(int year, Runnable onComplete) {

@@ -22,7 +22,8 @@ public class PiggyBankViewModel extends AndroidViewModel {
 
     public PiggyBankViewModel(@NonNull Application application) {
         super(application);
-        this.repository = new PiggyBankRepository(application);
+        ru.menshovanton.gachapoint.di.AppContainer container = ((ru.menshovanton.gachapoint.App) application).getAppContainer();
+        this.repository = container.getPiggyBankRepository();
     }
 
     public LiveData<PiggyBankState> getStateLiveData() { return stateLiveData; }

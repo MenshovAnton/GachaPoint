@@ -17,6 +17,7 @@ import ru.menshovanton.gachapoint.domain.models.Date;
 )
 public class CalendarEntity {
 
+    @ColumnInfo(name = "day")
     public int day;
 
     @ColumnInfo(name = "day_of_year")
@@ -25,7 +26,10 @@ public class CalendarEntity {
     @ColumnInfo(name = "day_of_week")
     public int dayOfWeek;
 
+    @ColumnInfo(name = "month")
     public int month;
+
+    @ColumnInfo(name = "year")
     public int year;
 
     public CalendarEntity() {}

@@ -51,7 +51,8 @@ public class TrackerViewModel extends AndroidViewModel {
 
     public TrackerViewModel(@NonNull Application application) {
         super(application);
-        this.calendarRepository = new CalendarRepository(application);
+        ru.menshovanton.gachapoint.di.AppContainer container = ((ru.menshovanton.gachapoint.App) application).getAppContainer();
+        this.calendarRepository = container.getCalendarRepository();
 
         LocalDate now = LocalDate.now();
         this.selectedMonth = now.getMonthValue();
@@ -184,7 +185,6 @@ public class TrackerViewModel extends AndroidViewModel {
 
     private void performCheck(int year, int dayOfYear, @StringRes int messageRes) {
         calendarRepository.setDayStatus(year, dayOfYear, currentGameType, 1, () -> {
-            calendarRepository.addClaimDay();
             toastMessageEvent.setValue(messageRes);
             refreshData();
         });
@@ -267,7 +267,6 @@ public class TrackerViewModel extends AndroidViewModel {
 
     private void cancelCheckInternal(int year, int dayOfYear, Runnable onComplete) {
         calendarRepository.setDayStatus(year, dayOfYear, currentGameType, 0, () -> {
-            calendarRepository.subtractClaimDay();
             if (onComplete != null) onComplete.run();
         });
     }

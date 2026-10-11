@@ -32,11 +32,12 @@ public interface PullDao {
     @Transaction
     default void addPullsBatch(String dateTime, String dropType, String dropRare, int count,
                                int gameType, String bannerType, boolean isResetPity) {
+        java.util.ArrayList<PullEntity> entities = new java.util.ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             boolean currentReset = isResetPity && (i == count - 1);
-            PullEntity entity = new PullEntity(gameType, dateTime, dropRare, dropType, bannerType, currentReset);
-            insert(entity);
+            entities.add(new PullEntity(gameType, dateTime, dropRare, dropType, bannerType, currentReset));
         }
+        insertAll(entities);
     }
 
     @Query("DELETE FROM pulls WHERE id = :id")

@@ -66,8 +66,8 @@ public class DatabaseImporter {
                     shmFile.delete();
                 }
 
-                if (dbFile.exists()) {
-                    dbFile.delete();
+                if (dbFile.exists() && !dbFile.delete()) {
+                    throw new Exception("Cannot delete old database file");
                 }
 
                 if (!tempFile.renameTo(dbFile)) {
@@ -79,8 +79,9 @@ public class DatabaseImporter {
                             out.write(buffer, 0, length);
                         }
                         out.flush();
+                    } finally {
+                        tempFile.delete();
                     }
-                    tempFile.delete();
                 }
 
                 if (tempWalFile.exists()) tempWalFile.delete();
@@ -126,8 +127,10 @@ public class DatabaseImporter {
         AppDatabase tempDb = null;
         try {
             tempDb = AppDatabase.createDatabaseBuilder(context, DatabaseImporter.TEMP_DB_NAME).build();
-            tempDb.getOpenHelper().getWritableDatabase();
-
+            androidx.sqlite.db.SupportSQLiteDatabase db = tempDb.getOpenHelper().getWritableDatabase();
+            try (Cursor cursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery("PRAGMA wal_checkpoint(TRUNCATE)"))) {
+                cursor.moveToFirst();
+            }
         } catch (Throwable t) {
             throw new Exception(context.getString(R.string.db_error_incompatible_schema) + " (" + t.getMessage() + ")", t);
         } finally {

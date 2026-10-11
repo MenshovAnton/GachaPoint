@@ -282,6 +282,7 @@ public class MainActivityView extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             this.finish();
+            Runtime.getRuntime().exit(0);
         }
     }
 }

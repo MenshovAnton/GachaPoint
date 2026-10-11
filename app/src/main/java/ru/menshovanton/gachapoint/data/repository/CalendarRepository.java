@@ -24,16 +24,26 @@ public class CalendarRepository {
     private final DatabaseRepository databaseRepository;
     private final Preferences preferences;
 
-    private int missesDays = 0;
-    private int claimsDays = 0;
     private int subsCount = 0;
 
     public CalendarRepository(@NonNull Context context) {
         Context appContext = context.getApplicationContext();
-        this.calendar = new Calendar(appContext);
-        this.piggyBankRepository = new PiggyBankRepository(appContext);
         this.databaseRepository = new DatabaseRepository(appContext);
+        this.calendar = new Calendar(this.databaseRepository);
+        this.piggyBankRepository = new PiggyBankRepository(appContext);
         this.preferences = new Preferences(appContext);
+    }
+
+    public CalendarRepository(
+            Calendar calendar,
+            PiggyBankRepository piggyBankRepository,
+            DatabaseRepository databaseRepository,
+            Preferences preferences
+    ) {
+        this.calendar = calendar;
+        this.piggyBankRepository = piggyBankRepository;
+        this.databaseRepository = databaseRepository;
+        this.preferences = preferences;
     }
 
     public void init(GameType gameType, int year, Runnable onComplete) {
@@ -41,58 +51,8 @@ public class CalendarRepository {
         long todayEpoch = now.toEpochDay();
 
         databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
-            if (activeSub != null) {
-                subsCount = activeSub.count;
-                if (onComplete != null) onComplete.run();
-            } else {
-                boolean needMigration = preferences.getNeedMigration(gameType);
-
-                if (!needMigration) {
-                    subsCount = 0;
-                    if (onComplete != null) onComplete.run();
-                    return;
-                }
-
-                databaseRepository.getSubscriptionsCountForGame(gameType, countInDb -> {
-                    if (countInDb > 0) {
-                        preferences.saveNeedMigration(gameType, false);
-                        subsCount = 0;
-                        if (onComplete != null) onComplete.run();
-                        return;
-                    }
-                    calendar.getDay(now.getYear(), now.getDayOfYear(), gameType, todayDate -> {
-                        if (todayDate != null && todayDate.subDaysRemaining > 0) {
-                            int rem = todayDate.subDaysRemaining;
-                            int count = (int) Math.ceil(rem / 30.0);
-                            int totalDays = count * 30;
-                            int daysPassed = Math.max(0, totalDays - rem);
-                            LocalDate startDate = now.minusDays(daysPassed);
-                            LocalDate endDate = now.plusDays(rem - 1);
-
-                            SubscriptionEntity migrated = new SubscriptionEntity(
-                                    gameType.getCode(),
-                                    count,
-                                    startDate.toEpochDay(),
-                                    endDate.toEpochDay(),
-                                    0,
-                                    0,
-                                    rem * gameType.getCurrencyPerDay()
-                            );
-                            databaseRepository.insertSubscription(migrated, id -> {
-                                subsCount = count;
-                                calculateMissesAndClaims(gameType, year, () -> {
-                                    if (onComplete != null) onComplete.run();
-                                });
-                            });
-
-                            preferences.saveNeedMigration(gameType, false);
-                        } else {
-                            subsCount = 0;
-                            if (onComplete != null) onComplete.run();
-                        }
-                    });
-                });
-            }
+            subsCount = (activeSub != null) ? activeSub.count : 0;
+            if (onComplete != null) onComplete.run();
         });
     }
 
@@ -137,8 +97,6 @@ public class CalendarRepository {
     }
 
     public void calculateMissesAndClaims(GameType gameType, int year, Runnable onComplete) {
-        missesDays = 0;
-        claimsDays = 0;
         LocalDate today = LocalDate.now();
         long todayEpoch = today.toEpochDay();
 
@@ -153,40 +111,47 @@ public class CalendarRepository {
             LocalDate startDate = LocalDate.ofEpochDay(activeSub.startDate);
 
             fetchDatesInRange(startDate, today, gameType, chainDates -> {
-                int claims = 0;
-                int misses = 0;
+                int[] counts = countClaimsAndMisses(chainDates, todayEpoch);
+                int claims = counts[0];
+                int misses = counts[1];
 
-                for (Date date : chainDates) {
-                    LocalDate d = LocalDate.of(date.year, date.month, date.dayOfMonth);
-                    long dEpoch = d.toEpochDay();
-
-                    if (dEpoch < todayEpoch) {
-                        if (date.status == DayState.STATUS_RECEIVED || date.status == DayState.STATUS_OLD_RECEIVED) {
-                            claims++;
-                        } else {
-                            misses++;
-                        }
-                    } else if (dEpoch == todayEpoch) {
-                        if (date.status == DayState.STATUS_RECEIVED || date.status == DayState.STATUS_OLD_RECEIVED) {
-                            claims++;
-                        }
-                    }
-                }
-
-                missesDays = misses;
-                claimsDays = claims;
-
-                int primogemsPerDay = gameType.getCurrencyPerDay();
-                activeSub.claimed = claimsDays * primogemsPerDay;
-                activeSub.missed = missesDays * primogemsPerDay;
-                int totalPrimogems = activeSub.count * 30 * primogemsPerDay;
-                activeSub.wait = Math.max(0, totalPrimogems - activeSub.claimed - activeSub.missed);
+                applySubscriptionProgress(activeSub, gameType, claims, misses);
 
                 databaseRepository.updateSubscription(activeSub, () -> {
+                    checkAndAddWishFromClaims(gameType, claims);
                     if (onComplete != null) onComplete.run();
                 });
             });
         });
+    }
+
+    private int[] countClaimsAndMisses(List<Date> dates, long todayEpoch) {
+        int claims = 0;
+        int misses = 0;
+        if (dates != null) {
+            for (Date date : dates) {
+                long dEpoch = LocalDate.of(date.year, date.month, date.dayOfMonth).toEpochDay();
+                boolean isClaimed = (date.status == DayState.STATUS_RECEIVED || date.status == DayState.STATUS_OLD_RECEIVED);
+                if (dEpoch < todayEpoch) {
+                    if (isClaimed) {
+                        claims++;
+                    } else {
+                        misses++;
+                    }
+                } else if (dEpoch == todayEpoch && isClaimed) {
+                    claims++;
+                }
+            }
+        }
+        return new int[]{claims, misses};
+    }
+
+    private void applySubscriptionProgress(SubscriptionEntity activeSub, GameType gameType, int claims, int misses) {
+        int primogemsPerDay = gameType.getCurrencyPerDay();
+        activeSub.claimed = claims * primogemsPerDay;
+        activeSub.missed = misses * primogemsPerDay;
+        int totalPrimogems = activeSub.count * 30 * primogemsPerDay;
+        activeSub.wait = Math.max(0, totalPrimogems - activeSub.claimed - activeSub.missed);
     }
 
     private void fetchDatesInRange(LocalDate start, LocalDate end, GameType gameType, DatabaseRepository.Callback<List<Date>> callback) {
@@ -206,29 +171,55 @@ public class CalendarRepository {
     }
 
     public void getStatistic(GameType gameType, int year, DatabaseRepository.Callback<Statistic> callback) {
-        calculateMissesAndClaims(gameType, year, () -> {
-            int wishesCost = gameType.getPullCost();
-            int primogemsPerDay = gameType.getCurrencyPerDay();
-            int summaryClaim = primogemsPerDay * 30;
+        LocalDate today = LocalDate.now();
+        long todayEpoch = today.toEpochDay();
 
-            int missedPrimogemsCount = missesDays * primogemsPerDay;
-            int claimPrimogemsCount = claimsDays * primogemsPerDay;
-            int totalPromogemsInActiveSubs = summaryClaim * subsCount;
-
-            int laterPrimogemsCount = Math.max(0, totalPromogemsInActiveSubs - claimPrimogemsCount - missedPrimogemsCount);
-
-            Statistic statistic = new Statistic(
-                    missedPrimogemsCount,
-                    claimPrimogemsCount,
-                    laterPrimogemsCount,
-                    missedPrimogemsCount / wishesCost,
-                    claimPrimogemsCount / wishesCost,
-                    laterPrimogemsCount / wishesCost
-            );
-
-            if (callback != null) {
-                callback.onResult(statistic);
+        databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
+            if (activeSub == null) {
+                subsCount = 0;
+                if (callback != null) {
+                    callback.onResult(new Statistic(0, 0, 0, 0, 0, 0));
+                }
+                return;
             }
+
+            subsCount = activeSub.count;
+            LocalDate startDate = LocalDate.ofEpochDay(activeSub.startDate);
+
+            fetchDatesInRange(startDate, today, gameType, chainDates -> {
+                int[] counts = countClaimsAndMisses(chainDates, todayEpoch);
+                int claims = counts[0];
+                int misses = counts[1];
+
+                applySubscriptionProgress(activeSub, gameType, claims, misses);
+
+                databaseRepository.updateSubscription(activeSub, () -> {
+                    checkAndAddWishFromClaims(gameType, claims);
+
+                    int wishesCost = gameType.getPullCost();
+                    int primogemsPerDay = gameType.getCurrencyPerDay();
+                    int summaryClaim = primogemsPerDay * 30;
+
+                    int missedPrimogemsCount = misses * primogemsPerDay;
+                    int claimPrimogemsCount = claims * primogemsPerDay;
+                    int totalPromogemsInActiveSubs = summaryClaim * activeSub.count;
+
+                    int laterPrimogemsCount = Math.max(0, totalPromogemsInActiveSubs - claimPrimogemsCount - missedPrimogemsCount);
+
+                    Statistic statistic = new Statistic(
+                            missedPrimogemsCount,
+                            claimPrimogemsCount,
+                            laterPrimogemsCount,
+                            missedPrimogemsCount / wishesCost,
+                            claimPrimogemsCount / wishesCost,
+                            laterPrimogemsCount / wishesCost
+                    );
+
+                    if (callback != null) {
+                        callback.onResult(statistic);
+                    }
+                });
+            });
         });
     }
 
@@ -303,10 +294,12 @@ public class CalendarRepository {
                     if (callback != null) callback.onResult(true);
                 });
             } else {
-                databaseRepository.deleteSubscription(activeSub, () -> {
+                LocalDate subStartDate = LocalDate.ofEpochDay(activeSub.startDate);
+                databaseRepository.clearCalendarStatusesInRange(gameType, subStartDate, today, () ->
+                        databaseRepository.deleteSubscription(activeSub, () -> {
                     subsCount = 0;
                     if (callback != null) callback.onResult(true);
-                });
+                }));
             }
         });
     }
@@ -319,27 +312,20 @@ public class CalendarRepository {
 
     public void setDayStatus(int year, int dayOfYear, GameType gameType, int status, Runnable onComplete) {
         calendar.getDay(year, dayOfYear, gameType, date -> {
-            int oldStatus = date != null ? date.status : DayState.STATUS_MISSED;
-            int rem = date != null ? date.subDaysRemaining : DayState.STATUS_MISSED;
+            int rem = date != null ? date.subDaysRemaining : 0;
 
-            calendar.updateDay(year, dayOfYear, gameType, status, rem, () -> {
-                if (oldStatus == DayState.STATUS_MISSED && status == DayState.STATUS_RECEIVED) {
-                    claimsDays++;
-                    checkAndAddWishFromClaim(gameType);
-                } else if (oldStatus == DayState.STATUS_RECEIVED && status == DayState.STATUS_MISSED) {
-                    claimsDays = Math.max(0, claimsDays - 1);
-                    checkAndAddWishFromClaim(gameType);
-                }
+            calendar.updateDay(year, dayOfYear, gameType, status, rem, () ->
+                    calculateMissesAndClaims(gameType, year, () -> {
                 if (onComplete != null) onComplete.run();
-            });
+            }));
         });
     }
 
-    private void checkAndAddWishFromClaim(GameType gameType) {
+    private void checkAndAddWishFromClaims(GameType gameType, int claims) {
         int primogemsPerDay = gameType.getCurrencyPerDay();
         int wishesCost = gameType.getPullCost();
 
-        int totalGems = claimsDays * primogemsPerDay;
+        int totalGems = claims * primogemsPerDay;
         int totalWishes = totalGems / wishesCost;
 
         int currentProgress = piggyBankRepository.getSubsProgress(gameType);
@@ -414,21 +400,6 @@ public class CalendarRepository {
         });
     }
 
-    public void updateSubscribeDaysTransaction(int startYear, int startDayOfYear, GameType gameType, int todayStatus, int totalDays) {
-        updateSubscribeDays(startYear, startDayOfYear, gameType, todayStatus, totalDays, null);
-    }
-
-    public void updateSubscribeDaysTransaction(int startYear, int startDayOfYear, GameType gameType, int todayStatus, int totalDays, Runnable onComplete) {
-        updateSubscribeDays(startYear, startDayOfYear, gameType, todayStatus, totalDays, onComplete);
-    }
 
     public int getSubsCount() { return subsCount; }
-    public void setSubsCount(int value) { subsCount = value; }
-    public void addSub() { subsCount++; }
-    public void delSub() { subsCount--; }
-    public int getClaimsDays() { return claimsDays; }
-    public void setClaimsDays(int value) { claimsDays = value; }
-    public void addClaimDay() { claimsDays++; }
-    public void subtractClaimDay() { claimsDays--; }
-    public void setMissesDays(int value) { missesDays = value; }
 }

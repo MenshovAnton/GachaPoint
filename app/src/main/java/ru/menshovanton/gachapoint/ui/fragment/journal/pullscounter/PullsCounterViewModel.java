@@ -38,7 +38,8 @@ public class PullsCounterViewModel extends AndroidViewModel {
 
     public PullsCounterViewModel(@NonNull Application application) {
         super(application);
-        this.databaseRepository = new DatabaseRepository(application);
+        ru.menshovanton.gachapoint.di.AppContainer container = ((ru.menshovanton.gachapoint.App) application).getAppContainer();
+        this.databaseRepository = container.getDatabaseRepository();
     }
 
     public LiveData<List<Pull>> getWishesLiveData() { return wishesLiveData; }

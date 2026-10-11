@@ -1,8 +1,6 @@
 package ru.menshovanton.gachapoint.data.db.dao;
 
 import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Upsert;
 
@@ -18,15 +16,6 @@ public interface GameDao {
 
     @Query("SELECT * FROM games WHERE id = :id LIMIT 1")
     GameEntity getGameById(int id);
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertAll(List<GameEntity> games);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOrUpdate(GameEntity game);
-
-    @Upsert
-    void upsert(GameEntity game);
 
     @Upsert
     void upsertAll(List<GameEntity> games);

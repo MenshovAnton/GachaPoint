@@ -27,8 +27,9 @@ public class HomeViewModel extends AndroidViewModel {
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
-        calendarRepository = new CalendarRepository(application);
-        piggyBankRepository = new PiggyBankRepository(application);
+        ru.menshovanton.gachapoint.di.AppContainer container = ((ru.menshovanton.gachapoint.App) application).getAppContainer();
+        this.calendarRepository = container.getCalendarRepository();
+        this.piggyBankRepository = container.getPiggyBankRepository();
 
         loadData();
     }

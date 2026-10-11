@@ -29,9 +29,6 @@ public final class DatabaseExporter {
         File dbFile = context.getDatabasePath(AppDatabase.DATABASE_NAME);
         if (!dbFile.exists()) return false;
 
-        File walFile = new File(dbFile.getPath() + "-wal");
-        if (walFile.exists() && walFile.length() > 0) return false;
-
         try (InputStream in  = new FileInputStream(dbFile);
              OutputStream out = context.getContentResolver().openOutputStream(targetUri)) {
 
@@ -54,10 +51,8 @@ public final class DatabaseExporter {
     private static void checkpoint(RoomDatabase room) {
         SupportSQLiteDatabase db = room.getOpenHelper().getWritableDatabase();
 
-        String sql = "PRAGMA wal_checkpoint(" + "TRUNCATE" + ")";
-
-        try {
-            db.execSQL(sql);
+        try (android.database.Cursor cursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery("PRAGMA wal_checkpoint(TRUNCATE)"))) {
+            cursor.moveToFirst();
         } catch (Exception e) {
             e.printStackTrace();
         }
