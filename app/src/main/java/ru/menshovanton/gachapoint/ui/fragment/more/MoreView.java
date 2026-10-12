@@ -48,9 +48,14 @@ public class MoreView extends Fragment {
         settingsButton = view.findViewById(R.id.mcv_item_settings);
         feedbackButton = view.findViewById(R.id.mcv_item_feedback);
 
+        View rowSavings = view.findViewById(R.id.row_savings);
         rowStatistics = view.findViewById(R.id.row_statistics);
         rowCalculator = view.findViewById(R.id.row_calculator);
         rowPromocodes = view.findViewById(R.id.row_promocodes);
+
+        if (rowSavings != null) {
+            rowSavings.setOnClickListener(v -> viewModel.onSavingsButtonClicked());
+        }
 
         return view;
     }
@@ -66,6 +71,9 @@ public class MoreView extends Fragment {
     }
 
     private void observeViewModel() {
+        viewModel.getNavigateToPiggyBankEvent().observe(getViewLifecycleOwner(), unused ->
+                NavHostFragment.findNavController(this).navigate(R.id.action_to_piggy_bank));
+
         viewModel.getNavigateToInfoEvent().observe(getViewLifecycleOwner(), unused ->
                 NavHostFragment.findNavController(this).navigate(R.id.action_to_info));
 

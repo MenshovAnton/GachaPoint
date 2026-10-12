@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.fragment.journal.pullscounter;
+package ru.menshovanton.gachapoint.ui.fragment.journal;
 
 import android.app.Application;
 import android.text.TextUtils;
@@ -18,32 +18,37 @@ import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
+import ru.menshovanton.gachapoint.domain.enums.PityStatus;
+import ru.menshovanton.gachapoint.domain.enums.RareType;
 import ru.menshovanton.gachapoint.domain.models.BannerInfo;
 import ru.menshovanton.gachapoint.domain.models.Pull;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 
-public class PullsCounterViewModel extends AndroidViewModel {
+public class JournalViewModel extends AndroidViewModel {
 
     private final DatabaseRepository databaseRepository;
 
     private final MutableLiveData<List<Pull>> wishesLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Integer> currentPityLiveData = new MutableLiveData<>(0);
+    private final MutableLiveData<Integer> pity5StarLiveData = new MutableLiveData<>(0);
+    private final MutableLiveData<Integer> pity4StarLiveData = new MutableLiveData<>(0);
+    private final MutableLiveData<Boolean> isGuaranteedLiveData = new MutableLiveData<>(false);
     private final MutableLiveData<String> currentBannerTypeLiveData = new MutableLiveData<>(BannerType.EVENT.getDbKey());
 
     private final SingleLiveEvent<Void> openDialogEvent = new SingleLiveEvent<>();
-
     private final MutableLiveData<Boolean> isLoadingLiveData = new MutableLiveData<>(false);
 
     private GameType currentGameType = GameType.GENSHIN;
 
-    public PullsCounterViewModel(@NonNull Application application) {
+    public JournalViewModel(@NonNull Application application) {
         super(application);
         ru.menshovanton.gachapoint.di.AppContainer container = ((ru.menshovanton.gachapoint.App) application).getAppContainer();
         this.databaseRepository = container.getDatabaseRepository();
     }
 
     public LiveData<List<Pull>> getWishesLiveData() { return wishesLiveData; }
-    public LiveData<Integer> getCurrentPityLiveData() { return currentPityLiveData; }
+    public LiveData<Integer> getPity5StarLiveData() { return pity5StarLiveData; }
+    public LiveData<Integer> getPity4StarLiveData() { return pity4StarLiveData; }
+    public LiveData<Boolean> getIsGuaranteedLiveData() { return isGuaranteedLiveData; }
     public LiveData<String> getCurrentBannerTypeLiveData() { return currentBannerTypeLiveData; }
     public SingleLiveEvent<Void> getOpenDialogEvent() { return openDialogEvent; }
     public LiveData<Boolean> getIsLoadingLiveData() { return isLoadingLiveData; }
@@ -70,6 +75,10 @@ public class PullsCounterViewModel extends AndroidViewModel {
         return currentGameType;
     }
 
+    public BannerInfo getCurrentBannerInfo() {
+        return currentGameType.getBannerInfo(getCurrentBannerType());
+    }
+
     public void setBannerType(String bannerTypeKey) {
         if (bannerTypeKey != null && !bannerTypeKey.equals(currentBannerTypeLiveData.getValue())) {
             currentBannerTypeLiveData.setValue(bannerTypeKey);
@@ -83,35 +92,78 @@ public class PullsCounterViewModel extends AndroidViewModel {
     }
 
     public void refreshData() {
-        isLoadingLiveData.setValue(true);
+        refreshData(true);
+    }
+
+    public void refreshData(boolean showLoading) {
+        if (showLoading) {
+            isLoadingLiveData.setValue(true);
+        }
         databaseRepository.getPullsByBanner(currentGameType, getCurrentBannerType(), rawWishes -> {
             List<Pull> processedList = processWishesAndCalculatePity(rawWishes);
-            isLoadingLiveData.setValue(false);
+            if (showLoading) {
+                isLoadingLiveData.setValue(false);
+            }
             wishesLiveData.setValue(processedList);
         });
     }
 
-    private List<Pull> processWishesAndCalculatePity(List<Pull> pull) {
-        if (pull == null || pull.isEmpty()) {
-            currentPityLiveData.setValue(0);
+    private List<Pull> processWishesAndCalculatePity(List<Pull> rawPulls) {
+        if (rawPulls == null || rawPulls.isEmpty()) {
+            pity5StarLiveData.setValue(0);
+            pity4StarLiveData.setValue(0);
+            isGuaranteedLiveData.setValue(false);
             return new ArrayList<>();
         }
 
-        List<Pull> listToProcess = new ArrayList<>(pull);
-        Collections.reverse(listToProcess);
+        List<Pull> chronological = new ArrayList<>(rawPulls);
+        Collections.reverse(chronological);
 
-        int counter = 0;
-        for (Pull wish : listToProcess) {
-            counter++;
-            wish.setPityNumber(counter);
-            if (wish.isResetPity()) {
-                counter = 0;
+        int counter5 = 0;
+        int counter4 = 0;
+        boolean guaranteed = false;
+
+        BannerInfo bannerInfo = getCurrentBannerInfo();
+        boolean bannerHas5050 = bannerInfo != null && bannerInfo.hasFiftyFifty();
+
+        for (Pull pull : chronological) {
+            counter5++;
+            counter4++;
+
+            RareType rareType = RareType.from(pull.getDropRare(), getApplication());
+
+            if (rareType == RareType.LEGENDARY) {
+                pull.setPityNumber(counter5);
+                pull.setPity4StarNumber(counter4);
+
+                if (bannerHas5050) {
+                    PityStatus status = pull.getPityStatus();
+                    if (status == PityStatus.LOSS_50_50) {
+                        guaranteed = true;
+                    } else if (status == PityStatus.WIN_50_50 || status == PityStatus.GUARANTEED) {
+                        guaranteed = false;
+                    }
+                }
+
+                counter5 = 0;
+                counter4 = 0;
+            } else if (rareType == RareType.EPIC) {
+                pull.setPityNumber(counter5);
+                pull.setPity4StarNumber(counter4);
+                counter4 = 0;
+            } else {
+                pull.setPityNumber(counter5);
+                pull.setPity4StarNumber(counter4);
             }
         }
 
-        Collections.reverse(listToProcess);
-        currentPityLiveData.setValue(counter);
-        return listToProcess;
+        Collections.reverse(chronological);
+
+        pity5StarLiveData.setValue(counter5);
+        pity4StarLiveData.setValue(counter4);
+        isGuaranteedLiveData.setValue(bannerHas5050 && guaranteed);
+
+        return chronological;
     }
 
     public void saveOneWish() {
@@ -126,18 +178,22 @@ public class PullsCounterViewModel extends AndroidViewModel {
                 currentGameType,
                 getCurrentBannerType(),
                 false,
-                this::refreshData
+                PityStatus.NONE,
+                () -> refreshData(false)
         );
     }
 
     public void saveWishFromUi(@Nullable Pull wishToEdit, @NonNull LocalDate selectedDate,
-                               @Nullable String dropType, @NonNull String dropRare, boolean isResetPity, boolean isBatch) {
+                               @Nullable String dropType, @NonNull String dropRare,
+                               @NonNull PityStatus pityStatus, boolean isBatch) {
 
         String finalDropType = TextUtils.isEmpty(dropType) ? getApplication().getString(R.string.default_pull_content) : dropType;
         String dateForDb = selectedDate.toString();
 
         String threeStar = getApplication().getString(R.string.three_star);
         String defaultContent = getApplication().getString(R.string.default_pull_content);
+
+        boolean isResetPity = (RareType.from(dropRare, getApplication()) == RareType.LEGENDARY);
 
         if (wishToEdit != null) {
             databaseRepository.updatePull(
@@ -148,19 +204,21 @@ public class PullsCounterViewModel extends AndroidViewModel {
                     currentGameType,
                     getCurrentBannerType(),
                     isResetPity,
-                    this::refreshData
+                    pityStatus,
+                    () -> refreshData(false)
             );
         } else {
             if (isBatch) {
                 databaseRepository.addPulls(
-                        dateForDb,
-                        defaultContent,
-                        threeStar,
-                        9,
-                        currentGameType,
-                        getCurrentBannerType(),
-                        false,
-                        this::refreshData
+                    dateForDb,
+                    defaultContent,
+                    threeStar,
+                    9,
+                    currentGameType,
+                    getCurrentBannerType(),
+                    false,
+                    PityStatus.NONE,
+                    () -> refreshData(false)
                 );
             }
             databaseRepository.addPulls(
@@ -171,12 +229,17 @@ public class PullsCounterViewModel extends AndroidViewModel {
                     currentGameType,
                     getCurrentBannerType(),
                     isResetPity,
-                    this::refreshData
+                    pityStatus,
+                    () -> refreshData(false)
             );
         }
     }
 
     public void deleteWish(int id) {
-        databaseRepository.deletePull(id, this::refreshData);
+        databaseRepository.deletePull(id, () -> refreshData(false));
+    }
+
+    public void deleteWishesBatch(List<Integer> ids) {
+        databaseRepository.deletePullsBatch(ids, () -> refreshData(false));
     }
 }

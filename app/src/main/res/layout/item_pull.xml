@@ -1,89 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:paddingBottom="5dp"
-    android:gravity="center_vertical">
+    android:paddingBottom="6dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_pull"
-        style="@style/Widget.GachaPoint.MaterialCardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="@color/pull_row_bg"
+        app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
+        app:strokeColor="@color/pull_row_stroke"
+        app:strokeWidth="1dp"
         app:rippleColor="@color/check_30"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="15dp">
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="9dp">
 
-            <TextView
-                android:id="@+id/numberOfWish"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/badge_pity_count"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:layout_height="24dp"
+                app:cardBackgroundColor="@color/pull_pity_badge_bg"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="1" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_pity_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:minWidth="28dp"
+                    android:paddingHorizontal="6dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    tools:text="59" />
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/dropRare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
+                android:layout_marginStart="8dp"
+                android:textSize="13sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/badge_pity_count"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="5★"
-                tools:textColor="@color/rare_legendary"/>
+                tools:textColor="@color/rare_legendary" />
 
-            <TextView
-                android:id="@+id/dropType"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:breakStrategy="high_quality"
-                android:hyphenationFrequency="normal"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/date"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/dropRare"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Nilou"
-                tools:textColor="@color/rare_legendary"/>
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/dropType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="13sp"
+                    tools:text="Nilou"
+                    tools:textColor="@color/text" />
+
+                <TextView
+                    android:id="@+id/tv_pull_outcome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="Won 50/50"
+                    tools:textColor="@color/checked"
+                    tools:visibility="visible"
+                    tools:ignore="SmallSp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textStyle="italic"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/cb_select"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="30.08.2026" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cb_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="0dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:visibility="gone"
+                app:buttonTint="@color/check"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="18.10.2022" />
+                tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

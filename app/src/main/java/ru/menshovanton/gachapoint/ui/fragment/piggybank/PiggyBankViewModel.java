@@ -1,4 +1,4 @@
-package ru.menshovanton.gachapoint.ui.fragment.journal.piggybank;
+package ru.menshovanton.gachapoint.ui.fragment.piggybank;
 
 import android.app.Application;
 
@@ -29,6 +29,10 @@ public class PiggyBankViewModel extends AndroidViewModel {
     public LiveData<PiggyBankState> getStateLiveData() { return stateLiveData; }
     public SingleLiveEvent<Void> getGoalExceededEvent() { return goalExceededEvent; }
 
+    public GameType getCurrentGameType() {
+        return currentGameType;
+    }
+
     public void setGameType(GameType gameType) {
         if (gameType != null) {
             this.currentGameType = gameType;
@@ -50,13 +54,26 @@ public class PiggyBankViewModel extends AndroidViewModel {
         int subsProgress = repository.getSubsProgress(currentGameType);
         int target = repository.getTarget(currentGameType);
 
-        if (manualProgress + subsProgress + wishes <= target) {
-            int newManualProgress = manualProgress + wishes;
-            repository.saveManualProgress(currentGameType, newManualProgress);
-            refreshData();
-        } else {
+        if (target > 0 && manualProgress + subsProgress + wishes > target) {
             goalExceededEvent.call();
+            return;
         }
+
+        int newManualProgress = manualProgress + wishes;
+        repository.saveManualProgress(currentGameType, Math.max(0, newManualProgress));
+        refreshData();
+    }
+
+    public void removeProgress(int wishes) {
+        int manualProgress = repository.getManualProgress(currentGameType);
+        int newManualProgress = Math.max(0, manualProgress - wishes);
+        repository.saveManualProgress(currentGameType, newManualProgress);
+        refreshData();
+    }
+
+    public void setTarget(int target) {
+        repository.saveTarget(currentGameType, Math.max(0, target));
+        refreshData();
     }
 
     public void addTargetMultiplier(int multiplier) {

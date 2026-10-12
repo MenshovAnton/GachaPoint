@@ -1,22 +1,9 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="128dp"
-    android:height="128dp"
-    android:viewportWidth="256"
-    android:viewportHeight="256">
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
     <path
-        android:fillColor="#fff"
-        android:name="Прямоугольник 1"
-        android:pathData="m43 103h170v85c0 13.81 -11.19 25 -25 25h-120c-13.81 0 -25 -11.19 -25 -25v-85z" />
-    <path
-        android:fillColor="#fff"
-        android:name="Прямоугольник 2"
-        android:pathData="m68 64h119c13.81 0 25 11.19 25 25v3h-169v-3c0 -13.81 11.19 -25 25 -25z" />
-    <path
-        android:fillColor="#fff"
-        android:name="Прямоугольник 3"
-        android:pathData="m91 34c6.63 0 12 5.37 12 12v20c0 6.63 -5.37 12 -12 12c-6.63 0 -12 -5.37 -12 -12v-20c0 -6.63 5.37 -12 12 -12z" />
-    <path
-        android:fillColor="#fff"
-        android:name="Прямоугольник 3"
-        android:pathData="m165 34c6.63 0 12 5.37 12 12v20c0 6.63 -5.37 12 -12 12c-6.63 0 -12 -5.37 -12 -12v-20c0 -6.63 5.37 -12 12 -12z" />
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M19,4h-1V2h-2v2H8V2H6v2H5c-1.11,0 -1.99,0.9 -1.99,2L3,20c0,1.1 0.89,2 2,2h14c1.1,0 2,-0.9 2,-2V6c0,-1.1 -0.9,-2 -2,-2zm0,16H5V10h14v10zm0,-12H5V6h14v2zm-7,5h5v5h-5z" />
 </vector>

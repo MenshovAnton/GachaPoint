@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -67,7 +68,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="1×"
+                        android:text="@string/one_x"
                         android:textColor="@color/check"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -118,7 +119,7 @@
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="4dp"
-                        android:text="+77"
+                        android:text="@string/plus_seventy_seven"
                         android:textColor="@color/check"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -160,7 +161,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="2×"
+                        android:text="@string/two_x"
                         android:textColor="@color/check"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -211,7 +212,7 @@
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="4dp"
-                        android:text="+154"
+                        android:text="@string/plus_one_hundred_fifty_four"
                         android:textColor="@color/check"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -253,7 +254,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="6×"
+                        android:text="@string/six_x"
                         android:textColor="@color/check"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -304,7 +305,7 @@
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="4dp"
-                        android:text="+462"
+                        android:text="@string/plus_four_hundred_sixty_tow"
                         android:textColor="@color/check"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -410,7 +411,8 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="14dp"
-            android:paddingVertical="10dp">
+            android:paddingVertical="10dp"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="18dp"

@@ -58,6 +58,17 @@
     <string name="title_bank">Saved</string>
     <string name="goal_edit_button">Target</string>
     <string name="add_to_bank">Add</string>
+    <string name="savings_target_label">Target goal:</string>
+    <string name="savings_current_pulls">Pulls earned</string>
+    <string name="savings_current_gems">In gems</string>
+    <string name="savings_quick_actions">Quick actions</string>
+    <string name="savings_reset_confirm">Reset current savings goal and progress?</string>
+    <string name="savings_set_target_dialog_title">Set Target</string>
+    <string name="savings_set_target_hint">Total pulls required</string>
+    <string name="savings_add_custom_dialog_title">Add Pulls</string>
+    <string name="savings_add_custom_hint">Number of pulls to add</string>
+    <string name="savings_converter_title">Quick Calculator</string>
+    <string name="savings_converter_desc">1 Pull = %d Currency</string>
     <string name="plus_ten" translatable="false">+10</string>
     <string name="plus_one" translatable="false">+1</string>
     <string name="feedback">Feedback</string>
@@ -107,6 +118,17 @@
     <string name="banner_type_zzz_bangboo">Bangboo Channel</string>
     <string name="banner_type_spec">Special</string>
     <string name="reset_pity">Reset pity</string>
+    <string name="pity_status_none">None</string>
+    <string name="pity_status_win">Won 50/50</string>
+    <string name="pity_status_loss">Lost 50/50</string>
+    <string name="pity_status_guaranteed">Guaranteed</string>
+    <string name="pity_5star_title">5★ Guarantee</string>
+    <string name="pity_4star_title">4★ Guarantee</string>
+    <string name="pity_status_fifty_fifty">50/50 Chance</string>
+    <string name="pity_status_guaranteed_badge">100% Guaranteed</string>
+    <string name="pity_status_na">N/A</string>
+    <string name="pity_pull_at">%d pull</string>
+    <string name="dialog_select_drop_outcome">Drop result:</string>
     <string name="goal_not_set_or_reached">Target not set or reached</string>
     <string name="ok_button">Yes</string>
     <string name="cancel_button">No, thanks</string>
@@ -144,8 +166,6 @@
     <string name="developer_card_title">Developer</string>
     <string name="developer_username" translatable="false">MenshovAnton</string>
     <string name="form_load_error">Form load error!</string>
-
-    <!-- Subtitles and headers for bottom sheets -->
     <string name="sheet_add_ten_desc">+10 to current history</string>
     <string name="sheet_add_one_desc">+1 to current history</string>
     <string name="sheet_add_five_star_desc">Reset 5★ pity counter</string>
@@ -162,8 +182,6 @@
     <string name="sheet_section_add_wishes">Add Pulls</string>
     <string name="sheet_section_drops">Rarity Drops</string>
     <string name="sheet_section_quick_add">Quick Add</string>
-
-    <!-- About screen strings -->
     <string name="about_version_badge">v0.2.0 • Offline &amp; Open Source</string>
     <string name="about_section_project">About Project</string>
     <string name="about_section_links">Links &amp; Community</string>
@@ -172,10 +190,10 @@
     <string name="about_telegram_title">Telegram Channel</string>
     <string name="about_telegram_desc">Project news and discussion</string>
     <string name="about_developer_desc">MenshovAnton • Project author</string>
-
-    <!-- Menu Hub strings -->
     <string name="menu_section_tools">Tools &amp; Services</string>
     <string name="menu_section_app">Application</string>
+    <string name="menu_savings_title">Savings &amp; Targets</string>
+    <string name="menu_savings_desc">Track savings, goals and pull conversions</string>
     <string name="menu_stats_title">Overall Statistics</string>
     <string name="menu_stats_desc">Pulls, probability and expense analytics</string>
     <string name="menu_calc_title">Pulls &amp; Gems Calculator</string>
@@ -187,4 +205,17 @@
     <string name="menu_feedback_desc">Report a bug or suggest a feature</string>
     <string name="menu_about_desc">Version, open source and contacts</string>
     <string name="menu_feature_in_dev">This feature is currently under development!</string>
+    <string name="selected_count">Selected: %d</string>
+    <string name="select_all">Select all</string>
+    <string name="delete_batch_confirm_title">Delete pulls</string>
+    <string name="delete_batch_confirm_message">Do you really want to delete selected records (%d)? This action cannot be undone.</string>
+    <string name="minus_one" translatable="false">-1</string>
+    <string name="minus_ten" translatable="false">-10</string>
+    <string name="one_x" translatable="false">1×</string>
+    <string name="plus_seventy_seven" translatable="false">+77</string>
+    <string name="two_x" translatable="false">2×</string>
+    <string name="plus_one_hundred_fifty_four" translatable="false">+154</string>
+    <string name="six_x" translatable="false">6×</string>
+    <string name="plus_four_hundred_sixty_tow" translatable="false">+462</string>
+    <string name="pulls">Pulls</string>
 </resources>

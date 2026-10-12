@@ -24,4 +24,9 @@
     <color name="badge_green_bg">#E8F5E9</color>
     <color name="badge_red_bg">#FDE8E8</color>
     <color name="badge_blue_bg">#E3ECF6</color>
+    <color name="pull_row_bg">#F4F6F8</color>
+    <color name="pull_row_stroke">#12000000</color>
+    <color name="pull_pity_badge_bg">#E2E7EC</color>
+    <color name="pull_row_selected_bg">#EBF2FA</color>
+    <color name="pull_row_selected_stroke">#537497</color>
 </resources>

@@ -7,6 +7,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import ru.menshovanton.gachapoint.domain.enums.PityStatus;
 import ru.menshovanton.gachapoint.domain.models.Pull;
 
 @Entity(
@@ -45,19 +46,28 @@ public class PullEntity {
     @ColumnInfo(name = "is_reset_pity", defaultValue = "0")
     public boolean isResetPity;
 
+    @ColumnInfo(name = "pity_status", defaultValue = "NONE")
+    public String pityStatus = "NONE";
+
     public PullEntity() {}
 
     @Ignore
-    public PullEntity(int gameType, String dateTime, String dropRare, String dropType, String bannerType, boolean isResetPity) {
+    public PullEntity(int gameType, String dateTime, String dropRare, String dropType, String bannerType, boolean isResetPity, String pityStatus) {
         this.gameType = gameType;
         this.dateTime = dateTime;
         this.dropRare = dropRare;
         this.dropType = dropType;
         this.bannerType = bannerType;
         this.isResetPity = isResetPity;
+        this.pityStatus = pityStatus != null ? pityStatus : "NONE";
+    }
+
+    @Ignore
+    public PullEntity(int gameType, String dateTime, String dropRare, String dropType, String bannerType, boolean isResetPity) {
+        this(gameType, dateTime, dropRare, dropType, bannerType, isResetPity, "NONE");
     }
 
     public Pull toWishModel() {
-        return new Pull(id, dropRare, dropType, dateTime, bannerType, isResetPity);
+        return new Pull(id, dropRare, dropType, dateTime, bannerType, isResetPity, PityStatus.fromName(pityStatus));
     }
 }

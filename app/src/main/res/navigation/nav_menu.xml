@@ -35,7 +35,21 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out"/>
 
+        <action
+            android:id="@+id/action_to_piggy_bank"
+            app:destination="@id/piggyBankView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+
     </fragment>
+
+    <fragment
+        android:id="@+id/piggyBankView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.piggybank.PiggyBankView"
+        android:label="@string/menu_savings_title"
+        tools:layout="@layout/fragment_piggy_bank" />
 
     <fragment
         android:id="@+id/infoView"

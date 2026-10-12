@@ -4,22 +4,8 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 public class MigrationHelper {
-    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL(
-                "CREATE INDEX IF NOT EXISTS idx_calendar_year_month ON calendar (year, month)"
-            );
-            database.execSQL(
-                "CREATE INDEX IF NOT EXISTS idx_calendar_day_of_year ON calendar (day_of_year)"
-            );
-            database.execSQL(
-                "CREATE INDEX IF NOT EXISTS idx_pull_game_banner ON pulls (game_type, banner_type)"
-            );
-        }
-    };
 
-    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL(
@@ -95,56 +81,31 @@ public class MigrationHelper {
                             "`drop_type` TEXT, " +
                             "`banner_type` TEXT DEFAULT 'event', " +
                             "`is_reset_pity` INTEGER NOT NULL DEFAULT 0, " +
+                            "`pity_status` TEXT DEFAULT 'NONE', " +
                             "FOREIGN KEY(`game_type`) REFERENCES `games`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT)"
             );
             database.execSQL(
-                    "INSERT INTO `pulls_new` (`id`, `game_type`, `date_time`, `drop_rare`, `drop_type`, `banner_type`, `is_reset_pity`) " +
-                            "SELECT `id`, `game_type`, `date_time`, `drop_rare`, `drop_type`, `banner_type`, `is_reset_pity` FROM `pulls`"
+                    "INSERT INTO `pulls_new` (`id`, `game_type`, `date_time`, `drop_rare`, `drop_type`, `banner_type`, `is_reset_pity`, `pity_status`) " +
+                            "SELECT `id`, `game_type`, `date_time`, `drop_rare`, `drop_type`, " +
+                            "COALESCE(`banner_type`, 'event'), `is_reset_pity`, 'NONE' FROM `pulls`"
             );
             database.execSQL("DROP TABLE `pulls`");
             database.execSQL("ALTER TABLE `pulls_new` RENAME TO `pulls`");
             database.execSQL("CREATE INDEX IF NOT EXISTS `idx_pull_game_banner` ON `pulls` (`game_type`, `banner_type`)");
             database.execSQL("CREATE INDEX IF NOT EXISTS `idx_pull_game_type` ON `pulls` (`game_type`)");
 
-            boolean hasSubscriptionsTable = false;
-            try (android.database.Cursor cursor = database.query("SELECT 1 FROM sqlite_master WHERE type='table' AND name='subscriptions'")) {
-                hasSubscriptionsTable = cursor.moveToFirst();
-            }
-
-            if (hasSubscriptionsTable) {
-                database.execSQL(
-                        "CREATE TABLE IF NOT EXISTS `subscriptions_new` (" +
-                                "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                                "`game_type` INTEGER NOT NULL, " +
-                                "`count` INTEGER NOT NULL, " +
-                                "`start_date` INTEGER NOT NULL, " +
-                                "`end_date` INTEGER NOT NULL, " +
-                                "`claimed` INTEGER NOT NULL DEFAULT 0, " +
-                                "`missed` INTEGER NOT NULL DEFAULT 0, " +
-                                "`wait` INTEGER NOT NULL DEFAULT 0, " +
-                                "FOREIGN KEY(`game_type`) REFERENCES `games`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT)"
-                );
-                database.execSQL(
-                        "INSERT OR IGNORE INTO `subscriptions_new` (`id`, `game_type`, `count`, `start_date`, `end_date`, `claimed`, `missed`, `wait`) " +
-                                "SELECT `id`, CASE WHEN `game_type` IN (SELECT `id` FROM `games`) THEN `game_type` ELSE 0 END, " +
-                                "`count`, `start_date`, `end_date`, `claimed`, `missed`, `wait` FROM `subscriptions`"
-                );
-                database.execSQL("DROP TABLE `subscriptions`");
-                database.execSQL("ALTER TABLE `subscriptions_new` RENAME TO `subscriptions`");
-            } else {
-                database.execSQL(
-                        "CREATE TABLE IF NOT EXISTS `subscriptions` (" +
-                                "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                                "`game_type` INTEGER NOT NULL, " +
-                                "`count` INTEGER NOT NULL, " +
-                                "`start_date` INTEGER NOT NULL, " +
-                                "`end_date` INTEGER NOT NULL, " +
-                                "`claimed` INTEGER NOT NULL DEFAULT 0, " +
-                                "`missed` INTEGER NOT NULL DEFAULT 0, " +
-                                "`wait` INTEGER NOT NULL DEFAULT 0, " +
-                                "FOREIGN KEY(`game_type`) REFERENCES `games`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT)"
-                );
-            }
+            database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `subscriptions` (" +
+                            "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                            "`game_type` INTEGER NOT NULL, " +
+                            "`count` INTEGER NOT NULL, " +
+                            "`start_date` INTEGER NOT NULL, " +
+                            "`end_date` INTEGER NOT NULL, " +
+                            "`claimed` INTEGER NOT NULL DEFAULT 0, " +
+                            "`missed` INTEGER NOT NULL DEFAULT 0, " +
+                            "`wait` INTEGER NOT NULL DEFAULT 0, " +
+                            "FOREIGN KEY(`game_type`) REFERENCES `games`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT)"
+            );
             database.execSQL("CREATE INDEX IF NOT EXISTS `idx_subscription_game_dates` ON `subscriptions` (`game_type`, `start_date`, `end_date`)");
             database.execSQL("CREATE INDEX IF NOT EXISTS `idx_subscription_game_type` ON `subscriptions` (`game_type`)");
         }

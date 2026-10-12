@@ -3,7 +3,6 @@ package ru.menshovanton.gachapoint.data.db.dao;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
@@ -26,20 +25,12 @@ public interface PullDao {
     void update(PullEntity pull);
 
     @Query("UPDATE pulls SET date_time = :dateTime, drop_type = :dropType, drop_rare = :dropRare, " +
-            "banner_type = :bannerType, is_reset_pity = :isResetPity WHERE id = :id")
-    void updatePullFields(int id, String dateTime, String dropType, String dropRare, String bannerType, boolean isResetPity);
-
-    @Transaction
-    default void addPullsBatch(String dateTime, String dropType, String dropRare, int count,
-                               int gameType, String bannerType, boolean isResetPity) {
-        java.util.ArrayList<PullEntity> entities = new java.util.ArrayList<>(count);
-        for (int i = 0; i < count; i++) {
-            boolean currentReset = isResetPity && (i == count - 1);
-            entities.add(new PullEntity(gameType, dateTime, dropRare, dropType, bannerType, currentReset));
-        }
-        insertAll(entities);
-    }
+            "banner_type = :bannerType, is_reset_pity = :isResetPity, pity_status = :pityStatus WHERE id = :id")
+    void updatePullFields(int id, String dateTime, String dropType, String dropRare, String bannerType, boolean isResetPity, String pityStatus);
 
     @Query("DELETE FROM pulls WHERE id = :id")
     void deletePull(int id);
+
+    @Query("DELETE FROM pulls WHERE id IN (:ids)")
+    void deletePullsBatch(List<Integer> ids);
 }

@@ -12,6 +12,7 @@ import ru.menshovanton.gachapoint.data.db.entities.GameEntity;
 import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
+import ru.menshovanton.gachapoint.domain.enums.PityStatus;
 import ru.menshovanton.gachapoint.domain.models.Date;
 import ru.menshovanton.gachapoint.domain.models.Pull;
 
@@ -44,9 +45,32 @@ public class DatabaseRepository {
     }
 
     public void addPulls(String dateTime, String dropType, String dropRare, int count,
-                         GameType gameType, String bannerType, boolean isResetPity, Runnable onComplete) {
+                         GameType gameType, String bannerType, boolean isResetPity, PityStatus pityStatus, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            getDb().pullDao().addPullsBatch(dateTime, dropType, dropRare, count, gameType.getCode(), bannerType, isResetPity);
+            String statusStr = pityStatus != null ? pityStatus.name() : "NONE";
+            List<PullEntity> entities = new ArrayList<>(count);
+            for (int i = 0; i < count; i++) {
+                boolean currentReset = isResetPity && (i == count - 1);
+                String currentStatus = (i == count - 1) ? statusStr : "NONE";
+                entities.add(new PullEntity(gameType.getCode(), dateTime, dropRare, dropType, bannerType, currentReset, currentStatus));
+            }
+            getDb().pullDao().insertAll(entities);
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void addPulls(String dateTime, String dropType, String dropRare, int count,
+                         GameType gameType, String bannerType, boolean isResetPity, Runnable onComplete) {
+        addPulls(dateTime, dropType, dropRare, count, gameType, bannerType, isResetPity, PityStatus.NONE, onComplete);
+    }
+
+    public void updatePull(int id, String dateTime, String dropType, String dropRare,
+                           GameType gameType, String bannerType, boolean isResetPity, PityStatus pityStatus, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            String statusStr = pityStatus != null ? pityStatus.name() : "NONE";
+            getDb().pullDao().updatePullFields(id, dateTime, dropType, dropRare, bannerType, isResetPity, statusStr);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
@@ -55,17 +79,27 @@ public class DatabaseRepository {
 
     public void updatePull(int id, String dateTime, String dropType, String dropRare,
                            GameType gameType, String bannerType, boolean isResetPity, Runnable onComplete) {
+        updatePull(id, dateTime, dropType, dropRare, gameType, bannerType, isResetPity, PityStatus.NONE, onComplete);
+    }
+
+    public void deletePull(int id, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
-            getDb().pullDao().updatePullFields(id, dateTime, dropType, dropRare, bannerType, isResetPity);
+            getDb().pullDao().deletePull(id);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
         });
     }
 
-    public void deletePull(int id, Runnable onComplete) {
+    public void deletePullsBatch(List<Integer> ids, Runnable onComplete) {
+        if (ids == null || ids.isEmpty()) {
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+            return;
+        }
         AppDatabase.getExecutor().execute(() -> {
-            getDb().pullDao().deletePull(id);
+            getDb().pullDao().deletePullsBatch(ids);
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }

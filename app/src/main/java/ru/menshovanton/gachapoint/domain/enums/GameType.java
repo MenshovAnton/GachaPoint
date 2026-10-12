@@ -24,12 +24,12 @@ public enum GameType {
             R.drawable.icon_intertwined_fate,
             R.string.blessing_of_the_welkin_moon_count_header,
             Arrays.asList(
-                    new BannerInfo(BannerType.EVENT, R.string.banner_type_genshin_event),
-                    new BannerInfo(BannerType.STANDARD, R.string.banner_type_genshin_std),
-                    new BannerInfo(BannerType.WEAPON, R.string.banner_type_genshin_weapon),
-                    new BannerInfo(BannerType.BEGINNER, R.string.banner_type_genshin_novice),
-                    new BannerInfo(BannerType.CHRONICLE, R.string.banner_type_genshin_chronicled),
-                    new BannerInfo(BannerType.SPECIAL, R.string.banner_type_spec)
+                    new BannerInfo(BannerType.EVENT, R.string.banner_type_genshin_event, 90, 74, 10, true),
+                    new BannerInfo(BannerType.STANDARD, R.string.banner_type_genshin_std, 90, 74, 10, false),
+                    new BannerInfo(BannerType.WEAPON, R.string.banner_type_genshin_weapon, 80, 63, 10, true),
+                    new BannerInfo(BannerType.BEGINNER, R.string.banner_type_genshin_novice, 20, 15, 10, false),
+                    new BannerInfo(BannerType.CHRONICLE, R.string.banner_type_genshin_chronicled, 90, 74, 10, true),
+                    new BannerInfo(BannerType.SPECIAL, R.string.banner_type_spec, 90, 74, 10, false)
             )
     ),
     HSR(
@@ -43,12 +43,12 @@ public enum GameType {
             R.drawable.icon_star_rail_special_pass,
             R.string.star_rail_special_pass_count_header,
             Arrays.asList(
-                    new BannerInfo(BannerType.EVENT, R.string.banner_type_hsr_event),
-                    new BannerInfo(BannerType.WEAPON, R.string.banner_type_hsr_weapon),
-                    new BannerInfo(BannerType.STANDARD, R.string.banner_type_hsr_std),
-                    new BannerInfo(BannerType.BEGINNER, R.string.banner_type_hsr_novice),
-                    new BannerInfo(BannerType.CHRONICLE, R.string.banner_type_hsr_chronicled),
-                    new BannerInfo(BannerType.SPECIAL, R.string.banner_type_spec)
+                    new BannerInfo(BannerType.EVENT, R.string.banner_type_hsr_event, 90, 74, 10, true),
+                    new BannerInfo(BannerType.WEAPON, R.string.banner_type_hsr_weapon, 80, 65, 10, true),
+                    new BannerInfo(BannerType.STANDARD, R.string.banner_type_hsr_std, 90, 74, 10, false),
+                    new BannerInfo(BannerType.BEGINNER, R.string.banner_type_hsr_novice, 50, 45, 10, false),
+                    new BannerInfo(BannerType.CHRONICLE, R.string.banner_type_hsr_chronicled, 90, 74, 10, true),
+                    new BannerInfo(BannerType.SPECIAL, R.string.banner_type_spec, 90, 74, 10, false)
             )
     ),
     ZZZ(
@@ -62,12 +62,12 @@ public enum GameType {
             R.drawable.icon_encrypted_master_tape,
             R.string.inter_knot_member_count_header,
             Arrays.asList(
-                    new BannerInfo(BannerType.EVENT, R.string.banner_type_zzz_event),
-                    new BannerInfo(BannerType.WEAPON, R.string.banner_type_zzz_weapon),
-                    new BannerInfo(BannerType.STANDARD, R.string.banner_type_zzz_std),
-                    new BannerInfo(BannerType.BEGINNER, R.string.banner_type_zzz_novice),
-                    new BannerInfo(BannerType.BANGBOO, R.string.banner_type_zzz_bangboo),
-                    new BannerInfo(BannerType.SPECIAL, R.string.banner_type_spec)
+                    new BannerInfo(BannerType.EVENT, R.string.banner_type_zzz_event, 90, 74, 10, true),
+                    new BannerInfo(BannerType.WEAPON, R.string.banner_type_zzz_weapon, 80, 65, 10, true),
+                    new BannerInfo(BannerType.STANDARD, R.string.banner_type_zzz_std, 90, 74, 10, false),
+                    new BannerInfo(BannerType.BEGINNER, R.string.banner_type_zzz_novice, 50, 45, 10, false),
+                    new BannerInfo(BannerType.BANGBOO, R.string.banner_type_zzz_bangboo, 80, 65, 10, false),
+                    new BannerInfo(BannerType.SPECIAL, R.string.banner_type_spec, 90, 74, 10, false)
             )
     );
 
@@ -147,6 +147,17 @@ public enum GameType {
 
     public List<BannerInfo> getBanners() {
         return banners;
+    }
+
+    public BannerInfo getBannerInfo(String dbKey) {
+        if (dbKey != null) {
+            for (BannerInfo banner : banners) {
+                if (banner.getDbKey().equals(dbKey)) {
+                    return banner;
+                }
+            }
+        }
+        return banners.isEmpty() ? null : banners.get(0);
     }
 
     public String getBannerLabel(Context context, String dbKey) {

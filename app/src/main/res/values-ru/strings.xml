@@ -46,6 +46,17 @@
     <string name="title_bank">Накоплено</string>
     <string name="goal_edit_button">Цель</string>
     <string name="add_to_bank">Добавить</string>
+    <string name="savings_target_label">Текущая цель:</string>
+    <string name="savings_current_pulls">Круток накоплено</string>
+    <string name="savings_current_gems">В гемах</string>
+    <string name="savings_quick_actions">Быстрые действия</string>
+    <string name="savings_reset_confirm">Сбросить текущую цель и накопленные крутки?</string>
+    <string name="savings_set_target_dialog_title">Установить цель</string>
+    <string name="savings_set_target_hint">Количество круток к цели</string>
+    <string name="savings_add_custom_dialog_title">Добавить крутки</string>
+    <string name="savings_add_custom_hint">Сколько круток добавить</string>
+    <string name="savings_converter_title">Быстрый калькулятор</string>
+    <string name="savings_converter_desc">1 крутка = %d гемов</string>
     <string name="feedback">Обратная связь</string>
     <string name="pity_1">На гарант 1x</string>
     <string name="pity_2">На гарант 2x</string>
@@ -89,6 +100,17 @@
     <string name="banner_type_zzz_bangboo">Поиск Банбу</string>
     <string name="banner_type_spec">Специальный</string>
     <string name="reset_pity">Сбросить гарант</string>
+    <string name="pity_status_none">Нет</string>
+    <string name="pity_status_win">Выигрыш 50/50</string>
+    <string name="pity_status_loss">Проигрыш 50/50</string>
+    <string name="pity_status_guaranteed">Гарант 100%</string>
+    <string name="pity_5star_title">Гарант 5★</string>
+    <string name="pity_4star_title">Гарант 4★</string>
+    <string name="pity_status_fifty_fifty">Шанс 50/50</string>
+    <string name="pity_status_guaranteed_badge">Гарант 100%</string>
+    <string name="pity_status_na">—</string>
+    <string name="pity_pull_at">%d-я крутка</string>
+    <string name="dialog_select_drop_outcome">Результат дропа:</string>
     <string name="goal_not_set_or_reached">Цель не установлена или не достигнута</string>
     <string name="ok_button">Да</string>
     <string name="cancel_button">Нет, спасибо</string>
@@ -130,8 +152,6 @@
     <string name="db_error_invalid_file">Выбранный файл не является базой данных SQLite</string>
     <string name="developer_card_title">Разработчик</string>
     <string name="form_load_error">Ошибка загрузки формы!</string>
-
-    <!-- Subtitles and headers for bottom sheets -->
     <string name="sheet_add_ten_desc">+10 к текущей истории</string>
     <string name="sheet_add_one_desc">+1 к текущей истории</string>
     <string name="sheet_add_five_star_desc">Сбросить счетчик 5★ гаранта</string>
@@ -148,8 +168,6 @@
     <string name="sheet_section_add_wishes">Добавить попытки</string>
     <string name="sheet_section_drops">Выпадение редкостей</string>
     <string name="sheet_section_quick_add">Быстрое добавление</string>
-
-    <!-- About screen strings -->
     <string name="about_version_badge">v0.2.0 • Offline &amp; Open Source</string>
     <string name="about_section_project">О проекте</string>
     <string name="about_section_links">Ссылки и сообщество</string>
@@ -158,19 +176,24 @@
     <string name="about_telegram_title">Telegram-канал</string>
     <string name="about_telegram_desc">Новости и обсуждение проекта</string>
     <string name="about_developer_desc">MenshovAnton • Автор проекта</string>
-
-    <!-- Menu Hub strings -->
     <string name="menu_section_tools">Инструменты и сервисы</string>
     <string name="menu_section_app">Приложение</string>
+    <string name="menu_savings_title">Накопления и цели</string>
+    <string name="menu_savings_desc">Прогресс круток, цели и подсчет гемов</string>
     <string name="menu_stats_title">Общая статистика</string>
     <string name="menu_stats_desc">Аналитика круток, шансов и расходов</string>
     <string name="menu_calc_title">Калькулятор гемов и круток</string>
     <string name="menu_calc_desc">Расчет накоплений к баннерам</string>
     <string name="menu_promo_title">Агрегатор промокодов</string>
-    <string name="menu_promo_desc">Свежие коды на примогемы и нефрит</string>
+    <string name="menu_promo_desc">Свежие коды на гемы</string>
     <string name="menu_badge_soon">Скоро</string>
     <string name="menu_settings_desc">Оповещения, темы и база данных</string>
     <string name="menu_feedback_desc">Сообщить об ошибке или предложить идею</string>
     <string name="menu_about_desc">Версия, репозиторий и разработчик</string>
     <string name="menu_feature_in_dev">Раздел находится в разработке!</string>
+    <string name="selected_count">Выбрано: %d</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="delete_batch_confirm_title">Удаление круток</string>
+    <string name="delete_batch_confirm_message">Вы действительно хотите удалить выбранные записи (%d шт.)? Это действие нельзя отменить.</string>
+    <string name="pulls">Круток</string>
 </resources>

@@ -11,8 +11,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:fontFamily="@font/genshin_font"
         android:text="@string/add_pull"
-        android:textSize="18sp" />
+        android:textColor="@color/text"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -49,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="@string/select_rare"
+        android:textColor="@color/text_secondary"
         android:textSize="14sp" />
 
     <RadioGroup
@@ -71,7 +75,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/four_star"
-            app:buttonTint="@color/radio_button_selector" />
+            android:textColor="@color/rare_epic"
+            app:buttonTint="@color/rare_epic" />
 
         <RadioButton
             android:id="@+id/rb_five_star"
@@ -79,15 +84,53 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/five_star"
-            app:buttonTint="@color/radio_button_selector" />
+            android:textColor="@color/rare_legendary"
+            app:buttonTint="@color/rare_legendary" />
     </RadioGroup>
 
-    <CheckBox
-        android:id="@+id/cb_reset_pity"
+    <LinearLayout
+        android:id="@+id/ll_pity_status_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="@string/reset_pity"
-        android:textSize="14sp" />
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:text="@string/dialog_select_drop_outcome"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+
+        <RadioGroup
+            android:id="@+id/rg_pity_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rb_pity_win"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pity_status_win"
+                app:buttonTint="@color/radio_button_selector" />
+
+            <RadioButton
+                android:id="@+id/rb_pity_loss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pity_status_loss"
+                app:buttonTint="@color/radio_button_selector" />
+
+            <RadioButton
+                android:id="@+id/rb_pity_guaranteed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pity_status_guaranteed"
+                app:buttonTint="@color/radio_button_selector" />
+        </RadioGroup>
+    </LinearLayout>
 
 </LinearLayout>
