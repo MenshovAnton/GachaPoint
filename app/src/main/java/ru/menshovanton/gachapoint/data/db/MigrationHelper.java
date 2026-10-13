@@ -57,13 +57,14 @@ public class MigrationHelper {
                             "`game_type` INTEGER NOT NULL, " +
                             "`status` INTEGER NOT NULL DEFAULT 0, " +
                             "`sub_days_remaining` INTEGER NOT NULL DEFAULT 0, " +
+                            "`daily_status` INTEGER NOT NULL DEFAULT 0, " +
                             "PRIMARY KEY(`year`, `day_of_year`, `game_type`), " +
                             "FOREIGN KEY(`year`, `day_of_year`) REFERENCES `calendar`(`year`, `day_of_year`) ON UPDATE NO ACTION ON DELETE CASCADE, " +
                             "FOREIGN KEY(`game_type`) REFERENCES `games`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT)"
             );
             database.execSQL(
-                    "INSERT INTO `calendar_game_status` (`year`, `day_of_year`, `game_type`, `status`, `sub_days_remaining`) " +
-                            "SELECT `year`, `day_of_year`, `game_type`, `status`, `sub_days_remaining` FROM `calendar_temp_status`"
+                    "INSERT INTO `calendar_game_status` (`year`, `day_of_year`, `game_type`, `status`, `sub_days_remaining`, `daily_status`) " +
+                            "SELECT `year`, `day_of_year`, `game_type`, `status`, `sub_days_remaining`, 0 FROM `calendar_temp_status`"
             );
             database.execSQL("DROP TABLE `calendar_temp_status`");
             database.execSQL("CREATE INDEX IF NOT EXISTS `idx_calendar_status_day` ON `calendar_game_status` (`year`, `day_of_year`)");

@@ -36,16 +36,41 @@ public class CalendarGrid extends GridLayout {
         gestureDetector = new GestureDetector(context, new SwipeGestureListener());
     }
 
+    private boolean swipedDuringGesture = false;
+
+    @Override
+    protected void onMeasure(int widthSpec, int heightSpec) {
+        int width = MeasureSpec.getSize(widthSpec);
+        if (width > 0 && getChildCount() > 0) {
+            float density = getResources().getDisplayMetrics().density;
+            int marginPx = (int) (2 * density);
+            int availableWidth = width - (getPaddingLeft() + getPaddingRight());
+            int cellWidth = Math.max(0, (availableWidth - (marginPx * 2 * 7)) / 7);
+            int cellHeight = (int) (44 * density);
+
+            for (int i = 0; i < getChildCount(); i++) {
+                android.view.View child = getChildAt(i);
+                android.view.ViewGroup.LayoutParams lp = child.getLayoutParams();
+                if (lp != null && (lp.width != cellWidth || lp.height != cellHeight)) {
+                    lp.width = cellWidth;
+                    lp.height = cellHeight;
+                }
+            }
+        }
+        super.onMeasure(widthSpec, heightSpec);
+    }
+
     public void setOnSwipeListener(OnSwipeListener listener) {
         this.swipeListener = listener;
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        switch (ev.getAction()) {
+        switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 initialX = ev.getX();
                 initialY = ev.getY();
+                swipedDuringGesture = false;
                 gestureDetector.onTouchEvent(ev);
                 break;
 
@@ -54,7 +79,17 @@ public class CalendarGrid extends GridLayout {
                 float diffY = ev.getY() - initialY;
 
                 if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > touchSlop) {
+                    if (getParent() != null) {
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                    }
                     return true;
+                }
+                break;
+
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                if (getParent() != null) {
+                    getParent().requestDisallowInterceptTouchEvent(false);
                 }
                 break;
         }
@@ -63,9 +98,47 @@ public class CalendarGrid extends GridLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_MOVE:
+                float diffX = event.getX() - initialX;
+                float diffY = event.getY() - initialY;
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > touchSlop) {
+                    if (getParent() != null) {
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                    }
+                }
+                break;
+
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                if (getParent() != null) {
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                }
+                break;
+        }
+
         boolean handled = gestureDetector.onTouchEvent(event);
-        if (!handled && event.getAction() == MotionEvent.ACTION_UP) {
-            performClick();
+
+        if (event.getActionMasked() == MotionEvent.ACTION_UP) {
+            if (!handled && !swipedDuringGesture) {
+                float diffX = event.getX() - initialX;
+                float diffY = event.getY() - initialY;
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > touchSlop * 2.5f) {
+                    if (swipeListener != null) {
+                        if (diffX > 0) {
+                            swipeListener.onSwipeRight();
+                        } else {
+                            swipeListener.onSwipeLeft();
+                        }
+                    }
+                    handled = true;
+                    swipedDuringGesture = true;
+                }
+            }
+
+            if (!handled && !swipedDuringGesture) {
+                performClick();
+            }
         }
         return handled || super.onTouchEvent(event);
     }
@@ -77,7 +150,7 @@ public class CalendarGrid extends GridLayout {
     }
 
     private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
-        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 80;
 
         @Override
         public boolean onDown(@NonNull MotionEvent e) {
@@ -91,7 +164,7 @@ public class CalendarGrid extends GridLayout {
             float diffX = e2.getX() - e1.getX();
             float diffY = e2.getY() - e1.getY();
 
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+            if (Math.abs(diffX) > Math.abs(diffY) && (Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD || Math.abs(diffX) > touchSlop * 2)) {
                 if (swipeListener != null) {
                     if (diffX > 0) {
                         swipeListener.onSwipeRight();
@@ -99,6 +172,7 @@ public class CalendarGrid extends GridLayout {
                         swipeListener.onSwipeLeft();
                     }
                 }
+                swipedDuringGesture = true;
                 return true;
             }
             return false;

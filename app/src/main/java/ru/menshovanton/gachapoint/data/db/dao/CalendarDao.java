@@ -22,11 +22,12 @@ public interface CalendarDao {
     void insertCalendarDays(List<CalendarEntity> entities);
 
     // Note: Room directly maps SQL column aliases into ru.menshovanton.gachapoint.domain.models.Date
-    // by matching field names (dayOfMonth, dayOfYear, dayOfWeek, year, month, status, subDaysRemaining).
+    // by matching field names (dayOfMonth, dayOfYear, dayOfWeek, year, month, status, subDaysRemaining, dailyStatus).
     @Query("SELECT c.day AS dayOfMonth, c.day_of_year AS dayOfYear, c.day_of_week AS dayOfWeek, " +
             "c.year AS year, c.month AS month, " +
             "COALESCE(s.status, 0) AS status, " +
-            "COALESCE(s.sub_days_remaining, 0) AS subDaysRemaining " +
+            "COALESCE(s.sub_days_remaining, 0) AS subDaysRemaining, " +
+            "COALESCE(s.daily_status, 0) AS dailyStatus " +
             "FROM calendar c " +
             "LEFT JOIN calendar_game_status s ON c.year = s.year AND c.day_of_year = s.day_of_year AND s.game_type = :gameType " +
             "WHERE c.year = :year AND c.month = :month " +
@@ -36,7 +37,8 @@ public interface CalendarDao {
     @Query("SELECT c.day AS dayOfMonth, c.day_of_year AS dayOfYear, c.day_of_week AS dayOfWeek, " +
             "c.year AS year, c.month AS month, " +
             "COALESCE(s.status, 0) AS status, " +
-            "COALESCE(s.sub_days_remaining, 0) AS subDaysRemaining " +
+            "COALESCE(s.sub_days_remaining, 0) AS subDaysRemaining, " +
+            "COALESCE(s.daily_status, 0) AS dailyStatus " +
             "FROM calendar c " +
             "LEFT JOIN calendar_game_status s ON c.year = s.year AND c.day_of_year = s.day_of_year AND s.game_type = :gameType " +
             "WHERE c.year = :year AND c.day_of_year = :dayOfYear " +
@@ -46,13 +48,16 @@ public interface CalendarDao {
     @Query("SELECT c.day AS dayOfMonth, c.day_of_year AS dayOfYear, c.day_of_week AS dayOfWeek, " +
             "c.year AS year, c.month AS month, " +
             "COALESCE(s.status, 0) AS status, " +
-            "COALESCE(s.sub_days_remaining, 0) AS subDaysRemaining " +
+            "COALESCE(s.sub_days_remaining, 0) AS subDaysRemaining, " +
+            "COALESCE(s.daily_status, 0) AS dailyStatus " +
             "FROM calendar c " +
             "LEFT JOIN calendar_game_status s ON c.year = s.year AND c.day_of_year = s.day_of_year AND s.game_type = :gameType " +
             "WHERE c.year = :year AND c.day_of_year BETWEEN :startDay AND :endDay " +
             "ORDER BY c.day_of_year ASC")
     List<Date> getDaysRange(int year, int startDay, int endDay, int gameType);
 
+    @Query("SELECT * FROM calendar_game_status WHERE year = :year AND day_of_year = :dayOfYear AND game_type = :gameType LIMIT 1")
+    CalendarGameStatusEntity getGameStatus(int year, int dayOfYear, int gameType);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrUpdateGameStatus(CalendarGameStatusEntity statusEntity);

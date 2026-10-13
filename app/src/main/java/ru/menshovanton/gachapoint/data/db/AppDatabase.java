@@ -83,15 +83,6 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public static void syncSubscriptionsRaw(SupportSQLiteDatabase db) {
-        try (android.database.Cursor countCheck = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
-                "SELECT COUNT(*) FROM `subscriptions`"))) {
-            if (countCheck.moveToFirst() && countCheck.getInt(0) > 0) {
-                return;
-            }
-        } catch (Exception ignored) {
-            return;
-        }
-
         db.beginTransaction();
         try {
             java.time.LocalDate today = java.time.LocalDate.now();
@@ -99,38 +90,75 @@ public abstract class AppDatabase extends RoomDatabase {
 
             for (GameType gameType : GameType.values()) {
                 int gameCode = gameType.getCode();
-                int countInSubs = 0;
-                try (android.database.Cursor countCursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
-                        "SELECT COUNT(*) FROM `subscriptions` WHERE `game_type` = ?",
-                        new Object[]{gameCode}))) {
-                    if (countCursor.moveToFirst()) {
-                        countInSubs = countCursor.getInt(0);
+                int activeSubsCount = 0;
+                try (android.database.Cursor subCursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
+                        "SELECT COUNT(*) FROM `subscriptions` WHERE `game_type` = ? AND `end_date` >= ?",
+                        new Object[]{gameCode, todayEpoch}))) {
+                    if (subCursor.moveToFirst()) {
+                        activeSubsCount = subCursor.getInt(0);
                     }
                 }
 
-                if (countInSubs > 0) {
+                if (activeSubsCount > 0) {
                     continue;
                 }
 
-                int remDays = 0;
-                try (android.database.Cursor statusCursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
-                        "SELECT `sub_days_remaining` FROM `calendar_game_status` " +
-                                "WHERE `game_type` = ? AND `year` = ? AND `day_of_year` = ?",
+                int lastYear = 0;
+                int lastDoy = 0;
+                int lastRem = 0;
+
+                try (android.database.Cursor todayCursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
+                        "SELECT `year`, `day_of_year`, `sub_days_remaining` " +
+                                "FROM `calendar_game_status` " +
+                                "WHERE `game_type` = ? AND `year` = ? AND `day_of_year` = ? AND `sub_days_remaining` > 0",
                         new Object[]{gameCode, today.getYear(), today.getDayOfYear()}))) {
-                    if (statusCursor.moveToFirst()) {
-                        remDays = statusCursor.getInt(0);
+                    if (todayCursor.moveToFirst()) {
+                        lastYear = todayCursor.getInt(0);
+                        lastDoy = todayCursor.getInt(1);
+                        lastRem = todayCursor.getInt(2);
                     }
                 }
 
-                if (remDays <= 0) {
+                if (lastRem <= 0) {
+                    try (android.database.Cursor latestCursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
+                            "SELECT `year`, `day_of_year`, `sub_days_remaining` " +
+                                    "FROM `calendar_game_status` " +
+                                    "WHERE `game_type` = ? AND `sub_days_remaining` > 0 " +
+                                    "ORDER BY `year` DESC, `day_of_year` DESC LIMIT 1",
+                            new Object[]{gameCode}))) {
+                        if (latestCursor.moveToFirst()) {
+                            lastYear = latestCursor.getInt(0);
+                            lastDoy = latestCursor.getInt(1);
+                            lastRem = latestCursor.getInt(2);
+                        }
+                    }
+                }
+
+                if (lastRem <= 0 || lastYear <= 0 || lastDoy <= 0) {
                     continue;
                 }
 
-                int count = (int) Math.ceil(remDays / 30.0);
+                int maxRem = lastRem;
+                try (android.database.Cursor maxCursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
+                        "SELECT MAX(`sub_days_remaining`) FROM `calendar_game_status` WHERE `game_type` = ?",
+                        new Object[]{gameCode}))) {
+                    if (maxCursor.moveToFirst() && !maxCursor.isNull(0)) {
+                        maxRem = Math.max(maxRem, maxCursor.getInt(0));
+                    }
+                }
+
+                int count = Math.max(1, Math.min(6, (int) Math.ceil(maxRem / 30.0)));
                 int totalDays = count * 30;
-                int daysPassed = Math.max(0, totalDays - remDays);
-                java.time.LocalDate startDate = today.minusDays(daysPassed);
-                java.time.LocalDate endDate = today.plusDays(remDays - 1);
+
+                java.time.LocalDate latestDate = java.time.LocalDate.ofYearDay(lastYear, lastDoy);
+                java.time.LocalDate endDate = latestDate.plusDays(lastRem - 1);
+                java.time.LocalDate startDate;
+
+                if (endDate.isBefore(today)) {
+                    endDate = today.plusDays(lastRem - 1);
+                }
+                startDate = endDate.minusDays(totalDays - 1);
+
                 long startEpoch = startDate.toEpochDay();
                 long endEpoch = endDate.toEpochDay();
 
@@ -158,7 +186,7 @@ public abstract class AppDatabase extends RoomDatabase {
                         if (status == ru.menshovanton.gachapoint.domain.enums.DayState.STATUS_RECEIVED
                                 || status == ru.menshovanton.gachapoint.domain.enums.DayState.STATUS_OLD_RECEIVED) {
                             claims++;
-                        } else if (!isToday) {
+                        } else if (!isToday && status != 0) {
                             misses++;
                         }
                     }
@@ -169,6 +197,8 @@ public abstract class AppDatabase extends RoomDatabase {
                 int missed = misses * primogemsPerDay;
                 int totalPrimogems = count * 30 * primogemsPerDay;
                 int wait = Math.max(0, totalPrimogems - claimed - missed);
+
+                db.execSQL("DELETE FROM `subscriptions` WHERE `game_type` = ?", new Object[]{gameCode});
 
                 String insertSubSql = "INSERT INTO `subscriptions` " +
                         "(`game_type`, `count`, `start_date`, `end_date`, `claimed`, `missed`, `wait`) " +

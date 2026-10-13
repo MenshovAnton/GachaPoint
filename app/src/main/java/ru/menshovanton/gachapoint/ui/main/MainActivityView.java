@@ -4,13 +4,9 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.ViewGroup;
-import android.view.Window;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -142,36 +138,19 @@ public class MainActivityView extends AppCompatActivity {
         void onExport();
         void onRecovery();
         void onCancel();
+        void onMultiSelect();
     }
 
     public void showCalendarMenu(OnCalendarMenuClickListener listener) {
         final BottomSheetDialog dialog = new BottomSheetDialog(this, R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
         dialog.setContentView(R.layout.calendar_more_sheet);
 
-        dialog.findViewById(R.id.ll_add).setOnClickListener(v -> {
-            listener.onAdd();
-            dialog.dismiss();
-        });
-
-        dialog.findViewById(R.id.ll_delete).setOnClickListener(v -> {
-            listener.onDel();
-            dialog.dismiss();
-        });
-
-        dialog.findViewById(R.id.ll_export).setOnClickListener(v -> {
-            listener.onExport();
-            dialog.dismiss();
-        });
-
-        dialog.findViewById(R.id.ll_mark_up_missed_day).setOnClickListener(v -> {
-            listener.onRecovery();
-            dialog.dismiss();
-        });
-
-        dialog.findViewById(R.id.ll_cancel_mark).setOnClickListener(v -> {
-            listener.onCancel();
-            dialog.dismiss();
-        });
+        setDialogClickListener(dialog, R.id.ll_multi_select, listener::onMultiSelect);
+        setDialogClickListener(dialog, R.id.ll_add, listener::onAdd);
+        setDialogClickListener(dialog, R.id.ll_delete, listener::onDel);
+        setDialogClickListener(dialog, R.id.ll_export, listener::onExport);
+        setDialogClickListener(dialog, R.id.ll_mark_up_missed_day, listener::onRecovery);
+        setDialogClickListener(dialog, R.id.ll_cancel_mark, listener::onCancel);
 
         dialog.show();
     }
@@ -187,25 +166,10 @@ public class MainActivityView extends AppCompatActivity {
         final BottomSheetDialog dialog = new BottomSheetDialog(this, R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
         dialog.setContentView(R.layout.piggy_bank_more_sheet);
 
-        dialog.findViewById(R.id.layoutAddOneGarant).setOnClickListener(v -> {
-            listener.onAddOnePity();
-            dialog.dismiss();
-        });
-
-        dialog.findViewById(R.id.layoutAddTwoGarant).setOnClickListener(v -> {
-            listener.onAddTwoPity();
-            dialog.dismiss();
-        });
-
-        dialog.findViewById(R.id.layoutAddSixGarant).setOnClickListener(v -> {
-            listener.onAddSixPity();
-            dialog.dismiss();
-        });
-
-        dialog.findViewById(R.id.layoutResetGoal).setOnClickListener(v -> {
-            listener.onReset();
-            dialog.dismiss();
-        });
+        setDialogClickListener(dialog, R.id.layoutAddOneGarant, listener::onAddOnePity);
+        setDialogClickListener(dialog, R.id.layoutAddTwoGarant, listener::onAddTwoPity);
+        setDialogClickListener(dialog, R.id.layoutAddSixGarant, listener::onAddSixPity);
+        setDialogClickListener(dialog, R.id.layoutResetGoal, listener::onReset);
 
         dialog.show();
     }
@@ -221,27 +185,22 @@ public class MainActivityView extends AppCompatActivity {
         final BottomSheetDialog dialog = new BottomSheetDialog(this, R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
         dialog.setContentView(R.layout.wishes_counter_more_sheet);
 
-        dialog.findViewById(R.id.ll_add_one_attempt).setOnClickListener(v -> {
-            listener.onAddOneAttempt();
-            dialog.dismiss();
-        });
-
-        dialog.findViewById(R.id.ll_add_ten_attempts).setOnClickListener(v -> {
-            listener.onAddTenAttempts();
-            dialog.dismiss();
-        });
-
-        dialog.findViewById(R.id.ll_add_five_star_drop).setOnClickListener(v -> {
-            listener.onAddFiveStarDrop();
-            dialog.dismiss();
-        });
-
-        dialog.findViewById(R.id.ll_add_four_start_drop).setOnClickListener(v -> {
-            listener.onAddFourStarDrop();
-            dialog.dismiss();
-        });
+        setDialogClickListener(dialog, R.id.ll_add_one_attempt, listener::onAddOneAttempt);
+        setDialogClickListener(dialog, R.id.ll_add_ten_attempts, listener::onAddTenAttempts);
+        setDialogClickListener(dialog, R.id.ll_add_five_star_drop, listener::onAddFiveStarDrop);
+        setDialogClickListener(dialog, R.id.ll_add_four_start_drop, listener::onAddFourStarDrop);
 
         dialog.show();
+    }
+
+    private void setDialogClickListener(Dialog dialog, int viewId, Runnable action) {
+        View view = dialog.findViewById(viewId);
+        if (view != null) {
+            view.setOnClickListener(v -> {
+                action.run();
+                dialog.dismiss();
+            });
+        }
     }
 
     public GameType getSubType() {

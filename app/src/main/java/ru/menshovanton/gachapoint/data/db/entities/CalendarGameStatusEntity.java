@@ -44,14 +44,23 @@ public class CalendarGameStatusEntity {
     @ColumnInfo(name = "sub_days_remaining", defaultValue = "0")
     public int subDaysRemaining;
 
+    @ColumnInfo(name = "daily_status", defaultValue = "0")
+    public int dailyStatus;
+
     public CalendarGameStatusEntity() {}
 
     @Ignore
     public CalendarGameStatusEntity(int year, int dayOfYear, int gameType, int status, int subDaysRemaining) {
+        this(year, dayOfYear, gameType, status, subDaysRemaining, 0);
+    }
+
+    @Ignore
+    public CalendarGameStatusEntity(int year, int dayOfYear, int gameType, int status, int subDaysRemaining, int dailyStatus) {
         this.year = year;
         this.dayOfYear = dayOfYear;
         this.gameType = gameType;
         this.status = status;
         this.subDaysRemaining = subDaysRemaining;
+        this.dailyStatus = dailyStatus;
     }
 }

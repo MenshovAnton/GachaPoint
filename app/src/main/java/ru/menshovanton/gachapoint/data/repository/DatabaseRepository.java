@@ -148,11 +148,37 @@ public class DatabaseRepository {
     }
 
     public void updateCalendarDay(int year, int dayOfYear, GameType gameType, int status, int subDaysRemaining, Runnable onComplete) {
+        setCalendarDaySubscriptionStatus(year, dayOfYear, gameType, status, subDaysRemaining, onComplete);
+    }
+
+    public void setCalendarDayDailyStatus(int year, int dayOfYear, GameType gameType, int dailyStatus, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
             if (gameType != null) {
-                getDb().calendarDao().insertOrUpdateGameStatus(
-                        new CalendarGameStatusEntity(year, dayOfYear, gameType.getCode(), status, subDaysRemaining)
-                );
+                CalendarGameStatusEntity entity = getDb().calendarDao().getGameStatus(year, dayOfYear, gameType.getCode());
+                if (entity == null) {
+                    entity = new CalendarGameStatusEntity(year, dayOfYear, gameType.getCode(), 0, 0, dailyStatus);
+                } else {
+                    entity.dailyStatus = dailyStatus;
+                }
+                getDb().calendarDao().insertOrUpdateGameStatus(entity);
+            }
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void setCalendarDaySubscriptionStatus(int year, int dayOfYear, GameType gameType, int status, int subDaysRemaining, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            if (gameType != null) {
+                CalendarGameStatusEntity entity = getDb().calendarDao().getGameStatus(year, dayOfYear, gameType.getCode());
+                if (entity == null) {
+                    entity = new CalendarGameStatusEntity(year, dayOfYear, gameType.getCode(), status, subDaysRemaining, 0);
+                } else {
+                    entity.status = status;
+                    entity.subDaysRemaining = subDaysRemaining;
+                }
+                getDb().calendarDao().insertOrUpdateGameStatus(entity);
             }
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
@@ -163,6 +189,54 @@ public class DatabaseRepository {
     public void updateSubscribeDaysBatch(List<CalendarGameStatusEntity> statusEntities, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
             getDb().calendarDao().updateSubscribeDaysTransaction(statusEntities);
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void setCalendarDaysDailyStatusBatch(List<Integer> years, List<Integer> daysOfYear, GameType gameType, int dailyStatus, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            if (gameType != null && years != null && daysOfYear != null && years.size() == daysOfYear.size()) {
+                int gameTypeCode = gameType.getCode();
+                List<CalendarGameStatusEntity> entities = new ArrayList<>(years.size());
+                for (int i = 0; i < years.size(); i++) {
+                    int y = years.get(i);
+                    int d = daysOfYear.get(i);
+                    CalendarGameStatusEntity entity = getDb().calendarDao().getGameStatus(y, d, gameTypeCode);
+                    if (entity == null) {
+                        entity = new CalendarGameStatusEntity(y, d, gameTypeCode, 0, 0, dailyStatus);
+                    } else {
+                        entity.dailyStatus = dailyStatus;
+                    }
+                    entities.add(entity);
+                }
+                getDb().calendarDao().insertOrUpdateGameStatusBatch(entities);
+            }
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void setCalendarDaysSubscriptionStatusBatch(List<Integer> years, List<Integer> daysOfYear, GameType gameType, int status, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            if (gameType != null && years != null && daysOfYear != null && years.size() == daysOfYear.size()) {
+                int gameTypeCode = gameType.getCode();
+                List<CalendarGameStatusEntity> entities = new ArrayList<>(years.size());
+                for (int i = 0; i < years.size(); i++) {
+                    int y = years.get(i);
+                    int d = daysOfYear.get(i);
+                    CalendarGameStatusEntity entity = getDb().calendarDao().getGameStatus(y, d, gameTypeCode);
+                    if (entity == null) {
+                        entity = new CalendarGameStatusEntity(y, d, gameTypeCode, status, 0, 0);
+                    } else {
+                        entity.status = status;
+                    }
+                    entities.add(entity);
+                }
+                getDb().calendarDao().insertOrUpdateGameStatusBatch(entities);
+            }
             if (onComplete != null) {
                 AppDatabase.postToMain(onComplete);
             }
@@ -194,8 +268,20 @@ public class DatabaseRepository {
 
     public void getActiveSubscription(GameType gameType, long epochDay, Callback<SubscriptionEntity> callback) {
         AppDatabase.getExecutor().execute(() -> {
-            SubscriptionEntity entity = getDb().subscriptionDao().getActiveSubscription(gameType.getCode(), epochDay);
+            int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
+            SubscriptionEntity entity = getDb().subscriptionDao().getActiveOrUpcomingSubscription(code, epochDay);
             AppDatabase.postToMain(() -> callback.onResult(entity));
+        });
+    }
+
+    public void cleanupOldSubscriptions(GameType gameType, int keepId, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            if (gameType != null) {
+                getDb().subscriptionDao().cleanupOldSubscriptionsForGame(gameType.getCode(), keepId);
+            }
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
         });
     }
 

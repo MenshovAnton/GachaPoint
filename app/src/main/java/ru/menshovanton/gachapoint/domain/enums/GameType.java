@@ -23,6 +23,7 @@ public enum GameType {
             R.drawable.icon_primogem,
             R.drawable.icon_intertwined_fate,
             R.string.blessing_of_the_welkin_moon_count_header,
+            R.string.sub_name_genshin,
             Arrays.asList(
                     new BannerInfo(BannerType.EVENT, R.string.banner_type_genshin_event, 90, 74, 10, true),
                     new BannerInfo(BannerType.STANDARD, R.string.banner_type_genshin_std, 90, 74, 10, false),
@@ -42,6 +43,7 @@ public enum GameType {
             R.drawable.icon_stellar_jade,
             R.drawable.icon_star_rail_special_pass,
             R.string.star_rail_special_pass_count_header,
+            R.string.sub_name_hsr,
             Arrays.asList(
                     new BannerInfo(BannerType.EVENT, R.string.banner_type_hsr_event, 90, 74, 10, true),
                     new BannerInfo(BannerType.WEAPON, R.string.banner_type_hsr_weapon, 80, 65, 10, true),
@@ -61,6 +63,7 @@ public enum GameType {
             R.drawable.icon_polychrome,
             R.drawable.icon_encrypted_master_tape,
             R.string.inter_knot_member_count_header,
+            R.string.sub_name_zzz,
             Arrays.asList(
                     new BannerInfo(BannerType.EVENT, R.string.banner_type_zzz_event, 90, 74, 10, true),
                     new BannerInfo(BannerType.WEAPON, R.string.banner_type_zzz_weapon, 80, 65, 10, true),
@@ -80,10 +83,12 @@ public enum GameType {
     @DrawableRes private final int currencyIconResId;
     @DrawableRes private final int pullIconResId;
     @StringRes private final int subTitleResId;
+    @StringRes private final int subscriptionNameResId;
     private final List<BannerInfo> banners;
 
     GameType(int code, String name, int currencyPerDay, int pullCost, int maxSubs, @StringRes int nameResId,
-            @DrawableRes int currencyIconResId, @DrawableRes int pullIconResId, @StringRes int subTitleResId, List<BannerInfo> banners) {
+            @DrawableRes int currencyIconResId, @DrawableRes int pullIconResId, @StringRes int subTitleResId,
+            @StringRes int subscriptionNameResId, List<BannerInfo> banners) {
         this.code = code;
         this.name = name;
         this.currencyPerDay = currencyPerDay;
@@ -93,6 +98,7 @@ public enum GameType {
         this.currencyIconResId = currencyIconResId;
         this.pullIconResId = pullIconResId;
         this.subTitleResId = subTitleResId;
+        this.subscriptionNameResId = subscriptionNameResId;
         this.banners = Collections.unmodifiableList(banners);
     }
 
@@ -143,6 +149,11 @@ public enum GameType {
     @StringRes
     public int getSubTitleResId() {
         return subTitleResId;
+    }
+
+    @StringRes
+    public int getSubscriptionNameResId() {
+        return subscriptionNameResId;
     }
 
     public List<BannerInfo> getBanners() {
