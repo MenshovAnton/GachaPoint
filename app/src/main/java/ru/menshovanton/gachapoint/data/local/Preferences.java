@@ -30,6 +30,9 @@ public class Preferences {
     private static final String PREFIX_PIGGY_DAILIES = "Piggy Bank dailies progress ";
     private static final String SUFFIX_NEED_MIGRATION = " need migration";
 
+    public static final String HOME_WIDGETS_CONFIG = "home_widgets_config";
+    public static final String DEFAULT_HOME_WIDGETS = "quick_actions:true,savings:true,statistics:true,pity:true";
+
     private final SharedPreferences settings;
 
     public Preferences(Context context) {
@@ -159,6 +162,14 @@ public class Preferences {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(key, value);
         editor.apply();
+    }
+
+    public String getHomeWidgetsConfig() {
+        return getStringPreference(HOME_WIDGETS_CONFIG, DEFAULT_HOME_WIDGETS);
+    }
+
+    public void saveHomeWidgetsConfig(String config) {
+        saveStringPreference(HOME_WIDGETS_CONFIG, config);
     }
 
     public String getStringPreference(String key, String defValue) {

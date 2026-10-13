@@ -9,6 +9,21 @@
         android:id="@+id/homeView"
         android:name="ru.menshovanton.gachapoint.ui.fragment.home.HomeView"
         android:label="@string/nav_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_home_to_piggy_bank"
+            app:destination="@id/piggyBankView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/piggyBankView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.piggybank.PiggyBankView"
+        android:label="@string/menu_savings_title"
+        tools:layout="@layout/fragment_piggy_bank" />
 
 </navigation>

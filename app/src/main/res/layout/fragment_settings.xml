@@ -51,7 +51,6 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_back"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- КАРТОЧКА: УВЕДОМЛЕНИЯ -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_notification_settings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
@@ -72,7 +71,6 @@
                     android:orientation="vertical"
                     android:paddingVertical="8dp">
 
-                    <!-- Заголовок карточки -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -84,7 +82,6 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <!-- Строка 1: Главный свитч напоминаний -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -130,14 +127,12 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <!-- Разделитель -->
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginHorizontal="20dp"
                         android:background="@color/divider_color" />
 
-                    <!-- Строка 2: Время напоминания -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/row_select_time"
                         android:layout_width="match_parent"
@@ -178,7 +173,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- КАРТОЧКА: ВНЕШНИЙ ВИД И ПОВЕДЕНИЕ -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_ui_settings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
@@ -199,7 +193,6 @@
                     android:orientation="vertical"
                     android:paddingVertical="8dp">
 
-                    <!-- Заголовок карточки -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -211,7 +204,6 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <!-- Строка 1: Тема -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -260,14 +252,12 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <!-- Разделитель -->
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginHorizontal="20dp"
                         android:background="@color/divider_color" />
 
-                    <!-- Строка 2: Язык -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -316,14 +306,12 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <!-- Разделитель -->
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginHorizontal="20dp"
                         android:background="@color/divider_color" />
 
-                    <!-- Строка 3: Вибрация -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -369,11 +357,66 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:background="@color/divider_color" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_home_widgets"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="12dp">
+
+                        <TextView
+                            android:id="@+id/tv_home_widgets_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/home_customize_widgets"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_home_widgets_arrow"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_home_widgets_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/home_customize_widgets_desc"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_home_widgets_arrow"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_home_widgets_title" />
+
+                        <ImageView
+                            android:id="@+id/iv_home_widgets_arrow"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/icon_right_arrow"
+                            app:tint="@color/text_secondary"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- КАРТОЧКА: ДАННЫЕ И ХРАНИЛИЩЕ -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_storage_settings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
@@ -394,7 +437,6 @@
                     android:orientation="vertical"
                     android:paddingVertical="8dp">
 
-                    <!-- Заголовок карточки -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -406,7 +448,6 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <!-- Строка 1: Экспорт -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -453,14 +494,12 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <!-- Разделитель -->
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginHorizontal="20dp"
                         android:background="@color/divider_color" />
 
-                    <!-- Строка 2: Импорт -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

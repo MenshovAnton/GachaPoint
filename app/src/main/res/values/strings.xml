@@ -265,4 +265,34 @@
     <string name="plus_one_hundred_fifty_days">+5 (150 d.)</string>
     <string name="plus_one_hundred_eighty_days">+6 (180 d.)</string>
     <string name="plus_one_hundred_twenty_days">+4 (120 d.)</string>
+
+    <!-- Home Redesign & Widgets -->
+    <string name="widget_quick_actions">Quick Actions</string>
+    <string name="widget_savings">Savings Overview</string>
+    <string name="widget_statistics">Monthly Statistics</string>
+    <string name="widget_pity">Pity &amp; Banners</string>
+    <string name="home_customize_widgets">Home Widgets</string>
+    <string name="home_customize_widgets_desc">Toggle widgets and drag to reorder</string>
+    <string name="home_reset_default">Reset to default</string>
+    <string name="home_action_daily">Dailies</string>
+    <string name="home_action_daily_done">Completed ✓</string>
+    <string name="home_action_daily_todo">Check in</string>
+    <string name="home_action_sub">Subscription</string>
+    <string name="home_action_sub_claimed">Claimed ✓</string>
+    <string name="home_action_sub_claim">Claim</string>
+    <string name="home_action_sub_none">No sub</string>
+    <string name="home_action_savings">Piggy Bank</string>
+    <string name="home_action_journal">Journal</string>
+    <string name="home_action_journal_desc">Pulls history</string>
+    <string name="home_savings_total_pulls">Total saved pulls</string>
+    <string name="home_savings_in_currency">Equivalent in currency</string>
+    <string name="home_stat_subs_remaining">Sub: %1$d d. left</string>
+    <string name="home_stat_subs_inactive">No active subscription</string>
+    <string name="home_stat_dailies_month">Dailies: %1$d / %2$d</string>
+    <string name="home_pity_event">Event Character Banner</string>
+    <string name="home_pity_since_last">Since last 5★: %1$d / %2$d</string>
+    <string name="home_pity_until_5star">Until 5★: %1$d</string>
+    <string name="home_pity_guaranteed_badge">100% Guaranteed</string>
+    <string name="home_pity_fifty_fifty_badge">50 / 50</string>
+    <string name="home_done">Done</string>
 </resources>

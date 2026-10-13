@@ -359,6 +359,12 @@ public class CalendarRepository {
         });
     }
 
+    public void getDayDailyStatus(int year, int dayOfYear, GameType gameType, DatabaseRepository.Callback<Integer> callback) {
+        calendar.getDay(year, dayOfYear, gameType, date -> {
+            if (callback != null) callback.onResult(date != null ? date.dailyStatus : 0);
+        });
+    }
+
     public void setDayStatus(int year, int dayOfYear, GameType gameType, int status, Runnable onComplete) {
         calendar.getDay(year, dayOfYear, gameType, date -> {
             int rem = date != null ? date.subDaysRemaining : 0;
@@ -405,9 +411,8 @@ public class CalendarRepository {
             years.add(d.getYear());
             daysOfYear.add(d.getDayOfYear());
         }
-        databaseRepository.setCalendarDaysSubscriptionStatusBatch(years, daysOfYear, gameType, status, () -> {
-            calculateMissesAndClaims(gameType, dates.get(0).getYear(), onComplete);
-        });
+        databaseRepository.setCalendarDaysSubscriptionStatusBatch(years, daysOfYear, gameType, status, () ->
+                calculateMissesAndClaims(gameType, dates.get(0).getYear(), onComplete));
     }
 
     public void getDailiesStatistic(GameType gameType, int year, int month, DatabaseRepository.Callback<Statistic> callback) {

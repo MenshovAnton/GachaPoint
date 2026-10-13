@@ -29,12 +29,14 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
+import ru.menshovanton.gachapoint.ui.fragment.home.HomeWidgetsSheetDialog;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
 public class SettingsView extends Fragment {
 
     private Chip timeChip;
     private View rowSelectTime;
+    private View rowHomeWidgets;
 
     private Button dbImportButton;
     private Button dbExportButton;
@@ -85,6 +87,7 @@ public class SettingsView extends Fragment {
         notificationsSwitch = view.findViewById(R.id.sm_notification_switch);
         timeChip = view.findViewById(R.id.btn_time_chip);
         rowSelectTime = view.findViewById(R.id.row_select_time);
+        rowHomeWidgets = view.findViewById(R.id.row_home_widgets);
         dbImportButton = view.findViewById(R.id.btn_import_database);
         dbExportButton = view.findViewById(R.id.btn_export_database);
         back = view.findViewById(R.id.btn_back);
@@ -126,6 +129,12 @@ public class SettingsView extends Fragment {
         }
         if (rowSelectTime != null) {
             rowSelectTime.setOnClickListener(timeClickListener);
+        }
+
+        if (rowHomeWidgets != null) {
+            rowHomeWidgets.setOnClickListener(v -> {
+                HomeWidgetsSheetDialog.show(requireContext(), null);
+            });
         }
 
         dbExportButton.setOnClickListener(v -> viewModel.onExportDatabaseClicked());
@@ -265,14 +274,14 @@ public class SettingsView extends Fragment {
         timeChip.setText(String.format("%02d:%02d", h, m));
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     public void showTimePicker() {
         if (!isAdded() || getContext() == null || getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()) {
             return;
         }
 
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext(), R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
-        View sheetView = getLayoutInflater().inflate(R.layout.dialog_time_picker_sheet, null);
+        @SuppressLint("InflateParams") View sheetView = getLayoutInflater().inflate(R.layout.dialog_time_picker_sheet, null);
         bottomSheetDialog.setContentView(sheetView);
 
         android.widget.NumberPicker npHours = sheetView.findViewById(R.id.np_hours);

@@ -243,4 +243,34 @@
     <string name="plus_one_hundred_fifty_days">+5 (150 дн.)</string>
     <string name="plus_one_hundred_eighty_days">+6 (180 дн.)</string>
     <string name="plus_one_hundred_twenty_days">+4 (120 дн.)</string>
+
+    <!-- Home Redesign & Widgets -->
+    <string name="widget_quick_actions">Быстрые действия</string>
+    <string name="widget_savings">Обзор накоплений</string>
+    <string name="widget_statistics">Статистика за месяц</string>
+    <string name="widget_pity">Гарант и баннеры</string>
+    <string name="home_customize_widgets">Настройка виджетов</string>
+    <string name="home_customize_widgets_desc">Включайте виджеты и перетаскивайте для смены порядка</string>
+    <string name="home_reset_default">Сбросить по умолчанию</string>
+    <string name="home_action_daily">Дейлики</string>
+    <string name="home_action_daily_done">Выполнены ✓</string>
+    <string name="home_action_daily_todo">Отметиться</string>
+    <string name="home_action_sub">Подписка</string>
+    <string name="home_action_sub_claimed">Собрана ✓</string>
+    <string name="home_action_sub_claim">Забрать</string>
+    <string name="home_action_sub_none">Нет подписки</string>
+    <string name="home_action_savings">Копилка</string>
+    <string name="home_action_journal">Журнал</string>
+    <string name="home_action_journal_desc">История круток</string>
+    <string name="home_savings_total_pulls">Всего накоплено круток</string>
+    <string name="home_savings_in_currency">в эквиваленте гемов</string>
+    <string name="home_stat_subs_remaining">Подписка: %1$d дн.</string>
+    <string name="home_stat_subs_inactive">Нет активной подписки</string>
+    <string name="home_stat_dailies_month">Дейлики: %1$d из %2$d дн.</string>
+    <string name="home_pity_event">Ивентовый баннер</string>
+    <string name="home_pity_since_last">С последней 5★: %1$d / %2$d</string>
+    <string name="home_pity_until_5star">До 5★: %1$d</string>
+    <string name="home_pity_guaranteed_badge">100% гарант</string>
+    <string name="home_pity_fifty_fifty_badge">50 / 50</string>
+    <string name="home_done">Готово</string>
 </resources>
