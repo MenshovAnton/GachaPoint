@@ -273,4 +273,43 @@
     <string name="home_pity_guaranteed_badge">100% гарант</string>
     <string name="home_pity_fifty_fifty_badge">50 / 50</string>
     <string name="home_done">Готово</string>
+
+    <!-- Feedback Hub & Form -->
+    <string name="feedback_contact_email" translatable="false">mrwaysoon@gmail.com</string>
+    <string name="feedback_telegram_url" translatable="false">https://t.me/GachaPoint_official</string>
+    <string name="feedback_github_issues_url" translatable="false">https://github.com/MenshovAnton/GachaPoint/issues</string>
+    <string name="feedback_google_form_url" translatable="false">https://docs.google.com/forms/d/e/1FAIpQLSdURkqnmX6zi5o26U5C4AUQ-MV-3MWY4UQRAsxuS1Y0hve1xg/viewform</string>
+    <string name="feedback_section_channels">Каналы связи</string>
+    <string name="feedback_telegram_title">Telegram-сообщество</string>
+    <string name="feedback_telegram_desc">Новости, обсуждения и быстрый контакт</string>
+    <string name="feedback_github_title">GitHub Issues</string>
+    <string name="feedback_github_desc">Трекер багов, отслеживание задач и предложений</string>
+    <string name="feedback_google_form_title">Google Форма</string>
+    <string name="feedback_google_form_desc">Заполнить веб-анкету в браузере</string>
+    <string name="feedback_section_form">Написать обращение</string>
+    <string name="feedback_type_label">Категория обращения</string>
+    <string name="feedback_type_bug">Ошибка</string>
+    <string name="feedback_type_feature">Предложение</string>
+    <string name="feedback_type_review">Отзыв</string>
+    <string name="feedback_rating_label">Ваша оценка</string>
+    <string name="feedback_subject_hint_bug">Тема (кратко о неполадке)</string>
+    <string name="feedback_subject_hint_feature">Тема идеи или улучшения</string>
+    <string name="feedback_subject_hint_review">Тема отзыва</string>
+    <string name="feedback_message_hint_bug">Подробное описание проблемы</string>
+    <string name="feedback_message_hint_feature">Подробное описание вашей идеи</string>
+    <string name="feedback_message_hint_review">Ваш отзыв о приложении</string>
+    <string name="feedback_steps_hint">Шаги для воспроизведения (необязательно)</string>
+    <string name="feedback_device_info_title">Диагностическая информация</string>
+    <string name="feedback_device_info_desc">Модель устройства, версия Android и приложения</string>
+    <string name="feedback_device_info_format">Устройство: %1$s\nОС: Android %2$s (API %3$d)\nВерсия: %4$s</string>
+    <string name="feedback_btn_send_email">Отправить через Email</string>
+    <string name="feedback_btn_send_github">Создать Issue на GitHub</string>
+    <string name="feedback_btn_copy_telegram">Скопировать для Telegram</string>
+    <string name="feedback_error_empty_message">Пожалуйста, введите текст сообщения</string>
+    <string name="feedback_copied_toast">Текст обращения скопирован в буфер обмена</string>
+    <string name="feedback_email_chooser_title">Отправить обращение через...</string>
+    <string name="feedback_default_subject_bug">[Ошибка] Обращение из приложения</string>
+    <string name="feedback_default_subject_feature">[Идея] Предложение по улучшению</string>
+    <string name="feedback_default_subject_review">[Отзыв] Отзыв о GachaPoint (%1$d/5)</string>
+    <string name="feedback_email_client_not_found">Почтовый клиент не найден</string>
 </resources>
