@@ -197,6 +197,7 @@ public class PiggyBankView extends Fragment {
         super.onResume();
         if (viewModel != null) {
             viewModel.refreshData();
+            viewModel.syncAndRefresh();
         }
     }
 

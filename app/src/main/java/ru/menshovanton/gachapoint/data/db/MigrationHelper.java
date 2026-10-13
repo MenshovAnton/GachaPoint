@@ -109,6 +109,20 @@ public class MigrationHelper {
             );
             database.execSQL("CREATE INDEX IF NOT EXISTS `idx_subscription_game_dates` ON `subscriptions` (`game_type`, `start_date`, `end_date`)");
             database.execSQL("CREATE INDEX IF NOT EXISTS `idx_subscription_game_type` ON `subscriptions` (`game_type`)");
+
+            database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `savings` (" +
+                            "`game_type` INTEGER NOT NULL, " +
+                            "`target` INTEGER NOT NULL DEFAULT 0, " +
+                            "`manual_progress` INTEGER NOT NULL DEFAULT 0, " +
+                            "`subs_progress` INTEGER NOT NULL DEFAULT 0, " +
+                            "`dailies_progress` INTEGER NOT NULL DEFAULT 0, " +
+                            "PRIMARY KEY(`game_type`), " +
+                            "FOREIGN KEY(`game_type`) REFERENCES `games`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT)"
+            );
+
+            database.execSQL("INSERT OR IGNORE INTO `savings` (`game_type`, `target`, `manual_progress`, `subs_progress`, `dailies_progress`) " +
+                    "VALUES (0, 0, 0, 0, 0), (1, 0, 0, 0, 0), (2, 0, 0, 0, 0)");
         }
     };
 }

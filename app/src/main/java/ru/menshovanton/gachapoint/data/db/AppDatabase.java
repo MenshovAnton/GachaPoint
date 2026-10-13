@@ -18,16 +18,19 @@ import java.util.concurrent.Executors;
 import ru.menshovanton.gachapoint.data.db.dao.CalendarDao;
 import ru.menshovanton.gachapoint.data.db.dao.GameDao;
 import ru.menshovanton.gachapoint.data.db.dao.PullDao;
+import ru.menshovanton.gachapoint.data.db.dao.SavingsDao;
 import ru.menshovanton.gachapoint.data.db.dao.SubscriptionDao;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarEntity;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarGameStatusEntity;
 import ru.menshovanton.gachapoint.data.db.entities.GameEntity;
 import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
+import ru.menshovanton.gachapoint.data.db.entities.SavingsEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
+import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 
 @Database(
-        entities = {CalendarEntity.class, CalendarGameStatusEntity.class, PullEntity.class, SubscriptionEntity.class, GameEntity.class},
+        entities = {CalendarEntity.class, CalendarGameStatusEntity.class, PullEntity.class, SubscriptionEntity.class, GameEntity.class, SavingsEntity.class},
         version = 2
 )
 public abstract class AppDatabase extends RoomDatabase {
@@ -42,6 +45,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PullDao pullDao();
     public abstract SubscriptionDao subscriptionDao();
     public abstract GameDao gameDao();
+    public abstract SavingsDao savingsDao();
 
     public static RoomDatabase.Builder<AppDatabase> createDatabaseBuilder(Context context, String databaseName) {
         return Room.databaseBuilder(
@@ -56,6 +60,7 @@ public abstract class AppDatabase extends RoomDatabase {
                         super.onCreate(db);
                         syncGamesRaw(db);
                         syncSubscriptionsRaw(db);
+                        syncSavingsRaw(context, db);
                     }
 
                     @Override
@@ -63,6 +68,7 @@ public abstract class AppDatabase extends RoomDatabase {
                         super.onOpen(db);
                         syncGamesRaw(db);
                         syncSubscriptionsRaw(db);
+                        syncSavingsRaw(context, db);
                     }
                 });
     }
@@ -206,6 +212,49 @@ public abstract class AppDatabase extends RoomDatabase {
                 db.execSQL(insertSubSql, new Object[]{gameCode, count, startEpoch, endEpoch, claimed, missed, wait});
             }
 
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public static void syncSavingsRaw(Context context, SupportSQLiteDatabase db) {
+        db.beginTransaction();
+        try {
+            Preferences prefs = new Preferences(context);
+            boolean alreadyMigrated = prefs.getBooleanPreference("savings_migrated_to_db", false);
+            for (GameType game : GameType.values()) {
+                int gameCode = game.getCode();
+                boolean hasRow = false;
+                try (android.database.Cursor cursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
+                        "SELECT COUNT(*) FROM `savings` WHERE `game_type` = ?",
+                        new Object[]{gameCode}))) {
+                    if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
+                        hasRow = true;
+                    }
+                }
+
+                if (!hasRow) {
+                    int prefTarget = prefs.getPiggyBankTarget(game);
+                    int prefManual = prefs.getPiggyBankManualProgress(game);
+                    int prefSubs = prefs.getPiggyBankSubsProgress(game);
+                    int prefDailies = prefs.getPiggyBankDailiesProgress(game);
+                    db.execSQL("INSERT INTO `savings` (`game_type`, `target`, `manual_progress`, `subs_progress`, `dailies_progress`) VALUES (?, ?, ?, ?, ?)",
+                            new Object[]{gameCode, prefTarget, prefManual, prefSubs, prefDailies});
+                } else if (!alreadyMigrated) {
+                    int prefTarget = prefs.getPiggyBankTarget(game);
+                    int prefManual = prefs.getPiggyBankManualProgress(game);
+                    int prefSubs = prefs.getPiggyBankSubsProgress(game);
+                    int prefDailies = prefs.getPiggyBankDailiesProgress(game);
+                    if (prefTarget > 0 || prefManual != 0 || prefSubs > 0 || prefDailies > 0) {
+                        db.execSQL("UPDATE `savings` SET `target` = ?, `manual_progress` = ?, `subs_progress` = ?, `dailies_progress` = ? WHERE `game_type` = ?",
+                                new Object[]{prefTarget, prefManual, prefSubs, prefDailies, gameCode});
+                    }
+                }
+            }
+            prefs.saveBooleanPreference("savings_migrated_to_db", true);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             e.printStackTrace();

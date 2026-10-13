@@ -90,6 +90,7 @@ public class DatabaseImporter {
                 AppDatabase newDb = AppDatabase.getInstance(context);
                 androidx.sqlite.db.SupportSQLiteDatabase writableDb = newDb.getOpenHelper().getWritableDatabase();
                 AppDatabase.syncSubscriptionsRaw(writableDb);
+                AppDatabase.syncSavingsRaw(context, writableDb);
 
                 AppDatabase.postToMain(callback::onSuccess);
 

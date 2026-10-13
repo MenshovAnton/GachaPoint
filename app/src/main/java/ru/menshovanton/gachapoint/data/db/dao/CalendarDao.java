@@ -75,4 +75,7 @@ public interface CalendarDao {
     @Query("UPDATE calendar_game_status SET status = 0, sub_days_remaining = 0 " +
             "WHERE game_type = :gameType AND year = :year AND day_of_year BETWEEN :startDay AND :endDay")
     void resetStatusesInRangeSameYear(int gameType, int year, int startDay, int endDay);
+
+    @Query("SELECT COUNT(*) FROM calendar_game_status WHERE game_type = :gameType AND daily_status = 1")
+    int getCompletedDailiesCount(int gameType);
 }

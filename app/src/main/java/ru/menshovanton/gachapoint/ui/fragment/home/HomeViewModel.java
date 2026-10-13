@@ -44,21 +44,28 @@ public class HomeViewModel extends AndroidViewModel {
         if (gameType == null) gameType = GameType.GENSHIN;
         int currentYear = LocalDate.now().getYear();
 
-        calendarRepository.init(gameType, currentYear, () -> subsCountLiveData.setValue(calendarRepository.getSubsCount()));
+        final GameType finalGameType = gameType;
+        calendarRepository.init(gameType, currentYear, () -> {
+            subsCountLiveData.setValue(calendarRepository.getSubsCount());
+            int total = piggyBankRepository.getTotalProgress(finalGameType);
+            int target = piggyBankRepository.getTarget(finalGameType);
+            piggyTargetLiveData.setValue(target);
+            if (target > 0) {
+                piggyProgressLiveData.setValue(total);
+            } else {
+                piggyProgressLiveData.setValue(0);
+            }
+        });
 
         calendarRepository.getStatistic(gameType, currentYear, statisticLiveData::setValue);
 
-        int manualProgress = piggyBankRepository.getManualProgress(gameType);
-        int subsProgress = piggyBankRepository.getSubsProgress(gameType);
-        int totalProgress = manualProgress + subsProgress;
-
+        int totalProgress = piggyBankRepository.getTotalProgress(gameType);
         int target = piggyBankRepository.getTarget(gameType);
 
         piggyTargetLiveData.setValue(target);
         if (target > 0) {
             piggyProgressLiveData.setValue(totalProgress);
-        }
-        else {
+        } else {
             piggyProgressLiveData.setValue(0);
         }
     }

@@ -14,6 +14,7 @@ import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 public class PiggyBankViewModel extends AndroidViewModel {
 
     private final PiggyBankRepository repository;
+    private final ru.menshovanton.gachapoint.data.repository.CalendarRepository calendarRepository;
     private final MutableLiveData<PiggyBankState> stateLiveData = new MutableLiveData<>(new PiggyBankState(0, 0));
     private final SingleLiveEvent<Void> goalExceededEvent = new SingleLiveEvent<>();
 
@@ -24,6 +25,7 @@ public class PiggyBankViewModel extends AndroidViewModel {
         super(application);
         ru.menshovanton.gachapoint.di.AppContainer container = ((ru.menshovanton.gachapoint.App) application).getAppContainer();
         this.repository = container.getPiggyBankRepository();
+        this.calendarRepository = container.getCalendarRepository();
     }
 
     public LiveData<PiggyBankState> getStateLiveData() { return stateLiveData; }
@@ -37,37 +39,41 @@ public class PiggyBankViewModel extends AndroidViewModel {
         if (gameType != null) {
             this.currentGameType = gameType;
             refreshData();
+            calendarRepository.syncDailiesProgress(gameType, this::refreshData);
         }
     }
 
+    public void syncAndRefresh() {
+        calendarRepository.syncDailiesProgress(currentGameType, this::refreshData);
+    }
+
     public void refreshData() {
-        int manualProgress = repository.getManualProgress(currentGameType);
-        int subsProgress = repository.getSubsProgress(currentGameType);
-        int totalProgress = manualProgress + subsProgress;
+        int totalProgress = repository.getTotalProgress(currentGameType);
         int target = repository.getTarget(currentGameType);
 
         stateLiveData.setValue(new PiggyBankState(totalProgress, target));
     }
 
     public void addProgress(int wishes) {
-        int manualProgress = repository.getManualProgress(currentGameType);
-        int subsProgress = repository.getSubsProgress(currentGameType);
+        int totalProgress = repository.getTotalProgress(currentGameType);
         int target = repository.getTarget(currentGameType);
 
-        if (target > 0 && manualProgress + subsProgress + wishes > target) {
+        if (target > 0 && totalProgress + wishes > target) {
             goalExceededEvent.call();
             return;
         }
 
-        int newManualProgress = manualProgress + wishes;
-        repository.saveManualProgress(currentGameType, Math.max(0, newManualProgress));
+        int manualProgress = repository.getManualProgress(currentGameType);
+        repository.saveManualProgress(currentGameType, manualProgress + wishes);
         refreshData();
     }
 
     public void removeProgress(int wishes) {
+        int totalProgress = repository.getTotalProgress(currentGameType);
+        if (totalProgress <= 0) return;
+        int diff = Math.min(wishes, totalProgress);
         int manualProgress = repository.getManualProgress(currentGameType);
-        int newManualProgress = Math.max(0, manualProgress - wishes);
-        repository.saveManualProgress(currentGameType, newManualProgress);
+        repository.saveManualProgress(currentGameType, manualProgress - diff);
         refreshData();
     }
 

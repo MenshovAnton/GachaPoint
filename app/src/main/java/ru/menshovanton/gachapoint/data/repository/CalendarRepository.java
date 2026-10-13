@@ -52,7 +52,7 @@ public class CalendarRepository {
 
         databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
             subsCount = (activeSub != null) ? activeSub.count : 0;
-            if (onComplete != null) onComplete.run();
+            syncDailiesProgress(gameType, onComplete);
         });
     }
 
@@ -372,9 +372,9 @@ public class CalendarRepository {
 
     public void setDayDailyStatus(int year, int dayOfYear, GameType gameType, int dailyStatus, Runnable onComplete) {
         calendar.ensureYearInitialized(year, () ->
-                databaseRepository.setCalendarDayDailyStatus(year, dayOfYear, gameType, dailyStatus, () -> {
-                    if (onComplete != null) onComplete.run();
-                })
+                databaseRepository.setCalendarDayDailyStatus(year, dayOfYear, gameType, dailyStatus, () ->
+                        syncDailiesProgress(gameType, onComplete)
+                )
         );
     }
 
@@ -389,7 +389,9 @@ public class CalendarRepository {
             years.add(d.getYear());
             daysOfYear.add(d.getDayOfYear());
         }
-        databaseRepository.setCalendarDaysDailyStatusBatch(years, daysOfYear, gameType, dailyStatus, onComplete);
+        databaseRepository.setCalendarDaysDailyStatusBatch(years, daysOfYear, gameType, dailyStatus, () ->
+                syncDailiesProgress(gameType, onComplete)
+        );
     }
 
     public void setDaysSubscriptionStatusBatch(List<LocalDate> dates, GameType gameType, int status, Runnable onComplete) {
@@ -465,6 +467,21 @@ public class CalendarRepository {
         if (totalWishes > currentProgress) {
             piggyBankRepository.saveSubsProgress(gameType, totalWishes);
         }
+    }
+
+    public void syncDailiesProgress(GameType gameType, Runnable onComplete) {
+        if (gameType == null) {
+            if (onComplete != null) onComplete.run();
+            return;
+        }
+        databaseRepository.getCompletedDailiesCount(gameType, count -> {
+            int dailyReward = 60;
+            int pullCost = gameType.getPullCost();
+            int totalGems = (count != null ? count : 0) * dailyReward;
+            int totalWishes = totalGems / pullCost;
+            piggyBankRepository.saveDailiesProgress(gameType, totalWishes);
+            if (onComplete != null) onComplete.run();
+        });
     }
 
     public void getDaySubDaysRemaining(int year, int dayOfYear, GameType gameType, DatabaseRepository.Callback<Integer> callback) {

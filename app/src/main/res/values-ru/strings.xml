@@ -237,9 +237,9 @@
     <string name="multi_select_marked_success">Отметки успешно обновлены</string>
     <string name="multi_select_no_selection">Выберите хотя бы один день</string>
     <string name="active_subs_none_in_selection">Среди выбранных дней нет активных подписок</string>
-    <string name="plus_thirty_days">+1 (30 d.)</string>
-    <string name="plus_sixty_days">+2 (60 d.)</string>
-    <string name="plus_ninty_days">+3 (90 d.)</string>
+    <string name="plus_thirty_days">+1 (30 дн.)</string>
+    <string name="plus_sixty_days">+2 (60 дн.)</string>
+    <string name="plus_ninty_days">+3 (90 дн.)</string>
     <string name="plus_one_hundred_fifty_days">+5 (150 дн.)</string>
     <string name="plus_one_hundred_eighty_days">+6 (180 дн.)</string>
     <string name="plus_one_hundred_twenty_days">+4 (120 дн.)</string>

@@ -10,6 +10,7 @@ import ru.menshovanton.gachapoint.data.db.entities.CalendarEntity;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarGameStatusEntity;
 import ru.menshovanton.gachapoint.data.db.entities.GameEntity;
 import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
+import ru.menshovanton.gachapoint.data.db.entities.SavingsEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.enums.PityStatus;
@@ -356,6 +357,96 @@ public class DatabaseRepository {
             List<GameEntity> games = getDb().gameDao().getAllGames();
             if (callback != null) {
                 AppDatabase.postToMain(() -> callback.onResult(games));
+            }
+        });
+    }
+
+    public void getCompletedDailiesCount(GameType gameType, Callback<Integer> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            int count = 0;
+            if (gameType != null) {
+                count = getDb().calendarDao().getCompletedDailiesCount(gameType.getCode());
+            }
+            final int finalCount = count;
+            if (callback != null) {
+                AppDatabase.postToMain(() -> callback.onResult(finalCount));
+            }
+        });
+    }
+
+    public void getSavings(GameType gameType, Callback<SavingsEntity> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            SavingsEntity entity = null;
+            if (gameType != null) {
+                entity = getDb().savingsDao().getSavings(gameType.getCode());
+            }
+            final SavingsEntity result = entity;
+            if (callback != null) {
+                AppDatabase.postToMain(() -> callback.onResult(result));
+            }
+        });
+    }
+
+    public void getAllSavings(Callback<List<SavingsEntity>> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            List<SavingsEntity> list = getDb().savingsDao().getAllSavings();
+            if (callback != null) {
+                AppDatabase.postToMain(() -> callback.onResult(list));
+            }
+        });
+    }
+
+    public void saveSavingsTarget(GameType gameType, int target, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            if (gameType != null) {
+                getDb().savingsDao().updateTarget(gameType.getCode(), target);
+            }
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void saveSavingsManualProgress(GameType gameType, int progress, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            if (gameType != null) {
+                getDb().savingsDao().updateManualProgress(gameType.getCode(), progress);
+            }
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void saveSavingsSubsProgress(GameType gameType, int progress, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            if (gameType != null) {
+                getDb().savingsDao().updateSubsProgress(gameType.getCode(), progress);
+            }
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void saveSavingsDailiesProgress(GameType gameType, int progress, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            if (gameType != null) {
+                getDb().savingsDao().updateDailiesProgress(gameType.getCode(), progress);
+            }
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
+            }
+        });
+    }
+
+    public void resetSavings(GameType gameType, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            if (gameType != null) {
+                getDb().savingsDao().reset(gameType.getCode());
+            }
+            if (onComplete != null) {
+                AppDatabase.postToMain(onComplete);
             }
         });
     }

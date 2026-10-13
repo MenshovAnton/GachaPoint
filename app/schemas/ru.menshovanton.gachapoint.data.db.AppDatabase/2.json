@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "dff2e6fc4ff5d6b12184378001d46618",
+    "identityHash": "f458da97b2df6592a96944a2c9609bef",
     "entities": [
       {
         "tableName": "calendar",
@@ -387,11 +387,70 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "savings",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`game_type` INTEGER NOT NULL, `target` INTEGER NOT NULL DEFAULT 0, `manual_progress` INTEGER NOT NULL DEFAULT 0, `subs_progress` INTEGER NOT NULL DEFAULT 0, `dailies_progress` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`game_type`), FOREIGN KEY(`game_type`) REFERENCES `games`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "gameType",
+            "columnName": "game_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "target",
+            "columnName": "target",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "manualProgress",
+            "columnName": "manual_progress",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "subsProgress",
+            "columnName": "subs_progress",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "dailiesProgress",
+            "columnName": "dailies_progress",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "game_type"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "games",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "game_type"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dff2e6fc4ff5d6b12184378001d46618')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f458da97b2df6592a96944a2c9609bef')"
     ]
   }
 }

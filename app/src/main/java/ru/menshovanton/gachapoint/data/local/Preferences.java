@@ -22,10 +22,12 @@ public class Preferences {
     public static final String PIGGY_BANK_TARGET_GENSHIN = "Piggy Bank target Genshin Impact";
     public static final String PIGGY_BANK_MANUAL_PROGRESS_GENSHIN = "Piggy Bank manual progress Genshin Impact";
     public static final String PIGGY_BANK_SUBS_PROGRESS_GENSHIN = "Piggy Bank subs progress Genshin Impact";
+    public static final String PIGGY_BANK_DAILIES_PROGRESS_GENSHIN = "Piggy Bank dailies progress Genshin Impact";
 
     private static final String PREFIX_PIGGY_TARGET = "Piggy Bank target ";
     private static final String PREFIX_PIGGY_MANUAL = "Piggy Bank manual progress ";
     private static final String PREFIX_PIGGY_SUBS = "Piggy Bank subs progress ";
+    private static final String PREFIX_PIGGY_DAILIES = "Piggy Bank dailies progress ";
     private static final String SUFFIX_NEED_MIGRATION = " need migration";
 
     private final SharedPreferences settings;
@@ -55,6 +57,13 @@ public class Preferences {
         return PREFIX_PIGGY_SUBS + gameType.getName();
     }
 
+    public static String getPiggyBankDailiesProgressKey(GameType gameType) {
+        if (gameType == GameType.GENSHIN) {
+            return PIGGY_BANK_DAILIES_PROGRESS_GENSHIN;
+        }
+        return PREFIX_PIGGY_DAILIES + gameType.getName();
+    }
+
     public static String getNeedMigrationKey(GameType gameType) {
         return gameType.getName() + SUFFIX_NEED_MIGRATION;
     }
@@ -81,6 +90,14 @@ public class Preferences {
 
     public void savePiggyBankSubsProgress(GameType gameType, int value) {
         saveIntPreference(getPiggyBankSubsProgressKey(gameType), value);
+    }
+
+    public int getPiggyBankDailiesProgress(GameType gameType) {
+        return getIntPreference(getPiggyBankDailiesProgressKey(gameType));
+    }
+
+    public void savePiggyBankDailiesProgress(GameType gameType, int value) {
+        saveIntPreference(getPiggyBankDailiesProgressKey(gameType), value);
     }
 
     public boolean getNeedMigration(GameType gameType) {
@@ -127,10 +144,14 @@ public class Preferences {
     }
 
     public boolean getBooleanPreference(String key) {
+        return getBooleanPreference(key, true);
+    }
+
+    public boolean getBooleanPreference(String key, boolean defValue) {
         try {
-            return settings.getBoolean(key, true);
+            return settings.getBoolean(key, defValue);
         } catch (Exception e) {
-            return true;
+            return defValue;
         }
     }
 
