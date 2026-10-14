@@ -15,11 +15,10 @@ public class PiggyBankViewModel extends AndroidViewModel {
 
     private final PiggyBankRepository repository;
     private final ru.menshovanton.gachapoint.data.repository.CalendarRepository calendarRepository;
-    private final MutableLiveData<PiggyBankState> stateLiveData = new MutableLiveData<>(new PiggyBankState(0, 0));
+    private final MutableLiveData<PiggyBankState> stateLiveData = new MutableLiveData<>();
     private final SingleLiveEvent<Void> goalExceededEvent = new SingleLiveEvent<>();
 
     private GameType currentGameType = GameType.GENSHIN;
-    private static final int PITY = 77;
 
     public PiggyBankViewModel(@NonNull Application application) {
         super(application);
@@ -51,7 +50,10 @@ public class PiggyBankViewModel extends AndroidViewModel {
         int totalProgress = repository.getTotalProgress(currentGameType);
         int target = repository.getTarget(currentGameType);
 
-        stateLiveData.setValue(new PiggyBankState(totalProgress, target));
+        PiggyBankState currentState = stateLiveData.getValue();
+        if (currentState == null || currentState.getProgress() != totalProgress || currentState.getTarget() != target) {
+            stateLiveData.setValue(new PiggyBankState(totalProgress, target));
+        }
     }
 
     public void addProgress(int wishes) {
@@ -84,7 +86,7 @@ public class PiggyBankViewModel extends AndroidViewModel {
 
     public void addTargetMultiplier(int multiplier) {
         int currentTarget = repository.getTarget(currentGameType);
-        int newTarget = currentTarget + (PITY * multiplier);
+        int newTarget = currentTarget + (currentGameType.getDefaultPity() * multiplier);
         repository.saveTarget(currentGameType, newTarget);
         refreshData();
     }

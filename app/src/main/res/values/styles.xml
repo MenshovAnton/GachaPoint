@@ -58,21 +58,14 @@
         <item name="colorSurface">@color/card_background_light</item>
         <item name="colorSurfaceContainerLow">@color/card_background_light</item>
         <item name="colorOnSurface">@color/black</item>
+        <item name="bottomSheetStyle">@style/Widget.GachaPoint.BottomSheet.Modal</item>
+    </style>
+    <style name="Widget.GachaPoint.BottomSheet.Modal" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="android:maxWidth">@dimen/bottom_sheet_max_width</item>
     </style>
     <style name="ThemeOverlay.GachaPoint.NumberPicker" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="colorControlNormal">@color/accent</item>
         <item name="android:textColorPrimary">@color/black</item>
-    </style>
-    <style name="Tabs.GachaPoint.TabLayout" parent="Widget.Material3.TabLayout">
-        <item name="tabIndicatorColor">@color/accent</item>
-        <item name="tabIndicatorGravity">bottom</item>
-        <item name="tabSelectedTextColor">@color/accent</item>
-        <item name="tabTextColor">@color/light_grey</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="tabGravity">fill</item>
-        <item name="tabIconTint">@color/check</item>
-        <item name="tabRippleColor">@android:color/transparent</item>
-        <item name="android:tabStripEnabled">true</item>
     </style>
     <style name="Dialog.GachaPoint.AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="colorSurfaceContainerHigh">@color/card_background_light</item>
@@ -129,10 +122,6 @@
         <item name="thumbIconTint">@color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="switchPadding">10dp</item>
-    </style>
-    <style name="Logo.GachaPoint.Image" parent="ShapeAppearance.Material3.Corner.Small">
-        <item name="cornerSize">8dp</item>
-        <item name="cornerFamily">rounded</item>
     </style>
     <style name="Logo.GachaPoint.Hero" parent="ShapeAppearance.Material3.Corner.Medium">
         <item name="cornerSize">20dp</item>

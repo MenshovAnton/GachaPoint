@@ -12,109 +12,106 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="24dp">
+        android:paddingBottom="@dimen/screen_padding_bottom">
 
-        <!-- App Header Bar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="16dp"
+            android:paddingHorizontal="@dimen/screen_padding_horizontal"
+            android:paddingTop="@dimen/screen_padding_top"
             android:paddingBottom="8dp">
 
             <TextView
                 android:id="@+id/tv_app_header"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:fontFamily="@font/genshin_font"
                 android:includeFontPadding="false"
                 android:text="@string/app_name"
                 android:textColor="@color/text"
-                android:textSize="28sp"
+                android:textSize="@dimen/text_size_screen_title"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tv_app_version"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_app_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="4dp"
-                android:includeFontPadding="false"
-                android:text="@string/app_version"
-                android:textColor="@color/check"
-                android:textSize="13sp" />
+                app:cardBackgroundColor="@color/badge_blue_bg"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <TextView
+                    android:id="@+id/tv_app_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:text="@string/app_version"
+                    android:textColor="@color/check"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
-        <!-- Game Selector Pills -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_game_types"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:orientation="horizontal"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="4dp" />
+            android:paddingHorizontal="@dimen/pills_padding_horizontal"
+            android:paddingVertical="@dimen/pills_padding_vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_pill"
+            tools:orientation="horizontal" />
 
-        <!-- Widgets Container (Ordered Dynamically) -->
         <LinearLayout
             android:id="@+id/ll_widgets_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 1. QUICK ACTIONS WIDGET -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_widget_quick_actions"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="10dp"
-                app:cardCornerRadius="16dp"
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
+                app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="14dp">
+                    android:padding="@dimen/card_inner_padding">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="12dp">
+                        android:layout_marginBottom="12dp"
+                        android:fontFamily="@font/genshin_font"
+                        android:text="@string/widget_quick_actions"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/text_size_section_title"
+                        android:textStyle="bold"
+                        app:drawableStartCompat="@drawable/icon_daily_task"
+                        app:drawableTint="@color/check"
+                        android:drawablePadding="8dp" />
 
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:contentDescription="@null"
-                            android:src="@drawable/icon_daily_task"
-                            app:tint="@color/check" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:fontFamily="@font/genshin_font"
-                            android:text="@string/widget_quick_actions"
-                            android:textColor="@color/text"
-                            android:textSize="17sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <!-- Quick Actions Grid Row 1 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <!-- Daily Check-in Card -->
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/btn_quick_daily"
                             style="@style/Widget.GachaPoint.BottomSheetCard"
@@ -125,54 +122,54 @@
                             android:clickable="true"
                             android:focusable="true">
 
-                            <LinearLayout
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"
                                 android:padding="12dp">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <ImageView
+                                    android:id="@+id/iv_quick_daily_icon"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:contentDescription="@string/a11y_daily_icon"
+                                    android:src="@drawable/icon_daily_task"
+                                    app:tint="@color/check"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/tv_quick_daily_title"
+                                    app:layout_constraintBottom_toBottomOf="@+id/tv_quick_daily_title" />
+
+                                <TextView
+                                    android:id="@+id/tv_quick_daily_title"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal">
-
-                                    <ImageView
-                                        android:id="@+id/iv_quick_daily_icon"
-                                        android:layout_width="20dp"
-                                        android:layout_height="20dp"
-                                        android:contentDescription="@null"
-                                        android:src="@drawable/icon_daily_task"
-                                        app:tint="@color/check" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginStart="6dp"
-                                        android:fontFamily="@font/genshin_font"
-                                        android:text="@string/home_action_daily"
-                                        android:textColor="@color/text"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
-
-                                </LinearLayout>
+                                    android:layout_marginStart="6dp"
+                                    android:fontFamily="@font/genshin_font"
+                                    android:text="@string/home_action_daily"
+                                    android:textColor="@color/text"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toEndOf="@+id/iv_quick_daily_icon"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
                                 <TextView
                                     android:id="@+id/tv_quick_daily_status"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
                                     android:fontFamily="@font/genshin_font"
                                     android:text="@string/home_action_daily_todo"
                                     android:textColor="@color/check"
                                     android:textSize="13sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/tv_quick_daily_title" />
 
-                            </LinearLayout>
+                            </androidx.constraintlayout.widget.ConstraintLayout>
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <!-- Subscription Claim Card -->
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/btn_quick_sub"
                             style="@style/Widget.GachaPoint.BottomSheetCard"
@@ -183,64 +180,62 @@
                             android:clickable="true"
                             android:focusable="true">
 
-                            <LinearLayout
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"
                                 android:padding="12dp">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <ImageView
+                                    android:id="@+id/iv_quick_sub_icon"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:contentDescription="@string/a11y_subscription_icon"
+                                    android:src="@drawable/icon_subscription"
+                                    app:tint="@color/check"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/tv_quick_sub_title"
+                                    app:layout_constraintBottom_toBottomOf="@+id/tv_quick_sub_title" />
+
+                                <TextView
+                                    android:id="@+id/tv_quick_sub_title"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal">
-
-                                    <ImageView
-                                        android:id="@+id/iv_quick_sub_icon"
-                                        android:layout_width="20dp"
-                                        android:layout_height="20dp"
-                                        android:contentDescription="@null"
-                                        android:src="@drawable/icon_subscription"
-                                        app:tint="@color/check" />
-
-                                    <TextView
-                                        android:id="@+id/tv_quick_sub_title"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginStart="6dp"
-                                        android:fontFamily="@font/genshin_font"
-                                        android:text="@string/home_action_sub"
-                                        android:textColor="@color/text"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
-
-                                </LinearLayout>
+                                    android:layout_marginStart="6dp"
+                                    android:fontFamily="@font/genshin_font"
+                                    android:text="@string/home_action_sub"
+                                    android:textColor="@color/text"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toEndOf="@+id/iv_quick_sub_icon"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
                                 <TextView
                                     android:id="@+id/tv_quick_sub_status"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
                                     android:fontFamily="@font/genshin_font"
                                     android:text="@string/home_action_sub_claim"
                                     android:textColor="@color/check"
                                     android:textSize="13sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/tv_quick_sub_title" />
 
-                            </LinearLayout>
+                            </androidx.constraintlayout.widget.ConstraintLayout>
 
                         </com.google.android.material.card.MaterialCardView>
 
                     </LinearLayout>
 
-                    <!-- Quick Actions Grid Row 2 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:orientation="horizontal">
 
-                        <!-- Shortcut to Piggy Bank -->
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/btn_quick_savings"
                             style="@style/Widget.GachaPoint.BottomSheetCard"
@@ -257,30 +252,17 @@
                                 android:orientation="vertical"
                                 android:padding="12dp">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal">
-
-                                    <ImageView
-                                        android:layout_width="20dp"
-                                        android:layout_height="20dp"
-                                        android:contentDescription="@null"
-                                        android:src="@drawable/icon_piggy_bank"
-                                        app:tint="@color/check" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginStart="6dp"
-                                        android:fontFamily="@font/genshin_font"
-                                        android:text="@string/home_action_savings"
-                                        android:textColor="@color/text"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
-
-                                </LinearLayout>
+                                    android:fontFamily="@font/genshin_font"
+                                    android:text="@string/home_action_savings"
+                                    android:textColor="@color/text"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    app:drawableStartCompat="@drawable/icon_piggy_bank"
+                                    app:drawableTint="@color/check"
+                                    android:drawablePadding="6dp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -294,7 +276,6 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <!-- Shortcut to Journal -->
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/btn_quick_journal"
                             style="@style/Widget.GachaPoint.BottomSheetCard"
@@ -311,30 +292,17 @@
                                 android:orientation="vertical"
                                 android:padding="12dp">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal">
-
-                                    <ImageView
-                                        android:layout_width="20dp"
-                                        android:layout_height="20dp"
-                                        android:contentDescription="@null"
-                                        android:src="@drawable/icon_journal"
-                                        app:tint="@color/check" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginStart="6dp"
-                                        android:fontFamily="@font/genshin_font"
-                                        android:text="@string/home_action_journal"
-                                        android:textColor="@color/text"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
-
-                                </LinearLayout>
+                                    android:fontFamily="@font/genshin_font"
+                                    android:text="@string/home_action_journal"
+                                    android:textColor="@color/text"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    app:drawableStartCompat="@drawable/icon_journal"
+                                    app:drawableTint="@color/check"
+                                    android:drawablePadding="6dp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -354,24 +322,23 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 2. SAVINGS WIDGET -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_widget_savings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="15dp">
+                    android:padding="@dimen/card_inner_padding">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -396,7 +363,7 @@
                             android:fontFamily="@font/genshin_font"
                             android:text="@string/widget_savings"
                             android:textColor="@color/text"
-                            android:textSize="17sp"
+                            android:textSize="@dimen/text_size_section_title"
                             android:textStyle="bold"
                             app:layout_constraintStart_toEndOf="@+id/iv_savings_header_icon"
                             app:layout_constraintEnd_toStartOf="@+id/iv_savings_arrow"
@@ -439,7 +406,7 @@
                             android:layout_width="26dp"
                             android:layout_height="26dp"
                             android:layout_marginStart="6dp"
-                            android:contentDescription="@null"
+                            android:contentDescription="@string/a11y_pull_icon"
                             app:srcCompat="@drawable/icon_intertwined_fate"
                             app:layout_constraintStart_toEndOf="@+id/tv_saved_counter"
                             app:layout_constraintTop_toTopOf="parent"
@@ -486,24 +453,23 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 3. STATISTICS WIDGET -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_widget_statistics"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="14dp">
+                    android:padding="@dimen/card_inner_padding">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -529,7 +495,7 @@
                             android:fontFamily="@font/genshin_font"
                             android:text="@string/widget_statistics"
                             android:textColor="@color/text"
-                            android:textSize="17sp"
+                            android:textSize="@dimen/text_size_section_title"
                             android:textStyle="bold"
                             app:layout_constraintStart_toEndOf="@+id/iv_stats_header_icon"
                             app:layout_constraintEnd_toStartOf="@+id/iv_stats_arrow"
@@ -549,7 +515,6 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <!-- Monthly Badges Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -592,7 +557,6 @@
 
                     </LinearLayout>
 
-                    <!-- Stats Table Breakdown -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -639,7 +603,7 @@
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:layout_marginTop="6dp"
-                            android:contentDescription="@null"
+                            android:contentDescription="@string/a11y_currency_icon"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/tv_received_column"
                             app:srcCompat="@drawable/icon_primogem" />
@@ -691,7 +655,7 @@
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:layout_marginTop="6dp"
-                            android:contentDescription="@null"
+                            android:contentDescription="@string/a11y_pull_icon"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/iv_gem"
                             app:srcCompat="@drawable/icon_intertwined_fate" />
@@ -744,24 +708,23 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 4. PITY WIDGET -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_widget_pity"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="15dp">
+                    android:padding="@dimen/card_inner_padding">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -786,7 +749,7 @@
                             android:fontFamily="@font/genshin_font"
                             android:text="@string/widget_pity"
                             android:textColor="@color/text"
-                            android:textSize="17sp"
+                            android:textSize="@dimen/text_size_section_title"
                             android:textStyle="bold"
                             app:layout_constraintStart_toEndOf="@+id/iv_pity_header_icon"
                             app:layout_constraintEnd_toStartOf="@+id/iv_pity_arrow"
@@ -888,45 +851,32 @@
 
         </LinearLayout>
 
-        <!-- Customize Widgets Inconspicuous Footer Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_customize_widgets"
             style="@style/Widget.GachaPoint.MaterialCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+            android:layout_marginTop="@dimen/card_margin_vertical"
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardCornerRadius="14dp"
+            app:cardCornerRadius="@dimen/card_corner_radius"
             app:cardElevation="0dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
+                android:layout_gravity="center"
                 android:paddingVertical="12dp"
-                android:paddingHorizontal="16dp">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/icon_edit"
-                    app:tint="@color/text_secondary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:fontFamily="@font/genshin_font"
-                    android:text="@string/home_customize_widgets"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
+                android:paddingHorizontal="16dp"
+                android:fontFamily="@font/genshin_font"
+                android:text="@string/home_customize_widgets"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                app:drawableStartCompat="@drawable/icon_edit"
+                app:drawableTint="@color/text_secondary"
+                android:drawablePadding="8dp" />
 
         </com.google.android.material.card.MaterialCardView>
 

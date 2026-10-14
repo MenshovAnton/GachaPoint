@@ -69,6 +69,8 @@ import ru.menshovanton.gachapoint.domain.enums.DayState;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.enums.TrackerMode;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
+import ru.menshovanton.gachapoint.ui.animation.NumberCountAnimator;
+import ru.menshovanton.gachapoint.ui.animation.TextAnimator;
 import ru.menshovanton.gachapoint.ui.fragment.tracker.model.CalendarCellUiModel;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
@@ -352,7 +354,14 @@ public class TrackerView extends Fragment {
         viewModel.getGameTypeLiveData().observe(getViewLifecycleOwner(), this::updateGameTypeUi);
         viewModel.getTrackerModeLiveData().observe(getViewLifecycleOwner(), this::updateTrackerModeUi);
         viewModel.getSelectedMonthLiveData().observe(getViewLifecycleOwner(), this::updateHeaderMonth);
-        viewModel.getSelectedYearLiveData().observe(getViewLifecycleOwner(), year -> yearHeader.setText(String.valueOf(year)));
+        viewModel.getSelectedYearLiveData().observe(getViewLifecycleOwner(), year -> {
+            String yearStr = String.valueOf(year);
+            if (!isFirstRender) {
+                TextAnimator.crossfade(yearHeader, yearStr);
+            } else {
+                yearHeader.setText(yearStr);
+            }
+        });
         viewModel.getSubsCountLiveData().observe(getViewLifecycleOwner(), this::updateSubsCountUi);
         viewModel.getDailiesProgressLiveData().observe(getViewLifecycleOwner(), this::updateDailiesProgressUi);
         viewModel.getStatisticLiveData().observe(getViewLifecycleOwner(), this::updateStatisticsUi);
@@ -455,12 +464,19 @@ public class TrackerView extends Fragment {
             tvModeDailiesTitle.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
             ivModeDailiesIcon.setColorFilter(ContextCompat.getColor(context, R.color.text_secondary));
 
-            checkButton.setText(R.string.btn_mark_sub);
-            statsHeader.setText(R.string.stat_header_sub);
-
-            GameType game = viewModel.getCurrentGameType();
-            subsCountTitle.setText(game.getSubTitleResId());
-            subsCounterView.setText(String.valueOf(viewModel.getSubsCountLiveData().getValue()));
+            if (!isFirstRender) {
+                TextAnimator.crossfade(checkButton, R.string.btn_mark_sub);
+                TextAnimator.crossfade(statsHeader, R.string.stat_header_sub);
+                GameType game = viewModel.getCurrentGameType();
+                TextAnimator.crossfade(subsCountTitle, game.getSubTitleResId());
+            } else {
+                checkButton.setText(R.string.btn_mark_sub);
+                statsHeader.setText(R.string.stat_header_sub);
+                GameType game = viewModel.getCurrentGameType();
+                subsCountTitle.setText(game.getSubTitleResId());
+            }
+            Integer count = viewModel.getSubsCountLiveData().getValue();
+            NumberCountAnimator.animate(subsCounterView, count != null ? count : 0);
         } else {
             cardModeDailies.setStrokeColor(ContextCompat.getColor(context, R.color.check));
             cardModeDailies.setStrokeWidth((int) (2 * density));
@@ -472,31 +488,18 @@ public class TrackerView extends Fragment {
             tvModeSubTitle.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
             ivModeSubIcon.setColorFilter(ContextCompat.getColor(context, R.color.text_secondary));
 
-            checkButton.setText(R.string.btn_mark_dailies);
-            statsHeader.setText(R.string.stat_header_dailies);
-
-            subsCountTitle.setText(R.string.sheet_status_completed);
-            int[] progress = viewModel.getDailiesProgressLiveData().getValue();
-            if (progress != null) {
-                subsCounterView.setText(getString(R.string.tracker_mode_dailies_subtitle, progress[0], progress[1]));
+            if (!isFirstRender) {
+                TextAnimator.crossfade(checkButton, R.string.btn_mark_dailies);
+                TextAnimator.crossfade(statsHeader, R.string.stat_header_dailies);
+                TextAnimator.crossfade(subsCountTitle, R.string.sheet_status_completed);
+            } else {
+                checkButton.setText(R.string.btn_mark_dailies);
+                statsHeader.setText(R.string.stat_header_dailies);
+                subsCountTitle.setText(R.string.sheet_status_completed);
             }
-        }
-
-        if (!isFirstRender) {
-            MaterialCardView activeCard = (mode == TrackerMode.SUBSCRIPTION) ? cardModeSub : cardModeDailies;
-            activeCard.animate()
-                    .scaleX(1.025f)
-                    .scaleY(1.025f)
-                    .setDuration(90)
-                    .withEndAction(() -> activeCard.animate().scaleX(1.0f).scaleY(1.0f).setDuration(90).start())
-                    .start();
-
-            if (!isAnimatingMonth) {
-                calendarGrid.animate()
-                        .alpha(0.5f)
-                        .setDuration(70)
-                        .withEndAction(() -> calendarGrid.animate().alpha(1.0f).setDuration(110).start())
-                        .start();
+            int[] progress = viewModel.getDailiesProgressLiveData().getValue();
+            if (progress != null && progress.length >= 2) {
+                NumberCountAnimator.animate(subsCounterView, progress[0], val -> getString(R.string.tracker_mode_dailies_subtitle, val, progress[1]));
             }
         }
     }
@@ -505,7 +508,7 @@ public class TrackerView extends Fragment {
         int cnt = (count != null) ? count : 0;
         tvModeSubSubtitle.setText(getString(R.string.tracker_mode_sub_subtitle, cnt));
         if (viewModel.getCurrentMode() == TrackerMode.SUBSCRIPTION) {
-            subsCounterView.setText(String.valueOf(cnt));
+            NumberCountAnimator.animate(subsCounterView, cnt);
         }
     }
 
@@ -513,7 +516,7 @@ public class TrackerView extends Fragment {
         if (progress == null || progress.length < 2) return;
         tvModeDailiesSubtitle.setText(getString(R.string.tracker_mode_dailies_subtitle, progress[0], progress[1]));
         if (viewModel.getCurrentMode() == TrackerMode.DAILIES) {
-            subsCounterView.setText(getString(R.string.tracker_mode_dailies_subtitle, progress[0], progress[1]));
+            NumberCountAnimator.animate(subsCounterView, progress[0], val -> getString(R.string.tracker_mode_dailies_subtitle, val, progress[1]));
         }
     }
 
@@ -568,7 +571,11 @@ public class TrackerView extends Fragment {
         gemIcon.setImageResource(gameType.getCurrencyIconResId());
         wishIcon.setImageResource(gameType.getPullIconResId());
         if (viewModel.getCurrentMode() == TrackerMode.SUBSCRIPTION) {
-            subsCountTitle.setText(gameType.getSubTitleResId());
+            if (!isFirstRender) {
+                TextAnimator.crossfade(subsCountTitle, gameType.getSubTitleResId());
+            } else {
+                subsCountTitle.setText(gameType.getSubTitleResId());
+            }
         }
     }
 
@@ -715,6 +722,9 @@ public class TrackerView extends Fragment {
                 tvDay.setTextColor(ContextCompat.getColor(context, model.textColorRes));
 
                 LocalDate cellDate = LocalDate.of(model.year, model.month, model.dayOfMonth);
+                String dateDesc = cellDate.format(DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.getDefault()));
+                cellView.setContentDescription(dateDesc);
+
                 boolean isSelected = isSelectionMode && selectedDates != null && selectedDates.contains(cellDate);
                 if (overlay != null) {
                     overlay.setVisibility(isSelected ? View.VISIBLE : View.GONE);
@@ -743,13 +753,13 @@ public class TrackerView extends Fragment {
     private void updateStatisticsUi(Statistic statistic) {
         if (statistic == null) return;
 
-        claimPrimogems.setText(String.valueOf(statistic.claimGems));
-        missedPrimogems.setText(String.valueOf(statistic.missedGems));
-        claimWishes.setText(String.valueOf(statistic.claimWishes));
-        missedWishes.setText(String.valueOf(statistic.missedWishes));
+        NumberCountAnimator.animate(claimPrimogems, statistic.claimGems);
+        NumberCountAnimator.animate(missedPrimogems, statistic.missedGems);
+        NumberCountAnimator.animate(claimWishes, statistic.claimWishes);
+        NumberCountAnimator.animate(missedWishes, statistic.missedWishes);
 
-        laterPrimogems.setText(statistic.laterGems > 0 ? String.valueOf(statistic.laterGems) : "0");
-        laterWishes.setText(statistic.laterWishes > 0 ? String.valueOf(statistic.laterWishes) : "0");
+        NumberCountAnimator.animate(laterPrimogems, Math.max(0, statistic.laterGems));
+        NumberCountAnimator.animate(laterWishes, Math.max(0, statistic.laterWishes));
     }
 
     @SuppressLint("SetTextI18n")
@@ -757,12 +767,9 @@ public class TrackerView extends Fragment {
         Month monthObj = Month.of(month);
         Locale locale = LocaleList.getDefault().get(0);
         String printMonth = monthObj.getDisplayName(TextStyle.FULL_STANDALONE, locale);
-        String formattedMonth = printMonth.substring(0, 1).toUpperCase() + printMonth.substring(1);
-        if (monthHeader.getText() != null && !monthHeader.getText().toString().equals(formattedMonth) && !isFirstRender) {
-            monthHeader.animate().alpha(0f).setDuration(60).withEndAction(() -> {
-                monthHeader.setText(formattedMonth);
-                monthHeader.animate().alpha(1f).setDuration(100).start();
-            }).start();
+        String formattedMonth = printMonth.substring(0, 1).toUpperCase(locale) + printMonth.substring(1);
+        if (!isFirstRender) {
+            TextAnimator.crossfade(monthHeader, formattedMonth);
         } else {
             monthHeader.setText(formattedMonth);
         }
@@ -776,9 +783,9 @@ public class TrackerView extends Fragment {
 
         Context context = requireContext();
         float density = getResources().getDisplayMetrics().density;
-        int cellHeightInPx = (int) (44 * density);
-        int marginInPx = (int) (2 * density);
-        int tvSizePx = (int) (38 * density);
+        int cellHeightInPx = getResources().getDimensionPixelSize(R.dimen.calendar_cell_min_height);
+        int marginInPx = getResources().getDimensionPixelSize(R.dimen.calendar_cell_margin);
+        int tvSizePx = getResources().getDimensionPixelSize(R.dimen.calendar_day_number_size);
         Typeface customTypeface = ResourcesCompat.getFont(context, R.font.genshin_font);
 
         TypedValue typedValue = new TypedValue();
@@ -846,7 +853,7 @@ public class TrackerView extends Fragment {
         Locale locale = LocaleList.getDefault().get(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", locale);
         String formattedDate = dateObj.format(formatter);
-        formattedDate = formattedDate.substring(0, 1).toUpperCase() + formattedDate.substring(1);
+        formattedDate = formattedDate.substring(0, 1).toUpperCase(locale) + formattedDate.substring(1);
 
         if (tvDate != null) tvDate.setText(formattedDate);
         if (tvGame != null) tvGame.setText(getString(viewModel.getCurrentGameType().getNameResId()));
@@ -995,7 +1002,8 @@ public class TrackerView extends Fragment {
         final LocalDate effectiveStartDate = (startDate != null) ? startDate : LocalDate.now();
         GameType currentGame = viewModel.getCurrentGameType();
         int currentSubs = viewModel.getSubsCountLiveData().getValue() != null ? viewModel.getSubsCountLiveData().getValue() : 0;
-        int maxAllowed = Math.max(1, 6 - currentSubs);
+        int maxSubs = currentGame.getMaxSubs();
+        int maxAllowed = Math.max(1, maxSubs - currentSubs);
 
         BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
         dialog.setContentView(R.layout.dialog_add_subscription);
@@ -1017,7 +1025,7 @@ public class TrackerView extends Fragment {
 
         if (tvChainStatus != null) {
             if (currentSubs > 0) {
-                tvChainStatus.setText(getString(R.string.dialog_add_sub_current_chain, currentSubs, 6));
+                tvChainStatus.setText(getString(R.string.dialog_add_sub_current_chain, currentSubs, maxSubs));
             } else {
                 tvChainStatus.setText(R.string.dialog_add_sub_no_active);
             }
@@ -1035,10 +1043,14 @@ public class TrackerView extends Fragment {
             for (int i = 0; i < 6; i++) {
                 if (chips[i] != null) {
                     int countVal = i + 1;
-                    if (countVal > maxAllowed) {
+                    if (countVal > maxSubs) {
+                        chips[i].setVisibility(View.GONE);
+                    } else if (countVal > maxAllowed) {
+                        chips[i].setVisibility(View.VISIBLE);
                         chips[i].setEnabled(false);
                         chips[i].setAlpha(0.35f);
                     } else {
+                        chips[i].setVisibility(View.VISIBLE);
                         chips[i].setEnabled(true);
                         chips[i].setAlpha(1.0f);
                     }
@@ -1050,10 +1062,11 @@ public class TrackerView extends Fragment {
 
         Runnable updatePreview = () -> {
             int count = selectedCount[0];
-            int addedDays = count * 30;
-            int totalChainDays = (currentSubs + count) * 30;
-            int totalGems = count * 2700;
-            int totalPulls = totalGems / 160;
+            int subDays = currentGame.getSubscriptionDurationDays();
+            int addedDays = count * subDays;
+            int totalChainDays = (currentSubs + count) * subDays;
+            int totalGems = count * currentGame.getSubscriptionTotalCurrency();
+            int totalPulls = totalGems / currentGame.getPullCost();
 
             if (tvDuration != null) {
                 tvDuration.setText(getString(R.string.dialog_add_sub_preview_duration, addedDays, totalChainDays));

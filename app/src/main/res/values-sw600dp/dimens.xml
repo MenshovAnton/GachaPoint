@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Screen Spacing & Margins for Tablets (sw600dp) -->
+    <dimen name="screen_padding_horizontal">32dp</dimen>
+    <dimen name="screen_padding_top">24dp</dimen>
+    <dimen name="screen_padding_bottom">32dp</dimen>
+    <dimen name="screen_content_max_width">720dp</dimen>
+
+    <!-- Card & Widget Dimensions -->
+    <dimen name="header_margin_bottom">24dp</dimen>
+    <dimen name="card_spacing_vertical">16dp</dimen>
+    <dimen name="card_corner_radius">20dp</dimen>
+    <dimen name="card_corner_radius_large">24dp</dimen>
+    <dimen name="card_margin_horizontal">24dp</dimen>
+    <dimen name="card_margin_vertical">10dp</dimen>
+    <dimen name="card_inner_padding">20dp</dimen>
+
+    <!-- Calendar Grid Dimensions on Tablets -->
+    <dimen name="calendar_cell_margin">3dp</dimen>
+    <dimen name="calendar_cell_min_height">52dp</dimen>
+    <dimen name="calendar_cell_max_height">72dp</dimen>
+    <dimen name="calendar_day_number_size">44dp</dimen>
+
+    <!-- Interactive Elements & Touch Targets -->
+    <dimen name="min_touch_target_size">48dp</dimen>
+    <dimen name="icon_button_size">52dp</dimen>
+    <dimen name="action_button_height">56dp</dimen>
+    <dimen name="pills_padding_horizontal">20dp</dimen>
+    <dimen name="pills_padding_vertical">6dp</dimen>
+
+    <!-- Dialog & Sheet Maximum Dimensions -->
+    <dimen name="bottom_sheet_max_width">600dp</dimen>
+    <dimen name="sheet_drag_handle_width">44dp</dimen>
+    <dimen name="sheet_drag_handle_height">5dp</dimen>
+    <dimen name="sheet_drag_handle_margin_bottom">16dp</dimen>
+
+    <!-- Unified Typography Hierarchy on Tablets -->
+    <dimen name="text_size_screen_title">30sp</dimen>
+    <dimen name="text_size_section_title">20sp</dimen>
+    <dimen name="text_size_card_title">18sp</dimen>
+    <dimen name="text_size_body">15sp</dimen>
+    <dimen name="text_size_caption">13sp</dimen>
+    <dimen name="text_size_stat_large">32sp</dimen>
+</resources>

@@ -7,12 +7,18 @@
     android:paddingTop="12dp"
     android:paddingBottom="24dp">
 
+    <View
+        android:layout_width="@dimen/sheet_drag_handle_width"
+        android:layout_height="@dimen/sheet_drag_handle_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/sheet_drag_handle_margin_bottom"
+        android:background="@drawable/sheet_drag_handle" />
+
     <TextView
         android:id="@+id/tv_time_sheet_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
         android:fontFamily="@font/genshin_font"
         android:text="@string/time_picker_title"
@@ -55,7 +61,7 @@
         android:id="@+id/btn_save_time"
         style="@style/Button.GachaPoint.Tonal"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="@dimen/action_button_height"
         android:layout_marginTop="24dp"
         android:text="@string/time_picker_save"
         android:textSize="16sp" />

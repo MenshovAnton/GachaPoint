@@ -1,85 +1,62 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- General & Navigation -->
     <string name="app_name" translatable="false">GachaPoint</string>
-    <string name="app_version" translatable="false">0.2.0</string>
+    <string name="app_version" translatable="false">v0.2.0</string>
     <string name="description">Your open-source, all-in-one companion app for anime gacha RPGs (such as Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, and more). Effortlessly track your wish history, manage savings, and keep tabs on daily pass rewards—all in one secure, fully offline application.</string>
     <string name="copyright_info">All rights belong to their respective copyright holders. This app is not affiliated with Hoyoverse.</string>
-    <string name="sheet_header_actions">Actions</string>
-    <string name="sheet_header_edit">Edit</string>
-    <string name="check_button_text">Mark</string>
-    <string name="add_button_text">Add subscription</string>
-    <string name="del_button_text">Delete subscription</string>
-    <string name="cancel_button_text">Cancel mark</string>
-    <string name="change_status_button_text">Recover missed day</string>
-    <string name="stat_header">Statistics</string>
-    <string name="stat_header_sub">Subscription Statistics</string>
-    <string name="stat_header_dailies">Dailies Statistics</string>
-    <string name="tracker_mode_sub">Subscription</string>
-    <string name="tracker_mode_dailies">Dailies</string>
-    <string name="tracker_mode_sub_subtitle">Active: %d</string>
-    <string name="tracker_mode_dailies_subtitle">%1$d of %2$d days</string>
-    <string name="sheet_day_details_title">Manage Day</string>
-    <string name="sheet_dailies_title">Daily Quests</string>
-    <string name="sheet_dailies_reward">+60 Currency</string>
-    <string name="sheet_sub_title">Subscription</string>
-    <string name="sub_name_genshin">Blessing of the Welkin Moon</string>
-    <string name="sub_name_hsr">Express Supply Pass</string>
-    <string name="sub_name_zzz">Inter-Knot Membership</string>
-    <string name="sheet_sub_reward">+90 Currency</string>
-    <string name="sheet_sub_remaining">Days remaining: %d</string>
-    <string name="sheet_sub_start_here">Start subscription chain (1–6 passes)</string>
-    <string name="sheet_sub_add_more">+ Add to subscription chain</string>
-    <string name="dialog_add_sub_count_label">Number of subscriptions to add (chain up to 6):</string>
-    <string name="dialog_add_sub_current_chain">Current chain: %1$d of %2$d</string>
-    <string name="dialog_add_sub_no_active">No active subscription</string>
-    <string name="dialog_add_sub_preview_duration">Duration: +%1$d days (total %2$d days)</string>
-    <string name="dialog_add_sub_preview_reward">Reward: +%1$s (~%2$d pulls)</string>
-    <string name="dialog_add_sub_start_date">Start date: %s</string>
-    <string name="dialog_add_sub_confirm">Add</string>
-    <string name="sheet_status_completed">Completed</string>
-    <string name="sheet_status_not_completed">Not completed</string>
-    <string name="mark_dailies_today">Daily quests marked!</string>
-    <string name="dailies_already_completed">Dailies already marked today</string>
-    <string name="btn_mark_sub">Claim</string>
-    <string name="btn_mark_dailies">Claim</string>
-    <string name="nav_prev_month">Previous month</string>
-    <string name="nav_next_month">Next month</string>
-    <string name="claim_column_header">Received</string>
-    <string name="miss_column_header">Missed</string>
-    <string name="later_column_header">Upcoming</string>
-    <string name="blessing_of_the_welkin_moon_count_header">Number of moons:</string>
-    <string name="star_rail_special_pass_count_header">Number of express passes:</string>
-    <string name="inter_knot_member_count_header">Number of Inter-Knot subs:</string>
-    <string name="notifications_settings_title">Notifications</string>
-    <string name="notifications_settings_desc">Reminders to claim daily check-ins</string>
-    <string name="notifications_settings_time">Notification time</string>
-    <string name="time_picker_title">Set reminder time</string>
-    <string name="time_picker_save">Done</string>
-    <string name="ui_settings_vibration_desc">Haptic feedback on clicks and marks</string>
-    <string name="db_settings_title">Data &amp; Storage</string>
-    <string name="db_settings_backup_desc">Backup marks and pulls to SQLite file</string>
-    <string name="db_settings_import_desc">Restore history from a backup file</string>
-    <string name="db_settings_backup_button">Export</string>
     <string name="nav_home">Home</string>
     <string name="nav_tracker">Calendar</string>
-    <string name="nav_settings">Settings</string>
-    <string name="nav_info">About app</string>
     <string name="nav_journal">Pulls history</string>
     <string name="nav_menu">Menu</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_info">About app</string>
     <string name="genshin" translatable="false">Genshin Impact</string>
     <string name="hsr" translatable="false">Honkai Star Rail</string>
     <string name="zzz" translatable="false">Zenless Zone Zero</string>
-    <string name="tab_piggy_bank">Piggy bank</string>
-    <string name="tab_pulls">Pulls history</string>
-    <string name="add_sub">Subscription added</string>
-    <string name="del_sub">Subscription deleted</string>
-    <string name="subs_limit">Subscription limit reached</string>
-    <string name="check_today">Marking complete!</string>
-    <string name="cancel_check_today">Mark removed</string>
-    <string name="already_checked">You have already checked in today</string>
-    <string name="active_subs_null">You have no active subscriptions.</string>
-    <string name="not_miss_day">You already checked in yesterday</string>
-    <string name="not_check_today">You haven\'t checked in yet today</string>
-    <string name="impossible_cancel_sub">A subscription can only be deleted on the day it was added!</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="reset">Reset</string>
+    <string name="warning">Warning!</string>
+    <string name="ok_button">Yes</string>
+    <string name="cancel_button">No, thanks</string>
+    <string name="delete_confirm_message">Do you really want to delete this record? This action cannot be undone, and the data will be lost forever.</string>
+    <string name="date">Date</string>
+    <string name="select_date">Select date</string>
+    <string name="time" translatable="false">:</string>
+    <string name="form_load_error">Form load error!</string>
+    <string name="developer_card_title">Developer</string>
+
+    <!-- Home Screen & Widgets -->
+    <string name="widget_quick_actions">Quick Actions</string>
+    <string name="widget_savings">Savings Overview</string>
+    <string name="widget_statistics">Monthly Statistics</string>
+    <string name="widget_pity">Pity &amp; Banners</string>
+    <string name="home_customize_widgets">Home Widgets</string>
+    <string name="home_customize_widgets_desc">Toggle widgets and drag to reorder</string>
+    <string name="home_reset_default">Reset to default</string>
+    <string name="home_done">Done</string>
+    <string name="home_action_daily">Dailies</string>
+    <string name="home_action_daily_done">Completed ✓</string>
+    <string name="home_action_daily_todo">Check in</string>
+    <string name="home_action_sub">Subscription</string>
+    <string name="home_action_sub_claimed">Claimed ✓</string>
+    <string name="home_action_sub_claim">Claim</string>
+    <string name="home_action_sub_none">No sub</string>
+    <string name="home_action_savings">Piggy Bank</string>
+    <string name="home_action_journal">Journal</string>
+    <string name="home_action_journal_desc">Pulls history</string>
+    <string name="home_savings_in_currency">Equivalent in currency</string>
+    <string name="home_stat_subs_remaining">Sub: %1$d d. left</string>
+    <string name="home_stat_subs_inactive">No active subscription</string>
+    <string name="home_stat_dailies_month">Dailies: %1$d / %2$d</string>
+    <string name="home_pity_event">Event Character Banner</string>
+    <string name="home_pity_until_5star">Until 5★: %1$d</string>
+    <string name="home_pity_guaranteed_badge" formatted="false">100% Guaranteed</string>
+    <string name="home_pity_fifty_fifty_badge">50 / 50</string>
+
+    <!-- Tracker / Calendar Screen -->
     <string name="calendar_mon">Mon</string>
     <string name="calendar_tue">Tue</string>
     <string name="calendar_wed">Wed</string>
@@ -87,52 +64,91 @@
     <string name="calendar_fr">Fri</string>
     <string name="calendar_sa">Sat</string>
     <string name="calendar_su">Sun</string>
-    <string name="title_bank">Saved</string>
-    <string name="goal_edit_button">Target</string>
-    <string name="add_to_bank">Add</string>
-    <string name="savings_target_label">Target goal:</string>
-    <string name="savings_current_pulls">Pulls earned</string>
-    <string name="savings_current_gems">In gems</string>
-    <string name="savings_quick_actions">Quick actions</string>
-    <string name="savings_reset_confirm">Reset current savings goal and progress?</string>
-    <string name="savings_set_target_dialog_title">Set Target</string>
-    <string name="savings_set_target_hint">Total pulls required</string>
-    <string name="savings_add_custom_dialog_title">Add Pulls</string>
-    <string name="savings_add_custom_hint">Number of pulls to add</string>
-    <string name="savings_converter_title">Quick Calculator</string>
-    <string name="savings_converter_desc">1 Pull = %d Currency</string>
-    <string name="plus_ten" translatable="false">+10</string>
-    <string name="plus_one" translatable="false">+1</string>
-    <string name="feedback">Feedback</string>
-    <string name="time" translatable="false">:</string>
-    <string name="pity_1">Pity 1x</string>
-    <string name="pity_2">Pity 2x</string>
-    <string name="pity_6">Pity 6x</string>
-    <string name="reset">Reset</string>
-    <string name="remark_piggy_bank">Pity 1x = 77 pulls</string>
-    <string name="db_export_successful">Export successful!</string>
-    <string name="db_export_failed">Export failed!</string>
-    <string name="notifications_name">Notifications</string>
-    <string name="notifications_description">Sends reminders to collect rewards</string>
-    <string name="notifications_title">Reminder!</string>
-    <string name="notifications_text">Don\'t forget to collect your rewards!</string>
-    <string name="five_star" translatable="false">5★</string>
-    <string name="four_star" translatable="false">4★</string>
-    <string name="three_star" translatable="false">3★</string>
-    <string name="add_one_pull">Add 1 pull</string>
-    <string name="add_ten_pulls">Add 10 pulls</string>
-    <string name="add_five_star">Got 5★</string>
-    <string name="add_four_star">Got 4★</string>
-    <string name="empty_pulls_list">No pulls yet :(</string>
-    <string name="default_pull_content">Unknown</string>
+    <string name="nav_prev_month">Previous month</string>
+    <string name="nav_next_month">Next month</string>
+    <string name="tracker_mode_sub">Subscription</string>
+    <string name="tracker_mode_dailies">Dailies</string>
+    <string name="tracker_mode_sub_subtitle">Active: %d</string>
+    <string name="tracker_mode_dailies_subtitle" tools:ignore="PluralsCandidate">%1$d of %2$d days</string>
+    <string name="stat_header_sub">Subscription Statistics</string>
+    <string name="stat_header_dailies">Dailies Statistics</string>
+    <string name="claim_column_header">Received</string>
+    <string name="miss_column_header">Missed</string>
+    <string name="later_column_header">Upcoming</string>
+    <string name="sheet_status_completed">Completed</string>
+    <string name="sub_name_genshin">Blessing of the Welkin Moon</string>
+    <string name="sub_name_hsr">Express Supply Pass</string>
+    <string name="sub_name_zzz">Inter-Knot Membership</string>
+    <string name="blessing_of_the_welkin_moon_count_header">Number of moons:</string>
+    <string name="star_rail_special_pass_count_header">Number of express passes:</string>
+    <string name="inter_knot_member_count_header">Number of Inter-Knot subs:</string>
+    <string name="sheet_header_actions">Actions</string>
+    <string name="sheet_header_edit">Edit</string>
+    <string name="check_button_text">Mark</string>
+    <string name="add_button_text">Add subscription</string>
+    <string name="del_button_text">Delete subscription</string>
+    <string name="cancel_button_text">Cancel mark</string>
+    <string name="change_status_button_text">Recover missed day</string>
+    <string name="sheet_dailies_title">Daily Quests</string>
+    <string name="sheet_dailies_reward">+60 Currency</string>
+    <string name="sheet_sub_title">Subscription</string>
+    <string name="sheet_sub_reward">+90 Currency</string>
+    <string name="sheet_sub_remaining">Days remaining: %d</string>
+    <string name="sheet_sub_start_here">Start subscription chain (1–6 passes)</string>
+    <string name="sheet_sub_add_more">+ Add to subscription chain</string>
+    <string name="sheet_add_sub_desc">+1 active 30-day subscription</string>
+    <string name="sheet_del_sub_desc">Delete subscription added today</string>
+    <string name="sheet_recover_desc">Mark yesterday as claimed</string>
+    <string name="sheet_cancel_mark_desc">Remove today\'s check-in mark</string>
+    <string name="btn_mark_sub">Claim</string>
+    <string name="btn_mark_dailies">Claim</string>
+    <string name="delete_sub_confirm_message">Do you really want to delete subscription? This action cannot be undone, and the data will be lost forever.</string>
+    <string name="dialog_add_sub_count_label">Number of subscriptions to add (chain up to 6):</string>
+    <string name="dialog_add_sub_current_chain">Current chain: %1$d of %2$d</string>
+    <string name="dialog_add_sub_no_active">No active subscription</string>
+    <string name="dialog_add_sub_preview_duration" tools:ignore="PluralsCandidate">Duration: +%1$d days (total %2$d days)</string>
+    <string name="dialog_add_sub_preview_reward" tools:ignore="PluralsCandidate">Reward: +%1$s (~%2$d pulls)</string>
+    <string name="dialog_add_sub_start_date">Start date: %s</string>
+    <string name="dialog_add_sub_confirm">Add</string>
+    <string name="plus_thirty_days">+1 (30 d.)</string>
+    <string name="plus_sixty_days">+2 (60 d.)</string>
+    <string name="plus_ninty_days">+3 (90 d.)</string>
+    <string name="plus_one_hundred_twenty_days">+4 (120 d.)</string>
+    <string name="plus_one_hundred_fifty_days">+5 (150 d.)</string>
+    <string name="plus_one_hundred_eighty_days">+6 (180 d.)</string>
+    <string name="multi_select_mode">Multi-selection</string>
+    <string name="sheet_multi_select_desc">Select days to mark subscriptions or dailies</string>
+    <string name="btn_selection_mark">Mark</string>
+    <string name="btn_selection_mark_count">Mark (%d)</string>
+    <string name="btn_selection_unmark">Unmark</string>
+    <string name="btn_selection_unmark_count">Unmark (%d)</string>
+    <string name="multi_select_marked_success">Marks successfully updated</string>
+    <string name="multi_select_no_selection">Select at least one day</string>
+    <string name="active_subs_none_in_selection">No active subscriptions on selected days</string>
+    <string name="mark_dailies_today">Daily quests marked!</string>
+    <string name="dailies_already_completed">Dailies already marked today</string>
+    <string name="add_sub">Subscription added</string>
+    <string name="del_sub">Subscription deleted</string>
+    <string name="subs_limit">Subscription limit reached</string>
+    <string name="check_today">Marking complete!</string>
+    <string name="cancel_check_today">Mark removed</string>
+    <string name="already_checked">You have already checked in today</string>
+    <string name="active_subs_null">You have no active subscriptions.</string>
+    <string name="active_subs_null_question">You have no active subscriptions. Add one?</string>
+    <string name="not_miss_day">You already checked in yesterday</string>
+    <string name="not_check_today">You haven\'t checked in yet today</string>
+
+    <!-- Pulls Journal Screen -->
     <string name="add_pull">Add record</string>
     <string name="edit_pull">Edit record</string>
     <string name="hint_input_content">Character/Weapon</string>
     <string name="select_rare">Select item rarity</string>
-    <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
-    <string name="date">Date</string>
-    <string name="select_date">Select date</string>
+    <string name="default_pull_content">Unknown</string>
+    <string name="empty_pulls_list">No pulls yet :(</string>
+    <string name="pulls">Pulls</string>
+    <string name="five_star" translatable="false">5★</string>
+    <string name="four_star" translatable="false">4★</string>
+    <string name="three_star" translatable="false">3★</string>
     <string name="banner_type_genshin_event">Event banner</string>
     <string name="banner_type_genshin_weapon">Weapon banner</string>
     <string name="banner_type_genshin_std">Standard banner</string>
@@ -149,7 +165,6 @@
     <string name="banner_type_zzz_novice">Subsidized Channel</string>
     <string name="banner_type_zzz_bangboo">Bangboo Channel</string>
     <string name="banner_type_spec">Special</string>
-    <string name="reset_pity">Reset pity</string>
     <string name="pity_status_none">None</string>
     <string name="pity_status_win">Won 50/50</string>
     <string name="pity_status_loss">Lost 50/50</string>
@@ -157,26 +172,61 @@
     <string name="pity_5star_title">5★ Guarantee</string>
     <string name="pity_4star_title">4★ Guarantee</string>
     <string name="pity_status_fifty_fifty">50/50 Chance</string>
-    <string name="pity_status_guaranteed_badge">100% Guaranteed</string>
-    <string name="pity_status_na">N/A</string>
-    <string name="pity_pull_at">%d pull</string>
+    <string name="pity_status_guaranteed_badge" formatted="false">100% Guaranteed</string>
+    <string name="pity_pull_at" tools:ignore="PluralsCandidate">%d pull</string>
     <string name="dialog_select_drop_outcome">Drop result:</string>
+    <string name="selected_count">Selected: %d</string>
+    <string name="select_all">Select all</string>
+    <string name="delete_batch_confirm_title">Delete pulls</string>
+    <string name="delete_batch_confirm_message">Do you really want to delete selected records (%d)? This action cannot be undone.</string>
+    <string name="add_one_pull">Add 1 pull</string>
+    <string name="add_ten_pulls">Add 10 pulls</string>
+    <string name="add_five_star">Got 5★</string>
+    <string name="add_four_star">Got 4★</string>
+    <string name="plus_one" translatable="false">+1</string>
+    <string name="plus_ten" translatable="false">+10</string>
+    <string name="minus_one" translatable="false">-1</string>
+    <string name="minus_ten" translatable="false">-10</string>
+    <string name="sheet_section_add_wishes">Add Pulls</string>
+    <string name="sheet_section_drops">Rarity Drops</string>
+    <string name="sheet_add_one_desc">+1 to current history</string>
+    <string name="sheet_add_ten_desc">+10 to current history</string>
+    <string name="sheet_add_five_star_desc">Reset 5★ pity counter</string>
+    <string name="sheet_add_four_star_desc">Reset 4★ pity counter</string>
+
+    <!-- Piggy Bank Screen -->
+    <string name="title_bank">Saved</string>
+    <string name="goal_edit_button">Target</string>
+    <string name="add_to_bank">Add</string>
+    <string name="savings_target_label">Target goal:</string>
+    <string name="savings_current_pulls">Pulls earned</string>
+    <string name="savings_current_gems">In gems</string>
+    <string name="savings_quick_actions">Quick actions</string>
+    <string name="savings_reset_confirm">Reset current savings goal and progress?</string>
     <string name="goal_not_set_or_reached">Target not set or reached</string>
-    <string name="ok_button">Yes</string>
-    <string name="cancel_button">No, thanks</string>
-    <string name="active_subs_null_question">You have no active subscriptions. Add one?</string>
-    <string name="links">Useful links</string>
-    <string name="one" translatable="false">1</string>
-    <string name="two" translatable="false">2</string>
-    <string name="six" translatable="false">6</string>
-    <string name="delete">Delete</string>
-    <string name="delete_confirm_message">Do you really want to delete this record? This action cannot be undone, and the data will be lost forever.</string>
-    <string name="delete_sub_confirm_message">Do you really want to delete subscription? This action cannot be undone, and the data will be lost forever.</string>
-    <string name="warning">Warning!</string>
+    <string name="remark_piggy_bank">Pity 1x = 77 pulls</string>
+    <string name="savings_converter_title">Quick Calculator</string>
+    <string name="savings_converter_desc" tools:ignore="PluralsCandidate">1 Pull = %d Currency</string>
+    <string name="pity_1">Pity 1x</string>
+    <string name="pity_2">Pity 2x</string>
+    <string name="pity_6">Pity 6x</string>
+    <string name="one_x" translatable="false">1×</string>
+    <string name="two_x" translatable="false">2×</string>
+    <string name="six_x" translatable="false">6×</string>
+    <string name="plus_seventy_seven" translatable="false">+77</string>
+    <string name="plus_one_hundred_fifty_four" translatable="false">+154</string>
+    <string name="plus_four_hundred_sixty_tow" translatable="false">+462</string>
+    <string name="sheet_section_quick_add">Quick Add</string>
+    <string name="sheet_pity_1_desc">+77 pulls towards target</string>
+    <string name="sheet_pity_2_desc">+154 pulls towards target</string>
+    <string name="sheet_pity_6_desc">+462 pulls towards target</string>
+    <string name="sheet_reset_desc">Reset target savings progress</string>
+
+    <!-- Settings Screen -->
     <string name="ui_setting_title">Interface</string>
     <string name="ui_settings_language">Language</string>
     <string name="ui_settings_theme">Theme</string>
-    <string name="ui_settings_accessibility">Accessibility</string>
+    <string name="ui_settings_vibration_desc">Haptic feedback on clicks and marks</string>
     <string name="vibration">Vibration</string>
     <string name="theme_day">Day</string>
     <string name="theme_night">Night</string>
@@ -184,7 +234,18 @@
     <string name="lang_ru">Russian</string>
     <string name="lang_eng">English</string>
     <string name="lang_default">System language</string>
+    <string name="notifications_settings_title">Notifications</string>
+    <string name="notifications_settings_desc">Reminders to claim daily check-ins</string>
+    <string name="notifications_settings_time">Notification time</string>
+    <string name="time_picker_title">Set reminder time</string>
+    <string name="time_picker_save">Done</string>
+    <string name="db_settings_title">Data &amp; Storage</string>
+    <string name="db_settings_backup_desc">Backup marks and pulls to SQLite file</string>
+    <string name="db_settings_import_desc">Restore history from a backup file</string>
+    <string name="db_settings_backup_button">Export</string>
     <string name="db_settings_import_button">Import</string>
+    <string name="db_export_successful">Export successful!</string>
+    <string name="db_export_failed">Export failed!</string>
     <string name="db_import">Data import</string>
     <string name="db_import_message">Import content into the app? Current data may be overwritten!</string>
     <string name="db_import_successful">Import successful!</string>
@@ -195,33 +256,13 @@
     <string name="db_error_incorrect_db_version">Incorrect data base version</string>
     <string name="db_error_invalid_file">The selected file is not a valid SQLite database</string>
     <string name="db_error_missing_tables">Missing app tables</string>
-    <string name="developer_card_title">Developer</string>
-    <string name="developer_username" translatable="false">MenshovAnton</string>
-    <string name="form_load_error">Form load error!</string>
-    <string name="sheet_add_ten_desc">+10 to current history</string>
-    <string name="sheet_add_one_desc">+1 to current history</string>
-    <string name="sheet_add_five_star_desc">Reset 5★ pity counter</string>
-    <string name="sheet_add_four_star_desc">Reset 4★ pity counter</string>
-    <string name="sheet_pity_1_desc">+77 pulls towards target</string>
-    <string name="sheet_pity_2_desc">+154 pulls towards target</string>
-    <string name="sheet_pity_6_desc">+462 pulls towards target</string>
-    <string name="sheet_reset_desc">Reset target savings progress</string>
-    <string name="sheet_add_sub_desc">+1 active 30-day subscription</string>
-    <string name="sheet_del_sub_desc">Delete subscription added today</string>
     <string name="sheet_export_desc">Save SQLite database backup</string>
-    <string name="sheet_recover_desc">Mark yesterday as claimed</string>
-    <string name="sheet_cancel_mark_desc">Remove today\'s check-in mark</string>
-    <string name="sheet_section_add_wishes">Add Pulls</string>
-    <string name="sheet_section_drops">Rarity Drops</string>
-    <string name="sheet_section_quick_add">Quick Add</string>
-    <string name="about_version_badge">v0.2.0 • Offline &amp; Open Source</string>
-    <string name="about_section_project">About Project</string>
-    <string name="about_section_links">Links &amp; Community</string>
-    <string name="about_github_title">Source Code</string>
-    <string name="about_github_desc">github.com/MenshovAnton/GachaPoint</string>
-    <string name="about_telegram_title">Telegram Channel</string>
-    <string name="about_telegram_desc">Project news and discussion</string>
-    <string name="about_developer_desc">MenshovAnton • Project author</string>
+    <string name="notifications_name">Notifications</string>
+    <string name="notifications_description">Sends reminders to collect rewards</string>
+    <string name="notifications_title">Reminder!</string>
+    <string name="notifications_text">Don\'t forget to collect your rewards!</string>
+
+    <!-- Menu Screen -->
     <string name="menu_section_tools">Tools &amp; Services</string>
     <string name="menu_section_app">Application</string>
     <string name="menu_savings_title">Savings &amp; Targets</string>
@@ -237,66 +278,19 @@
     <string name="menu_feedback_desc">Report a bug or suggest a feature</string>
     <string name="menu_about_desc">Version, open source and contacts</string>
     <string name="menu_feature_in_dev">This feature is currently under development!</string>
-    <string name="selected_count">Selected: %d</string>
-    <string name="select_all">Select all</string>
-    <string name="delete_batch_confirm_title">Delete pulls</string>
-    <string name="delete_batch_confirm_message">Do you really want to delete selected records (%d)? This action cannot be undone.</string>
-    <string name="minus_one" translatable="false">-1</string>
-    <string name="minus_ten" translatable="false">-10</string>
-    <string name="one_x" translatable="false">1×</string>
-    <string name="plus_seventy_seven" translatable="false">+77</string>
-    <string name="two_x" translatable="false">2×</string>
-    <string name="plus_one_hundred_fifty_four" translatable="false">+154</string>
-    <string name="six_x" translatable="false">6×</string>
-    <string name="plus_four_hundred_sixty_tow" translatable="false">+462</string>
-    <string name="pulls">Pulls</string>
-    <string name="btn_selection_mark">Mark</string>
-    <string name="btn_selection_mark_count">Mark (%d)</string>
-    <string name="btn_selection_unmark">Unmark</string>
-    <string name="btn_selection_unmark_count">Unmark (%d)</string>
-    <string name="multi_select_mode">Multi-selection</string>
-    <string name="sheet_multi_select_desc">Select days to mark subscriptions or dailies</string>
-    <string name="multi_select_marked_success">Marks successfully updated</string>
-    <string name="multi_select_no_selection">Select at least one day</string>
-    <string name="active_subs_none_in_selection">No active subscriptions on selected days</string>
-    <string name="plus_thirty_days">+1 (30 d.)</string>
-    <string name="plus_sixty_days">+2 (60 d.)</string>
-    <string name="plus_ninty_days">+3 (90 d.)</string>
-    <string name="plus_one_hundred_fifty_days">+5 (150 d.)</string>
-    <string name="plus_one_hundred_eighty_days">+6 (180 d.)</string>
-    <string name="plus_one_hundred_twenty_days">+4 (120 d.)</string>
 
-    <!-- Home Redesign & Widgets -->
-    <string name="widget_quick_actions">Quick Actions</string>
-    <string name="widget_savings">Savings Overview</string>
-    <string name="widget_statistics">Monthly Statistics</string>
-    <string name="widget_pity">Pity &amp; Banners</string>
-    <string name="home_customize_widgets">Home Widgets</string>
-    <string name="home_customize_widgets_desc">Toggle widgets and drag to reorder</string>
-    <string name="home_reset_default">Reset to default</string>
-    <string name="home_action_daily">Dailies</string>
-    <string name="home_action_daily_done">Completed ✓</string>
-    <string name="home_action_daily_todo">Check in</string>
-    <string name="home_action_sub">Subscription</string>
-    <string name="home_action_sub_claimed">Claimed ✓</string>
-    <string name="home_action_sub_claim">Claim</string>
-    <string name="home_action_sub_none">No sub</string>
-    <string name="home_action_savings">Piggy Bank</string>
-    <string name="home_action_journal">Journal</string>
-    <string name="home_action_journal_desc">Pulls history</string>
-    <string name="home_savings_total_pulls">Total saved pulls</string>
-    <string name="home_savings_in_currency">Equivalent in currency</string>
-    <string name="home_stat_subs_remaining">Sub: %1$d d. left</string>
-    <string name="home_stat_subs_inactive">No active subscription</string>
-    <string name="home_stat_dailies_month">Dailies: %1$d / %2$d</string>
-    <string name="home_pity_event">Event Character Banner</string>
-    <string name="home_pity_since_last">Since last 5★: %1$d / %2$d</string>
-    <string name="home_pity_until_5star">Until 5★: %1$d</string>
-    <string name="home_pity_guaranteed_badge">100% Guaranteed</string>
-    <string name="home_pity_fifty_fifty_badge">50 / 50</string>
-    <string name="home_done">Done</string>
+    <!-- About Screen -->
+    <string name="about_version_badge">v0.2.0 • Offline &amp; Open Source</string>
+    <string name="about_section_project">About Project</string>
+    <string name="about_section_links">Links &amp; Community</string>
+    <string name="about_github_title">Source Code</string>
+    <string name="about_github_desc">github.com/MenshovAnton/GachaPoint</string>
+    <string name="about_telegram_title">Telegram Channel</string>
+    <string name="about_telegram_desc">Project news and discussion</string>
+    <string name="about_developer_desc">MenshovAnton • Project author</string>
 
-    <!-- Feedback Hub & Form -->
+    <!-- Feedback Screen -->
+    <string name="feedback">Feedback</string>
     <string name="feedback_contact_email" translatable="false">mrwaysoon@gmail.com</string>
     <string name="feedback_telegram_url" translatable="false">https://t.me/GachaPoint_official</string>
     <string name="feedback_github_issues_url" translatable="false">https://github.com/MenshovAnton/GachaPoint/issues</string>
@@ -339,4 +333,19 @@
     <string name="three_rate" translatable="false">3 ★</string>
     <string name="four_rate" translatable="false">4 ★</string>
     <string name="five_rate" translatable="false">5 ★</string>
+
+    <!-- Format Helpers -->
+    <string name="fraction_format" translatable="false">%1$d / %2$d</string>
+    <string name="percent_format" translatable="false">%1$d%%</string>
+    <string name="savings_currency_approx_format" translatable="false">≈ %1$s (%2$s)</string>
+
+    <!-- Accessibility Descriptions -->
+    <string name="a11y_btn_back">Back</string>
+    <string name="a11y_btn_close">Close</string>
+    <string name="a11y_btn_github">Open GitHub repository</string>
+    <string name="a11y_btn_telegram">Open Telegram channel</string>
+    <string name="a11y_currency_icon">Game currency</string>
+    <string name="a11y_pull_icon">Pulls</string>
+    <string name="a11y_subscription_icon">Subscription</string>
+    <string name="a11y_daily_icon">Daily quest</string>
 </resources>

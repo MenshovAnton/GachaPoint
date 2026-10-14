@@ -3,6 +3,7 @@ package ru.menshovanton.gachapoint.ui.fragment.home;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -38,8 +39,8 @@ public class HomeViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> subsCountLiveData = new MutableLiveData<>(0);
     private final MutableLiveData<Statistic> statisticLiveData = new MutableLiveData<>();
 
-    private final MutableLiveData<Integer> piggyProgressLiveData = new MutableLiveData<>(0);
-    private final MutableLiveData<Integer> piggyTargetLiveData = new MutableLiveData<>(100);
+    private final MutableLiveData<Integer> piggyProgressLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Integer> piggyTargetLiveData = new MutableLiveData<>();
 
     private final MutableLiveData<Boolean> isDailyDoneTodayLiveData = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> isSubClaimedTodayLiveData = new MutableLiveData<>(false);
@@ -101,8 +102,15 @@ public class HomeViewModel extends AndroidViewModel {
             subsCountLiveData.setValue(calendarRepository.getSubsCount());
             int total = piggyBankRepository.getTotalProgress(finalGameType);
             int target = piggyBankRepository.getTarget(finalGameType);
-            piggyTargetLiveData.setValue(target);
-            piggyProgressLiveData.setValue(target > 0 ? total : 0);
+            Integer curTarget = piggyTargetLiveData.getValue();
+            Integer curProgress = piggyProgressLiveData.getValue();
+            int newProgress = target > 0 ? total : 0;
+            if (curTarget == null || curTarget != target) {
+                piggyTargetLiveData.setValue(target);
+            }
+            if (curProgress == null || curProgress != newProgress) {
+                piggyProgressLiveData.setValue(newProgress);
+            }
         });
 
         calendarRepository.getStatistic(gameType, currentYear, statisticLiveData::setValue);
@@ -179,37 +187,41 @@ public class HomeViewModel extends AndroidViewModel {
         isGuaranteedLiveData.setValue(bannerHas5050 && guaranteed);
     }
 
-    public void markDailyToday(Runnable onComplete) {
+    public void markDailyToday(@Nullable java.util.function.Consumer<Boolean> onComplete) {
         LocalDate today = LocalDate.now();
         GameType gameType = gameTypeLiveData.getValue();
         if (gameType == null) gameType = GameType.GENSHIN;
 
         Boolean currentDone = isDailyDoneTodayLiveData.getValue();
-        int newStatus = (currentDone != null && currentDone) ? 0 : 1;
+        boolean newDone = !(currentDone != null && currentDone);
+        int newStatus = newDone ? 1 : 0;
+        isDailyDoneTodayLiveData.setValue(newDone);
 
         calendarRepository.setDayDailyStatus(today.getYear(), today.getDayOfYear(), gameType, newStatus, () -> {
             loadData();
-            if (onComplete != null) onComplete.run();
+            if (onComplete != null) onComplete.accept(newDone);
         });
     }
 
-    public void markSubToday(Runnable onComplete) {
+    public void markSubToday(@Nullable java.util.function.Consumer<Boolean> onComplete) {
         LocalDate today = LocalDate.now();
         GameType gameType = gameTypeLiveData.getValue();
         if (gameType == null) gameType = GameType.GENSHIN;
 
         Integer rem = subDaysRemainingTodayLiveData.getValue();
         if (rem == null || rem <= 0) {
-            if (onComplete != null) onComplete.run();
+            if (onComplete != null) onComplete.accept(null);
             return;
         }
 
         Boolean currentClaimed = isSubClaimedTodayLiveData.getValue();
-        int newStatus = (currentClaimed != null && currentClaimed) ? DayState.STATUS_MISSED : DayState.STATUS_RECEIVED;
+        boolean newClaimed = !(currentClaimed != null && currentClaimed);
+        int newStatus = newClaimed ? DayState.STATUS_RECEIVED : DayState.STATUS_MISSED;
+        isSubClaimedTodayLiveData.setValue(newClaimed);
 
         calendarRepository.setDayStatus(today.getYear(), today.getDayOfYear(), gameType, newStatus, () -> {
             loadData();
-            if (onComplete != null) onComplete.run();
+            if (onComplete != null) onComplete.accept(newClaimed);
         });
     }
 

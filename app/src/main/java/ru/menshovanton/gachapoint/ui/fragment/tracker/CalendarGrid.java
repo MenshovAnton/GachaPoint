@@ -9,6 +9,8 @@ import android.widget.GridLayout;
 
 import androidx.annotation.NonNull;
 
+import ru.menshovanton.gachapoint.R;
+
 public class CalendarGrid extends GridLayout {
 
     public interface OnSwipeListener {
@@ -43,10 +45,12 @@ public class CalendarGrid extends GridLayout {
         int width = MeasureSpec.getSize(widthSpec);
         if (width > 0 && getChildCount() > 0) {
             float density = getResources().getDisplayMetrics().density;
-            int marginPx = (int) (2 * density);
+            int marginPx = getResources().getDimensionPixelSize(R.dimen.calendar_cell_margin);
             int availableWidth = width - (getPaddingLeft() + getPaddingRight());
             int cellWidth = Math.max(0, (availableWidth - (marginPx * 2 * 7)) / 7);
-            int cellHeight = (int) (44 * density);
+            int minHeightPx = getResources().getDimensionPixelSize(R.dimen.calendar_cell_min_height);
+            int maxHeightPx = getResources().getDimensionPixelSize(R.dimen.calendar_cell_max_height);
+            int cellHeight = Math.max(minHeightPx, Math.min((int) (cellWidth * 0.95f), maxHeightPx));
 
             for (int i = 0; i < getChildCount(); i++) {
                 android.view.View child = getChildAt(i);

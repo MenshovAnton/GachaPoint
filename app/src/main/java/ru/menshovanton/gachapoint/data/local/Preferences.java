@@ -40,35 +40,23 @@ public class Preferences {
     }
 
     public static String getPiggyBankTargetKey(GameType gameType) {
-        if (gameType == GameType.GENSHIN) {
-            return PIGGY_BANK_TARGET_GENSHIN;
-        }
-        return PREFIX_PIGGY_TARGET + gameType.getName();
+        return (gameType != null ? gameType : GameType.GENSHIN).getPiggyBankTargetKey();
     }
 
     public static String getPiggyBankManualProgressKey(GameType gameType) {
-        if (gameType == GameType.GENSHIN) {
-            return PIGGY_BANK_MANUAL_PROGRESS_GENSHIN;
-        }
-        return PREFIX_PIGGY_MANUAL + gameType.getName();
+        return (gameType != null ? gameType : GameType.GENSHIN).getPiggyBankManualProgressKey();
     }
 
     public static String getPiggyBankSubsProgressKey(GameType gameType) {
-        if (gameType == GameType.GENSHIN) {
-            return PIGGY_BANK_SUBS_PROGRESS_GENSHIN;
-        }
-        return PREFIX_PIGGY_SUBS + gameType.getName();
+        return (gameType != null ? gameType : GameType.GENSHIN).getPiggyBankSubsProgressKey();
     }
 
     public static String getPiggyBankDailiesProgressKey(GameType gameType) {
-        if (gameType == GameType.GENSHIN) {
-            return PIGGY_BANK_DAILIES_PROGRESS_GENSHIN;
-        }
-        return PREFIX_PIGGY_DAILIES + gameType.getName();
+        return (gameType != null ? gameType : GameType.GENSHIN).getPiggyBankDailiesProgressKey();
     }
 
     public static String getNeedMigrationKey(GameType gameType) {
-        return gameType.getName() + SUFFIX_NEED_MIGRATION;
+        return (gameType != null ? gameType : GameType.GENSHIN).getNeedMigrationKey();
     }
 
     public int getPiggyBankTarget(GameType gameType) {

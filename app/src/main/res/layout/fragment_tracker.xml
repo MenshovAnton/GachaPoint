@@ -23,8 +23,8 @@
                 android:id="@+id/ll_month_nav"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="@dimen/screen_padding_horizontal"
+                android:layout_marginTop="@dimen/screen_padding_top"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toStartOf="@+id/ll_month_arrows"
@@ -37,8 +37,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/genshin_font"
+                    android:includeFontPadding="false"
                     android:textColor="@color/text"
-                    android:textSize="26sp"
+                    android:textSize="@dimen/text_size_screen_title"
                     android:textStyle="bold"
                     tools:text="Май" />
 
@@ -48,8 +49,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/genshin_font"
+                    android:includeFontPadding="false"
                     android:textColor="@color/check"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_size_section_title"
                     android:textStyle="bold"
                     tools:text="2026" />
             </LinearLayout>
@@ -58,7 +60,7 @@
                 android:id="@+id/ll_month_arrows"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/screen_padding_horizontal"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="@+id/ll_month_nav"
@@ -67,8 +69,8 @@
 
                 <ImageButton
                     android:id="@+id/btn_prev_month"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/nav_prev_month"
                     android:src="@drawable/icon_left_arrow"
@@ -76,8 +78,8 @@
 
                 <ImageButton
                     android:id="@+id/btn_next_month"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
                     android:layout_marginStart="4dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/nav_next_month"
@@ -89,11 +91,14 @@
                 android:id="@+id/rv_game_types"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="8dp"
                 android:clipToPadding="false"
                 android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="2dp"
+                android:paddingHorizontal="@dimen/pills_padding_horizontal"
+                android:paddingVertical="@dimen/pills_padding_vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_pill"
+                tools:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_month_nav" />
@@ -102,8 +107,8 @@
                 android:id="@+id/ll_mode_switcher"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -118,7 +123,7 @@
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardCornerRadius="14dp"
+                    app:cardCornerRadius="@dimen/card_corner_radius"
                     app:cardElevation="0dp"
                     app:strokeColor="@color/check"
                     app:strokeWidth="2dp">
@@ -177,7 +182,7 @@
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardCornerRadius="14dp"
+                    app:cardCornerRadius="@dimen/card_corner_radius"
                     app:cardElevation="0dp"
                     app:strokeColor="@color/divider_color"
                     app:strokeWidth="1dp">
@@ -232,8 +237,8 @@
                 android:id="@+id/cl_calendar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/text_size_card_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_mode_switcher">
@@ -342,8 +347,8 @@
                 android:id="@+id/fl_actions_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cl_calendar">
@@ -359,7 +364,7 @@
                         android:id="@+id/btn_mark_today"
                         style="@style/Widget.Material3.Button"
                         android:layout_width="0dp"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/min_touch_target_size"
                         android:layout_weight="1"
                         android:fontFamily="@font/genshin_font"
                         android:text="@string/btn_mark_sub"
@@ -373,8 +378,8 @@
 
                     <ImageButton
                         android:id="@+id/btn_more"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="@dimen/icon_button_size"
+                        android:layout_height="@dimen/icon_button_size"
                         android:layout_marginStart="10dp"
                         android:background="@drawable/rounded_button"
                         android:contentDescription="@string/nav_menu"
@@ -394,7 +399,7 @@
                         android:id="@+id/btn_selection_mark"
                         style="@style/Widget.Material3.Button"
                         android:layout_width="0dp"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/min_touch_target_size"
                         android:layout_weight="1"
                         android:fontFamily="@font/genshin_font"
                         android:text="@string/btn_selection_mark"
@@ -410,7 +415,7 @@
                         android:id="@+id/btn_selection_unmark"
                         style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="0dp"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/min_touch_target_size"
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/genshin_font"
@@ -424,8 +429,8 @@
 
                     <ImageButton
                         android:id="@+id/btn_select_all"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="@dimen/icon_button_size"
+                        android:layout_height="@dimen/icon_button_size"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/rounded_button"
                         android:contentDescription="@string/select_all"
@@ -434,8 +439,8 @@
 
                     <ImageButton
                         android:id="@+id/btn_close_selection"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="@dimen/icon_button_size"
+                        android:layout_height="@dimen/icon_button_size"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/rounded_button"
                         android:contentDescription="@string/cancel"
@@ -450,9 +455,9 @@
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="16dp"
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
+                app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -461,8 +466,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="14dp"
-                    android:paddingVertical="10dp">
+                    android:padding="@dimen/card_inner_padding">
 
                     <TextView
                         android:id="@+id/tv_stats_header"
@@ -471,7 +475,7 @@
                         android:fontFamily="@font/genshin_font"
                         android:text="@string/stat_header_sub"
                         android:textColor="@color/text"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_size_section_title"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

@@ -9,11 +9,18 @@
     android:paddingTop="8dp"
     android:paddingBottom="28dp">
 
+    <View
+        android:layout_width="@dimen/sheet_drag_handle_width"
+        android:layout_height="@dimen/sheet_drag_handle_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/sheet_drag_handle_margin_bottom"
+        android:background="@drawable/sheet_drag_handle" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="12dp"
         android:fontFamily="@font/genshin_font"
         android:text="@string/title_bank"

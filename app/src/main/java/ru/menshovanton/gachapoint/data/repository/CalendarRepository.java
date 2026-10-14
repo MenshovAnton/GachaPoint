@@ -84,7 +84,7 @@ public class CalendarRepository {
 
                     if (matchingSub != null) {
                         date.subDaysRemaining = (int) (matchingSub.endDate - dateEpoch + 1);
-                    } else {
+                    } else if (date.subDaysRemaining <= 0) {
                         date.subDaysRemaining = 0;
                     }
                 }
@@ -158,7 +158,7 @@ public class CalendarRepository {
         int primogemsPerDay = gameType.getCurrencyPerDay();
         activeSub.claimed = claims * primogemsPerDay;
         activeSub.missed = misses * primogemsPerDay;
-        int totalPrimogems = activeSub.count * 30 * primogemsPerDay;
+        int totalPrimogems = activeSub.count * gameType.getSubscriptionDurationDays() * primogemsPerDay;
         activeSub.wait = Math.max(0, totalPrimogems - activeSub.claimed - activeSub.missed);
     }
 
@@ -197,7 +197,7 @@ public class CalendarRepository {
 
             int wishesCost = gameType.getPullCost();
             int primogemsPerDay = gameType.getCurrencyPerDay();
-            int totalPromogemsInActiveSubs = primogemsPerDay * 30 * activeSub.count;
+            int totalPromogemsInActiveSubs = primogemsPerDay * gameType.getSubscriptionDurationDays() * activeSub.count;
 
             if (today.isBefore(startDate)) {
                 Statistic statistic = new Statistic(
@@ -266,7 +266,7 @@ public class CalendarRepository {
             if (activeSub == null || todayEpoch > activeSub.endDate) {
                 int totalCount = Math.min(countToAdd, gameType.getMaxSubs());
                 LocalDate actualStart = (startDate != null) ? startDate : today;
-                LocalDate endDate = actualStart.plusDays(totalCount * 30L - 1);
+                LocalDate endDate = actualStart.plusDays((long) totalCount * gameType.getSubscriptionDurationDays() - 1);
                 int currencyPerDay = gameType.getCurrencyPerDay();
 
                 SubscriptionEntity newSub = new SubscriptionEntity(
@@ -276,23 +276,15 @@ public class CalendarRepository {
                         endDate.toEpochDay(),
                         currencyPerDay,
                         0,
-                        (totalCount * 30 - 1) * currencyPerDay
+                        totalCount * gameType.getSubscriptionDurationDays() * currencyPerDay
                 );
 
                 calendar.ensureYearInitialized(actualStart.getYear(), () ->
                         calendar.ensureYearInitialized(endDate.getYear(), () ->
                                 databaseRepository.insertSubscription(newSub, id -> {
                                     subsCount = totalCount;
-                                    int insertedId = id != null ? id.intValue() : 0;
-                                    databaseRepository.cleanupOldSubscriptions(gameType, insertedId, () -> {
-                                        if (!actualStart.isAfter(today)) {
-                                            LocalDate markDate = actualStart.isBefore(today) ? today : actualStart;
-                                            setDayStatus(markDate.getYear(), markDate.getDayOfYear(), gameType, DayState.STATUS_RECEIVED, () -> {
-                                                if (callback != null) callback.onResult(true);
-                                            });
-                                        } else {
-                                            if (callback != null) callback.onResult(true);
-                                        }
+                                    calculateMissesAndClaims(gameType, actualStart.getYear(), () -> {
+                                        if (callback != null) callback.onResult(true);
                                     });
                                 })
                         )
@@ -307,9 +299,9 @@ public class CalendarRepository {
 
                 activeSub.count = newCount;
                 LocalDate curEnd = LocalDate.ofEpochDay(activeSub.endDate);
-                LocalDate newEnd = curEnd.plusDays(added * 30L);
+                LocalDate newEnd = curEnd.plusDays((long) added * gameType.getSubscriptionDurationDays());
                 activeSub.endDate = newEnd.toEpochDay();
-                activeSub.wait += added * 30 * gameType.getCurrencyPerDay();
+                activeSub.wait += (long) added * gameType.getSubscriptionDurationDays() * gameType.getCurrencyPerDay();
 
                 calendar.ensureYearInitialized(newEnd.getYear(), () ->
                         databaseRepository.updateSubscription(activeSub, () -> {
@@ -334,9 +326,9 @@ public class CalendarRepository {
             if (activeSub.count > 1) {
                 activeSub.count--;
                 LocalDate curEnd = LocalDate.ofEpochDay(activeSub.endDate);
-                LocalDate newEnd = curEnd.minusDays(30);
+                LocalDate newEnd = curEnd.minusDays(gameType.getSubscriptionDurationDays());
                 activeSub.endDate = newEnd.toEpochDay();
-                activeSub.wait = Math.max(0, activeSub.wait - gameType.getCurrencyPerDay() * 30);
+                activeSub.wait = Math.max(0, activeSub.wait - gameType.getCurrencyPerDay() * gameType.getSubscriptionDurationDays());
 
                 databaseRepository.updateSubscription(activeSub, () -> {
                     subsCount = activeSub.count;
@@ -344,7 +336,8 @@ public class CalendarRepository {
                 });
             } else {
                 LocalDate subStartDate = LocalDate.ofEpochDay(activeSub.startDate);
-                databaseRepository.clearCalendarStatusesInRange(gameType, subStartDate, today, () ->
+                LocalDate subEndDate = LocalDate.ofEpochDay(activeSub.endDate);
+                databaseRepository.clearCalendarStatusesInRange(gameType, subStartDate, subEndDate, () ->
                         databaseRepository.deleteSubscription(activeSub, () -> {
                     subsCount = 0;
                     if (callback != null) callback.onResult(true);
@@ -366,13 +359,25 @@ public class CalendarRepository {
     }
 
     public void setDayStatus(int year, int dayOfYear, GameType gameType, int status, Runnable onComplete) {
-        calendar.getDay(year, dayOfYear, gameType, date -> {
-            int rem = date != null ? date.subDaysRemaining : 0;
+        LocalDate dateObj = LocalDate.ofYearDay(year, dayOfYear);
+        long epoch = dateObj.toEpochDay();
 
-            calendar.updateDay(year, dayOfYear, gameType, status, rem, () ->
-                    calculateMissesAndClaims(gameType, year, () -> {
-                if (onComplete != null) onComplete.run();
-            }));
+        databaseRepository.getSubscriptionsInRange(gameType, epoch, epoch, subs -> {
+            int subDaysRemaining = 0;
+            if (subs != null && !subs.isEmpty()) {
+                SubscriptionEntity sub = subs.get(0);
+                subDaysRemaining = (int) (sub.endDate - epoch + 1);
+            }
+
+            final int finalRem = subDaysRemaining;
+            calendar.getDay(year, dayOfYear, gameType, date -> {
+                int remToUse = finalRem > 0 ? finalRem : (date != null ? date.subDaysRemaining : 0);
+
+                calendar.updateDay(year, dayOfYear, gameType, status, remToUse, () ->
+                        calculateMissesAndClaims(gameType, year, () -> {
+                    if (onComplete != null) onComplete.run();
+                }));
+            });
         });
     }
 
@@ -440,8 +445,8 @@ public class CalendarRepository {
                 }
             }
 
-            int dailyReward = 60;
-            int pullCost = gameType != null ? gameType.getPullCost() : 160;
+            int dailyReward = gameType != null ? gameType.getDailyReward() : GameType.GENSHIN.getDailyReward();
+            int pullCost = gameType != null ? gameType.getPullCost() : GameType.GENSHIN.getPullCost();
             int claimGems = completedDays * dailyReward;
             int missedGems = missedDays * dailyReward;
             int laterGems = laterDays * dailyReward;
@@ -480,7 +485,7 @@ public class CalendarRepository {
             return;
         }
         databaseRepository.getCompletedDailiesCount(gameType, count -> {
-            int dailyReward = 60;
+            int dailyReward = gameType.getDailyReward();
             int pullCost = gameType.getPullCost();
             int totalGems = (count != null ? count : 0) * dailyReward;
             int totalWishes = totalGems / pullCost;
@@ -493,12 +498,16 @@ public class CalendarRepository {
         LocalDate date = LocalDate.ofYearDay(year, dayOfYear);
         long dateEpoch = date.toEpochDay();
 
-        databaseRepository.getActiveSubscription(gameType, dateEpoch, activeSub -> {
-            if (activeSub != null) {
-                int rem = (int) (activeSub.endDate - dateEpoch + 1);
+        databaseRepository.getSubscriptionsInRange(gameType, dateEpoch, dateEpoch, subs -> {
+            if (subs != null && !subs.isEmpty()) {
+                SubscriptionEntity sub = subs.get(0);
+                int rem = (int) (sub.endDate - dateEpoch + 1);
                 if (callback != null) callback.onResult(Math.max(0, rem));
             } else {
-                if (callback != null) callback.onResult(0);
+                calendar.getDay(year, dayOfYear, gameType, day -> {
+                    int rem = day != null ? day.subDaysRemaining : 0;
+                    if (callback != null) callback.onResult(Math.max(0, rem));
+                });
             }
         });
     }
@@ -520,7 +529,7 @@ public class CalendarRepository {
             return;
         }
 
-        int span = (totalDays > 0) ? totalDays : 180;
+        int span = (totalDays > 0) ? totalDays : (gameType.getMaxSubs() * gameType.getSubscriptionDurationDays());
         LocalDate startDate = LocalDate.ofYearDay(startYear, startDayOfYear);
         LocalDate endDate = startDate.plusDays(span - 1);
 

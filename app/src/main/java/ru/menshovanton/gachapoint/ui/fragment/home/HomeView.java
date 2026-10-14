@@ -42,6 +42,8 @@ import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.BannerInfo;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
+import ru.menshovanton.gachapoint.ui.animation.NumberCountAnimator;
+import ru.menshovanton.gachapoint.ui.animation.TextAnimator;
 import ru.menshovanton.gachapoint.ui.fragment.home.model.HomeWidgetItem;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
@@ -91,8 +93,8 @@ public class HomeView extends Fragment {
     private LinearProgressIndicator pbPityProgress;
     private TextView tvPityUntil5Star;
 
-    private int lastProgress = 0;
-    private int lastTarget = 100;
+    private Integer lastProgress = null;
+    private Integer lastTarget = null;
 
     public HomeView() {}
 
@@ -179,10 +181,10 @@ public class HomeView extends Fragment {
         if (btnQuickDaily != null) {
             btnQuickDaily.setOnClickListener(v -> {
                 triggerVibration();
-                viewModel.markDailyToday(() -> {
-                    Boolean isDone = viewModel.getIsDailyDoneTodayLiveData().getValue();
+                viewModel.markDailyToday(isDone -> {
+                    if (getContext() == null) return;
                     if (isDone != null && isDone) {
-                        Toast.makeText(getContext(), R.string.check_today, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.mark_dailies_today, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), R.string.cancel_check_today, Toast.LENGTH_SHORT).show();
                     }
@@ -198,9 +200,9 @@ public class HomeView extends Fragment {
                     Toast.makeText(getContext(), R.string.active_subs_null, Toast.LENGTH_SHORT).show();
                     navigateToTracker();
                 } else {
-                    viewModel.markSubToday(() -> {
-                        Boolean claimed = viewModel.getIsSubClaimedTodayLiveData().getValue();
-                        if (claimed != null && claimed) {
+                    viewModel.markSubToday(isClaimed -> {
+                        if (getContext() == null) return;
+                        if (isClaimed != null && isClaimed) {
                             Toast.makeText(getContext(), R.string.check_today, Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getContext(), R.string.cancel_check_today, Toast.LENGTH_SHORT).show();
@@ -304,6 +306,8 @@ public class HomeView extends Fragment {
         pillsAdapter = new PillsAdapter(categories, currentType.getCode(), (item, position) -> {
             GameType selected = GameType.fromCode(position);
             if (mainActivityView != null) mainActivityView.setSubType(selected);
+            lastProgress = null;
+            lastTarget = null;
             viewModel.setGameType(selected);
             smoothScrollToCenter(position);
         });
@@ -368,13 +372,11 @@ public class HomeView extends Fragment {
         int checkColor = ContextCompat.getColor(requireContext(), R.color.check);
 
         if (isDone != null && isDone) {
-            tvQuickDailyStatus.setText(R.string.home_action_daily_done);
-            tvQuickDailyStatus.setTextColor(checkedColor);
+            TextAnimator.crossfadeTextAndColor(tvQuickDailyStatus, R.string.home_action_daily_done, checkedColor);
             ivQuickDailyIcon.setImageResource(R.drawable.icon_check);
             ivQuickDailyIcon.setImageTintList(ColorStateList.valueOf(checkedColor));
         } else {
-            tvQuickDailyStatus.setText(R.string.home_action_daily_todo);
-            tvQuickDailyStatus.setTextColor(checkColor);
+            TextAnimator.crossfadeTextAndColor(tvQuickDailyStatus, R.string.home_action_daily_todo, checkColor);
             ivQuickDailyIcon.setImageResource(R.drawable.icon_daily_task);
             ivQuickDailyIcon.setImageTintList(ColorStateList.valueOf(checkColor));
         }
@@ -391,18 +393,15 @@ public class HomeView extends Fragment {
         int secondaryColor = ContextCompat.getColor(requireContext(), R.color.text_secondary);
 
         if (remaining == null || remaining <= 0) {
-            tvQuickSubStatus.setText(R.string.home_action_sub_none);
-            tvQuickSubStatus.setTextColor(secondaryColor);
+            TextAnimator.crossfadeTextAndColor(tvQuickSubStatus, R.string.home_action_sub_none, secondaryColor);
             ivQuickSubIcon.setImageResource(R.drawable.icon_subscription);
             ivQuickSubIcon.setImageTintList(ColorStateList.valueOf(secondaryColor));
         } else if (isClaimed != null && isClaimed) {
-            tvQuickSubStatus.setText(R.string.home_action_sub_claimed);
-            tvQuickSubStatus.setTextColor(checkedColor);
+            TextAnimator.crossfadeTextAndColor(tvQuickSubStatus, R.string.home_action_sub_claimed, checkedColor);
             ivQuickSubIcon.setImageResource(R.drawable.icon_check);
             ivQuickSubIcon.setImageTintList(ColorStateList.valueOf(checkedColor));
         } else {
-            tvQuickSubStatus.setText(R.string.home_action_sub_claim);
-            tvQuickSubStatus.setTextColor(checkColor);
+            TextAnimator.crossfadeTextAndColor(tvQuickSubStatus, R.string.home_action_sub_claim, checkColor);
             ivQuickSubIcon.setImageResource(R.drawable.icon_subscription);
             ivQuickSubIcon.setImageTintList(ColorStateList.valueOf(checkColor));
         }
@@ -412,9 +411,9 @@ public class HomeView extends Fragment {
         updateSubClaimStatusUi();
         if (tvStatSubsInfo == null) return;
         if (remaining != null && remaining > 0) {
-            tvStatSubsInfo.setText(getString(R.string.home_stat_subs_remaining, remaining));
+            TextAnimator.crossfade(tvStatSubsInfo, getString(R.string.home_stat_subs_remaining, remaining));
         } else {
-            tvStatSubsInfo.setText(R.string.home_stat_subs_inactive);
+            TextAnimator.crossfade(tvStatSubsInfo, R.string.home_stat_subs_inactive);
         }
     }
 
@@ -428,40 +427,45 @@ public class HomeView extends Fragment {
         if (target != null) lastTarget = target;
         if (progress != null) lastProgress = progress;
 
+        if (lastProgress == null || lastTarget == null) {
+            return;
+        }
+
+        int curProgress = lastProgress;
+        int curTarget = lastTarget;
+
         if (pbSaveProgress != null && tvSavedCounter != null) {
-            pbSaveProgress.setMax(lastTarget > 0 ? lastTarget : 1);
-            pbSaveProgress.setProgress(lastProgress, false);
-            tvSavedCounter.setText(lastProgress + " / " + lastTarget);
+            pbSaveProgress.setMax(curTarget > 0 ? curTarget : 1);
+            pbSaveProgress.setProgress(curProgress, false);
+            NumberCountAnimator.animateFraction(tvSavedCounter, curProgress, curTarget);
         }
 
         if (tvSavedPercent != null) {
-            int percent = lastTarget > 0 ? (int) Math.min(100, Math.round((lastProgress * 100.0) / lastTarget)) : 0;
-            tvSavedPercent.setText(percent + "%");
+            int percent = curTarget > 0 ? (int) Math.min(100, Math.round((curProgress * 100.0) / curTarget)) : 0;
+            NumberCountAnimator.animatePercent(tvSavedPercent, percent);
         }
 
         if (tvSavingsCurrency != null) {
             GameType currentGame = viewModel.getGameTypeLiveData().getValue();
-            int pullCost = (currentGame != null) ? currentGame.getPullCost() : 160;
-            long totalCurrency = (long) lastProgress * pullCost;
-            String formatted = NumberFormat.getIntegerInstance().format(totalCurrency);
-            tvSavingsCurrency.setText("≈ " + formatted + " (" + getString(R.string.home_savings_in_currency) + ")");
+            int pullCost = (currentGame != null) ? currentGame.getPullCost() : GameType.GENSHIN.getPullCost();
+            NumberCountAnimator.animate(tvSavingsCurrency, curProgress, progressVal -> {
+                long totalCurrency = (long) progressVal * pullCost;
+                String formatted = NumberFormat.getIntegerInstance().format(totalCurrency);
+                return getString(R.string.savings_currency_approx_format, formatted, getString(R.string.home_savings_in_currency));
+            });
         }
     }
 
     private void updateStatisticsUi(Statistic statistic) {
         if (statistic == null) return;
 
-        if (tvReceivedGems != null) tvReceivedGems.setText(String.valueOf(statistic.claimGems));
-        if (tvOmittedGems != null) tvOmittedGems.setText(String.valueOf(statistic.missedGems));
-        if (tvReceivedPulls != null) tvReceivedPulls.setText(String.valueOf(statistic.claimWishes));
-        if (tvOmittedPulls != null) tvOmittedPulls.setText(String.valueOf(statistic.missedWishes));
+        NumberCountAnimator.animate(tvReceivedGems, statistic.claimGems);
+        NumberCountAnimator.animate(tvOmittedGems, statistic.missedGems);
+        NumberCountAnimator.animate(tvReceivedPulls, statistic.claimWishes);
+        NumberCountAnimator.animate(tvOmittedPulls, statistic.missedWishes);
 
-        if (tvUpcomingGems != null) {
-            tvUpcomingGems.setText(statistic.laterGems > 0 ? String.valueOf(statistic.laterGems) : "0");
-        }
-        if (tvUpcomingPulls != null) {
-            tvUpcomingPulls.setText(statistic.laterWishes > 0 ? String.valueOf(statistic.laterWishes) : "0");
-        }
+        NumberCountAnimator.animate(tvUpcomingGems, Math.max(0, statistic.laterGems));
+        NumberCountAnimator.animate(tvUpcomingPulls, Math.max(0, statistic.laterWishes));
     }
 
     @SuppressLint("SetTextI18n")
@@ -476,28 +480,30 @@ public class HomeView extends Fragment {
         int m = (max != null && max > 0) ? max : 90;
         boolean isGuar = (guaranteed != null && guaranteed);
 
-        tvPity5StarCounter.setText(p + " / " + m);
+        NumberCountAnimator.animateFraction(tvPity5StarCounter, p, m);
         pbPityProgress.setMax(m);
         pbPityProgress.setProgress(p, false);
 
         int until = Math.max(0, m - p);
         if (tvPityUntil5Star != null) {
-            tvPityUntil5Star.setText(getString(R.string.home_pity_until_5star, until));
+            NumberCountAnimator.animate(tvPityUntil5Star, until, val -> getString(R.string.home_pity_until_5star, val));
         }
 
         if (tvPityGuaranteeBadge != null) {
             if (isGuar) {
-                tvPityGuaranteeBadge.setText(R.string.home_pity_guaranteed_badge);
-                tvPityGuaranteeBadge.setBackgroundTintList(ColorStateList.valueOf(
-                        ContextCompat.getColor(requireContext(), R.color.badge_gold_bg)));
-                tvPityGuaranteeBadge.setTextColor(
-                        ContextCompat.getColor(requireContext(), R.color.rare_legendary));
+                int goldBg = ContextCompat.getColor(requireContext(), R.color.badge_gold_bg);
+                int goldText = ContextCompat.getColor(requireContext(), R.color.rare_legendary);
+                TextAnimator.crossfade(tvPityGuaranteeBadge, getString(R.string.home_pity_guaranteed_badge), () -> {
+                    tvPityGuaranteeBadge.setTextColor(goldText);
+                    tvPityGuaranteeBadge.setBackgroundTintList(ColorStateList.valueOf(goldBg));
+                });
             } else {
-                tvPityGuaranteeBadge.setText(R.string.home_pity_fifty_fifty_badge);
-                tvPityGuaranteeBadge.setBackgroundTintList(ColorStateList.valueOf(
-                        ContextCompat.getColor(requireContext(), R.color.badge_blue_bg)));
-                tvPityGuaranteeBadge.setTextColor(
-                        ContextCompat.getColor(requireContext(), R.color.check));
+                int blueBg = ContextCompat.getColor(requireContext(), R.color.badge_blue_bg);
+                int blueText = ContextCompat.getColor(requireContext(), R.color.check);
+                TextAnimator.crossfade(tvPityGuaranteeBadge, getString(R.string.home_pity_fifty_fifty_badge), () -> {
+                    tvPityGuaranteeBadge.setTextColor(blueText);
+                    tvPityGuaranteeBadge.setBackgroundTintList(ColorStateList.valueOf(blueBg));
+                });
             }
         }
     }
@@ -511,11 +517,8 @@ public class HomeView extends Fragment {
 
         if (tvPityBannerName != null && getContext() != null) {
             BannerInfo banner = gameType.getBannerInfo(BannerType.EVENT.getDbKey());
-            if (banner != null) {
-                tvPityBannerName.setText(banner.getLabelResId());
-            } else {
-                tvPityBannerName.setText(R.string.home_pity_event);
-            }
+            int labelRes = (banner != null) ? banner.getLabelResId() : R.string.home_pity_event;
+            TextAnimator.crossfade(tvPityBannerName, labelRes);
         }
 
         updatePiggyProgress(null, null);
@@ -542,10 +545,8 @@ public class HomeView extends Fragment {
     }
 
     private void centerPositionInstantly(int position) {
-        if (layoutManager == null) {
+        if (layoutManager == null || getContext() == null) {
             return;
-        } else {
-            getResources();
         }
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int estimatedPillWidth = (int) (130 * getResources().getDisplayMetrics().density);

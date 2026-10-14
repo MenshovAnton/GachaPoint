@@ -44,7 +44,7 @@ public class TrackerViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> selectedMonthLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> selectedYearLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> subsCountLiveData = new MutableLiveData<>(0);
-    private final MutableLiveData<int[]> dailiesProgressLiveData = new MutableLiveData<>(new int[]{0, 30});
+    private final MutableLiveData<int[]> dailiesProgressLiveData = new MutableLiveData<>(new int[]{0, YearMonth.now().lengthOfMonth()});
     private final MutableLiveData<Statistic> statisticLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<CalendarCellUiModel>> calendarCellsLiveData = new MutableLiveData<>();
 
@@ -436,7 +436,7 @@ public class TrackerViewModel extends AndroidViewModel {
     }
 
     public void addSubscriptionChain(int count, LocalDate startDate) {
-        if (calendarRepository.getSubsCount() >= 6) {
+        if (calendarRepository.getSubsCount() >= currentGameType.getMaxSubs()) {
             toastMessageEvent.setValue(R.string.subs_limit);
             return;
         }
@@ -460,7 +460,7 @@ public class TrackerViewModel extends AndroidViewModel {
     }
 
     public void onAddClick() {
-        if (calendarRepository.getSubsCount() < 6) {
+        if (calendarRepository.getSubsCount() < currentGameType.getMaxSubs()) {
             openAddSubscriptionDialogEvent.setValue(LocalDate.now());
         } else {
             toastMessageEvent.setValue(R.string.subs_limit);

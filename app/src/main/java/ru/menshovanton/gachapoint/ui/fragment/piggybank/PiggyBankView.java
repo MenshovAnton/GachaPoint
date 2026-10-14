@@ -34,6 +34,8 @@ import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
+import ru.menshovanton.gachapoint.ui.animation.NumberCountAnimator;
+import ru.menshovanton.gachapoint.ui.animation.TextAnimator;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
 
@@ -212,15 +214,14 @@ public class PiggyBankView extends Fragment {
             progressBar.setMax(Math.max(1, target));
             progressBar.setProgress(progress, true);
 
-            String counterText = progress + " / " + target;
-            savedWishesCounter.setText(counterText);
+            NumberCountAnimator.animateFraction(savedWishesCounter, progress, target);
 
             int percent = target > 0 ? Math.min(100, (int) ((progress / (float) target) * 100)) : 0;
-            tvPercent.setText(percent + "%");
+            NumberCountAnimator.animatePercent(tvPercent, percent);
 
             GameType gameType = viewModel.getCurrentGameType();
             int currencyTotal = progress * gameType.getPullCost();
-            tvCurrencyAmount.setText(NumberFormat.getIntegerInstance().format(currencyTotal));
+            NumberCountAnimator.animateFormatted(tvCurrencyAmount, currencyTotal);
         });
 
         viewModel.getGoalExceededEvent().observe(getViewLifecycleOwner(), unused ->
@@ -233,7 +234,7 @@ public class PiggyBankView extends Fragment {
         if (gameType == null) return;
         wishIcon.setImageResource(gameType.getPullIconResId());
         currencyIcon.setImageResource(gameType.getCurrencyIconResId());
-        tvConverterRate.setText(getString(R.string.savings_converter_desc, gameType.getPullCost()));
+        TextAnimator.crossfade(tvConverterRate, getString(R.string.savings_converter_desc, gameType.getPullCost()));
 
         isUpdatingConverter = true;
         etConvertPulls.setText("10");

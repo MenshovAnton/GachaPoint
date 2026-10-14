@@ -19,6 +19,9 @@ public enum GameType {
             90,
             160,
             6,
+            60,
+            30,
+            77,
             R.string.genshin,
             R.drawable.icon_primogem,
             R.drawable.icon_intertwined_fate,
@@ -39,6 +42,9 @@ public enum GameType {
             90,
             160,
             6,
+            60,
+            30,
+            77,
             R.string.hsr,
             R.drawable.icon_stellar_jade,
             R.drawable.icon_star_rail_special_pass,
@@ -59,6 +65,9 @@ public enum GameType {
             90,
             160,
             6,
+            60,
+            30,
+            77,
             R.string.zzz,
             R.drawable.icon_polychrome,
             R.drawable.icon_encrypted_master_tape,
@@ -79,6 +88,9 @@ public enum GameType {
     private final int currencyPerDay;
     private final int pullCost;
     private final int maxSubs;
+    private final int dailyReward;
+    private final int subscriptionDurationDays;
+    private final int defaultPity;
     @StringRes private final int nameResId;
     @DrawableRes private final int currencyIconResId;
     @DrawableRes private final int pullIconResId;
@@ -86,14 +98,18 @@ public enum GameType {
     @StringRes private final int subscriptionNameResId;
     private final List<BannerInfo> banners;
 
-    GameType(int code, String name, int currencyPerDay, int pullCost, int maxSubs, @StringRes int nameResId,
-            @DrawableRes int currencyIconResId, @DrawableRes int pullIconResId, @StringRes int subTitleResId,
-            @StringRes int subscriptionNameResId, List<BannerInfo> banners) {
+    GameType(int code, String name, int currencyPerDay, int pullCost, int maxSubs,
+            int dailyReward, int subscriptionDurationDays, int defaultPity,
+            @StringRes int nameResId, @DrawableRes int currencyIconResId, @DrawableRes int pullIconResId,
+            @StringRes int subTitleResId, @StringRes int subscriptionNameResId, List<BannerInfo> banners) {
         this.code = code;
         this.name = name;
         this.currencyPerDay = currencyPerDay;
         this.pullCost = pullCost;
         this.maxSubs = maxSubs;
+        this.dailyReward = dailyReward;
+        this.subscriptionDurationDays = subscriptionDurationDays;
+        this.defaultPity = defaultPity;
         this.nameResId = nameResId;
         this.currencyIconResId = currencyIconResId;
         this.pullIconResId = pullIconResId;
@@ -129,6 +145,46 @@ public enum GameType {
 
     public int getMaxSubs() {
         return maxSubs;
+    }
+
+    public int getDailyReward() {
+        return dailyReward;
+    }
+
+    public int getSubscriptionDurationDays() {
+        return subscriptionDurationDays;
+    }
+
+    public int getDefaultPity() {
+        return defaultPity;
+    }
+
+    public int getSubscriptionTotalCurrency() {
+        return currencyPerDay * subscriptionDurationDays;
+    }
+
+    public String getPiggyBankTargetKey() {
+        if (this == GENSHIN) return "Piggy Bank target Genshin Impact";
+        return "Piggy Bank target " + name;
+    }
+
+    public String getPiggyBankManualProgressKey() {
+        if (this == GENSHIN) return "Piggy Bank manual progress Genshin Impact";
+        return "Piggy Bank manual progress " + name;
+    }
+
+    public String getPiggyBankSubsProgressKey() {
+        if (this == GENSHIN) return "Piggy Bank subs progress Genshin Impact";
+        return "Piggy Bank subs progress " + name;
+    }
+
+    public String getPiggyBankDailiesProgressKey() {
+        if (this == GENSHIN) return "Piggy Bank dailies progress Genshin Impact";
+        return "Piggy Bank dailies progress " + name;
+    }
+
+    public String getNeedMigrationKey() {
+        return name + " need migration";
     }
 
     @StringRes

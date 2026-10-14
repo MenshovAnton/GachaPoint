@@ -51,6 +51,7 @@ import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.enums.PityStatus;
 import ru.menshovanton.gachapoint.domain.models.BannerInfo;
 import ru.menshovanton.gachapoint.domain.models.Pull;
+import ru.menshovanton.gachapoint.ui.animation.NumberCountAnimator;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
 
@@ -329,12 +330,12 @@ public class JournalView extends Fragment {
 
         Integer current5 = viewModel.getPity5StarLiveData().getValue();
         int val5 = current5 != null ? current5 : 0;
-        tvPity5StarCounter.setText(val5 + " / " + max5);
+        NumberCountAnimator.animateFraction(tvPity5StarCounter, val5, max5);
         progressPity5Star.setProgressCompat(Math.min(val5, max5), true);
 
         Integer current4 = viewModel.getPity4StarLiveData().getValue();
         int val4 = current4 != null ? current4 : 0;
-        tvPity4StarCounter.setText(val4 + " / " + max4);
+        NumberCountAnimator.animateFraction(tvPity4StarCounter, val4, max4);
         progressPity4Star.setProgressCompat(Math.min(val4, max4), true);
 
         boolean has5050 = bannerInfo != null && bannerInfo.hasFiftyFifty();
