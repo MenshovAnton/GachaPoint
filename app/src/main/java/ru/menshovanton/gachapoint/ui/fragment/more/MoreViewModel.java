@@ -14,6 +14,7 @@ public class MoreViewModel extends AndroidViewModel {
     private final SingleLiveEvent<Void> navigateToSettingsEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> navigateToFeedbackEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> navigateToPiggyBankEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> navigateToStatisticsEvent = new SingleLiveEvent<>();
 
     public MoreViewModel(@NonNull Application application) {
         super(application);
@@ -35,6 +36,10 @@ public class MoreViewModel extends AndroidViewModel {
         return navigateToPiggyBankEvent;
     }
 
+    public LiveData<Void> getNavigateToStatisticsEvent() {
+        return navigateToStatisticsEvent;
+    }
+
     public void onInfoButtonClicked() {
         navigateToInfoEvent.call();
     }
@@ -48,5 +53,9 @@ public class MoreViewModel extends AndroidViewModel {
 
     public void onSavingsButtonClicked() {
         navigateToPiggyBankEvent.call();
+    }
+
+    public void onStatisticsButtonClicked() {
+        navigateToStatisticsEvent.call();
     }
 }

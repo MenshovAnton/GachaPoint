@@ -43,6 +43,14 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out"/>
 
+        <action
+            android:id="@+id/action_to_statistics"
+            app:destination="@id/statisticsView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+
     </fragment>
 
     <fragment
@@ -68,5 +76,11 @@
         android:name="ru.menshovanton.gachapoint.ui.fragment.feedback.FeedbackView"
         android:label="@string/feedback"
         tools:layout="@layout/fragment_feedback" />
+
+    <fragment
+        android:id="@+id/statisticsView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.statistics.StatisticsView"
+        android:label="@string/stat_screen_title"
+        tools:layout="@layout/fragment_statistics" />
 
 </navigation>

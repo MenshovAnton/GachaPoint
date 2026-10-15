@@ -82,6 +82,9 @@ public class MoreView extends Fragment {
 
         viewModel.getNavigateToFeedbackEvent().observe(getViewLifecycleOwner(), unused ->
                 NavHostFragment.findNavController(this).navigate(R.id.action_to_feedback));
+
+        viewModel.getNavigateToStatisticsEvent().observe(getViewLifecycleOwner(), unused ->
+                NavHostFragment.findNavController(this).navigate(R.id.action_to_statistics));
     }
 
     private void setupListeners() {
@@ -95,10 +98,13 @@ public class MoreView extends Fragment {
             feedbackButton.setOnClickListener(v -> viewModel.onFeedbackButtonClicked());
         }
 
+        if (rowStatistics != null) {
+            rowStatistics.setOnClickListener(v -> viewModel.onStatisticsButtonClicked());
+        }
+
         View.OnClickListener comingSoonListener = v ->
                 Toast.makeText(requireContext(), R.string.menu_feature_in_dev, Toast.LENGTH_SHORT).show();
 
-        if (rowStatistics != null) rowStatistics.setOnClickListener(comingSoonListener);
         if (rowCalculator != null) rowCalculator.setOnClickListener(comingSoonListener);
         if (rowPromocodes != null) rowPromocodes.setOnClickListener(comingSoonListener);
     }

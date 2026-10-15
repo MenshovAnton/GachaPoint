@@ -15,6 +15,9 @@ public interface PullDao {
     @Query("SELECT * FROM pulls WHERE game_type = :gameType AND banner_type = :bannerType ORDER BY id DESC")
     List<PullEntity> getPulls(int gameType, String bannerType);
 
+    @Query("SELECT * FROM pulls WHERE game_type = :gameType ORDER BY id ASC")
+    List<PullEntity> getAllPullsForGame(int gameType);
+
     @Insert
     void insert(PullEntity pull);
 

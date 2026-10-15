@@ -45,6 +45,18 @@ public class DatabaseRepository {
         });
     }
 
+    public void getAllPullsForGame(GameType gameType, Callback<List<Pull>> callback) {
+        AppDatabase.getExecutor().execute(() -> {
+            int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
+            List<PullEntity> entities = getDb().pullDao().getAllPullsForGame(code);
+            List<Pull> pulls = new ArrayList<>(entities.size());
+            for (PullEntity entity : entities) {
+                pulls.add(entity.toWishModel());
+            }
+            AppDatabase.postToMain(() -> callback.onResult(pulls));
+        });
+    }
+
     public void addPulls(String dateTime, String dropType, String dropRare, int count,
                          GameType gameType, String bannerType, boolean isResetPity, PityStatus pityStatus, Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
