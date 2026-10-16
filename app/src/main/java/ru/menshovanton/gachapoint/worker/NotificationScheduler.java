@@ -15,6 +15,10 @@ import ru.menshovanton.gachapoint.data.local.Preferences;
 public class NotificationScheduler {
 
     public static void scheduleDailyNotification(Context context) {
+        scheduleDailyNotification(context, false);
+    }
+
+    public static void scheduleDailyNotification(Context context, boolean forceReschedule) {
         Preferences preferences = new Preferences(context);
         boolean enabled = preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS);
 
@@ -41,9 +45,13 @@ public class NotificationScheduler {
                 .addTag(DailyNotificationWorker.WORK_TAG)
                 .build();
 
+        ExistingPeriodicWorkPolicy policy = forceReschedule
+                ? ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE
+                : ExistingPeriodicWorkPolicy.KEEP;
+
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 DailyNotificationWorker.WORK_TAG,
-                ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
+                policy,
                 workRequest
         );
     }

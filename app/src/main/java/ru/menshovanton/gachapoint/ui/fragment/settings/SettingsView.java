@@ -84,6 +84,7 @@ public class SettingsView extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        mainActivityView = (MainActivityView) getActivity();
         notificationsSwitch = view.findViewById(R.id.sm_notification_switch);
         timeChip = view.findViewById(R.id.btn_time_chip);
         rowSelectTime = view.findViewById(R.id.row_select_time);
@@ -123,10 +124,23 @@ public class SettingsView extends Fragment {
     public void onDestroyView() {
         if (themeSelector != null) {
             themeSelector.dismissDropDown();
+            themeSelector.setAdapter(null);
+            themeSelector = null;
         }
         if (languageSelector != null) {
             languageSelector.dismissDropDown();
+            languageSelector.setAdapter(null);
+            languageSelector = null;
         }
+        notificationsSwitch = null;
+        timeChip = null;
+        rowSelectTime = null;
+        rowHomeWidgets = null;
+        dbImportButton = null;
+        dbExportButton = null;
+        back = null;
+        vibrationSwitch = null;
+        mainActivityView = null;
         super.onDestroyView();
     }
 

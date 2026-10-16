@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +80,7 @@ public class PiggyBankView extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mainActivityView = (MainActivityView) getActivity();
         View view = inflater.inflate(R.layout.fragment_piggy_bank, container, false);
 
         btnBack = view.findViewById(R.id.btn_back);
@@ -260,5 +260,30 @@ public class PiggyBankView extends Fragment {
                         .show();
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (rvGameTypes != null) {
+            rvGameTypes.setAdapter(null);
+            rvGameTypes = null;
+        }
+        mainActivityView = null;
+        btnBack = null;
+        progressBar = null;
+        savedWishesCounter = null;
+        tvPercent = null;
+        wishIcon = null;
+        currencyIcon = null;
+        tvCurrencyAmount = null;
+        btnEditTarget = null;
+        btnAddOne = null;
+        btnAddTen = null;
+        btnMinusOne = null;
+        btnMinusTen = null;
+        tvConverterRate = null;
+        etConvertPulls = null;
+        etConvertCurrency = null;
     }
 }

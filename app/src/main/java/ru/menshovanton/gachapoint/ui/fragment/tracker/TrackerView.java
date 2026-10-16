@@ -167,6 +167,7 @@ public class TrackerView extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mainActivityView = (MainActivityView) getActivity();
         View view = inflater.inflate(R.layout.fragment_tracker, container, false);
 
         subsCounterView = view.findViewById(R.id.tv_sub_counter);
@@ -340,6 +341,7 @@ public class TrackerView extends Fragment {
         super.onDestroyView();
         if (backPressedCallback != null) {
             backPressedCallback.remove();
+            backPressedCallback = null;
         }
         isAnimatingMonth = false;
         pendingMonthDirection = 0;
@@ -347,7 +349,51 @@ public class TrackerView extends Fragment {
         pendingCells = null;
         isFirstRender = true;
         cellViewsPool.clear();
-        calendarGrid.removeCallbacks(null);
+        if (calendarGrid != null) {
+            calendarGrid.removeCallbacks(null);
+            calendarGrid = null;
+        }
+        mainActivityView = null;
+        subsCounterView = null;
+        pillsAdapter = null;
+        layoutManager = null;
+        gemIcon = null;
+        subsCountTitle = null;
+        wishIcon = null;
+        monthHeader = null;
+        yearHeader = null;
+        cardModeSub = null;
+        cardModeDailies = null;
+        tvModeSubTitle = null;
+        tvModeSubSubtitle = null;
+        ivModeSubIcon = null;
+        tvModeDailiesTitle = null;
+        tvModeDailiesSubtitle = null;
+        ivModeDailiesIcon = null;
+        checkButton = null;
+        statsHeader = null;
+        flActionsContainer = null;
+        llActions = null;
+        llSelectionActions = null;
+        btnSelectionMark = null;
+        btnSelectionUnmark = null;
+        btnSelectAll = null;
+        btnCloseSelection = null;
+        claimPrimogems = null;
+        missedPrimogems = null;
+        claimWishes = null;
+        missedWishes = null;
+        laterPrimogems = null;
+        laterWishes = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (soundPool != null) {
+            soundPool.release();
+            soundPool = null;
+        }
     }
 
     private void observeViewModel() {

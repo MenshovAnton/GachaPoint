@@ -72,4 +72,13 @@ public class InfoView extends Fragment {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        back = null;
+        rowGithub = null;
+        rowTelegram = null;
+        rowDeveloper = null;
+    }
 }

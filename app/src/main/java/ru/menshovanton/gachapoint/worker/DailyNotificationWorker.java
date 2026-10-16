@@ -3,7 +3,9 @@ package ru.menshovanton.gachapoint.worker;
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
@@ -16,6 +18,7 @@ import androidx.work.WorkerParameters;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.local.Preferences;
+import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
 public class DailyNotificationWorker extends Worker {
 
@@ -58,10 +61,20 @@ public class DailyNotificationWorker extends Worker {
             nm.createNotificationChannel(channel);
         }
 
+        Intent intent = new Intent(context, MainActivityView.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(context.getString(R.string.notifications_title))
                 .setContentText(context.getString(R.string.notifications_text))
+                .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true);
 

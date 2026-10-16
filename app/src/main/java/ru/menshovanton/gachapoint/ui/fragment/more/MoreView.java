@@ -108,4 +108,15 @@ public class MoreView extends Fragment {
         if (rowCalculator != null) rowCalculator.setOnClickListener(comingSoonListener);
         if (rowPromocodes != null) rowPromocodes.setOnClickListener(comingSoonListener);
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        infoButton = null;
+        settingsButton = null;
+        feedbackButton = null;
+        rowStatistics = null;
+        rowCalculator = null;
+        rowPromocodes = null;
+    }
 }

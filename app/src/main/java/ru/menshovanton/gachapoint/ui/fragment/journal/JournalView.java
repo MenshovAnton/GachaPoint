@@ -102,6 +102,7 @@ public class JournalView extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mainActivityView = (MainActivityView) getActivity();
         View view = inflater.inflate(R.layout.fragment_journal, container, false);
 
         rvGameTypes = view.findViewById(R.id.rv_game_types);
@@ -290,7 +291,36 @@ public class JournalView extends Fragment {
     public void onDestroyView() {
         if (bannerSelector != null) {
             bannerSelector.dismissDropDown();
+            bannerSelector.setAdapter(null);
+            bannerSelector = null;
         }
+        if (recyclerView != null) {
+            recyclerView.setAdapter(null);
+            recyclerView = null;
+        }
+        if (rvGameTypes != null) {
+            rvGameTypes.setAdapter(null);
+            rvGameTypes = null;
+        }
+        mainActivityView = null;
+        pillsAdapter = null;
+        gameTypesLayoutManager = null;
+        btnAdd = null;
+        tilBannerSelector = null;
+        llSelectionBar = null;
+        tvSelectionCount = null;
+        btnCancelSelection = null;
+        btnSelectAll = null;
+        btnDeleteSelected = null;
+        emptyView = null;
+        progressBar = null;
+        tvPity5StarCounter = null;
+        progressPity5Star = null;
+        badgePityStatus = null;
+        tvPityStatusBadge = null;
+        tvPity4StarCounter = null;
+        progressPity4Star = null;
+        pullsAdapter = null;
         super.onDestroyView();
     }
 

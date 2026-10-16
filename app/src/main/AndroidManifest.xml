@@ -21,6 +21,7 @@
         tools:targetApi="37">
         <activity
             android:name=".ui.main.MainActivityView"
+            android:launchMode="singleTask"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

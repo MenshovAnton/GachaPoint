@@ -160,7 +160,7 @@ public class SettingsViewModel extends AndroidViewModel {
 
         Context context = getApplication().getApplicationContext();
         if (allow) {
-            NotificationScheduler.scheduleDailyNotification(context);
+            NotificationScheduler.scheduleDailyNotification(context, true);
         } else {
             NotificationScheduler.cancelDailyNotification(context);
         }
@@ -174,7 +174,7 @@ public class SettingsViewModel extends AndroidViewModel {
         alarmMinute.setValue(minute);
 
         Context context = getApplication().getApplicationContext();
-        NotificationScheduler.scheduleDailyNotification(context);
+        NotificationScheduler.scheduleDailyNotification(context, true);
     }
 
     public void onBackToMenuClicked() {

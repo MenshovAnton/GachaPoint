@@ -112,6 +112,7 @@ public class HomeView extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        mainActivityView = (MainActivityView) getActivity();
         initViews(view);
         initGameTypePills(view);
 
@@ -124,6 +125,48 @@ public class HomeView extends Fragment {
         setupClickListeners();
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mainActivityView = null;
+        mcvCustomizeWidgets = null;
+        pillsAdapter = null;
+        layoutManager = null;
+        llWidgetsContainer = null;
+        mcvQuickActions = null;
+        mcvSavings = null;
+        mcvStatistics = null;
+        mcvPity = null;
+        btnQuickDaily = null;
+        ivQuickDailyIcon = null;
+        tvQuickDailyStatus = null;
+        btnQuickSub = null;
+        ivQuickSubIcon = null;
+        tvQuickSubStatus = null;
+        btnQuickSavings = null;
+        btnQuickJournal = null;
+        tvSavedCounter = null;
+        ivSavedPulls = null;
+        tvSavedPercent = null;
+        pbSaveProgress = null;
+        tvSavingsCurrency = null;
+        tvStatSubsInfo = null;
+        tvStatDailiesInfo = null;
+        ivGem = null;
+        ivPull = null;
+        tvReceivedGems = null;
+        tvOmittedGems = null;
+        tvUpcomingGems = null;
+        tvReceivedPulls = null;
+        tvOmittedPulls = null;
+        tvUpcomingPulls = null;
+        tvPityBannerName = null;
+        tvPity5StarCounter = null;
+        tvPityGuaranteeBadge = null;
+        pbPityProgress = null;
+        tvPityUntil5Star = null;
     }
 
     private void initViews(View view) {

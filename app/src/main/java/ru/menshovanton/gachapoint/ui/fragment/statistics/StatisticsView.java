@@ -326,4 +326,36 @@ public class StatisticsView extends Fragment {
             }
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (rvSubsHistory != null) {
+            rvSubsHistory.setAdapter(null);
+            rvSubsHistory = null;
+        }
+        historyAdapter = null;
+        tvTotalPullsCount = null;
+        tvTotalCurrencySpent = null;
+        tvLegendaryStat = null;
+        tvLegendarySub = null;
+        tvEpicStat = null;
+        tvEpicSub = null;
+        tvWinratePercent = null;
+        tvWinrateCounts = null;
+        tvAvgPityValue = null;
+        tvPityRangeValue = null;
+        bannerDistributionBars = null;
+        tvSubsPurchasedCount = null;
+        tvSubsAttendanceRate = null;
+        rowHistoryHeader = null;
+        tvHistoryToggle = null;
+        tvHistoryEmpty = null;
+        tvSavingsProgressSummary = null;
+        savingsSourceBar = null;
+        tvSourceManualVal = null;
+        tvSourceSubsVal = null;
+        tvSourceDailiesVal = null;
+        tvTotalTrackedWealth = null;
+    }
 }

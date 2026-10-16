@@ -314,4 +314,27 @@ public class FeedbackView extends Fragment {
             Toast.makeText(requireContext(), R.string.form_load_error, Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        btnBack = null;
+        rowTelegram = null;
+        rowGithubIssues = null;
+        rowGoogleForms = null;
+        cgFeedbackType = null;
+        layoutRatingContainer = null;
+        cgRating = null;
+        tilSubject = null;
+        tietSubject = null;
+        tilMessage = null;
+        tietMessage = null;
+        tilSteps = null;
+        tietSteps = null;
+        switchDeviceInfo = null;
+        mcvDeviceInfoPreview = null;
+        btnSendEmail = null;
+        btnSendGithub = null;
+        btnCopyTelegram = null;
+    }
 }
