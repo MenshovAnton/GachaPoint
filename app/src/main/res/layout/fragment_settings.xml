@@ -73,7 +73,7 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/icon_notification"
+                    android:src="@drawable/icon_bell"
                     app:tint="@color/check" />
 
                 <TextView

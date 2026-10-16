@@ -71,7 +71,7 @@ public class DailyNotificationWorker extends Worker {
         );
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.icon_notification)
                 .setContentTitle(context.getString(R.string.notifications_title))
                 .setContentText(context.getString(R.string.notifications_text))
                 .setContentIntent(pendingIntent)

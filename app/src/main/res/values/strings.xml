@@ -96,8 +96,8 @@
     <string name="sheet_sub_remaining">Days remaining: %d</string>
     <string name="sheet_sub_start_here">Start subscription chain (1–6 passes)</string>
     <string name="sheet_sub_add_more">+ Add to subscription chain</string>
-    <string name="sheet_add_sub_desc">+1 active 30-day subscription</string>
-    <string name="sheet_del_sub_desc">Delete subscription added today</string>
+    <string name="sheet_add_sub_desc">+ Add new active 30-day subscription</string>
+    <string name="sheet_del_sub_desc">Delete the last added subscription</string>
     <string name="sheet_recover_desc">Mark yesterday as claimed</string>
     <string name="sheet_cancel_mark_desc">Remove today\'s check-in mark</string>
     <string name="btn_mark_sub">Claim</string>
@@ -200,7 +200,7 @@
     <string name="add_to_bank">Add</string>
     <string name="savings_target_label">Target goal:</string>
     <string name="savings_current_pulls">Pulls earned</string>
-    <string name="savings_current_gems">In gems</string>
+    <string name="savings_current_gems">In currency</string>
     <string name="savings_quick_actions">Quick actions</string>
     <string name="savings_reset_confirm">Reset current savings goal and progress?</string>
     <string name="goal_not_set_or_reached">Target not set or reached</string>
@@ -241,8 +241,8 @@
     <string name="time_picker_title">Set reminder time</string>
     <string name="time_picker_save">Done</string>
     <string name="db_settings_title">Data &amp; Storage</string>
-    <string name="db_settings_backup_desc">Backup marks and pulls to SQLite file</string>
-    <string name="db_settings_import_desc">Restore history from a backup file</string>
+    <string name="db_settings_backup_desc">Save all data to a database file</string>
+    <string name="db_settings_import_desc">Recover data from a database file</string>
     <string name="db_settings_backup_button">Export</string>
     <string name="db_settings_import_button">Import</string>
     <string name="db_export_successful">Export successful!</string>
@@ -257,7 +257,7 @@
     <string name="db_error_incorrect_db_version">Incorrect data base version</string>
     <string name="db_error_invalid_file">The selected file is not a valid SQLite database</string>
     <string name="db_error_missing_tables">Missing app tables</string>
-    <string name="sheet_export_desc">Save SQLite database backup</string>
+    <string name="sheet_export_desc">Save database file backup</string>
     <string name="notifications_name">Notifications</string>
     <string name="notifications_description">Sends reminders to collect rewards</string>
     <string name="notifications_title">Reminder!</string>

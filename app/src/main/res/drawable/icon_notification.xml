@@ -1,9 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+
+    <!-- Star 2 (Back Star with shadow cutout: Top Tip, Left Tip, Main Body) -->
     <path
         android:fillColor="#FFFFFFFF"
-        android:pathData="M12,22c1.1,0 2,-0.9 2,-2h-4c0,1.1 0.89,2 2,2zm6,-6v-5c0,-3.07 -1.64,-5.64 -4.5,-6.32V4c0,-0.83 -0.67,-1.5 -1.5,-1.5s-1.5,0.67 -1.5,1.5v0.68C7.63,5.36 6,7.93 6,11v5l-2,2v1h16v-1l-2,-2z" />
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="0.55"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M13.61,6.22C13.61,6.80 13.65,7.25 13.68,7.57L13.55,7.57C13.59,7.25 13.61,6.80 13.61,6.22Z M7.16,13.56C7.54,13.56 7.99,13.53 8.36,13.51L8.36,13.62C7.99,13.60 7.54,13.57 7.16,13.56Z M14.36,10.89C15.09,11.94 15.82,13.56 20.37,13.56C15.37,13.56 13.61,15.75 13.61,21.99C13.61,17.71 12.27,15.58 11.46,14.70C12.09,12.62 13.13,11.48 14.36,10.89Z" />
+
+    <!-- Star 1 (Front Star) -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="0.55"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M10.07,2.00C10.07,7.43 11.83,9.34 16.83,9.34C11.83,9.34 10.07,11.54 10.07,17.78C10.07,11.54 8.40,9.34 3.62,9.34C8.40,9.34 10.07,7.43 10.07,2.00Z" />
+
 </vector>

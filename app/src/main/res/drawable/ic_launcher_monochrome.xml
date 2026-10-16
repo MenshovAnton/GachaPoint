@@ -4,10 +4,23 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+
+    <!-- Star 2 (Back Star with noticeable shadow cutout: Top Tip, Left Tip, Main Body) -->
     <path
         android:fillColor="#FFFFFFFF"
-        android:pathData="M57.56,41.23C57.56,53.17 61.42,57.36 72.42,57.36C61.42,57.36 57.56,62.18 57.56,75.90C57.56,62.18 53.87,57.36 43.38,57.36C53.87,57.36 57.56,53.17 57.56,41.23Z" />
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M57.56,41.22C57.56,42.49 57.65,43.48 57.71,44.18L57.43,44.18C57.51,43.48 57.56,42.49 57.56,41.22Z M43.37,57.36C44.20,57.36 45.19,57.29 46.00,57.25L46.00,57.49C45.19,57.45 44.20,57.38 43.37,57.36Z M60.50,52.20C61.80,54.20 63.20,57.36 72.43,57.36C61.43,57.36 57.56,62.18 57.56,75.92C57.56,66.51 55.20,62.20 53.80,60.20C55.20,55.80 57.80,53.20 60.50,52.20Z" />
+
+    <!-- Star 1 (Front Star) -->
     <path
         android:fillColor="#FFFFFFFF"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
         android:pathData="M49.77,31.96C49.77,43.90 53.62,48.09 64.62,48.09C53.62,48.09 49.77,52.91 49.77,66.63C49.77,52.91 46.08,48.09 35.58,48.09C46.08,48.09 49.77,43.90 49.77,31.96Z" />
+
 </vector>

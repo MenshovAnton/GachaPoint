@@ -91,8 +91,8 @@
     <string name="sheet_sub_remaining">Осталось дней: %d</string>
     <string name="sheet_sub_start_here">Начать цепочку подписок (1–6 шт.)</string>
     <string name="sheet_sub_add_more">+ Добавить подписку в цепочку</string>
-    <string name="sheet_add_sub_desc">+1 активная подписка на 30 дней</string>
-    <string name="sheet_del_sub_desc">Удалить добавленную сегодня подписку</string>
+    <string name="sheet_add_sub_desc">+ Новая активная подписка на 30 дней</string>
+    <string name="sheet_del_sub_desc">Удалить последнюю добавленную подписку</string>
     <string name="sheet_recover_desc">Отметить вчерашний день как полученный</string>
     <string name="sheet_cancel_mark_desc">Снять отметку за сегодняшний день</string>
     <string name="btn_mark_sub">Отметиться</string>
@@ -111,7 +111,7 @@
     <string name="plus_one_hundred_twenty_days">+4 (120 дн.)</string>
     <string name="plus_one_hundred_fifty_days">+5 (150 дн.)</string>
     <string name="plus_one_hundred_eighty_days">+6 (180 дн.)</string>
-    <string name="multi_select_mode">Массовый выбор</string>
+    <string name="multi_select_mode">Множественный выбор</string>
     <string name="sheet_multi_select_desc">Выбрать дни для отметок подписки или дейликов</string>
     <string name="btn_selection_mark">Отметить</string>
     <string name="btn_selection_mark_count">Отметить (%d)</string>
@@ -223,8 +223,8 @@
     <string name="time_picker_title">Время напоминания</string>
     <string name="time_picker_save">Готово</string>
     <string name="db_settings_title">Данные и хранилище</string>
-    <string name="db_settings_backup_desc">Сохранить отметки и крутки в файл</string>
-    <string name="db_settings_import_desc">Восстановить историю из файла базы</string>
+    <string name="db_settings_backup_desc">Сохранить все данные в файл базы данных</string>
+    <string name="db_settings_import_desc">Восстановить данные из файла базы данных</string>
     <string name="db_settings_backup_button">Экспорт</string>
     <string name="db_settings_import_button">Импорт</string>
     <string name="db_export_successful">Данные успешно выгружены!</string>

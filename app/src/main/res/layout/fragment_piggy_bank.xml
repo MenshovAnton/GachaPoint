@@ -58,16 +58,16 @@
                 android:id="@+id/rv_game_types"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="18dp"
                 android:clipToPadding="false"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/pills_padding_horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_pill"
-                tools:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_savings_header" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_savings_header"
+                tools:listitem="@layout/item_pill"
+                tools:orientation="horizontal" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_goal_card"
