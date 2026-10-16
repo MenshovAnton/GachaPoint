@@ -53,41 +53,43 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_back"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/tv_channels_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding_horizontal"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/genshin_font"
+                android:includeFontPadding="false"
+                android:text="@string/feedback_section_channels"
+                android:textColor="@color/check"
+                android:textSize="@dimen/text_size_section_title"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_feedback_header" />
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_channels"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/card_margin_horizontal"
-                android:layout_marginTop="@dimen/header_margin_bottom"
+                android:layout_marginTop="@dimen/card_margin_vertical"
                 android:layout_marginEnd="@dimen/card_margin_horizontal"
                 app:cardCornerRadius="@dimen/card_corner_radius"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_feedback_header">
+                app:layout_constraintTop_toBottomOf="@+id/tv_channels_header">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:fontFamily="@font/genshin_font"
-                        android:text="@string/feedback_section_channels"
-                        android:textColor="@color/text"
-                        android:textSize="@dimen/text_size_section_title"
-                        android:textStyle="bold" />
-
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/row_telegram"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
@@ -324,20 +326,35 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <TextView
+                android:id="@+id/tv_form_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding_horizontal"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/genshin_font"
+                android:includeFontPadding="false"
+                android:text="@string/feedback_section_form"
+                android:textColor="@color/check"
+                android:textSize="@dimen/text_size_section_title"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mcv_channels" />
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_form"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/card_margin_horizontal"
-                android:layout_marginTop="@dimen/card_spacing_vertical"
+                android:layout_marginTop="@dimen/card_margin_vertical"
                 android:layout_marginEnd="@dimen/card_margin_horizontal"
                 android:layout_marginBottom="24dp"
                 app:cardCornerRadius="@dimen/card_corner_radius"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_channels">
+                app:layout_constraintTop_toBottomOf="@+id/tv_form_header">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -348,16 +365,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/genshin_font"
-                        android:text="@string/feedback_section_form"
-                        android:textColor="@color/text"
-                        android:textSize="@dimen/text_size_section_title"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         android:text="@string/feedback_type_label"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />

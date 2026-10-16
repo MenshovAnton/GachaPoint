@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="6dp"
+    android:insetRight="6dp"
+    android:insetTop="2dp"
+    android:insetBottom="2dp">
+    <ripple android:color="@color/check_30">
+        <item>
+            <shape android:shape="rectangle">
+                <solid android:color="@color/pull_row_selected_bg" />
+                <stroke android:width="1dp" android:color="@color/check_30" />
+                <corners android:radius="8dp" />
+            </shape>
+        </item>
+    </ripple>
+</inset>

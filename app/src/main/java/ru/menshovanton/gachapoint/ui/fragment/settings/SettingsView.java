@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import ru.menshovanton.gachapoint.ui.common.NoFilterArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -102,12 +102,32 @@ public class SettingsView extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (themeSelector != null) {
+            themeSelector.dismissDropDown();
+            themeSelector.clearFocus();
+        }
+        if (languageSelector != null) {
+            languageSelector.dismissDropDown();
+            languageSelector.clearFocus();
+        }
+
         viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
 
         setupListeners();
         setupThemesSelector();
         setupLanguageSelector();
         observeViewModel();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (themeSelector != null) {
+            themeSelector.dismissDropDown();
+        }
+        if (languageSelector != null) {
+            languageSelector.dismissDropDown();
+        }
+        super.onDestroyView();
     }
 
     private void setupListeners() {
@@ -132,9 +152,8 @@ public class SettingsView extends Fragment {
         }
 
         if (rowHomeWidgets != null) {
-            rowHomeWidgets.setOnClickListener(v -> {
-                HomeWidgetsSheetDialog.show(requireContext(), null);
-            });
+            rowHomeWidgets.setOnClickListener(v ->
+                    HomeWidgetsSheetDialog.show(requireContext(), null));
         }
 
         dbExportButton.setOnClickListener(v -> viewModel.onExportDatabaseClicked());
@@ -149,10 +168,17 @@ public class SettingsView extends Fragment {
                 getString(R.string.theme_night)
         };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, themes);
+        NoFilterArrayAdapter<String> adapter = new NoFilterArrayAdapter<>(requireContext(), R.layout.item_dropdown_option, themes);
         themeSelector.setAdapter(adapter);
 
-        themeSelector.setOnItemClickListener((parent, view, position, id) -> viewModel.onThemeSelected(position));
+        themeSelector.setOnItemClickListener((parent, view, position, id) -> {
+            if (themeSelector.getAdapter() instanceof NoFilterArrayAdapter) {
+                ((NoFilterArrayAdapter<?>) themeSelector.getAdapter()).setSelectedPosition(position);
+            }
+            themeSelector.dismissDropDown();
+            themeSelector.clearFocus();
+            themeSelector.post(() -> viewModel.onThemeSelected(position));
+        });
     }
 
     private void setupLanguageSelector() {
@@ -162,12 +188,16 @@ public class SettingsView extends Fragment {
                 getString(R.string.lang_ru)
         };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, languages);
+        NoFilterArrayAdapter<String> adapter = new NoFilterArrayAdapter<>(requireContext(), R.layout.item_dropdown_option, languages);
         languageSelector.setAdapter(adapter);
 
         languageSelector.setOnItemClickListener((parent, view, position, id) -> {
+            if (languageSelector.getAdapter() instanceof NoFilterArrayAdapter) {
+                ((NoFilterArrayAdapter<?>) languageSelector.getAdapter()).setSelectedPosition(position);
+            }
+            languageSelector.dismissDropDown();
             languageSelector.clearFocus();
-            languageSelector.postDelayed(() -> viewModel.onLanguageSelected(position), 150);
+            languageSelector.post(() -> viewModel.onLanguageSelected(position));
         });
     }
 
@@ -184,7 +214,12 @@ public class SettingsView extends Fragment {
                 index = 0;
             }
 
-            themeSelector.setText(themeSelector.getAdapter().getItem(index).toString(), false);
+            if (themeSelector.getAdapter() != null) {
+                themeSelector.setText(themeSelector.getAdapter().getItem(index).toString(), false);
+                if (themeSelector.getAdapter() instanceof NoFilterArrayAdapter) {
+                    ((NoFilterArrayAdapter<?>) themeSelector.getAdapter()).setSelectedPosition(index);
+                }
+            }
         });
 
         viewModel.getSelectedLanguage().observe(getViewLifecycleOwner(), langCode -> {
@@ -206,6 +241,9 @@ public class SettingsView extends Fragment {
 
             if (languageSelector.getAdapter() != null) {
                 languageSelector.setText(languageSelector.getAdapter().getItem(index).toString(), false);
+                if (languageSelector.getAdapter() instanceof NoFilterArrayAdapter) {
+                    ((NoFilterArrayAdapter<?>) languageSelector.getAdapter()).setSelectedPosition(index);
+                }
             }
         });
 

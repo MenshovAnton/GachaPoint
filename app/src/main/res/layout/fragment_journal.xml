@@ -8,7 +8,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <TextView
             android:id="@+id/tv_journal_header"
@@ -71,19 +73,24 @@
                         style="@style/DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:saveEnabled="false"
                         android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu">
 
                         <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:id="@+id/mac_banner_selector"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:dropDownVerticalOffset="4dp"
+                            android:fontFamily="@font/genshin_font"
+                            android:freezesText="false"
                             android:gravity="center_vertical"
+                            android:includeFontPadding="false"
                             android:inputType="none"
                             android:minHeight="0dp"
-                            android:paddingHorizontal="14dp"
+                            android:paddingHorizontal="16dp"
                             android:paddingVertical="0dp"
                             android:popupBackground="@drawable/bg_dropdown_popup"
-                            android:dropDownWidth="wrap_content"
+                            android:saveEnabled="false"
                             android:textColor="@color/dropdown_text_selector"
                             android:textSize="14sp"
                             tools:ignore="LabelFor" />

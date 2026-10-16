@@ -108,18 +108,33 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tv_project_section_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding_horizontal"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/genshin_font"
+                android:includeFontPadding="false"
+                android:text="@string/about_section_project"
+                android:textColor="@color/check"
+                android:textSize="@dimen/text_size_section_title"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_hero" />
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_description"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/card_margin_horizontal"
-                android:layout_marginTop="@dimen/header_margin_bottom"
+                android:layout_marginTop="@dimen/card_margin_vertical"
                 android:layout_marginEnd="@dimen/card_margin_horizontal"
                 app:cardCornerRadius="@dimen/card_corner_radius"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_hero">
+                app:layout_constraintTop_toBottomOf="@+id/tv_project_section_header">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -128,19 +143,9 @@
                     android:padding="@dimen/card_inner_padding">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/genshin_font"
-                        android:text="@string/about_section_project"
-                        android:textColor="@color/text"
-                        android:textSize="@dimen/text_size_section_title"
-                        android:textStyle="bold" />
-
-                    <TextView
                         android:id="@+id/tv_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:lineSpacingExtra="3dp"
                         android:text="@string/description"
                         android:textColor="@color/text"
@@ -156,8 +161,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/screen_padding_horizontal"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="24dp"
                 android:fontFamily="@font/genshin_font"
+                android:includeFontPadding="false"
                 android:text="@string/about_section_links"
                 android:textColor="@color/check"
                 android:textSize="@dimen/text_size_section_title"

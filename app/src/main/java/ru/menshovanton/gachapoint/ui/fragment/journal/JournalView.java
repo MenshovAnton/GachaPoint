@@ -10,8 +10,8 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import ru.menshovanton.gachapoint.ui.common.NoFilterArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
@@ -286,14 +286,27 @@ public class JournalView extends Fragment {
         isFirstLaunch = false;
     }
 
+    @Override
+    public void onDestroyView() {
+        if (bannerSelector != null) {
+            bannerSelector.dismissDropDown();
+        }
+        super.onDestroyView();
+    }
+
     private void setupBannerSelector() {
         updateBannerSelector(viewModel.getCurrentGameType());
 
         bannerSelector.setOnItemClickListener((parent, itemView, position, id) -> {
+            if (bannerSelector.getAdapter() instanceof NoFilterArrayAdapter) {
+                ((NoFilterArrayAdapter<?>) bannerSelector.getAdapter()).setSelectedPosition(position);
+            }
             String selectedLabel = (String) parent.getItemAtPosition(position);
             String bannerKey = viewModel.getCurrentGameType().getBannerKeyByLabel(requireContext(), selectedLabel);
             viewModel.setBannerType(bannerKey);
             updateDashboardLimits();
+            bannerSelector.dismissDropDown();
+            bannerSelector.clearFocus();
         });
     }
 
@@ -304,11 +317,12 @@ public class JournalView extends Fragment {
         for (BannerInfo banner : banners) {
             bannerLabels.add(getString(banner.getLabelResId()));
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.item_dropdown_banner, bannerLabels);
-        bannerSelector.setAdapter(adapter);
-
+        NoFilterArrayAdapter<String> adapter = new NoFilterArrayAdapter<>(requireContext(), R.layout.item_dropdown_option, bannerLabels);
         String currentKey = viewModel.getCurrentBannerType();
         String currentLabel = gameType.getBannerLabel(requireContext(), currentKey);
+        adapter.setSelectedItem(currentLabel);
+        bannerSelector.setAdapter(adapter);
+
         bannerSelector.setText(currentLabel, false);
         updateDashboardLimits();
     }
@@ -411,6 +425,9 @@ public class JournalView extends Fragment {
         viewModel.getCurrentBannerTypeLiveData().observe(getViewLifecycleOwner(), bannerKey -> {
             String label = viewModel.getCurrentGameType().getBannerLabel(requireContext(), bannerKey);
             bannerSelector.setText(label, false);
+            if (bannerSelector.getAdapter() instanceof NoFilterArrayAdapter) {
+                ((NoFilterArrayAdapter<?>) bannerSelector.getAdapter()).setSelectedItem(label);
+            }
             updateDashboardLimits();
         });
 

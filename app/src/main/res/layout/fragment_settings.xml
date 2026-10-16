@@ -12,11 +12,15 @@
         android:fillViewport="true"
         android:clipToPadding="false"
         android:paddingBottom="32dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         tools:ignore="UselessParent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
             <ImageButton
                 android:id="@+id/btn_back"
@@ -53,36 +57,57 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_back"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <LinearLayout
+                android:id="@+id/header_notifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding_horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_settings_header">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/icon_notification"
+                    app:tint="@color/check" />
+
+                <TextView
+                    android:id="@+id/tv_notifications_section_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/genshin_font"
+                    android:includeFontPadding="false"
+                    android:text="@string/notifications_settings_title"
+                    android:textColor="@color/check"
+                    android:textSize="@dimen/text_size_section_title"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_notification_settings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/card_margin_horizontal"
-                android:layout_marginTop="@dimen/header_margin_bottom"
+                android:layout_marginTop="@dimen/card_margin_vertical"
                 android:layout_marginEnd="@dimen/card_margin_horizontal"
                 app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_settings_header">
+                app:layout_constraintTop_toBottomOf="@+id/header_notifications">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingVertical="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/notifications_settings_title"
-                        android:textColor="@color/text"
-                        android:textSize="@dimen/text_size_section_title"
-                        android:textStyle="bold" />
+                    android:paddingVertical="0dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -175,36 +200,57 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <LinearLayout
+                android:id="@+id/header_ui"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding_horizontal"
+                android:layout_marginTop="24dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mcv_notification_settings">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/icon_palette"
+                    app:tint="@color/check" />
+
+                <TextView
+                    android:id="@+id/tv_ui_section_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/genshin_font"
+                    android:includeFontPadding="false"
+                    android:text="@string/ui_setting_title"
+                    android:textColor="@color/check"
+                    android:textSize="@dimen/text_size_section_title"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_ui_settings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/card_margin_horizontal"
-                android:layout_marginTop="@dimen/card_spacing_vertical"
+                android:layout_marginTop="@dimen/card_margin_vertical"
                 android:layout_marginEnd="@dimen/card_margin_horizontal"
                 app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_notification_settings">
+                app:layout_constraintTop_toBottomOf="@+id/header_ui">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingVertical="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/ui_setting_title"
-                        android:textColor="@color/text"
-                        android:textSize="@dimen/text_size_section_title"
-                        android:textStyle="bold" />
+                    android:paddingVertical="0dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -230,6 +276,7 @@
                             style="@style/DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:layout_width="160dp"
                             android:layout_height="44dp"
+                            android:saveEnabled="false"
                             android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -239,10 +286,14 @@
                                 android:id="@+id/mac_theme_selector"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:dropDownVerticalOffset="4dp"
+                                android:fontFamily="@font/genshin_font"
+                                android:freezesText="false"
                                 android:gravity="center_vertical"
+                                android:includeFontPadding="false"
                                 android:inputType="none"
                                 android:minHeight="0dp"
-                                android:paddingHorizontal="14dp"
+                                android:paddingHorizontal="16dp"
                                 android:paddingVertical="0dp"
                                 android:popupBackground="@drawable/bg_dropdown_popup"
                                 android:saveEnabled="false"
@@ -284,6 +335,7 @@
                             style="@style/DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:layout_width="160dp"
                             android:layout_height="44dp"
+                            android:saveEnabled="false"
                             android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -293,10 +345,14 @@
                                 android:id="@+id/mac_lang_selector"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:dropDownVerticalOffset="4dp"
+                                android:fontFamily="@font/genshin_font"
+                                android:freezesText="false"
                                 android:gravity="center_vertical"
+                                android:includeFontPadding="false"
                                 android:inputType="none"
                                 android:minHeight="0dp"
-                                android:paddingHorizontal="14dp"
+                                android:paddingHorizontal="16dp"
                                 android:paddingVertical="0dp"
                                 android:popupBackground="@drawable/bg_dropdown_popup"
                                 android:saveEnabled="false"
@@ -419,36 +475,57 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <LinearLayout
+                android:id="@+id/header_storage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding_horizontal"
+                android:layout_marginTop="24dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mcv_ui_settings">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/icon_backup"
+                    app:tint="@color/check" />
+
+                <TextView
+                    android:id="@+id/tv_storage_section_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/genshin_font"
+                    android:includeFontPadding="false"
+                    android:text="@string/db_settings_title"
+                    android:textColor="@color/check"
+                    android:textSize="@dimen/text_size_section_title"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_storage_settings"
                 style="@style/Widget.GachaPoint.MaterialCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/card_margin_horizontal"
-                android:layout_marginTop="@dimen/card_spacing_vertical"
+                android:layout_marginTop="@dimen/card_margin_vertical"
                 android:layout_marginEnd="@dimen/card_margin_horizontal"
                 app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_ui_settings">
+                app:layout_constraintTop_toBottomOf="@+id/header_storage">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingVertical="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/db_settings_title"
-                        android:textColor="@color/text"
-                        android:textSize="@dimen/text_size_section_title"
-                        android:textStyle="bold" />
+                    android:paddingVertical="0dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"

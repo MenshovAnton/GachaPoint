@@ -406,7 +406,6 @@ public class StatsReportGenerator {
             canvas.drawText(String.format(Locale.getDefault(), "%d (%.1f%%)", count, pct), padding + contentWidth - 28f, itemY, textPaint);
             textPaint.setTextAlign(Paint.Align.LEFT);
 
-            // Progress Bar
             float barY = itemY + 14f;
             float barW = contentWidth - 56f;
             RectF trackRect = new RectF(padding + 28f, barY, padding + 28f + barW, barY + 10f);
