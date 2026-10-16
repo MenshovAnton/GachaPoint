@@ -235,6 +235,7 @@
     <string name="lang_eng">English</string>
     <string name="lang_default">System language</string>
     <string name="notifications_settings_title">Notifications</string>
+    <string name="notifications_settings_reminder">Reminder</string>
     <string name="notifications_settings_desc">Reminders to claim daily check-ins</string>
     <string name="notifications_settings_time">Notification time</string>
     <string name="time_picker_title">Set reminder time</string>

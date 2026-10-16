@@ -257,9 +257,9 @@ public abstract class AppDatabase extends RoomDatabase {
                     int wait = Math.max(0, totalPrimogems - claimed - missed);
 
                     String insertSubSql = "INSERT INTO `subscriptions` " +
-                            "(`game_type`, `count`, `start_date`, `end_date`, `currency_per_day`, `claimed`, `missed`, `wait`) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-                    db.execSQL(insertSubSql, new Object[]{gameCode, count, startEpoch, endEpoch, currencyPerDay, claimed, missed, wait});
+                            "(`game_type`, `count`, `start_date`, `end_date`, `claimed`, `missed`, `wait`) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    db.execSQL(insertSubSql, new Object[]{gameCode, count, startEpoch, endEpoch, claimed, missed, wait});
 
                     existingRanges.add(new long[]{startEpoch, endEpoch});
 
@@ -277,6 +277,16 @@ public abstract class AppDatabase extends RoomDatabase {
                             updated = updateStmt.executeUpdateDelete();
                         }
                         if (updated == 0) {
+                            try (androidx.sqlite.db.SupportSQLiteStatement insertCalStmt = db.compileStatement(
+                                    "INSERT OR IGNORE INTO `calendar` (`day`, `day_of_year`, `day_of_week`, `month`, `year`) " +
+                                            "VALUES (?, ?, ?, ?, ?)")) {
+                                insertCalStmt.bindLong(1, cur.getDayOfMonth());
+                                insertCalStmt.bindLong(2, cur.getDayOfYear());
+                                insertCalStmt.bindLong(3, cur.getDayOfWeek().getValue());
+                                insertCalStmt.bindLong(4, cur.getMonthValue());
+                                insertCalStmt.bindLong(5, cur.getYear());
+                                insertCalStmt.executeInsert();
+                            }
                             try (androidx.sqlite.db.SupportSQLiteStatement insertStmt = db.compileStatement(
                                     "INSERT OR IGNORE INTO `calendar_game_status` (`year`, `day_of_year`, `game_type`, `status`, `sub_days_remaining`, `daily_status`) " +
                                             "VALUES (?, ?, ?, 0, ?, 0)")) {
@@ -294,7 +304,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            e.printStackTrace();
+            android.util.Log.e("AppDatabase", "Error syncing subscriptions", e);
         } finally {
             db.endTransaction();
         }

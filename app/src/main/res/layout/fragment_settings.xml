@@ -66,7 +66,8 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_settings_header">
+                app:layout_constraintTop_toBottomOf="@+id/tv_settings_header"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="18dp"
@@ -120,7 +121,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
-                            android:text="@string/notifications_title"
+                            android:text="@string/notifications_settings_reminder"
                             android:textColor="@color/text"
                             android:textSize="16sp"
                             android:textStyle="bold"
@@ -209,7 +210,8 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_notification_settings">
+                app:layout_constraintTop_toBottomOf="@+id/mcv_notification_settings"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="18dp"
@@ -484,7 +486,8 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_ui_settings">
+                app:layout_constraintTop_toBottomOf="@+id/mcv_ui_settings"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="18dp"

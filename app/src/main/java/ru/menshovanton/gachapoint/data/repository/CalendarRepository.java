@@ -274,7 +274,7 @@ public class CalendarRepository {
                         totalCount,
                         actualStart.toEpochDay(),
                         endDate.toEpochDay(),
-                        currencyPerDay,
+                        0,
                         0,
                         totalCount * gameType.getSubscriptionDurationDays() * currencyPerDay
                 );
@@ -301,7 +301,7 @@ public class CalendarRepository {
                 LocalDate curEnd = LocalDate.ofEpochDay(activeSub.endDate);
                 LocalDate newEnd = curEnd.plusDays((long) added * gameType.getSubscriptionDurationDays());
                 activeSub.endDate = newEnd.toEpochDay();
-                activeSub.wait += (long) added * gameType.getSubscriptionDurationDays() * gameType.getCurrencyPerDay();
+                activeSub.wait = (int) (activeSub.wait + (long) added * gameType.getSubscriptionDurationDays() * gameType.getCurrencyPerDay());
 
                 calendar.ensureYearInitialized(newEnd.getYear(), () ->
                         databaseRepository.updateSubscription(activeSub, () -> {

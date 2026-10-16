@@ -217,6 +217,7 @@
     <string name="lang_eng">Английский</string>
     <string name="lang_default">Язык системы</string>
     <string name="notifications_settings_title">Уведомления</string>
+    <string name="notifications_settings_reminder">Напоминания</string>
     <string name="notifications_settings_desc">Напоминания о ежедневных отметках</string>
     <string name="notifications_settings_time">Время напоминания</string>
     <string name="time_picker_title">Время напоминания</string>

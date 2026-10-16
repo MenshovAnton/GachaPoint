@@ -123,6 +123,8 @@ public class MigrationHelper {
 
             database.execSQL("INSERT OR IGNORE INTO `savings` (`game_type`, `target`, `manual_progress`, `subs_progress`, `dailies_progress`) " +
                     "VALUES (0, 0, 0, 0, 0), (1, 0, 0, 0, 0), (2, 0, 0, 0, 0)");
+
+            AppDatabase.syncSubscriptionsRaw(database);
         }
     };
 }

@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -60,6 +61,7 @@ public class JournalView extends Fragment {
     private JournalViewModel viewModel;
     private MainActivityView mainActivityView;
 
+    private AppBarLayout appbarLayout;
     private PillsAdapter pillsAdapter;
     private LinearLayoutManager gameTypesLayoutManager;
     private RecyclerView rvGameTypes;
@@ -105,6 +107,7 @@ public class JournalView extends Fragment {
         mainActivityView = (MainActivityView) getActivity();
         View view = inflater.inflate(R.layout.fragment_journal, container, false);
 
+        appbarLayout = view.findViewById(R.id.appbar_journal);
         rvGameTypes = view.findViewById(R.id.rv_game_types);
         btnAdd = view.findViewById(R.id.btn_add);
         tilBannerSelector = view.findViewById(R.id.til_banner_selector);
@@ -163,6 +166,9 @@ public class JournalView extends Fragment {
             GameType selectedGame = GameType.fromCode(position);
             if (mainActivityView != null) {
                 mainActivityView.setSubType(selectedGame);
+            }
+            if (appbarLayout != null) {
+                appbarLayout.setExpanded(true, true);
             }
             viewModel.setGameType(selectedGame);
             updateBannerSelector(selectedGame);
@@ -305,6 +311,7 @@ public class JournalView extends Fragment {
         mainActivityView = null;
         pillsAdapter = null;
         gameTypesLayoutManager = null;
+        appbarLayout = null;
         btnAdd = null;
         tilBannerSelector = null;
         llSelectionBar = null;
@@ -333,6 +340,9 @@ public class JournalView extends Fragment {
             }
             String selectedLabel = (String) parent.getItemAtPosition(position);
             String bannerKey = viewModel.getCurrentGameType().getBannerKeyByLabel(requireContext(), selectedLabel);
+            if (appbarLayout != null) {
+                appbarLayout.setExpanded(true, true);
+            }
             viewModel.setBannerType(bannerKey);
             updateDashboardLimits();
             bannerSelector.dismissDropDown();
@@ -442,6 +452,9 @@ public class JournalView extends Fragment {
                     recyclerView.post(() -> {
                         if (pullsAdapter.getItemCount() > 0) {
                             recyclerView.scrollToPosition(0);
+                        }
+                        if (appbarLayout != null) {
+                            appbarLayout.setExpanded(true, true);
                         }
                     });
                 }
