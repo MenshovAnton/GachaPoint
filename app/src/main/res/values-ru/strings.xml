@@ -2,8 +2,8 @@
 <resources>
 
     <!-- General & Navigation -->
-    <string name="description">Ваш универсальный компаньон с открытым исходным кодом для аниме гача-RPG (Genshin Impact, Honkai: Star Rail, Zenless Zone Zero и др.). Приложение позволяет удобно, безопасно и полностью автономно отслеживать историю круток, рассчитывать накопления и контролировать прогресс игровых подписок прямо на вашем устройстве.</string>
-    <string name="copyright_info">Все права принадлежат их правообладателям. Приложение не аффилировано с компанией Hoyoverse.</string>
+    <string name="description">GachaPoint — приложение-компаньон с открытым исходным кодом для игроков в Genshin Impact, Honkai: Star Rail и Zenless Zone Zero. Помогает контролировать сбор наград по ежедневным подпискам, вести детальный учет истории молитв и гаранта, а также планировать накопления к желанным баннерам.</string>
+    <string name="copyright_info">© 2024–2026 Menshov Anton. Распространяется под лицензией Apache-2.0.\n\nВсе права на Genshin Impact™, Honkai: Star Rail™, Zenless Zone Zero™, их наименования, графические ресурсы и товарные знаки принадлежат COGNOSPHERE PTE. LTD. и miHoYo Co., Ltd. GachaPoint является независимым фанатским проектом, не связан с разработчиками или издателями игр и не спонсируется ими.</string>
     <string name="nav_home">Домашняя</string>
     <string name="nav_tracker">Календарь</string>
     <string name="nav_journal">Журнал круток</string>
