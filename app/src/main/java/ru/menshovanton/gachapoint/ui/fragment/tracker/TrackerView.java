@@ -33,8 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -63,7 +61,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.DayState;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
@@ -132,13 +129,6 @@ public class TrackerView extends Fragment {
 
     private SoundPool soundPool;
     private int successSound;
-
-    private final ActivityResultLauncher<String> exportDbLauncher =
-            registerForActivityResult(new ActivityResultContracts.CreateDocument("*/*"), uri -> {
-                if (uri != null) {
-                    viewModel.writeDatabaseToUri(uri);
-                }
-            });
 
     public TrackerView() {}
 
@@ -1017,16 +1007,11 @@ public class TrackerView extends Fragment {
             ((MainActivityView) getActivity()).showCalendarMenu(new MainActivityView.OnCalendarMenuClickListener() {
                 @Override public void onAdd() { viewModel.onAddClick(); }
                 @Override public void onDel() { viewModel.onDelClick(); }
-                @Override public void onExport() { exportDatabase(); }
                 @Override public void onRecovery() { viewModel.recoveryMissDay(); }
                 @Override public void onCancel() { viewModel.onCancelCheck(); }
                 @Override public void onMultiSelect() { viewModel.enterSelectionMode(null); }
             });
         }
-    }
-
-    public void exportDatabase() {
-        exportDbLauncher.launch(AppDatabase.DATABASE_NAME);
     }
 
     public void showAddingSubDialog(Context context) {

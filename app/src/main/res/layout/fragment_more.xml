@@ -84,9 +84,9 @@
                             app:cardBackgroundColor="@color/badge_gold_bg"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_savings"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_savings"
                             app:strokeWidth="0dp">
 
                             <ImageView
@@ -99,32 +99,39 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:id="@+id/tv_savings_title"
+                        <LinearLayout
+                            android:id="@+id/ll_text_savings"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="10dp"
-                            android:text="@string/menu_savings_title"
-                            android:textColor="@color/text"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/iv_savings_arrow"
                             app:layout_constraintStart_toEndOf="@+id/badge_savings"
-                            app:layout_constraintTop_toTopOf="@+id/badge_savings" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="10dp"
-                            android:text="@string/menu_savings_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toStartOf="@+id/iv_savings_arrow"
-                            app:layout_constraintStart_toEndOf="@+id/badge_savings"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_savings_title" />
+                            <TextView
+                                android:id="@+id/tv_savings_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/menu_savings_title"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_savings_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/menu_savings_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:id="@+id/iv_savings_arrow"
@@ -163,10 +170,9 @@
                             app:cardBackgroundColor="@color/badge_blue_bg"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_stats"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_stats"
                             app:strokeWidth="0dp">
 
                             <ImageView
@@ -179,32 +185,39 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:id="@+id/tv_stats_title"
+                        <LinearLayout
+                            android:id="@+id/ll_text_stats"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="10dp"
-                            android:text="@string/menu_stats_title"
-                            android:textColor="@color/text"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/iv_stats_arrow"
                             app:layout_constraintStart_toEndOf="@+id/badge_stats"
-                            app:layout_constraintTop_toTopOf="@+id/badge_stats" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="10dp"
-                            android:text="@string/menu_stats_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toStartOf="@+id/iv_stats_arrow"
-                            app:layout_constraintStart_toEndOf="@+id/badge_stats"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_stats_title" />
+                            <TextView
+                                android:id="@+id/tv_stats_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/menu_stats_title"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_stats_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/menu_stats_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:id="@+id/iv_stats_arrow"
@@ -243,10 +256,9 @@
                             app:cardBackgroundColor="@color/badge_purple_bg"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_calc"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_calc"
                             app:strokeWidth="0dp">
 
                             <ImageView
@@ -259,32 +271,39 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:id="@+id/tv_calc_title"
+                        <LinearLayout
+                            android:id="@+id/ll_text_calc"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="10dp"
-                            android:text="@string/menu_calc_title"
-                            android:textColor="@color/text"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/pill_calc_soon"
                             app:layout_constraintStart_toEndOf="@+id/badge_calc"
-                            app:layout_constraintTop_toTopOf="@+id/badge_calc" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="10dp"
-                            android:text="@string/menu_calc_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toStartOf="@+id/pill_calc_soon"
-                            app:layout_constraintStart_toEndOf="@+id/badge_calc"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_calc_title" />
+                            <TextView
+                                android:id="@+id/tv_calc_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/menu_calc_title"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_calc_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/menu_calc_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/pill_calc_soon"
@@ -336,10 +355,9 @@
                             app:cardBackgroundColor="@color/badge_green_bg"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_promo"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_promo"
                             app:strokeWidth="0dp">
 
                             <ImageView
@@ -352,32 +370,39 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:id="@+id/tv_promo_title"
+                        <LinearLayout
+                            android:id="@+id/ll_text_promo"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="10dp"
-                            android:text="@string/menu_promo_title"
-                            android:textColor="@color/text"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/pill_promo_soon"
                             app:layout_constraintStart_toEndOf="@+id/badge_promo"
-                            app:layout_constraintTop_toTopOf="@+id/badge_promo" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="10dp"
-                            android:text="@string/menu_promo_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toStartOf="@+id/pill_promo_soon"
-                            app:layout_constraintStart_toEndOf="@+id/badge_promo"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_promo_title" />
+                            <TextView
+                                android:id="@+id/tv_promo_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/menu_promo_title"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_promo_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/menu_promo_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/pill_promo_soon"
@@ -414,7 +439,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/screen_padding_horizontal"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/genshin_font"
                 android:text="@string/menu_section_app"
                 android:textColor="@color/check"
@@ -461,10 +486,9 @@
                             app:cardBackgroundColor="@color/badge_blue_bg"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_settings"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_settings"
                             app:strokeWidth="0dp">
 
                             <ImageView
@@ -477,32 +501,39 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:id="@+id/tv_settings_title"
+                        <LinearLayout
+                            android:id="@+id/ll_text_settings"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="10dp"
-                            android:text="@string/nav_settings"
-                            android:textColor="@color/text"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/ic_settings_chevron"
                             app:layout_constraintStart_toEndOf="@+id/badge_settings"
-                            app:layout_constraintTop_toTopOf="@+id/badge_settings" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="10dp"
-                            android:text="@string/menu_settings_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toStartOf="@+id/ic_settings_chevron"
-                            app:layout_constraintStart_toEndOf="@+id/badge_settings"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_settings_title" />
+                            <TextView
+                                android:id="@+id/tv_settings_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/nav_settings"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_settings_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/menu_settings_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:id="@+id/ic_settings_chevron"
@@ -541,10 +572,9 @@
                             app:cardBackgroundColor="@color/badge_blue_bg"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_feedback"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_feedback"
                             app:strokeWidth="0dp">
 
                             <ImageView
@@ -557,32 +587,39 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:id="@+id/tv_feedback_title"
+                        <LinearLayout
+                            android:id="@+id/ll_text_feedback"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="10dp"
-                            android:text="@string/feedback"
-                            android:textColor="@color/text"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/ic_feedback_chevron"
                             app:layout_constraintStart_toEndOf="@+id/badge_feedback"
-                            app:layout_constraintTop_toTopOf="@+id/badge_feedback" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="10dp"
-                            android:text="@string/menu_feedback_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toStartOf="@+id/ic_feedback_chevron"
-                            app:layout_constraintStart_toEndOf="@+id/badge_feedback"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_feedback_title" />
+                            <TextView
+                                android:id="@+id/tv_feedback_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/feedback"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_feedback_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/menu_feedback_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:id="@+id/ic_feedback_chevron"
@@ -621,10 +658,9 @@
                             app:cardBackgroundColor="@color/badge_blue_bg"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_about"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_about"
                             app:strokeWidth="0dp">
 
                             <ImageView
@@ -637,32 +673,39 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:id="@+id/tv_about_title"
+                        <LinearLayout
+                            android:id="@+id/ll_text_about"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="10dp"
-                            android:text="@string/nav_info"
-                            android:textColor="@color/text"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/ic_about_chevron"
                             app:layout_constraintStart_toEndOf="@+id/badge_about"
-                            app:layout_constraintTop_toTopOf="@+id/badge_about" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="10dp"
-                            android:text="@string/menu_about_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toStartOf="@+id/ic_about_chevron"
-                            app:layout_constraintStart_toEndOf="@+id/badge_about"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_about_title" />
+                            <TextView
+                                android:id="@+id/tv_about_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/nav_info"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_about_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/menu_about_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:id="@+id/ic_about_chevron"

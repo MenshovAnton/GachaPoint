@@ -103,10 +103,9 @@
                             app:cardBackgroundColor="@color/badge_blue_bg"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_telegram"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_telegram"
                             app:strokeWidth="0dp">
 
                             <ImageView
@@ -119,33 +118,39 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:id="@+id/tv_telegram_title"
+                        <LinearLayout
+                            android:id="@+id/ll_text_telegram"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="10dp"
-                            android:text="@string/feedback_telegram_title"
-                            android:textColor="@color/text"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/ic_telegram_chevron"
                             app:layout_constraintStart_toEndOf="@+id/badge_telegram"
-                            app:layout_constraintTop_toTopOf="@+id/badge_telegram" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/tv_telegram_desc"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="10dp"
-                            android:text="@string/feedback_telegram_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toStartOf="@+id/ic_telegram_chevron"
-                            app:layout_constraintStart_toEndOf="@+id/badge_telegram"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_telegram_title" />
+                            <TextView
+                                android:id="@+id/tv_telegram_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/feedback_telegram_title"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_telegram_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/feedback_telegram_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:id="@+id/ic_telegram_chevron"
@@ -184,10 +189,9 @@
                             app:cardBackgroundColor="@color/badge_blue_bg"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_github"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_github"
                             app:strokeWidth="0dp">
 
                             <ImageView
@@ -200,33 +204,39 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:id="@+id/tv_github_title"
+                        <LinearLayout
+                            android:id="@+id/ll_text_github"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="10dp"
-                            android:text="@string/feedback_github_title"
-                            android:textColor="@color/text"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/ic_github_chevron"
                             app:layout_constraintStart_toEndOf="@+id/badge_github"
-                            app:layout_constraintTop_toTopOf="@+id/badge_github" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/tv_github_desc"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="10dp"
-                            android:text="@string/feedback_github_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toStartOf="@+id/ic_github_chevron"
-                            app:layout_constraintStart_toEndOf="@+id/badge_github"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_github_title" />
+                            <TextView
+                                android:id="@+id/tv_github_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/feedback_github_title"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_github_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/feedback_github_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:id="@+id/ic_github_chevron"
@@ -265,10 +275,9 @@
                             app:cardBackgroundColor="@color/badge_blue_bg"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_google_form"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_google_form"
                             app:strokeWidth="0dp">
 
                             <ImageView
@@ -281,33 +290,39 @@
 
                         </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:id="@+id/tv_google_form_title"
+                        <LinearLayout
+                            android:id="@+id/ll_text_google_form"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_marginEnd="10dp"
-                            android:text="@string/feedback_google_form_title"
-                            android:textColor="@color/text"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/ic_google_form_chevron"
                             app:layout_constraintStart_toEndOf="@+id/badge_google_form"
-                            app:layout_constraintTop_toTopOf="@+id/badge_google_form" />
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/tv_google_form_desc"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="10dp"
-                            android:text="@string/feedback_google_form_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toStartOf="@+id/ic_google_form_chevron"
-                            app:layout_constraintStart_toEndOf="@+id/badge_google_form"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_google_form_title" />
+                            <TextView
+                                android:id="@+id/tv_google_form_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/feedback_google_form_title"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_google_form_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/feedback_google_form_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:id="@+id/ic_google_form_chevron"
@@ -331,7 +346,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/screen_padding_horizontal"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/genshin_font"
                 android:includeFontPadding="false"
                 android:text="@string/feedback_section_form"

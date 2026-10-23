@@ -66,9 +66,9 @@
                     app:cardBackgroundColor="@color/badge_blue_bg"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_text_pity_1"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ll_text_pity_1"
                     app:strokeWidth="0dp">
 
                     <TextView
@@ -82,32 +82,39 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tv_title_pity_1"
+                <LinearLayout
+                    android:id="@+id/ll_text_pity_1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@string/pity_1"
-                    android:textColor="@color/text"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/chip_val_1"
                     app:layout_constraintStart_toEndOf="@+id/badge_pity_1"
-                    app:layout_constraintTop_toTopOf="@+id/badge_pity_1" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/sheet_pity_1_desc"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toStartOf="@+id/chip_val_1"
-                    app:layout_constraintStart_toEndOf="@+id/badge_pity_1"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_title_pity_1" />
+                    <TextView
+                        android:id="@+id/tv_title_pity_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pity_1"
+                        android:textColor="@color/text"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_desc_pity_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/sheet_pity_1_desc"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/chip_val_1"
@@ -159,9 +166,9 @@
                     app:cardBackgroundColor="@color/badge_blue_bg"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_text_pity_2"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ll_text_pity_2"
                     app:strokeWidth="0dp">
 
                     <TextView
@@ -175,32 +182,39 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tv_title_pity_2"
+                <LinearLayout
+                    android:id="@+id/ll_text_pity_2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@string/pity_2"
-                    android:textColor="@color/text"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/chip_val_2"
                     app:layout_constraintStart_toEndOf="@+id/badge_pity_2"
-                    app:layout_constraintTop_toTopOf="@+id/badge_pity_2" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/sheet_pity_2_desc"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toStartOf="@+id/chip_val_2"
-                    app:layout_constraintStart_toEndOf="@+id/badge_pity_2"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_title_pity_2" />
+                    <TextView
+                        android:id="@+id/tv_title_pity_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pity_2"
+                        android:textColor="@color/text"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_desc_pity_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/sheet_pity_2_desc"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/chip_val_2"
@@ -252,9 +266,9 @@
                     app:cardBackgroundColor="@color/badge_blue_bg"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_text_pity_6"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ll_text_pity_6"
                     app:strokeWidth="0dp">
 
                     <TextView
@@ -268,32 +282,39 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tv_title_pity_6"
+                <LinearLayout
+                    android:id="@+id/ll_text_pity_6"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@string/pity_6"
-                    android:textColor="@color/text"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/chip_val_6"
                     app:layout_constraintStart_toEndOf="@+id/badge_pity_6"
-                    app:layout_constraintTop_toTopOf="@+id/badge_pity_6" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/sheet_pity_6_desc"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toStartOf="@+id/chip_val_6"
-                    app:layout_constraintStart_toEndOf="@+id/badge_pity_6"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_title_pity_6" />
+                    <TextView
+                        android:id="@+id/tv_title_pity_6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pity_6"
+                        android:textColor="@color/text"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_desc_pity_6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/sheet_pity_6_desc"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/chip_val_6"
@@ -359,9 +380,9 @@
                 app:cardBackgroundColor="@color/badge_red_bg"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/ll_text_reset"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/ll_text_reset"
                 app:strokeWidth="0dp">
 
                 <ImageView
@@ -374,30 +395,38 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/tv_title_reset"
+            <LinearLayout
+                android:id="@+id/ll_text_reset"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
-                android:text="@string/reset"
-                android:textColor="@color/missed"
-                android:textSize="15sp"
-                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:minHeight="40dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/badge_reset"
-                app:layout_constraintTop_toTopOf="@+id/badge_reset" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_marginTop="2dp"
-                android:text="@string/sheet_reset_desc"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/badge_reset"
-                app:layout_constraintTop_toBottomOf="@+id/tv_title_reset" />
+                <TextView
+                    android:id="@+id/tv_title_reset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reset"
+                    android:textColor="@color/missed"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_desc_reset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/sheet_reset_desc"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="6dp"
         android:fontFamily="@font/genshin_font"
         android:text="@string/sheet_header_actions"
         android:textColor="@color/check"
@@ -76,10 +76,10 @@
                     app:cardBackgroundColor="@color/badge_green_bg"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_text_daily"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="@+id/ll_text_daily"
+                    app:strokeWidth="0dp">
 
                     <ImageView
                         android:layout_width="22dp"
@@ -91,10 +91,13 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
+                    android:id="@+id/ll_text_daily"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:layout_marginEnd="8dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/switch_daily"
@@ -102,7 +105,8 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_title_daily"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/genshin_font"
                         android:text="@string/sheet_dailies_title"
@@ -112,7 +116,7 @@
 
                     <TextView
                         android:id="@+id/tv_daily_reward_desc"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:fontFamily="@font/genshin_font"
@@ -151,25 +155,28 @@
                     app:cardBackgroundColor="@color/check_30"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_text_sub"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="@+id/ll_text_sub"
+                    app:strokeWidth="0dp">
 
                     <ImageView
                         android:id="@+id/iv_sub_icon"
                         android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:importantForAccessibility="no"
                         android:src="@drawable/icon_primogem" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
+                    android:id="@+id/ll_text_sub"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:layout_marginEnd="8dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/switch_sub"
@@ -178,7 +185,7 @@
 
                     <TextView
                         android:id="@+id/tv_sub_row_title"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/genshin_font"
                         android:text="@string/sheet_sub_title"
@@ -188,7 +195,7 @@
 
                     <TextView
                         android:id="@+id/tv_sub_row_subtitle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:fontFamily="@font/genshin_font"
@@ -264,10 +271,9 @@
                     app:cardBackgroundColor="@color/badge_blue_bg"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_text_start_sub"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintTop_toTopOf="@+id/ll_text_start_sub"
                     app:strokeWidth="0dp">
 
                     <ImageView
@@ -280,9 +286,12 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
+                    android:id="@+id/ll_text_start_sub"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -290,7 +299,8 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_title_start_sub"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/genshin_font"
                         android:text="@string/add_button_text"
@@ -299,7 +309,8 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_desc_start_sub"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:fontFamily="@font/genshin_font"

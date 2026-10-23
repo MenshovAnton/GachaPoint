@@ -54,10 +54,9 @@
                     app:cardBackgroundColor="@color/badge_blue_bg"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_text_share_send"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintTop_toTopOf="@+id/ll_text_share_send"
                     app:strokeWidth="0dp">
 
                     <ImageView
@@ -70,34 +69,41 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tv_title_share_send"
+                <LinearLayout
+                    android:id="@+id/ll_text_share_send"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/genshin_font"
-                    android:text="@string/stat_share_sheet_send"
-                    android:textColor="@color/text"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/iv_arrow_send"
                     app:layout_constraintStart_toEndOf="@+id/badge_share_send"
-                    app:layout_constraintTop_toTopOf="@+id/badge_share_send" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/genshin_font"
-                    android:text="@string/stat_share_sheet_send_desc"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_arrow_send"
-                    app:layout_constraintStart_toEndOf="@+id/badge_share_send"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_title_share_send" />
+                    <TextView
+                        android:id="@+id/tv_title_share_send"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/genshin_font"
+                        android:text="@string/stat_share_sheet_send"
+                        android:textColor="@color/text"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_desc_share_send"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/genshin_font"
+                        android:text="@string/stat_share_sheet_send_desc"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/iv_arrow_send"
@@ -136,9 +142,9 @@
                     app:cardBackgroundColor="@color/badge_green_bg"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_text_share_save"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ll_text_share_save"
                     app:strokeWidth="0dp">
 
                     <ImageView
@@ -151,34 +157,41 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tv_title_share_save"
+                <LinearLayout
+                    android:id="@+id/ll_text_share_save"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/genshin_font"
-                    android:text="@string/stat_share_sheet_save"
-                    android:textColor="@color/text"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:minHeight="40dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/iv_arrow_save"
                     app:layout_constraintStart_toEndOf="@+id/badge_share_save"
-                    app:layout_constraintTop_toTopOf="@+id/badge_share_save" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/genshin_font"
-                    android:text="@string/stat_share_sheet_save_desc"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_arrow_save"
-                    app:layout_constraintStart_toEndOf="@+id/badge_share_save"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_title_share_save" />
+                    <TextView
+                        android:id="@+id/tv_title_share_save"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/genshin_font"
+                        android:text="@string/stat_share_sheet_save"
+                        android:textColor="@color/text"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_desc_share_save"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/genshin_font"
+                        android:text="@string/stat_share_sheet_save_desc"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/iv_arrow_save"

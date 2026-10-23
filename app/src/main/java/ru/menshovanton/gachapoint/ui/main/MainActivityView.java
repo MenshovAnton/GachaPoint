@@ -135,7 +135,6 @@ public class MainActivityView extends AppCompatActivity {
     public interface OnCalendarMenuClickListener {
         void onAdd();
         void onDel();
-        void onExport();
         void onRecovery();
         void onCancel();
         void onMultiSelect();
@@ -148,7 +147,6 @@ public class MainActivityView extends AppCompatActivity {
         setDialogClickListener(dialog, R.id.ll_multi_select, listener::onMultiSelect);
         setDialogClickListener(dialog, R.id.ll_add, listener::onAdd);
         setDialogClickListener(dialog, R.id.ll_delete, listener::onDel);
-        setDialogClickListener(dialog, R.id.ll_export, listener::onExport);
         setDialogClickListener(dialog, R.id.ll_mark_up_missed_day, listener::onRecovery);
         setDialogClickListener(dialog, R.id.ll_cancel_mark, listener::onCancel);
 

@@ -1,8 +1,6 @@
 package ru.menshovanton.gachapoint.ui.fragment.tracker;
 
 import android.app.Application;
-import android.content.Context;
-import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,8 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.data.db.AppDatabase;
-import ru.menshovanton.gachapoint.data.db.DatabaseExporter;
 import ru.menshovanton.gachapoint.data.repository.CalendarRepository;
 import ru.menshovanton.gachapoint.domain.enums.DayState;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
@@ -529,16 +525,6 @@ public class TrackerViewModel extends AndroidViewModel {
     private void cancelCheckInternal(int year, int dayOfYear, Runnable onComplete) {
         calendarRepository.setDayStatus(year, dayOfYear, currentGameType, 0, () -> {
             if (onComplete != null) onComplete.run();
-        });
-    }
-
-    public void writeDatabaseToUri(Uri targetUri) {
-        Context context = getApplication().getApplicationContext();
-        AppDatabase.getExecutor().execute(() -> {
-            boolean ok = DatabaseExporter.export(context, targetUri);
-            toastMessageEvent.postValue(ok
-                    ? R.string.db_export_successful
-                    : R.string.db_export_failed);
         });
     }
 }

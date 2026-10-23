@@ -263,11 +263,9 @@
     <string name="menu_feature_in_dev">Раздел находится в разработке!</string>
 
     <!-- About Screen -->
-    <string name="about_version_badge">v0.2.0 • Offline &amp; Open Source</string>
     <string name="about_section_project">О проекте</string>
     <string name="about_section_links">Ссылки и сообщество</string>
     <string name="about_github_title">Исходный код</string>
-    <string name="about_github_desc">github.com/MenshovAnton/GachaPoint</string>
     <string name="about_telegram_title">Telegram-канал</string>
     <string name="about_telegram_desc">Новости и обсуждение проекта</string>
     <string name="about_developer_desc">MenshovAnton • Автор проекта</string>
