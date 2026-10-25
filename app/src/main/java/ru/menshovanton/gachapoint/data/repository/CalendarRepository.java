@@ -166,16 +166,23 @@ public class CalendarRepository {
         if (start.getYear() == end.getYear()) {
             calendar.getDaysRange(start.getYear(), start.getDayOfYear(), end.getDayOfYear(), gameType, callback);
         } else {
-            calendar.getDaysRange(start.getYear(), start.getDayOfYear(), start.lengthOfYear(), gameType, firstYearDates -> calendar.getDaysRange(end.getYear(), 1, end.getDayOfYear(), gameType, secondYearDates -> {
-                List<Date> combined = new ArrayList<>(
-                        (firstYearDates != null ? firstYearDates.size() : 0) +
-                        (secondYearDates != null ? secondYearDates.size() : 0)
-                );
-                if (firstYearDates != null) combined.addAll(firstYearDates);
-                if (secondYearDates != null) combined.addAll(secondYearDates);
-                if (callback != null) callback.onResult(combined);
-            }));
+            fetchYearsRange(start.getYear(), end.getYear(), start, end, gameType, new ArrayList<>(), callback);
         }
+    }
+
+    private void fetchYearsRange(int currentYear, int endYear, LocalDate start, LocalDate end, GameType gameType, List<Date> accumulator, DatabaseRepository.Callback<List<Date>> callback) {
+        if (currentYear > endYear) {
+            if (callback != null) callback.onResult(accumulator);
+            return;
+        }
+        int startDay = (currentYear == start.getYear()) ? start.getDayOfYear() : 1;
+        int endDay = (currentYear == endYear) ? end.getDayOfYear() : LocalDate.of(currentYear, 1, 1).lengthOfYear();
+        calendar.getDaysRange(currentYear, startDay, endDay, gameType, dates -> {
+            if (dates != null) {
+                accumulator.addAll(dates);
+            }
+            fetchYearsRange(currentYear + 1, endYear, start, end, gameType, accumulator, callback);
+        });
     }
 
     public void getStatistic(GameType gameType, int year, DatabaseRepository.Callback<Statistic> callback) {

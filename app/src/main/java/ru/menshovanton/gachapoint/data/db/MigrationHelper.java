@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import org.jetbrains.annotations.NotNull;
+
 import ru.menshovanton.gachapoint.data.local.AppLogger;
 
 public class MigrationHelper {
@@ -137,4 +139,32 @@ public class MigrationHelper {
         }
     }
 };
+
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NotNull SupportSQLiteDatabase database) {
+            AppLogger.i("MigrationHelper", "Starting Room database migration from version 2 to 3...");
+            try {
+                boolean hasOrderIndex = false;
+                try (android.database.Cursor cursor = database.query(new androidx.sqlite.db.SimpleSQLiteQuery("PRAGMA table_info(`pulls`)"))) {
+                    int nameIndex = cursor.getColumnIndex("name");
+                    while (cursor.moveToNext()) {
+                        if ("order_index".equalsIgnoreCase(cursor.getString(nameIndex))) {
+                            hasOrderIndex = true;
+                            break;
+                        }
+                    }
+                }
+                if (!hasOrderIndex) {
+                    database.execSQL("ALTER TABLE `pulls` ADD COLUMN `order_index` INTEGER NOT NULL DEFAULT 0");
+                    database.execSQL("UPDATE `pulls` SET `order_index` = `id`");
+                }
+                database.execSQL("DROP INDEX IF EXISTS `idx_pull_order`");
+                AppLogger.i("MigrationHelper", "Room database migration 2 -> 3 completed successfully.");
+            } catch (Throwable t) {
+                AppLogger.e("MigrationHelper", "Room database migration 2 -> 3 FAILED!", t);
+                throw t;
+            }
+        }
+    };
 }

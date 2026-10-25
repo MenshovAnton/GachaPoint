@@ -23,7 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
@@ -267,14 +267,7 @@ public class JournalView extends Fragment {
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        DefaultItemAnimator animator = new DefaultItemAnimator();
-        animator.setAddDuration(300);
-        animator.setRemoveDuration(250);
-        animator.setMoveDuration(250);
-        animator.setChangeDuration(250);
-        animator.setSupportsChangeAnimations(false);
-        recyclerView.setItemAnimator(animator);
+        recyclerView.setItemAnimator(new SlideInItemAnimator());
         android.view.animation.LayoutAnimationController animationController =
                 android.view.animation.AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_animation_fall_down);
         recyclerView.setLayoutAnimation(animationController);
@@ -287,6 +280,72 @@ public class JournalView extends Fragment {
         });
         pullsAdapter.setOnSelectionChangedListener(this::updateSelectionUi);
         recyclerView.setAdapter(pullsAdapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+            @Override
+            public boolean isLongPressDragEnabled() {
+                return false;
+            }
+
+            @Override
+            public boolean isItemViewSwipeEnabled() {
+                return false;
+            }
+
+            @Override
+            public int getMovementFlags(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh) {
+                if (pullsAdapter.isSelectionMode()) {
+                    return makeMovementFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0);
+                }
+                return 0;
+            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView rv,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+                int from = viewHolder.getBindingAdapterPosition();
+                int to = target.getBindingAdapterPosition();
+                if (from != RecyclerView.NO_POSITION && to != RecyclerView.NO_POSITION) {
+                    pullsAdapter.onItemMove(from, to);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            }
+
+            @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+                super.onSelectedChanged(viewHolder, actionState);
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                    recyclerView.setNestedScrollingEnabled(false);
+                    triggerHapticFeedback();
+                    if (viewHolder != null) {
+                        viewHolder.itemView.setAlpha(0.85f);
+                        viewHolder.itemView.setScaleX(1.02f);
+                        viewHolder.itemView.setScaleY(1.02f);
+                    }
+                } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+                    recyclerView.setNestedScrollingEnabled(true);
+                }
+            }
+
+            @Override
+            public void clearView(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder viewHolder) {
+                super.clearView(rv, viewHolder);
+                viewHolder.itemView.setAlpha(1.0f);
+                viewHolder.itemView.setScaleX(1.0f);
+                viewHolder.itemView.setScaleY(1.0f);
+                recyclerView.setNestedScrollingEnabled(true);
+                viewModel.onPullsReordered(pullsAdapter.getCurrentPullsList());
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        pullsAdapter.setOnStartDragListener(itemTouchHelper::startDrag);
 
         scrollListener = new RecyclerView.OnScrollListener() {
             @Override
@@ -545,8 +604,10 @@ public class JournalView extends Fragment {
 
                 if (!isEmpty && (newList.size() > previousSize || bannerChanged)) {
                     recyclerView.post(() -> {
-                        if (pullsAdapter.getItemCount() > 0) {
-                            recyclerView.scrollToPosition(0);
+                        LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
+                        int firstVisible = lm != null ? lm.findFirstVisibleItemPosition() : 0;
+                        if (firstVisible > 0) {
+                            recyclerView.smoothScrollToPosition(0);
                         }
                         if (appbarLayout != null) {
                             appbarLayout.setExpanded(true, true);

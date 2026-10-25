@@ -49,10 +49,13 @@ public class PullEntity {
     @ColumnInfo(name = "pity_status", defaultValue = "NONE")
     public String pityStatus = "NONE";
 
+    @ColumnInfo(name = "order_index", defaultValue = "0")
+    public long orderIndex;
+
     public PullEntity() {}
 
     @Ignore
-    public PullEntity(int gameType, String dateTime, String dropRare, String dropType, String bannerType, boolean isResetPity, String pityStatus) {
+    public PullEntity(int gameType, String dateTime, String dropRare, String dropType, String bannerType, boolean isResetPity, String pityStatus, long orderIndex) {
         this.gameType = gameType;
         this.dateTime = dateTime;
         this.dropRare = dropRare;
@@ -60,6 +63,12 @@ public class PullEntity {
         this.bannerType = bannerType;
         this.isResetPity = isResetPity;
         this.pityStatus = pityStatus != null ? pityStatus : "NONE";
+        this.orderIndex = orderIndex;
+    }
+
+    @Ignore
+    public PullEntity(int gameType, String dateTime, String dropRare, String dropType, String bannerType, boolean isResetPity, String pityStatus) {
+        this(gameType, dateTime, dropRare, dropType, bannerType, isResetPity, pityStatus, 0L);
     }
 
     @Ignore
@@ -68,6 +77,6 @@ public class PullEntity {
     }
 
     public Pull toWishModel() {
-        return new Pull(id, dropRare, dropType, dateTime, bannerType, isResetPity, PityStatus.fromName(pityStatus));
+        return new Pull(id, dropRare, dropType, dateTime, bannerType, isResetPity, PityStatus.fromName(pityStatus), orderIndex > 0 ? orderIndex : id);
     }
 }

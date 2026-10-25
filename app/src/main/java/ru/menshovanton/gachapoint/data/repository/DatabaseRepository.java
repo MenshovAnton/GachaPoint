@@ -117,13 +117,92 @@ public class DatabaseRepository {
         executeAsyncSafe(() -> {
             int gameCode = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
             String statusStr = pityStatus != null ? pityStatus.name() : "NONE";
+            Long maxOrder = getDb().pullDao().getMaxOrderIndex(gameCode, bannerType);
+            long baseOrder = (maxOrder != null && maxOrder > 0) ? maxOrder : System.currentTimeMillis();
             List<PullEntity> entities = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
                 boolean currentReset = isResetPity && (i == count - 1);
                 String currentStatus = (i == count - 1) ? statusStr : "NONE";
-                entities.add(new PullEntity(gameCode, dateTime, dropRare, dropType, bannerType, currentReset, currentStatus));
+                long pullOrder = baseOrder + i + 1;
+                entities.add(new PullEntity(gameCode, dateTime, dropRare, dropType, bannerType, currentReset, currentStatus, pullOrder));
             }
             getDb().pullDao().insertAll(entities);
+        }, onComplete);
+    }
+
+    public void addTenPullBatch(String dateTime, String defaultContent, String threeStar,
+                                String finalDropType, String dropRare, GameType gameType,
+                                String bannerType, boolean isResetPity, PityStatus pityStatus, Runnable onComplete) {
+        executeAsyncSafe(() -> {
+            int gameCode = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
+            String statusStr = pityStatus != null ? pityStatus.name() : "NONE";
+            Long maxOrder = getDb().pullDao().getMaxOrderIndex(gameCode, bannerType);
+            long baseOrder = (maxOrder != null && maxOrder > 0) ? maxOrder : System.currentTimeMillis();
+            List<PullEntity> entities = new ArrayList<>(10);
+            for (int i = 0; i < 9; i++) {
+                long pullOrder = baseOrder + i + 1;
+                entities.add(new PullEntity(gameCode, dateTime, threeStar, defaultContent, bannerType, false, "NONE", pullOrder));
+            }
+            long lastPullOrder = baseOrder + 10;
+            entities.add(new PullEntity(gameCode, dateTime, dropRare, finalDropType, bannerType, isResetPity, statusStr, lastPullOrder));
+            getDb().pullDao().insertAll(entities);
+        }, onComplete);
+    }
+
+    public void updatePullsOrderBatch(List<Pull> reorderedPulls, Runnable onComplete) {
+        if (reorderedPulls == null || reorderedPulls.isEmpty()) {
+            if (onComplete != null) onComplete.run();
+            return;
+        }
+        executeAsyncSafe(() -> {
+            AppDatabase db = getDb();
+            db.runInTransaction(() -> {
+                List<Long> orderIndices = new ArrayList<>(reorderedPulls.size());
+                long maxOrder = 0;
+                boolean allSame = true;
+                for (int i = 0; i < reorderedPulls.size(); i++) {
+                    Pull p = reorderedPulls.get(i);
+                    long oi = p.getOrderIndex();
+                    if (oi == 0) oi = p.getId();
+                    orderIndices.add(oi);
+                    if (oi > maxOrder) maxOrder = oi;
+                    if (i > 0 && !orderIndices.get(i).equals(orderIndices.get(0))) {
+                        allSame = false;
+                    }
+                }
+
+                if (allSame || maxOrder == 0) {
+                    long base = Math.max(maxOrder, reorderedPulls.size() * 10L);
+                    for (int i = 0; i < reorderedPulls.size(); i++) {
+                        Pull pull = reorderedPulls.get(i);
+                        long newOrder = base - ((long) i * 10L);
+                        pull.setOrderIndex(newOrder);
+                        db.pullDao().updateOrderIndex(pull.getId(), newOrder);
+                    }
+                } else {
+                    orderIndices.sort(Collections.reverseOrder());
+                    for (int i = 0; i < orderIndices.size() - 1; i++) {
+                        if (orderIndices.get(i) <= orderIndices.get(i + 1)) {
+                            orderIndices.set(i + 1, orderIndices.get(i) - 1);
+                        }
+                    }
+                    for (int i = 0; i < reorderedPulls.size(); i++) {
+                        Pull pull = reorderedPulls.get(i);
+                        long newOrder = orderIndices.get(i);
+                        if (pull.getOrderIndex() != newOrder) {
+                            pull.setOrderIndex(newOrder);
+                            db.pullDao().updateOrderIndex(pull.getId(), newOrder);
+                        }
+                    }
+                }
+            });
+        }, onComplete);
+    }
+
+    public void swapPullsOrder(int id1, long order1, int id2, long order2, Runnable onComplete) {
+        executeAsyncSafe(() -> {
+            getDb().pullDao().updateOrderIndex(id1, order2);
+            getDb().pullDao().updateOrderIndex(id2, order1);
         }, onComplete);
     }
 

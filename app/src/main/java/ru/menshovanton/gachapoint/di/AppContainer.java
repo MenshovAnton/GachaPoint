@@ -51,4 +51,8 @@ public class AppContainer {
     public CalendarRepository getCalendarRepository() {
         return calendarRepository;
     }
+
+    public void reload(Runnable onComplete) {
+        piggyBankRepository.loadFromDatabase(onComplete);
+    }
 }

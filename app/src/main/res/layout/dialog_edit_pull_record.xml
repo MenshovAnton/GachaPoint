@@ -34,6 +34,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+
         <ImageButton
             android:id="@+id/btn_dialog_delete"
             android:layout_width="40dp"

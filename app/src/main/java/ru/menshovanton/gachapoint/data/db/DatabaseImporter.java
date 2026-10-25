@@ -62,42 +62,56 @@ public class DatabaseImporter {
 
                 AppDatabase.destroyInstance();
 
-                if (walFile.exists()) {
-                    walFile.delete();
-                }
+                File bakDbFile = new File(dbFile.getPath() + ".bak");
+                File bakWalFile = new File(walFile.getPath() + ".bak");
+                File bakShmFile = new File(shmFile.getPath() + ".bak");
 
-                if (shmFile.exists()) {
-                    shmFile.delete();
-                }
+                cleanupTempFiles(bakDbFile, bakWalFile, bakShmFile);
 
-                if (dbFile.exists() && !dbFile.delete()) {
-                    throw new Exception("Cannot delete old database file");
-                }
+                if (dbFile.exists()) dbFile.renameTo(bakDbFile);
+                if (walFile.exists()) walFile.renameTo(bakWalFile);
+                if (shmFile.exists()) shmFile.renameTo(bakShmFile);
 
-                if (!tempFile.renameTo(dbFile)) {
-                    try (InputStream in = new FileInputStream(tempFile);
-                         OutputStream out = new FileOutputStream(dbFile)) {
-                        byte[] buffer = new byte[8192];
-                        int length;
-                        while ((length = in.read(buffer)) > 0) {
-                            out.write(buffer, 0, length);
+                try {
+                    if (!tempFile.renameTo(dbFile)) {
+                        try (InputStream in = new FileInputStream(tempFile);
+                             OutputStream out = new FileOutputStream(dbFile)) {
+                            byte[] buffer = new byte[8192];
+                            int length;
+                            while ((length = in.read(buffer)) > 0) {
+                                out.write(buffer, 0, length);
+                            }
+                            out.flush();
+                        } finally {
+                            tempFile.delete();
                         }
-                        out.flush();
-                    } finally {
-                        tempFile.delete();
                     }
+
+                    if (tempWalFile.exists()) tempWalFile.delete();
+                    if (tempShmFile.exists()) tempShmFile.delete();
+
+                    AppDatabase newDb = AppDatabase.getInstance(context);
+                    androidx.sqlite.db.SupportSQLiteDatabase writableDb = newDb.getOpenHelper().getWritableDatabase();
+                    AppDatabase.syncSubscriptionsRaw(writableDb);
+                    AppDatabase.syncSavingsRaw(context, writableDb);
+
+                    cleanupTempFiles(bakDbFile, bakWalFile, bakShmFile);
+
+                    if (context.getApplicationContext() instanceof ru.menshovanton.gachapoint.App) {
+                        ((ru.menshovanton.gachapoint.App) context.getApplicationContext()).getAppContainer().reload(null);
+                    }
+
+                    AppLogger.i("DatabaseImporter", "Database imported and synced successfully.");
+                    AppDatabase.postToMain(callback::onSuccess);
+                } catch (Exception innerEx) {
+                    AppLogger.e("DatabaseImporter", "Import step failed, rolling back to original database...", innerEx);
+                    AppDatabase.destroyInstance();
+                    cleanupTempFiles(dbFile, walFile, shmFile);
+                    if (bakDbFile.exists()) bakDbFile.renameTo(dbFile);
+                    if (bakWalFile.exists()) bakWalFile.renameTo(walFile);
+                    if (bakShmFile.exists()) bakShmFile.renameTo(shmFile);
+                    throw innerEx;
                 }
-
-                if (tempWalFile.exists()) tempWalFile.delete();
-                if (tempShmFile.exists()) tempShmFile.delete();
-
-                AppDatabase newDb = AppDatabase.getInstance(context);
-                androidx.sqlite.db.SupportSQLiteDatabase writableDb = newDb.getOpenHelper().getWritableDatabase();
-                AppDatabase.syncSubscriptionsRaw(writableDb);
-                AppDatabase.syncSavingsRaw(context, writableDb);
-
-                AppLogger.i("DatabaseImporter", "Database imported and synced successfully.");
-                AppDatabase.postToMain(callback::onSuccess);
 
             } catch (Exception e) {
                 AppLogger.e("DatabaseImporter", "Failed to import database from: " + sourceUri, e);

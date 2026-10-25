@@ -8,12 +8,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import ru.menshovanton.gachapoint.data.db.entities.SavingsEntity;
-import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 
 public class PiggyBankRepository {
 
-    private final Preferences preferences;
     private final DatabaseRepository databaseRepository;
     private final Map<GameType, SavingsEntity> cache = new ConcurrentHashMap<>();
 
@@ -22,20 +20,13 @@ public class PiggyBankRepository {
     }
 
     public PiggyBankRepository(@NonNull Context context, @NonNull DatabaseRepository databaseRepository) {
-        this.preferences = new Preferences(context);
         this.databaseRepository = databaseRepository;
         initCache();
     }
 
     private void initCache() {
         for (GameType game : GameType.values()) {
-            cache.put(game, new SavingsEntity(
-                    game.getCode(),
-                    preferences.getPiggyBankTarget(game),
-                    preferences.getPiggyBankManualProgress(game),
-                    preferences.getPiggyBankSubsProgress(game),
-                    preferences.getPiggyBankDailiesProgress(game)
-            ));
+            cache.put(game, new SavingsEntity(game.getCode(), 0, 0, 0, 0));
         }
         loadFromDatabase(null);
     }
@@ -46,10 +37,6 @@ public class PiggyBankRepository {
                 for (SavingsEntity entity : list) {
                     GameType game = entity.getGameTypeEnum();
                     cache.put(game, entity);
-                    preferences.savePiggyBankTarget(game, entity.target);
-                    preferences.savePiggyBankManualProgress(game, entity.manualProgress);
-                    preferences.savePiggyBankSubsProgress(game, entity.subsProgress);
-                    preferences.savePiggyBankDailiesProgress(game, entity.dailiesProgress);
                 }
             }
             if (onComplete != null) onComplete.run();
@@ -58,26 +45,26 @@ public class PiggyBankRepository {
 
     public int getManualProgress(GameType gameType) {
         SavingsEntity s = cache.get(gameType);
-        return s != null ? s.manualProgress : preferences.getPiggyBankManualProgress(gameType);
+        return s != null ? s.manualProgress : 0;
     }
 
     public void saveManualProgress(GameType gameType, int progress) {
+        int safeProgress = Math.max(0, progress);
         SavingsEntity s = cache.get(gameType);
-        if (s != null) s.manualProgress = progress;
-        preferences.savePiggyBankManualProgress(gameType, progress);
-        databaseRepository.saveSavingsManualProgress(gameType, progress, null);
+        if (s != null) s.manualProgress = safeProgress;
+        databaseRepository.saveSavingsManualProgress(gameType, safeProgress, null);
     }
 
     public int getSubsProgress(GameType gameType) {
         SavingsEntity s = cache.get(gameType);
-        return s != null ? s.subsProgress : preferences.getPiggyBankSubsProgress(gameType);
+        return s != null ? s.subsProgress : 0;
     }
 
     public void saveSubsProgress(GameType gameType, int progress) {
+        int safeProgress = Math.max(0, progress);
         SavingsEntity s = cache.get(gameType);
-        if (s != null) s.subsProgress = progress;
-        preferences.savePiggyBankSubsProgress(gameType, progress);
-        databaseRepository.saveSavingsSubsProgress(gameType, progress, null);
+        if (s != null) s.subsProgress = safeProgress;
+        databaseRepository.saveSavingsSubsProgress(gameType, safeProgress, null);
     }
 
     public void addSubsProgress(GameType gameType, int wishes) {
@@ -88,14 +75,14 @@ public class PiggyBankRepository {
 
     public int getDailiesProgress(GameType gameType) {
         SavingsEntity s = cache.get(gameType);
-        return s != null ? s.dailiesProgress : preferences.getPiggyBankDailiesProgress(gameType);
+        return s != null ? s.dailiesProgress : 0;
     }
 
     public void saveDailiesProgress(GameType gameType, int progress) {
+        int safeProgress = Math.max(0, progress);
         SavingsEntity s = cache.get(gameType);
-        if (s != null) s.dailiesProgress = progress;
-        preferences.savePiggyBankDailiesProgress(gameType, progress);
-        databaseRepository.saveSavingsDailiesProgress(gameType, progress, null);
+        if (s != null) s.dailiesProgress = safeProgress;
+        databaseRepository.saveSavingsDailiesProgress(gameType, safeProgress, null);
     }
 
     public int getTotalProgress(GameType gameType) {
@@ -104,14 +91,14 @@ public class PiggyBankRepository {
 
     public int getTarget(GameType gameType) {
         SavingsEntity s = cache.get(gameType);
-        return s != null ? s.target : preferences.getPiggyBankTarget(gameType);
+        return s != null ? s.target : 0;
     }
 
     public void saveTarget(GameType gameType, int target) {
+        int safeTarget = Math.max(0, target);
         SavingsEntity s = cache.get(gameType);
-        if (s != null) s.target = target;
-        preferences.savePiggyBankTarget(gameType, target);
-        databaseRepository.saveSavingsTarget(gameType, target, null);
+        if (s != null) s.target = safeTarget;
+        databaseRepository.saveSavingsTarget(gameType, safeTarget, null);
     }
 
     public void reset(GameType gameType) {
@@ -120,8 +107,6 @@ public class PiggyBankRepository {
             s.target = 0;
             s.manualProgress = 0;
         }
-        preferences.savePiggyBankTarget(gameType, 0);
-        preferences.savePiggyBankManualProgress(gameType, 0);
         databaseRepository.resetSavings(gameType, null);
     }
 }

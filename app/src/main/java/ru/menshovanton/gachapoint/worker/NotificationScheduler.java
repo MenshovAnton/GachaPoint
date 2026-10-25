@@ -1,19 +1,21 @@
 package ru.menshovanton.gachapoint.worker;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.concurrent.TimeUnit;
+import java.time.ZoneId;
 
 import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 
 public class NotificationScheduler {
+
+    public static final int ALARM_REQUEST_CODE = 1001;
 
     public static void scheduleDailyNotification(Context context) {
         scheduleDailyNotification(context, false);
@@ -39,25 +41,26 @@ public class NotificationScheduler {
                 targetTime = targetTime.plusDays(1);
             }
 
-            long initialDelayMinutes = Duration.between(now, targetTime).toMinutes();
+            long triggerAtMillis = targetTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
-            PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(
-                    DailyNotificationWorker.class, 24, TimeUnit.HOURS)
-                    .setInitialDelay(initialDelayMinutes, TimeUnit.MINUTES)
-                    .addTag(DailyNotificationWorker.WORK_TAG)
-                    .build();
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            if (alarmManager != null) {
+                Intent intent = new Intent(context, DailyNotificationReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        context,
+                        ALARM_REQUEST_CODE,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                );
 
-            ExistingPeriodicWorkPolicy policy = forceReschedule
-                    ? ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE
-                    : ExistingPeriodicWorkPolicy.KEEP;
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+                AppLogger.i("NotificationScheduler", "Daily notification scheduled via AlarmManager for " + targetTime);
+            }
 
-            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-                    DailyNotificationWorker.WORK_TAG,
-                    policy,
-                    workRequest
-            );
-            AppLogger.i("NotificationScheduler", "Daily notification scheduled. Target " + targetHour + ":" + targetMinute
-                    + ", initial delay: " + initialDelayMinutes + " minutes.");
+            try {
+                WorkManager.getInstance(context).cancelUniqueWork(DailyNotificationWorker.WORK_TAG);
+            } catch (Throwable ignored) {}
+
         } catch (Throwable t) {
             AppLogger.e("NotificationScheduler", "Failed to schedule daily notification", t);
         }
@@ -65,7 +68,22 @@ public class NotificationScheduler {
 
     public static void cancelDailyNotification(Context context) {
         try {
-            WorkManager.getInstance(context).cancelUniqueWork(DailyNotificationWorker.WORK_TAG);
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            if (alarmManager != null) {
+                Intent intent = new Intent(context, DailyNotificationReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        context,
+                        ALARM_REQUEST_CODE,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                );
+                alarmManager.cancel(pendingIntent);
+            }
+
+            try {
+                WorkManager.getInstance(context).cancelUniqueWork(DailyNotificationWorker.WORK_TAG);
+            } catch (Throwable ignored) {}
+
             AppLogger.i("NotificationScheduler", "Daily notification cancelled.");
         } catch (Throwable t) {
             AppLogger.e("NotificationScheduler", "Failed to cancel daily notification", t);

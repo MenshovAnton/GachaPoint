@@ -47,39 +47,31 @@ public class StatsReportGenerator {
                 Bitmap bitmap = createReportBitmap(context, stats);
                 String fileName = "GachaPoint_" + stats.getGameType().name() + "_" + System.currentTimeMillis() + ".png";
 
+                android.content.ContentValues values = new android.content.ContentValues();
+                values.put(android.provider.MediaStore.Images.Media.DISPLAY_NAME, fileName);
+                values.put(android.provider.MediaStore.Images.Media.MIME_TYPE, "image/png");
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                    android.content.ContentValues values = new android.content.ContentValues();
-                    values.put(android.provider.MediaStore.Images.Media.DISPLAY_NAME, fileName);
-                    values.put(android.provider.MediaStore.Images.Media.MIME_TYPE, "image/png");
                     values.put(android.provider.MediaStore.Images.Media.RELATIVE_PATH, android.os.Environment.DIRECTORY_PICTURES + "/GachaPoint");
                     values.put(android.provider.MediaStore.Images.Media.IS_PENDING, 1);
+                }
 
-                    android.content.ContentResolver resolver = context.getContentResolver();
-                    Uri uri = resolver.insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                android.content.ContentResolver resolver = context.getContentResolver();
+                Uri uri = resolver.insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
-                    if (uri == null) {
-                        throw new IOException("Failed to create MediaStore entry");
+                if (uri == null) {
+                    throw new IOException("Failed to create MediaStore entry");
+                }
+
+                try (java.io.OutputStream out = resolver.openOutputStream(uri)) {
+                    if (out == null || !bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)) {
+                        throw new IOException("Failed to save image bytes");
                     }
+                }
 
-                    try (java.io.OutputStream out = resolver.openOutputStream(uri)) {
-                        if (out == null || !bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)) {
-                            throw new IOException("Failed to save image bytes");
-                        }
-                    }
-
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                     values.clear();
                     values.put(android.provider.MediaStore.Images.Media.IS_PENDING, 0);
                     resolver.update(uri, values, null, null);
-                } else {
-                    File picturesDir = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_PICTURES), "GachaPoint");
-                    if (!picturesDir.exists()) {
-                        picturesDir.mkdirs();
-                    }
-                    File imageFile = new File(picturesDir, fileName);
-                    try (FileOutputStream out = new FileOutputStream(imageFile)) {
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                    }
-                    android.media.MediaScannerConnection.scanFile(context, new String[]{imageFile.getAbsolutePath()}, new String[]{"image/png"}, null);
                 }
 
                 if (callback != null) {

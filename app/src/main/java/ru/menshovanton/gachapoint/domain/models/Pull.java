@@ -12,8 +12,9 @@ public class Pull {
     private int pity4StarNumber;
     private boolean isResetPity;
     private PityStatus pityStatus;
+    private long orderIndex;
 
-    public Pull(int id, String dropRare, String dropType, String dateTime, String bannerType, boolean isResetPity, PityStatus pityStatus) {
+    public Pull(int id, String dropRare, String dropType, String dateTime, String bannerType, boolean isResetPity, PityStatus pityStatus, long orderIndex) {
         this.id = id;
         this.dropRare = dropRare;
         this.dropType = dropType;
@@ -21,6 +22,11 @@ public class Pull {
         this.bannerType = bannerType;
         this.isResetPity = isResetPity;
         this.pityStatus = pityStatus != null ? pityStatus : PityStatus.NONE;
+        this.orderIndex = orderIndex;
+    }
+
+    public Pull(int id, String dropRare, String dropType, String dateTime, String bannerType, boolean isResetPity, PityStatus pityStatus) {
+        this(id, dropRare, dropType, dateTime, bannerType, isResetPity, pityStatus, id);
     }
 
     public Pull(int id, String dropRare, String dropType, String dateTime, String bannerType, boolean isResetPity) {
@@ -40,4 +46,6 @@ public class Pull {
     public void setResetPity(boolean resetPity) { isResetPity = resetPity; }
     public PityStatus getPityStatus() { return pityStatus; }
     public void setPityStatus(PityStatus pityStatus) { this.pityStatus = pityStatus; }
+    public long getOrderIndex() { return orderIndex; }
+    public void setOrderIndex(long orderIndex) { this.orderIndex = orderIndex; }
 }

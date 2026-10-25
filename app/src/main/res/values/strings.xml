@@ -409,4 +409,6 @@
     <string name="stat_badge_sub_count_freq">%1$d %2$s • 1 every ~%3$.0f pulls</string>
     <string name="stat_badge_sub_empty_count">0 %s</string>
     <string name="stat_watermark_text">GachaPoint • Your offline gacha companion</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
 </resources>

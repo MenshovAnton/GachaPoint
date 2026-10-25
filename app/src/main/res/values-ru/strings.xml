@@ -375,4 +375,6 @@
     <string name="stat_badge_sub_count_freq">%1$d %2$s • 1 каждые ~%3$.0f кр.</string>
     <string name="stat_badge_sub_empty_count">0 %s</string>
     <string name="stat_watermark_text">GachaPoint • Твой офлайн гача-компаньон</string>
+    <string name="move_up">Переместить выше</string>
+    <string name="move_down">Переместить ниже</string>
 </resources>

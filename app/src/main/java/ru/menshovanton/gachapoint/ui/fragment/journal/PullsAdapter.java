@@ -1,14 +1,16 @@
 package ru.menshovanton.gachapoint.ui.fragment.journal;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -16,6 +18,8 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +30,7 @@ import ru.menshovanton.gachapoint.domain.enums.PityStatus;
 import ru.menshovanton.gachapoint.domain.enums.RareType;
 import ru.menshovanton.gachapoint.domain.models.Pull;
 
-public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder> {
+public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHolder> {
 
     private static final String PAYLOAD_SELECTION = "payload_selection";
     private static final DateTimeFormatter DB_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -35,9 +39,11 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
     private OnItemClickListener listener;
     private OnItemLongClickListener longClickListener;
     private OnSelectionChangedListener selectionChangedListener;
+    private OnStartDragListener dragListener;
 
     private boolean isSelectionMode = false;
     private final Set<Integer> selectedPullIds = new HashSet<>();
+    private final List<Pull> items = new ArrayList<>();
 
     public interface OnItemClickListener {
         void onItemClick(Pull pull);
@@ -51,26 +57,12 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
         void onSelectionChanged(int selectedCount);
     }
 
-    public PullsAdapter() {
-        super(DIFF_CALLBACK);
+    public interface OnStartDragListener {
+        void onStartDrag(RecyclerView.ViewHolder viewHolder);
     }
 
-    private static final DiffUtil.ItemCallback<Pull> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Pull oldItem, @NonNull Pull newItem) {
-            return oldItem.getId() == newItem.getId();
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull Pull oldItem, @NonNull Pull newItem) {
-            return oldItem.getPityNumber() == newItem.getPityNumber()
-                    && oldItem.getPity4StarNumber() == newItem.getPity4StarNumber()
-                    && Objects.equals(oldItem.getPityStatus(), newItem.getPityStatus())
-                    && Objects.equals(oldItem.getDropRare(), newItem.getDropRare())
-                    && Objects.equals(oldItem.getDropType(), newItem.getDropType())
-                    && Objects.equals(oldItem.getDateTime(), newItem.getDateTime());
-        }
-    };
+    public PullsAdapter() {
+    }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
@@ -82,6 +74,103 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
 
     public void setOnSelectionChangedListener(OnSelectionChangedListener selectionChangedListener) {
         this.selectionChangedListener = selectionChangedListener;
+    }
+
+    public void setOnStartDragListener(OnStartDragListener dragListener) {
+        this.dragListener = dragListener;
+    }
+
+    public void submitList(List<Pull> newItems) {
+        submitList(newItems, null);
+    }
+
+    public void submitList(List<Pull> newItems, Runnable commitCallback) {
+        if (newItems == null) {
+            int count = items.size();
+            items.clear();
+            notifyItemRangeRemoved(0, count);
+            if (commitCallback != null) commitCallback.run();
+            return;
+        }
+
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return items.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newItems.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return items.get(oldItemPosition).getId() == newItems.get(newItemPosition).getId();
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                Pull oldItem = items.get(oldItemPosition);
+                Pull newItem = newItems.get(newItemPosition);
+                return oldItem.getPityNumber() == newItem.getPityNumber()
+                        && oldItem.getPity4StarNumber() == newItem.getPity4StarNumber()
+                        && Objects.equals(oldItem.getPityStatus(), newItem.getPityStatus())
+                        && Objects.equals(oldItem.getDropRare(), newItem.getDropRare())
+                        && Objects.equals(oldItem.getDropType(), newItem.getDropType())
+                        && Objects.equals(oldItem.getDateTime(), newItem.getDateTime());
+            }
+
+            @NonNull
+            @Override
+            public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+                return "PAYLOAD_PITY";
+            }
+        });
+
+        items.clear();
+        items.addAll(newItems);
+        diffResult.dispatchUpdatesTo(this);
+
+        if (commitCallback != null) {
+            commitCallback.run();
+        }
+    }
+
+    public Pull getItem(int position) {
+        if (position >= 0 && position < items.size()) {
+            return items.get(position);
+        }
+        return null;
+    }
+
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
+
+    public List<Pull> getCurrentList() {
+        return new ArrayList<>(items);
+    }
+
+    public List<Pull> getCurrentPullsList() {
+        return new ArrayList<>(items);
+    }
+
+    public void onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < 0 || toPosition < 0 || fromPosition >= items.size() || toPosition >= items.size()) {
+            return;
+        }
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(items, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(items, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
     }
 
     public boolean isSelectionMode() {
@@ -174,6 +263,7 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull PullsViewHolder holder, int position) {
         Pull pull = getItem(position);
@@ -195,6 +285,15 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
         }
 
         applySelectionAndStyling(holder, pull, context);
+
+        holder.ivDragHandle.setOnTouchListener((v, event) -> {
+            if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                if (dragListener != null) {
+                    dragListener.onStartDrag(holder);
+                }
+            }
+            return false;
+        });
 
         holder.cardView.setOnClickListener(v -> {
             if (isSelectionMode) {
@@ -223,8 +322,10 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
         if (isSelectionMode) {
             holder.cbSelect.setVisibility(View.VISIBLE);
             holder.cbSelect.setChecked(isSelected);
+            holder.ivDragHandle.setVisibility(View.VISIBLE);
         } else {
             holder.cbSelect.setVisibility(View.GONE);
+            holder.ivDragHandle.setVisibility(View.GONE);
         }
 
         if (isSelected) {
@@ -297,6 +398,7 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
         TextView tvOutcome;
         TextView date;
         MaterialCheckBox cbSelect;
+        ImageView ivDragHandle;
 
         public PullsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -308,6 +410,7 @@ public class PullsAdapter extends ListAdapter<Pull, PullsAdapter.PullsViewHolder
             tvOutcome = itemView.findViewById(R.id.tv_pull_outcome);
             date = itemView.findViewById(R.id.date);
             cbSelect = itemView.findViewById(R.id.cb_select);
+            ivDragHandle = itemView.findViewById(R.id.iv_drag_handle);
         }
     }
 }

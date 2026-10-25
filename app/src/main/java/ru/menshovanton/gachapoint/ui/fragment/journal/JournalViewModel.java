@@ -146,7 +146,6 @@ public class JournalViewModel extends AndroidViewModel {
                 }
 
                 counter5 = 0;
-                counter4 = 0;
             } else if (rareType == RareType.EPIC) {
                 pull.setPityNumber(counter5);
                 pull.setPity4StarNumber(counter4);
@@ -209,30 +208,46 @@ public class JournalViewModel extends AndroidViewModel {
             );
         } else {
             if (isBatch) {
+                databaseRepository.addTenPullBatch(
+                        dateForDb,
+                        defaultContent,
+                        threeStar,
+                        finalDropType,
+                        dropRare,
+                        currentGameType,
+                        getCurrentBannerType(),
+                        isResetPity,
+                        pityStatus,
+                        () -> refreshData(false)
+                );
+            } else {
                 databaseRepository.addPulls(
-                    dateForDb,
-                    defaultContent,
-                    threeStar,
-                    9,
-                    currentGameType,
-                    getCurrentBannerType(),
-                    false,
-                    PityStatus.NONE,
-                    () -> refreshData(false)
+                        dateForDb,
+                        finalDropType,
+                        dropRare,
+                        1,
+                        currentGameType,
+                        getCurrentBannerType(),
+                        isResetPity,
+                        pityStatus,
+                        () -> refreshData(false)
                 );
             }
-            databaseRepository.addPulls(
-                    dateForDb,
-                    finalDropType,
-                    dropRare,
-                    1,
-                    currentGameType,
-                    getCurrentBannerType(),
-                    isResetPity,
-                    pityStatus,
-                    () -> refreshData(false)
-            );
         }
+    }
+
+    public void onPullsReordered(List<Pull> reorderedPulls) {
+        if (reorderedPulls == null || reorderedPulls.isEmpty()) return;
+        databaseRepository.updatePullsOrderBatch(reorderedPulls, () -> refreshData(false));
+    }
+
+    public void swapPullsOrder(Pull pull1, Pull pull2) {
+        if (pull1 == null || pull2 == null) return;
+        databaseRepository.swapPullsOrder(
+                pull1.getId(), pull1.getOrderIndex(),
+                pull2.getId(), pull2.getOrderIndex(),
+                () -> refreshData(false)
+        );
     }
 
     public void deleteWish(int id) {

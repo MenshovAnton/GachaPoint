@@ -71,10 +71,9 @@ public class PiggyBankViewModel extends AndroidViewModel {
     }
 
     public void removeProgress(int wishes) {
-        int totalProgress = repository.getTotalProgress(currentGameType);
-        if (totalProgress <= 0) return;
-        int diff = Math.min(wishes, totalProgress);
         int manualProgress = repository.getManualProgress(currentGameType);
+        if (manualProgress <= 0) return;
+        int diff = Math.min(wishes, manualProgress);
         repository.saveManualProgress(currentGameType, manualProgress - diff);
         refreshData();
     }

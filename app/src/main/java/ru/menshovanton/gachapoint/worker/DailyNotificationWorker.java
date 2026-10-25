@@ -37,24 +37,7 @@ public class DailyNotificationWorker extends Worker {
         AppLogger.i("DailyNotificationWorker", "DailyNotificationWorker started execution.");
 
         try {
-            Preferences preferences = new Preferences(context);
-
-            boolean allowNotifications = preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS);
-            if (!allowNotifications) {
-                AppLogger.i("DailyNotificationWorker", "Notifications are disabled in preferences. Skipping.");
-                return Result.success();
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    AppLogger.w("DailyNotificationWorker", "POST_NOTIFICATIONS permission is not granted. Failing work.");
-                    return Result.failure();
-                }
-            }
-
-            sendNotification(context);
-            AppLogger.i("DailyNotificationWorker", "Daily notification sent successfully.");
+            dispatchNotification(context);
             return Result.success();
         } catch (Throwable t) {
             AppLogger.e("DailyNotificationWorker", "Error executing DailyNotificationWorker", t);
@@ -62,7 +45,29 @@ public class DailyNotificationWorker extends Worker {
         }
     }
 
-    private void sendNotification(Context context) {
+    public static void dispatchNotification(Context context) {
+        if (context == null) return;
+        Preferences preferences = new Preferences(context);
+
+        boolean allowNotifications = preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS);
+        if (!allowNotifications) {
+            AppLogger.i("DailyNotificationWorker", "Notifications are disabled in preferences. Skipping.");
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                AppLogger.w("DailyNotificationWorker", "POST_NOTIFICATIONS permission is not granted. Skipping notification.");
+                return;
+            }
+        }
+
+        sendNotification(context);
+        AppLogger.i("DailyNotificationWorker", "Daily notification sent successfully.");
+    }
+
+    private static void sendNotification(Context context) {
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (nm != null) {
             CharSequence name = context.getString(R.string.notifications_name);

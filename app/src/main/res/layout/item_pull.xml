@@ -126,6 +126,21 @@
                 android:visibility="gone"
                 app:buttonTint="@color/check"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_drag_handle"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iv_drag_handle"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="6dp"
+                android:contentDescription="@null"
+                android:padding="2dp"
+                android:src="@drawable/icon_menu"
+                android:visibility="gone"
+                app:tint="@color/text_secondary"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
