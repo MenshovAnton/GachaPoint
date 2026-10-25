@@ -36,7 +36,16 @@ import ru.menshovanton.gachapoint.worker.NotificationScheduler;
 
 public class MainActivityView extends AppCompatActivity {
 
+    public interface OnBottomNavReselectedListener {
+        void onBottomNavReselected(int itemId);
+    }
+
     private MainActivityViewModel viewModel;
+    private OnBottomNavReselectedListener bottomNavReselectedListener;
+
+    public void setOnBottomNavReselectedListener(OnBottomNavReselectedListener listener) {
+        this.bottomNavReselectedListener = listener;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +96,19 @@ public class MainActivityView extends AppCompatActivity {
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
             NavigationUI.setupWithNavController(navigation, navController);
+            navigation.setOnItemReselectedListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_menu) {
+                    navController.popBackStack(R.id.moreView, false);
+                } else if (itemId == R.id.nav_home) {
+                    navController.popBackStack(R.id.homeView, false);
+                } else {
+                    navController.popBackStack(itemId, false);
+                }
+                if (bottomNavReselectedListener != null) {
+                    bottomNavReselectedListener.onBottomNavReselected(itemId);
+                }
+            });
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

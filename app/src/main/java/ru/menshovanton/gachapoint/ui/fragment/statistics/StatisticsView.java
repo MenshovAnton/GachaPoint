@@ -16,6 +16,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -57,7 +59,10 @@ public class StatisticsView extends Fragment {
     private TextView tvHistoryToggle;
     private TextView tvHistoryEmpty;
     private RecyclerView rvSubsHistory;
+    private MaterialButton btnHistoryToggle;
     private SubscriptionHistoryAdapter historyAdapter;
+
+    private static final int HISTORY_PREVIEW_LIMIT = 3;
 
     private TextView tvSavingsProgressSummary;
     private SavingsSourceBarView savingsSourceBar;
@@ -104,6 +109,7 @@ public class StatisticsView extends Fragment {
         tvHistoryToggle = view.findViewById(R.id.tv_history_toggle);
         tvHistoryEmpty = view.findViewById(R.id.tv_history_empty);
         rvSubsHistory = view.findViewById(R.id.rv_subs_history);
+        btnHistoryToggle = view.findViewById(R.id.btn_history_toggle);
 
         tvSavingsProgressSummary = view.findViewById(R.id.tv_savings_progress_summary);
         savingsSourceBar = view.findViewById(R.id.savings_source_bar);
@@ -151,11 +157,19 @@ public class StatisticsView extends Fragment {
         rvSubsHistory.setAdapter(historyAdapter);
 
         if (rowHistoryHeader != null) {
-            rowHistoryHeader.setOnClickListener(v -> {
-                isHistoryExpanded = !isHistoryExpanded;
-                updateHistoryListDisplay();
-            });
+            rowHistoryHeader.setOnClickListener(v -> toggleHistoryExpanded());
         }
+        if (btnHistoryToggle != null) {
+            btnHistoryToggle.setOnClickListener(v -> toggleHistoryExpanded());
+        }
+    }
+
+    private void toggleHistoryExpanded() {
+        if (fullHistoryList == null || fullHistoryList.size() <= HISTORY_PREVIEW_LIMIT) {
+            return;
+        }
+        isHistoryExpanded = !isHistoryExpanded;
+        updateHistoryListDisplay();
     }
 
     private void setupPills(View view) {
@@ -167,6 +181,7 @@ public class StatisticsView extends Fragment {
 
         PillsAdapter pillsAdapter = new PillsAdapter(gameNames, 0, (item, position) -> {
             if (viewModel != null && position >= 0 && position < GameType.values().length) {
+                isHistoryExpanded = false;
                 viewModel.setGameType(GameType.values()[position]);
             }
         });
@@ -301,6 +316,9 @@ public class StatisticsView extends Fragment {
             tvHistoryEmpty.setVisibility(View.VISIBLE);
             rvSubsHistory.setVisibility(View.GONE);
             tvHistoryToggle.setVisibility(View.GONE);
+            if (btnHistoryToggle != null) {
+                btnHistoryToggle.setVisibility(View.GONE);
+            }
             return;
         }
 
@@ -311,17 +329,32 @@ public class StatisticsView extends Fragment {
                 ? viewModel.getCurrentGameTypeLiveData().getValue()
                 : GameType.GENSHIN;
 
-        if (fullHistoryList.size() <= 2) {
+        if (fullHistoryList.size() <= HISTORY_PREVIEW_LIMIT) {
             tvHistoryToggle.setVisibility(View.GONE);
+            if (btnHistoryToggle != null) {
+                btnHistoryToggle.setVisibility(View.GONE);
+            }
             historyAdapter.setData(fullHistoryList, curGame);
         } else {
             tvHistoryToggle.setVisibility(View.VISIBLE);
+            if (btnHistoryToggle != null) {
+                btnHistoryToggle.setVisibility(View.VISIBLE);
+            }
+
             if (isHistoryExpanded) {
                 tvHistoryToggle.setText(R.string.stat_history_toggle_collapse);
+                if (btnHistoryToggle != null) {
+                    btnHistoryToggle.setText(R.string.stat_history_collapse);
+                    btnHistoryToggle.setIconResource(R.drawable.icon_chevron_up);
+                }
                 historyAdapter.setData(fullHistoryList, curGame);
             } else {
                 tvHistoryToggle.setText(String.format(getString(R.string.stat_history_toggle_expand), fullHistoryList.size()));
-                List<SubscriptionEntity> preview = fullHistoryList.subList(0, 2);
+                if (btnHistoryToggle != null) {
+                    btnHistoryToggle.setText(R.string.stat_history_show_all);
+                    btnHistoryToggle.setIconResource(R.drawable.icon_chevron_down);
+                }
+                List<SubscriptionEntity> preview = fullHistoryList.subList(0, HISTORY_PREVIEW_LIMIT);
                 historyAdapter.setData(preview, curGame);
             }
         }
@@ -335,6 +368,7 @@ public class StatisticsView extends Fragment {
             rvSubsHistory = null;
         }
         historyAdapter = null;
+        btnHistoryToggle = null;
         tvTotalPullsCount = null;
         tvTotalCurrencySpent = null;
         tvLegendaryStat = null;

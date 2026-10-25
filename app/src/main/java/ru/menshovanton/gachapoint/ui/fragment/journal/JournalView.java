@@ -2,6 +2,7 @@ package ru.menshovanton.gachapoint.ui.fragment.journal;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
@@ -10,11 +11,11 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AutoCompleteTextView;
 import ru.menshovanton.gachapoint.ui.common.NoFilterArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,12 +29,15 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.time.Instant;
@@ -67,6 +71,8 @@ public class JournalView extends Fragment {
     private RecyclerView rvGameTypes;
 
     private FloatingActionButton btnAdd;
+    private FloatingActionButton btnScrollTop;
+    private RecyclerView.OnScrollListener scrollListener;
     private View tilBannerSelector;
     private View llSelectionBar;
     private TextView tvSelectionCount;
@@ -110,6 +116,7 @@ public class JournalView extends Fragment {
         appbarLayout = view.findViewById(R.id.appbar_journal);
         rvGameTypes = view.findViewById(R.id.rv_game_types);
         btnAdd = view.findViewById(R.id.btn_add);
+        btnScrollTop = view.findViewById(R.id.btn_scroll_top);
         tilBannerSelector = view.findViewById(R.id.til_banner_selector);
         llSelectionBar = view.findViewById(R.id.ll_selection_bar);
         tvSelectionCount = view.findViewById(R.id.tv_selection_count);
@@ -145,6 +152,18 @@ public class JournalView extends Fragment {
         observeViewModel();
 
         btnAdd.setOnClickListener(this::showMoreMenu);
+        btnScrollTop.setOnClickListener(v -> scrollToTop());
+
+        if (appbarLayout != null && emptyView != null) {
+            appbarLayout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                if (emptyView != null && appbarLayout != null) {
+                    int scrollRange = appbarLayout.getTotalScrollRange();
+                    if (emptyView.getPaddingBottom() != scrollRange) {
+                        emptyView.setPadding(0, 0, 0, scrollRange);
+                    }
+                }
+            });
+        }
     }
 
     private void setupGameTypeSelector() {
@@ -169,6 +188,9 @@ public class JournalView extends Fragment {
             }
             if (appbarLayout != null) {
                 appbarLayout.setExpanded(true, true);
+            }
+            if (btnScrollTop != null && btnScrollTop.getVisibility() == View.VISIBLE) {
+                btnScrollTop.hide();
             }
             viewModel.setGameType(selectedGame);
             updateBannerSelector(selectedGame);
@@ -265,6 +287,46 @@ public class JournalView extends Fragment {
         });
         pullsAdapter.setOnSelectionChangedListener(this::updateSelectionUi);
         recyclerView.setAdapter(pullsAdapter);
+
+        scrollListener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
+                super.onScrolled(rv, dx, dy);
+                LinearLayoutManager lm = (LinearLayoutManager) rv.getLayoutManager();
+                if (lm != null && btnScrollTop != null) {
+                    int firstVisible = lm.findFirstVisibleItemPosition();
+                    if (firstVisible >= 8) {
+                        if (btnScrollTop.getVisibility() != View.VISIBLE) {
+                            btnScrollTop.show();
+                        }
+                    } else {
+                        if (btnScrollTop.getVisibility() == View.VISIBLE) {
+                            btnScrollTop.hide();
+                        }
+                    }
+                }
+            }
+        };
+        recyclerView.addOnScrollListener(scrollListener);
+    }
+
+    public void scrollToTop() {
+        if (recyclerView != null) {
+            LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
+            if (lm != null) {
+                int firstVisible = lm.findFirstVisibleItemPosition();
+                if (firstVisible > 25) {
+                    recyclerView.scrollToPosition(15);
+                }
+                recyclerView.smoothScrollToPosition(0);
+            }
+        }
+        if (appbarLayout != null) {
+            appbarLayout.setExpanded(true, true);
+        }
+        if (btnScrollTop != null && btnScrollTop.getVisibility() == View.VISIBLE) {
+            btnScrollTop.hide();
+        }
     }
 
     private void triggerHapticFeedback() {
@@ -276,21 +338,36 @@ public class JournalView extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mainActivityView != null && mainActivityView.getSubType() != null) {
-            GameType current = mainActivityView.getSubType();
-            if (pillsAdapter != null && pillsAdapter.getSelectedPosition() != current.getCode()) {
-                pillsAdapter.setSelectedPosition(current.getCode());
-                centerPositionInstantly(current.getCode());
-            }
-            if (viewModel != null && viewModel.getCurrentGameType() != current) {
-                viewModel.setGameType(current);
-                updateBannerSelector(current);
+        if (mainActivityView != null) {
+            mainActivityView.setOnBottomNavReselectedListener(itemId -> {
+                if (itemId == R.id.nav_journal) {
+                    scrollToTop();
+                }
+            });
+            if (mainActivityView.getSubType() != null) {
+                GameType current = mainActivityView.getSubType();
+                if (pillsAdapter != null && pillsAdapter.getSelectedPosition() != current.getCode()) {
+                    pillsAdapter.setSelectedPosition(current.getCode());
+                    centerPositionInstantly(current.getCode());
+                }
+                if (viewModel != null && viewModel.getCurrentGameType() != current) {
+                    viewModel.setGameType(current);
+                    updateBannerSelector(current);
+                }
             }
         }
         if (!isFirstLaunch && viewModel != null) {
             viewModel.refreshData();
         }
         isFirstLaunch = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mainActivityView != null) {
+            mainActivityView.setOnBottomNavReselectedListener(null);
+        }
     }
 
     @Override
@@ -301,6 +378,10 @@ public class JournalView extends Fragment {
             bannerSelector = null;
         }
         if (recyclerView != null) {
+            if (scrollListener != null) {
+                recyclerView.removeOnScrollListener(scrollListener);
+                scrollListener = null;
+            }
             recyclerView.setAdapter(null);
             recyclerView = null;
         }
@@ -313,6 +394,7 @@ public class JournalView extends Fragment {
         gameTypesLayoutManager = null;
         appbarLayout = null;
         btnAdd = null;
+        btnScrollTop = null;
         tilBannerSelector = null;
         llSelectionBar = null;
         tvSelectionCount = null;
@@ -342,6 +424,9 @@ public class JournalView extends Fragment {
             String bannerKey = viewModel.getCurrentGameType().getBannerKeyByLabel(requireContext(), selectedLabel);
             if (appbarLayout != null) {
                 appbarLayout.setExpanded(true, true);
+            }
+            if (btnScrollTop != null && btnScrollTop.getVisibility() == View.VISIBLE) {
+                btnScrollTop.hide();
             }
             viewModel.setBannerType(bannerKey);
             updateDashboardLimits();
@@ -439,6 +524,16 @@ public class JournalView extends Fragment {
                     if (emptyView.getVisibility() != View.VISIBLE) {
                         crossFadeViews(recyclerView, emptyView);
                     }
+                    if (appbarLayout != null) {
+                        appbarLayout.setExpanded(true, true);
+                        int scrollRange = appbarLayout.getTotalScrollRange();
+                        if (emptyView != null && emptyView.getPaddingBottom() != scrollRange) {
+                            emptyView.setPadding(0, 0, 0, scrollRange);
+                        }
+                    }
+                    if (btnScrollTop != null && btnScrollTop.getVisibility() == View.VISIBLE) {
+                        btnScrollTop.hide();
+                    }
                 } else {
                     if (recyclerView.getVisibility() != View.VISIBLE) {
                         crossFadeViews(emptyView, recyclerView);
@@ -455,6 +550,9 @@ public class JournalView extends Fragment {
                         }
                         if (appbarLayout != null) {
                             appbarLayout.setExpanded(true, true);
+                        }
+                        if (btnScrollTop != null && btnScrollTop.getVisibility() == View.VISIBLE) {
+                            btnScrollTop.hide();
                         }
                     });
                 }
@@ -532,25 +630,33 @@ public class JournalView extends Fragment {
     }
 
     private void showWishDialog(@Nullable Pull wishToEdit, @Nullable String defaultRarity, boolean isBatch) {
-        Context contextThemeWrapper = new ContextThemeWrapper(requireContext(), R.style.Dialog_GachaPoint_AlertDialog);
-        View dialogView = LayoutInflater.from(contextThemeWrapper).inflate(R.layout.dialog_edit_pull_record, null);
+        BottomSheetDialog dialog = new BottomSheetDialog(requireContext(), R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
+        @SuppressLint("InflateParams") View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_pull_record, null);
+        dialog.setContentView(dialogView);
 
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(contextThemeWrapper, R.style.Dialog_GachaPoint_AlertDialog);
-        builder.setView(dialogView);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        }
+
+        dialog.setOnShowListener(d -> {
+            BottomSheetDialog bsd = (BottomSheetDialog) d;
+            android.widget.FrameLayout bottomSheet = bsd.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                BottomSheetBehavior<android.widget.FrameLayout> behavior = BottomSheetBehavior.from(bottomSheet);
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                behavior.setSkipCollapsed(true);
+            }
+        });
 
         TextView dialogTitle = dialogView.findViewById(R.id.tv_dialog_header);
-        TextInputEditText editDate = dialogView.findViewById(R.id.tiet_edit_date);
-        TextInputEditText editDropType = dialogView.findViewById(R.id.tiet_drop_name_edit);
-        RadioGroup radioGroupRarity = dialogView.findViewById(R.id.rg_rarity);
-        MaterialRadioButton radioThreeStar = dialogView.findViewById(R.id.rb_three_star);
-        MaterialRadioButton radioFourStar = dialogView.findViewById(R.id.rb_four_star);
-        MaterialRadioButton radioFiveStar = dialogView.findViewById(R.id.rb_five_star);
-
+        ImageButton btnDelete = dialogView.findViewById(R.id.btn_dialog_delete);
+        ImageButton btnClose = dialogView.findViewById(R.id.btn_dialog_close);
+        MaterialButtonToggleGroup toggleRarity = dialogView.findViewById(R.id.toggle_rarity);
         View pityStatusContainer = dialogView.findViewById(R.id.ll_pity_status_container);
-        RadioGroup rgPityStatus = dialogView.findViewById(R.id.rg_pity_status);
-        MaterialRadioButton rbPityWin = dialogView.findViewById(R.id.rb_pity_win);
-        MaterialRadioButton rbPityLoss = dialogView.findViewById(R.id.rb_pity_loss);
-        MaterialRadioButton rbPityGuaranteed = dialogView.findViewById(R.id.rb_pity_guaranteed);
+        MaterialButtonToggleGroup togglePityStatus = dialogView.findViewById(R.id.toggle_pity_status);
+        TextInputEditText editDropType = dialogView.findViewById(R.id.tiet_drop_name_edit);
+        TextInputEditText editDate = dialogView.findViewById(R.id.tiet_edit_date);
+        MaterialButton btnSave = dialogView.findViewById(R.id.btn_save_pull);
 
         DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.getDefault());
         DateTimeFormatter dbFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -560,17 +666,88 @@ public class JournalView extends Fragment {
 
         BannerInfo bannerInfo = viewModel.getCurrentBannerInfo();
         boolean bannerHas5050 = bannerInfo != null && bannerInfo.hasFiftyFifty();
+        final ValueAnimator[] outcomeAnimator = new ValueAnimator[1];
 
-        Runnable updateOutcomeVisibility = () -> {
-            if (bannerHas5050 && radioFiveStar.isChecked()) {
-                pityStatusContainer.setVisibility(View.VISIBLE);
+        java.util.function.Consumer<Boolean> updateOutcomeVisibility = animate -> {
+            boolean shouldShow = bannerHas5050 && toggleRarity.getCheckedButtonId() == R.id.btn_rare_5;
+            if (outcomeAnimator[0] != null && outcomeAnimator[0].isRunning()) {
+                outcomeAnimator[0].cancel();
+            }
+
+            if (shouldShow) {
+                if (pityStatusContainer.getVisibility() != View.VISIBLE || pityStatusContainer.getHeight() == 0) {
+                    if (Boolean.TRUE.equals(animate)) {
+                        pityStatusContainer.setVisibility(View.VISIBLE);
+                        pityStatusContainer.measure(
+                                View.MeasureSpec.makeMeasureSpec(dialogView.getWidth() > 0 ? dialogView.getWidth() : dialogView.getResources().getDisplayMetrics().widthPixels, View.MeasureSpec.EXACTLY),
+                                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                        );
+                        int measuredH = pityStatusContainer.getMeasuredHeight();
+                        int targetH = measuredH > 0 ? measuredH : (int) (68 * dialogView.getResources().getDisplayMetrics().density);
+                        int startH = Math.max(0, pityStatusContainer.getHeight());
+
+                        outcomeAnimator[0] = ValueAnimator.ofInt(startH, targetH);
+                        outcomeAnimator[0].setDuration(240);
+                        outcomeAnimator[0].setInterpolator(new DecelerateInterpolator());
+                        outcomeAnimator[0].addUpdateListener(animation -> {
+                            pityStatusContainer.getLayoutParams().height = (int) (Integer) animation.getAnimatedValue();
+                            pityStatusContainer.setAlpha(animation.getAnimatedFraction());
+                            pityStatusContainer.requestLayout();
+                        });
+                        outcomeAnimator[0].addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                pityStatusContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                                pityStatusContainer.setAlpha(1f);
+                                pityStatusContainer.requestLayout();
+                            }
+                        });
+                        outcomeAnimator[0].start();
+                    } else {
+                        pityStatusContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        pityStatusContainer.setAlpha(1f);
+                        pityStatusContainer.setVisibility(View.VISIBLE);
+                    }
+                }
             } else {
-                pityStatusContainer.setVisibility(View.GONE);
+                if (pityStatusContainer.getVisibility() == View.VISIBLE) {
+                    if (Boolean.TRUE.equals(animate)) {
+                        int startH = pityStatusContainer.getHeight();
+                        if (startH <= 0) {
+                            pityStatusContainer.setVisibility(View.GONE);
+                            pityStatusContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                            return;
+                        }
+                        outcomeAnimator[0] = ValueAnimator.ofInt(startH, 0);
+                        outcomeAnimator[0].setDuration(200);
+                        outcomeAnimator[0].setInterpolator(new DecelerateInterpolator());
+                        outcomeAnimator[0].addUpdateListener(animation -> {
+                            pityStatusContainer.getLayoutParams().height = (int) (Integer) animation.getAnimatedValue();
+                            pityStatusContainer.setAlpha(1f - animation.getAnimatedFraction());
+                            pityStatusContainer.requestLayout();
+                        });
+                        outcomeAnimator[0].addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                pityStatusContainer.setVisibility(View.GONE);
+                                pityStatusContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                                pityStatusContainer.setAlpha(1f);
+                                pityStatusContainer.requestLayout();
+                            }
+                        });
+                        outcomeAnimator[0].start();
+                    } else {
+                        pityStatusContainer.setVisibility(View.GONE);
+                        pityStatusContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    }
+                }
             }
         };
 
         if (isEditMode) {
             dialogTitle.setText(getString(R.string.edit_pull));
+            btnDelete.setVisibility(View.VISIBLE);
+            btnSave.setText(getString(R.string.save));
             editDropType.setText(wishToEdit.getDropType());
 
             try {
@@ -581,50 +758,54 @@ public class JournalView extends Fragment {
 
             String rarity = wishToEdit.getDropRare();
             if (getString(R.string.four_star).equalsIgnoreCase(rarity)) {
-                radioFourStar.setChecked(true);
+                toggleRarity.check(R.id.btn_rare_4);
             } else if (getString(R.string.five_star).equalsIgnoreCase(rarity)) {
-                radioFiveStar.setChecked(true);
+                toggleRarity.check(R.id.btn_rare_5);
             } else {
-                radioThreeStar.setChecked(true);
+                toggleRarity.check(R.id.btn_rare_3);
             }
 
             PityStatus currentStatus = wishToEdit.getPityStatus();
             if (currentStatus == PityStatus.LOSS_50_50) {
-                rbPityLoss.setChecked(true);
+                togglePityStatus.check(R.id.btn_pity_loss);
             } else if (currentStatus == PityStatus.GUARANTEED) {
-                rbPityGuaranteed.setChecked(true);
+                togglePityStatus.check(R.id.btn_pity_guaranteed);
             } else {
-                rbPityWin.setChecked(true);
+                togglePityStatus.check(R.id.btn_pity_win);
             }
         } else {
             dialogTitle.setText(getString(R.string.add_pull));
+            btnDelete.setVisibility(View.GONE);
+            btnSave.setText(getString(R.string.add_pull));
             selectedDate[0] = LocalDate.now();
 
             if (getString(R.string.five_star).equalsIgnoreCase(defaultRarity)) {
-                radioFiveStar.setChecked(true);
+                toggleRarity.check(R.id.btn_rare_5);
             } else if (getString(R.string.four_star).equalsIgnoreCase(defaultRarity)) {
-                radioFourStar.setChecked(true);
+                toggleRarity.check(R.id.btn_rare_4);
             } else {
-                radioThreeStar.setChecked(true);
+                toggleRarity.check(R.id.btn_rare_3);
             }
 
             Boolean isCurrentGuaranteed = viewModel.getIsGuaranteedLiveData().getValue();
             if (Boolean.TRUE.equals(isCurrentGuaranteed)) {
-                rbPityGuaranteed.setChecked(true);
+                togglePityStatus.check(R.id.btn_pity_guaranteed);
             } else {
-                rbPityWin.setChecked(true);
+                togglePityStatus.check(R.id.btn_pity_win);
             }
         }
 
-        updateOutcomeVisibility.run();
+        updateOutcomeVisibility.accept(false);
         editDate.setText(selectedDate[0].format(displayFormatter));
 
-        radioGroupRarity.setOnCheckedChangeListener((group, checkedId) -> {
-            updateOutcomeVisibility.run();
-            String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
-            if (TextUtils.isEmpty(currentText)) {
-                if (checkedId == R.id.rb_three_star) {
-                    editDropType.setText(getString(R.string.default_pull_content));
+        toggleRarity.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (isChecked) {
+                updateOutcomeVisibility.accept(true);
+                String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
+                if (TextUtils.isEmpty(currentText)) {
+                    if (checkedId == R.id.btn_rare_3) {
+                        editDropType.setText(getString(R.string.default_pull_content));
+                    }
                 }
             }
         });
@@ -651,37 +832,18 @@ public class JournalView extends Fragment {
             datePicker.show(getParentFragmentManager(), "DATE_PICKER");
         });
 
-        builder.setPositiveButton(isEditMode ? getString(R.string.save) : getString(R.string.add_to_bank), (dialog, which) -> {
-            String dropType = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
-            int checkedRadioId = radioGroupRarity.getCheckedRadioButtonId();
-
-            String dropRare;
-            if (checkedRadioId == R.id.rb_five_star) {
-                dropRare = getString(R.string.five_star);
-            } else if (checkedRadioId == R.id.rb_four_star) {
-                dropRare = getString(R.string.four_star);
-            } else {
-                dropRare = getString(R.string.three_star);
-            }
-
-            PityStatus selectedPityStatus = getSelectedPityStatus(checkedRadioId, bannerHas5050, rgPityStatus);
-
-            viewModel.saveWishFromUi(
-                    wishToEdit,
-                    selectedDate[0],
-                    dropType,
-                    dropRare,
-                    selectedPityStatus,
-                    isBatch
-            );
-        });
+        btnClose.setOnClickListener(v -> dialog.dismiss());
 
         if (isEditMode) {
-            builder.setNeutralButton(R.string.delete, (dialog, which) -> {
+            btnDelete.setOnClickListener(v -> {
+                Context contextThemeWrapper = new ContextThemeWrapper(requireContext(), R.style.Dialog_GachaPoint_AlertDialog);
                 androidx.appcompat.app.AlertDialog confirmDialog = new MaterialAlertDialogBuilder(contextThemeWrapper, R.style.Dialog_GachaPoint_AlertDialog)
                         .setTitle(R.string.warning)
                         .setMessage(R.string.delete_confirm_message)
-                        .setPositiveButton(R.string.delete, (d, w) -> viewModel.deleteWish(wishToEdit.getId()))
+                        .setPositiveButton(R.string.delete, (d, w) -> {
+                            dialog.dismiss();
+                            viewModel.deleteWish(wishToEdit.getId());
+                        })
                         .setNegativeButton(R.string.cancel, null)
                         .create();
 
@@ -695,27 +857,43 @@ public class JournalView extends Fragment {
             });
         }
 
-        builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
-        androidx.appcompat.app.AlertDialog editDialog = builder.create();
-        if (isEditMode) {
-            editDialog.setOnShowListener(d -> {
-                Button btnNeutral = editDialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEUTRAL);
-                if (btnNeutral != null) {
-                    btnNeutral.setTextColor(ContextCompat.getColor(requireContext(), R.color.missed));
-                }
-            });
-        }
-        editDialog.show();
+        btnSave.setOnClickListener(v -> {
+            String dropType = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
+            int checkedToggleId = toggleRarity.getCheckedButtonId();
+
+            String dropRare;
+            if (checkedToggleId == R.id.btn_rare_5) {
+                dropRare = getString(R.string.five_star);
+            } else if (checkedToggleId == R.id.btn_rare_4) {
+                dropRare = getString(R.string.four_star);
+            } else {
+                dropRare = getString(R.string.three_star);
+            }
+
+            PityStatus selectedPityStatus = getSelectedPityStatus(checkedToggleId, bannerHas5050, togglePityStatus);
+
+            viewModel.saveWishFromUi(
+                    wishToEdit,
+                    selectedDate[0],
+                    dropType,
+                    dropRare,
+                    selectedPityStatus,
+                    isBatch
+            );
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
     @NonNull
-    private static PityStatus getSelectedPityStatus(int checkedRadioId, boolean bannerHas5050, RadioGroup rgPityStatus) {
+    private static PityStatus getSelectedPityStatus(int checkedToggleId, boolean bannerHas5050, MaterialButtonToggleGroup togglePityStatus) {
         PityStatus selectedPityStatus = PityStatus.NONE;
-        if (checkedRadioId == R.id.rb_five_star && bannerHas5050) {
-            int statusCheckedId = rgPityStatus.getCheckedRadioButtonId();
-            if (statusCheckedId == R.id.rb_pity_loss) {
+        if (checkedToggleId == R.id.btn_rare_5 && bannerHas5050 && togglePityStatus != null) {
+            int statusCheckedId = togglePityStatus.getCheckedButtonId();
+            if (statusCheckedId == R.id.btn_pity_loss) {
                 selectedPityStatus = PityStatus.LOSS_50_50;
-            } else if (statusCheckedId == R.id.rb_pity_guaranteed) {
+            } else if (statusCheckedId == R.id.btn_pity_guaranteed) {
                 selectedPityStatus = PityStatus.GUARANTEED;
             } else {
                 selectedPityStatus = PityStatus.WIN_50_50;

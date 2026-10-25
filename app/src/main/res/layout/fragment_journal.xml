@@ -47,16 +47,18 @@
                 tools:listitem="@layout/item_pill"
                 tools:orientation="horizontal" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_banner_dashboard"
-                style="@style/Widget.GachaPoint.MaterialCardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
-                android:layout_marginTop="@dimen/card_margin_vertical"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardElevation="0dp">
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_banner_dashboard"
+            style="@style/Widget.GachaPoint.MaterialCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+            android:layout_marginTop="@dimen/card_margin_vertical"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -279,18 +281,16 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/progress_loading"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
-                android:indeterminate="true"
-                android:visibility="gone"
-                app:indicatorColor="@color/check"
-                app:trackColor="@android:color/transparent"
-                app:trackThickness="3dp" />
-
-        </LinearLayout>
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:indicatorColor="@color/check"
+            app:trackColor="@android:color/transparent"
+            app:trackThickness="3dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -307,32 +307,36 @@
         tools:listitem="@layout/item_pull"
         tools:visibility="visible" />
 
-    <androidx.core.widget.NestedScrollView
+    <FrameLayout
         android:id="@+id/ll_empty_state"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="240dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="88dp">
+            android:layout_gravity="center"
+            android:text="@string/empty_pulls_list"
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/empty_pulls_list"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp" />
+    </FrameLayout>
 
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_scroll_top"
+        style="@style/Widget.GachaPoint.FAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/screen_padding_horizontal"
+        android:layout_marginBottom="92dp"
+        android:contentDescription="@string/scroll_to_top"
+        android:visibility="gone"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/icon_arrow_up"
+        tools:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add"

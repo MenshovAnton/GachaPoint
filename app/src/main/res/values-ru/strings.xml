@@ -135,6 +135,7 @@
 
     <!-- Pulls Journal Screen -->
     <string name="add_pull">Добавить запись</string>
+    <string name="scroll_to_top">Наверх</string>
     <string name="edit_pull">Редактировать запись</string>
     <string name="hint_input_content">Персонаж/Оружие</string>
     <string name="select_rare">Выберите редкость</string>
@@ -353,6 +354,10 @@
     <string name="stat_history_title">История подписок</string>
     <string name="stat_history_toggle_expand">Показать все (%d)</string>
     <string name="stat_history_toggle_collapse">Свернуть</string>
+    <string name="stat_history_show_all">Показать всю историю</string>
+    <string name="stat_history_show_all_fmt">Показать всю историю (%d)</string>
+    <string name="stat_history_collapse">Свернуть историю</string>
+    <string name="stat_history_count_fmt">Всего: %d</string>
     <string name="stat_history_empty">История подписок пуста</string>
     <string name="stat_savings_sources_title">Источники накоплений</string>
     <string name="stat_source_manual">Вручную</string>

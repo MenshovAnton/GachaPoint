@@ -140,6 +140,7 @@
 
     <!-- Pulls Journal Screen -->
     <string name="add_pull">Add record</string>
+    <string name="scroll_to_top">Scroll to top</string>
     <string name="edit_pull">Edit record</string>
     <string name="hint_input_content">Character/Weapon</string>
     <string name="select_rare">Select item rarity</string>
@@ -387,6 +388,10 @@
     <string name="stat_history_title">Subscription History</string>
     <string name="stat_history_toggle_expand">Show all (%d)</string>
     <string name="stat_history_toggle_collapse">Collapse</string>
+    <string name="stat_history_show_all">Show full history</string>
+    <string name="stat_history_show_all_fmt">Show full history (%d)</string>
+    <string name="stat_history_collapse">Collapse history</string>
+    <string name="stat_history_count_fmt">Total: %d</string>
     <string name="stat_history_empty">No subscriptions recorded</string>
     <string name="stat_savings_sources_title">Savings Sources</string>
     <string name="stat_source_manual">Manual</string>

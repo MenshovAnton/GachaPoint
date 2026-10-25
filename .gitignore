@@ -15,3 +15,10 @@
 local.properties
 /app/release/
 *.properties
+
+# Databases & preview data
+/preview_databases/
+*.db
+*.db-wal
+*.db-shm
+
