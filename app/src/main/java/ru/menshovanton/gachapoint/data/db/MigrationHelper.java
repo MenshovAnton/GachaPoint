@@ -1,20 +1,25 @@
 package ru.menshovanton.gachapoint.data.db;
 
+import androidx.annotation.NonNull;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import ru.menshovanton.gachapoint.data.local.AppLogger;
 
 public class MigrationHelper {
 
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL(
-                    "CREATE TABLE IF NOT EXISTS `games` (" +
-                            "`id` INTEGER NOT NULL, " +
-                            "`code_name` TEXT NOT NULL, " +
-                            "`display_name` TEXT NOT NULL, " +
-                            "PRIMARY KEY(`id`))"
-            );
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            AppLogger.i("MigrationHelper", "Starting Room database migration from version 1 to 2...");
+            try {
+                database.execSQL(
+                        "CREATE TABLE IF NOT EXISTS `games` (" +
+                                "`id` INTEGER NOT NULL, " +
+                                "`code_name` TEXT NOT NULL, " +
+                                "`display_name` TEXT NOT NULL, " +
+                                "PRIMARY KEY(`id`))"
+                );
 
             database.execSQL("INSERT OR IGNORE INTO `games` (`id`, `code_name`, `display_name`) VALUES (0, 'GENSHIN', 'Genshin')");
             database.execSQL("INSERT OR IGNORE INTO `games` (`id`, `code_name`, `display_name`) VALUES (1, 'HSR', 'HSR')");
@@ -125,6 +130,11 @@ public class MigrationHelper {
                     "VALUES (0, 0, 0, 0, 0), (1, 0, 0, 0, 0), (2, 0, 0, 0, 0)");
 
             AppDatabase.syncSubscriptionsRaw(database);
+            AppLogger.i("MigrationHelper", "Room database migration 1 -> 2 completed successfully.");
+        } catch (Throwable t) {
+            AppLogger.e("MigrationHelper", "Room database migration 1 -> 2 FAILED!", t);
+            throw t;
         }
-    };
+    }
+};
 }

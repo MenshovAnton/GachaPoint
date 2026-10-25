@@ -12,27 +12,36 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import ru.menshovanton.gachapoint.data.local.AppLogger;
+
 public final class DatabaseExporter {
 
     private DatabaseExporter() {}
 
     public static boolean export(Context context, Uri targetUri) {
+        AppLogger.i("DatabaseExporter", "Starting database export to: " + targetUri);
         AppDatabase room = AppDatabase.getInstance(context);
 
         try {
             checkpoint(room);
         } catch (Exception e) {
-            e.printStackTrace();
+            AppLogger.e("DatabaseExporter", "Error during WAL checkpoint before export", e);
             return false;
         }
 
         File dbFile = context.getDatabasePath(AppDatabase.DATABASE_NAME);
-        if (!dbFile.exists()) return false;
+        if (!dbFile.exists()) {
+            AppLogger.w("DatabaseExporter", "Database file does not exist: " + dbFile.getAbsolutePath());
+            return false;
+        }
 
         try (InputStream in  = new FileInputStream(dbFile);
              OutputStream out = context.getContentResolver().openOutputStream(targetUri)) {
 
-            if (out == null) return false;
+            if (out == null) {
+                AppLogger.e("DatabaseExporter", "Target OutputStream is null for URI: " + targetUri);
+                return false;
+            }
 
             byte[] buffer = new byte[8192];
             int length;
@@ -40,10 +49,11 @@ public final class DatabaseExporter {
                 out.write(buffer, 0, length);
             }
             out.flush();
+            AppLogger.i("DatabaseExporter", "Database exported successfully (" + dbFile.length() + " bytes).");
             return true;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            AppLogger.e("DatabaseExporter", "IOException during database export", e);
             return false;
         }
     }
@@ -54,7 +64,7 @@ public final class DatabaseExporter {
         try (android.database.Cursor cursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery("PRAGMA wal_checkpoint(TRUNCATE)"))) {
             cursor.moveToFirst();
         } catch (Exception e) {
-            e.printStackTrace();
+            AppLogger.e("DatabaseExporter", "WAL checkpoint failed", e);
         }
     }
 }

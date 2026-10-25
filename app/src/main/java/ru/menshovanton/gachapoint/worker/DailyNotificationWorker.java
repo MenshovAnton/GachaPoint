@@ -17,6 +17,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
@@ -33,22 +34,32 @@ public class DailyNotificationWorker extends Worker {
     @Override
     public Result doWork() {
         Context context = getApplicationContext();
-        Preferences preferences = new Preferences(context);
+        AppLogger.i("DailyNotificationWorker", "DailyNotificationWorker started execution.");
 
-        boolean allowNotifications = preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS);
-        if (!allowNotifications) {
-            return Result.success();
-        }
+        try {
+            Preferences preferences = new Preferences(context);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return Result.failure();
+            boolean allowNotifications = preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS);
+            if (!allowNotifications) {
+                AppLogger.i("DailyNotificationWorker", "Notifications are disabled in preferences. Skipping.");
+                return Result.success();
             }
-        }
 
-        sendNotification(context);
-        return Result.success();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    AppLogger.w("DailyNotificationWorker", "POST_NOTIFICATIONS permission is not granted. Failing work.");
+                    return Result.failure();
+                }
+            }
+
+            sendNotification(context);
+            AppLogger.i("DailyNotificationWorker", "Daily notification sent successfully.");
+            return Result.success();
+        } catch (Throwable t) {
+            AppLogger.e("DailyNotificationWorker", "Error executing DailyNotificationWorker", t);
+            return Result.failure();
+        }
     }
 
     private void sendNotification(Context context) {
@@ -82,7 +93,7 @@ public class DailyNotificationWorker extends Worker {
         try {
             notificationManager.notify(1, builder.build());
         } catch (SecurityException e) {
-            e.printStackTrace();
+            AppLogger.e("DailyNotificationWorker", "SecurityException dispatching notification", e);
         }
     }
 }

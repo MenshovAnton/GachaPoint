@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.data.local.AppLogger;
 
 public class DatabaseImporter {
 
@@ -24,6 +25,7 @@ public class DatabaseImporter {
     private static final String TEMP_DB_NAME = "temp_import.db";
 
     public static void importDatabase(Context context, Uri sourceUri, ImportCallback callback) {
+        AppLogger.i("DatabaseImporter", "Starting database import from: " + sourceUri);
         AppDatabase.getExecutor().execute(() -> {
             File dbFile = context.getDatabasePath(AppDatabase.DATABASE_NAME);
             File parentDir = dbFile.getParentFile();
@@ -43,7 +45,7 @@ public class DatabaseImporter {
                      OutputStream outputStream = new FileOutputStream(tempFile)) {
 
                     if (inputStream == null) {
-                        throw new Exception(context.getString(ru.menshovanton.gachapoint.R.string.db_error_cannot_open_file));
+                        throw new Exception(context.getString(R.string.db_error_cannot_open_file));
                     }
 
                     byte[] buffer = new byte[8192];
@@ -54,7 +56,9 @@ public class DatabaseImporter {
                     outputStream.flush();
                 }
 
+                AppLogger.i("DatabaseImporter", "Temp file written (" + tempFile.length() + " bytes). Validating schema...");
                 validateTempDatabase(context, tempFile);
+                AppLogger.i("DatabaseImporter", "Temp database validated successfully.");
 
                 AppDatabase.destroyInstance();
 
@@ -92,9 +96,11 @@ public class DatabaseImporter {
                 AppDatabase.syncSubscriptionsRaw(writableDb);
                 AppDatabase.syncSavingsRaw(context, writableDb);
 
+                AppLogger.i("DatabaseImporter", "Database imported and synced successfully.");
                 AppDatabase.postToMain(callback::onSuccess);
 
             } catch (Exception e) {
+                AppLogger.e("DatabaseImporter", "Failed to import database from: " + sourceUri, e);
                 cleanupTempFiles(tempFile, tempWalFile, tempShmFile);
                 AppDatabase.postToMain(() -> callback.onError(e));
             }

@@ -1,9 +1,13 @@
 package ru.menshovanton.gachapoint.data.repository;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabaseCorruptException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarEntity;
@@ -12,6 +16,7 @@ import ru.menshovanton.gachapoint.data.db.entities.GameEntity;
 import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SavingsEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
+import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.enums.PityStatus;
 import ru.menshovanton.gachapoint.domain.models.Date;
@@ -33,45 +38,93 @@ public class DatabaseRepository {
         return AppDatabase.getInstance(context);
     }
 
+    private <T> void queryAsyncSafe(Callable<T> query, Callback<T> callback, T fallback) {
+        AppDatabase.getExecutor().execute(() -> {
+            T result = fallback;
+            try {
+                result = query.call();
+            } catch (SQLiteDatabaseCorruptException e) {
+                AppLogger.e("DatabaseRepository", "CRITICAL: Database corrupted during query!", e);
+                handleDatabaseCorruption();
+            } catch (OutOfMemoryError oom) {
+                AppLogger.e("DatabaseRepository", "CRITICAL: OutOfMemoryError in DB query!", oom);
+                System.gc();
+            } catch (Throwable t) {
+                AppLogger.e("DatabaseRepository", "Unexpected DB error in query", t);
+            } finally {
+                final T finalResult = result;
+                if (callback != null) {
+                    AppDatabase.postToMain(() -> callback.onResult(finalResult));
+                }
+            }
+        });
+    }
+
+    private void executeAsyncSafe(Runnable task, Runnable onComplete) {
+        AppDatabase.getExecutor().execute(() -> {
+            try {
+                task.run();
+            } catch (SQLiteDatabaseCorruptException e) {
+                AppLogger.e("DatabaseRepository", "CRITICAL: Database corrupted during write!", e);
+                handleDatabaseCorruption();
+            } catch (OutOfMemoryError oom) {
+                AppLogger.e("DatabaseRepository", "CRITICAL: OutOfMemoryError in DB write!", oom);
+                System.gc();
+            } catch (Throwable t) {
+                AppLogger.e("DatabaseRepository", "Unexpected DB error in write", t);
+            } finally {
+                if (onComplete != null) {
+                    AppDatabase.postToMain(onComplete);
+                }
+            }
+        });
+    }
+
+    private void handleDatabaseCorruption() {
+        try {
+            AppDatabase.destroyInstance();
+        } catch (Exception e) {
+            AppLogger.e("DatabaseRepository", "Error destroying database instance after corruption", e);
+        }
+    }
 
     public void getPullsByBanner(GameType gameType, String bannerType, Callback<List<Pull>> callback) {
-        AppDatabase.getExecutor().execute(() -> {
-            List<PullEntity> entities = getDb().pullDao().getPulls(gameType.getCode(), bannerType);
+        queryAsyncSafe(() -> {
+            int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
+            List<PullEntity> entities = getDb().pullDao().getPulls(code, bannerType);
             List<Pull> pulls = new ArrayList<>(entities.size());
             for (PullEntity entity : entities) {
                 pulls.add(entity.toWishModel());
             }
-            AppDatabase.postToMain(() -> callback.onResult(pulls));
-        });
+            return pulls;
+        }, callback, Collections.emptyList());
     }
 
     public void getAllPullsForGame(GameType gameType, Callback<List<Pull>> callback) {
-        AppDatabase.getExecutor().execute(() -> {
+        queryAsyncSafe(() -> {
             int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
             List<PullEntity> entities = getDb().pullDao().getAllPullsForGame(code);
             List<Pull> pulls = new ArrayList<>(entities.size());
             for (PullEntity entity : entities) {
                 pulls.add(entity.toWishModel());
             }
-            AppDatabase.postToMain(() -> callback.onResult(pulls));
-        });
+            return pulls;
+        }, callback, Collections.emptyList());
     }
 
     public void addPulls(String dateTime, String dropType, String dropRare, int count,
                          GameType gameType, String bannerType, boolean isResetPity, PityStatus pityStatus, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
+            int gameCode = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
             String statusStr = pityStatus != null ? pityStatus.name() : "NONE";
             List<PullEntity> entities = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
                 boolean currentReset = isResetPity && (i == count - 1);
                 String currentStatus = (i == count - 1) ? statusStr : "NONE";
-                entities.add(new PullEntity(gameType.getCode(), dateTime, dropRare, dropType, bannerType, currentReset, currentStatus));
+                entities.add(new PullEntity(gameCode, dateTime, dropRare, dropType, bannerType, currentReset, currentStatus));
             }
             getDb().pullDao().insertAll(entities);
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
     public void addPulls(String dateTime, String dropType, String dropRare, int count,
@@ -81,13 +134,10 @@ public class DatabaseRepository {
 
     public void updatePull(int id, String dateTime, String dropType, String dropRare,
                            GameType gameType, String bannerType, boolean isResetPity, PityStatus pityStatus, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
             String statusStr = pityStatus != null ? pityStatus.name() : "NONE";
             getDb().pullDao().updatePullFields(id, dateTime, dropType, dropRare, bannerType, isResetPity, statusStr);
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
     public void updatePull(int id, String dateTime, String dropType, String dropRare,
@@ -96,12 +146,7 @@ public class DatabaseRepository {
     }
 
     public void deletePull(int id, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
-            getDb().pullDao().deletePull(id);
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        executeAsyncSafe(() -> getDb().pullDao().deletePull(id), onComplete);
     }
 
     public void deletePullsBatch(List<Integer> ids, Runnable onComplete) {
@@ -111,53 +156,36 @@ public class DatabaseRepository {
             }
             return;
         }
-        AppDatabase.getExecutor().execute(() -> {
-            getDb().pullDao().deletePullsBatch(ids);
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        executeAsyncSafe(() -> getDb().pullDao().deletePullsBatch(ids), onComplete);
     }
 
-
     public void hasDataForYear(int year, Callback<Boolean> callback) {
-        AppDatabase.getExecutor().execute(() -> {
-            boolean hasData = getDb().calendarDao().getYearEntriesCount(year) > 0;
-            AppDatabase.postToMain(() -> callback.onResult(hasData));
-        });
+        queryAsyncSafe(() -> getDb().calendarDao().getYearEntriesCount(year) > 0, callback, false);
     }
 
     public void saveCalendarEntities(List<CalendarEntity> entities, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
-            getDb().calendarDao().insertCalendarDays(entities);
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        executeAsyncSafe(() -> getDb().calendarDao().insertCalendarDays(entities), onComplete);
     }
 
     public void getMonthCalendarData(int year, int month, GameType gameType, Callback<List<Date>> callback) {
-        AppDatabase.getExecutor().execute(() -> {
+        queryAsyncSafe(() -> {
             int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
-            List<Date> dates = getDb().calendarDao().getCalendarForMonth(year, month, code);
-            AppDatabase.postToMain(() -> callback.onResult(dates));
-        });
+            return getDb().calendarDao().getCalendarForMonth(year, month, code);
+        }, callback, Collections.emptyList());
     }
 
     public void getDayCalendarData(int year, int dayOfYear, GameType gameType, Callback<Date> callback) {
-        AppDatabase.getExecutor().execute(() -> {
+        queryAsyncSafe(() -> {
             int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
-            Date date = getDb().calendarDao().getDay(year, dayOfYear, code);
-            AppDatabase.postToMain(() -> callback.onResult(date));
-        });
+            return getDb().calendarDao().getDay(year, dayOfYear, code);
+        }, callback, null);
     }
 
     public void getDaysRangeData(int year, int startDay, int endDay, GameType gameType, Callback<List<Date>> callback) {
-        AppDatabase.getExecutor().execute(() -> {
+        queryAsyncSafe(() -> {
             int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
-            List<Date> dates = getDb().calendarDao().getDaysRange(year, startDay, endDay, code);
-            AppDatabase.postToMain(() -> callback.onResult(dates));
-        });
+            return getDb().calendarDao().getDaysRange(year, startDay, endDay, code);
+        }, callback, Collections.emptyList());
     }
 
     public void updateCalendarDay(int year, int dayOfYear, GameType gameType, int status, int subDaysRemaining, Runnable onComplete) {
@@ -165,7 +193,7 @@ public class DatabaseRepository {
     }
 
     public void setCalendarDayDailyStatus(int year, int dayOfYear, GameType gameType, int dailyStatus, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
             if (gameType != null) {
                 CalendarGameStatusEntity entity = getDb().calendarDao().getGameStatus(year, dayOfYear, gameType.getCode());
                 if (entity == null) {
@@ -175,14 +203,11 @@ public class DatabaseRepository {
                 }
                 getDb().calendarDao().insertOrUpdateGameStatus(entity);
             }
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
     public void setCalendarDaySubscriptionStatus(int year, int dayOfYear, GameType gameType, int status, int subDaysRemaining, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
             if (gameType != null) {
                 CalendarGameStatusEntity entity = getDb().calendarDao().getGameStatus(year, dayOfYear, gameType.getCode());
                 if (entity == null) {
@@ -193,23 +218,15 @@ public class DatabaseRepository {
                 }
                 getDb().calendarDao().insertOrUpdateGameStatus(entity);
             }
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
     public void updateSubscribeDaysBatch(List<CalendarGameStatusEntity> statusEntities, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
-            getDb().calendarDao().updateSubscribeDaysTransaction(statusEntities);
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        executeAsyncSafe(() -> getDb().calendarDao().updateSubscribeDaysTransaction(statusEntities), onComplete);
     }
 
     public void setCalendarDaysDailyStatusBatch(List<Integer> years, List<Integer> daysOfYear, GameType gameType, int dailyStatus, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
             if (gameType != null && years != null && daysOfYear != null && years.size() == daysOfYear.size()) {
                 int gameTypeCode = gameType.getCode();
                 List<CalendarGameStatusEntity> entities = new ArrayList<>(years.size());
@@ -226,14 +243,11 @@ public class DatabaseRepository {
                 }
                 getDb().calendarDao().insertOrUpdateGameStatusBatch(entities);
             }
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
     public void setCalendarDaysSubscriptionStatusBatch(List<Integer> years, List<Integer> daysOfYear, GameType gameType, int status, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
             if (gameType != null && years != null && daysOfYear != null && years.size() == daysOfYear.size()) {
                 int gameTypeCode = gameType.getCode();
                 List<CalendarGameStatusEntity> entities = new ArrayList<>(years.size());
@@ -250,14 +264,11 @@ public class DatabaseRepository {
                 }
                 getDb().calendarDao().insertOrUpdateGameStatusBatch(entities);
             }
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
-    public void clearCalendarStatusesInRange(GameType gameType, java.time.LocalDate startDate, java.time.LocalDate endDate, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+    public void clearCalendarStatusesInRange(GameType gameType, LocalDate startDate, LocalDate endDate, Runnable onComplete) {
+        executeAsyncSafe(() -> {
             if (gameType != null && startDate != null && endDate != null) {
                 int gameCode = gameType.getCode();
                 int startYear = startDate.getYear();
@@ -268,198 +279,133 @@ public class DatabaseRepository {
                 } else {
                     getDb().calendarDao().resetStatusesInRangeSameYear(gameCode, startYear, startDate.getDayOfYear(), startDate.lengthOfYear());
                     for (int y = startYear + 1; y < endYear; y++) {
-                        getDb().calendarDao().resetStatusesInRangeSameYear(gameCode, y, 1, java.time.LocalDate.of(y, 1, 1).lengthOfYear());
+                        getDb().calendarDao().resetStatusesInRangeSameYear(gameCode, y, 1, LocalDate.of(y, 1, 1).lengthOfYear());
                     }
                     getDb().calendarDao().resetStatusesInRangeSameYear(gameCode, endYear, 1, endDate.getDayOfYear());
                 }
             }
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
     public void getActiveSubscription(GameType gameType, long epochDay, Callback<SubscriptionEntity> callback) {
-        AppDatabase.getExecutor().execute(() -> {
+        queryAsyncSafe(() -> {
             int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
-            SubscriptionEntity entity = getDb().subscriptionDao().getActiveOrUpcomingSubscription(code, epochDay);
-            AppDatabase.postToMain(() -> callback.onResult(entity));
-        });
+            return getDb().subscriptionDao().getActiveOrUpcomingSubscription(code, epochDay);
+        }, callback, null);
     }
 
     public void cleanupOldSubscriptions(GameType gameType, int keepId, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
             if (gameType != null) {
                 getDb().subscriptionDao().cleanupOldSubscriptionsForGame(gameType.getCode(), keepId);
             }
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
     public void getSubscriptionsCountForGame(GameType gameType, Callback<Integer> callback) {
-        AppDatabase.getExecutor().execute(() -> {
-            int count = getDb().subscriptionDao().getSubscriptionsCountForGame(gameType.getCode());
-            AppDatabase.postToMain(() -> callback.onResult(count));
-        });
+        queryAsyncSafe(() -> {
+            int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
+            return getDb().subscriptionDao().getSubscriptionsCountForGame(code);
+        }, callback, 0);
     }
 
     public void getSubscriptionsInRange(GameType gameType, long startEpoch, long endEpoch, Callback<List<SubscriptionEntity>> callback) {
-        AppDatabase.getExecutor().execute(() -> {
-            List<SubscriptionEntity> list = getDb().subscriptionDao().getSubscriptionsInRange(gameType.getCode(), startEpoch, endEpoch);
-            AppDatabase.postToMain(() -> callback.onResult(list));
-        });
+        queryAsyncSafe(() -> {
+            int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
+            return getDb().subscriptionDao().getSubscriptionsInRange(code, startEpoch, endEpoch);
+        }, callback, Collections.emptyList());
     }
 
     public void getAllSubscriptions(GameType gameType, Callback<List<SubscriptionEntity>> callback) {
-        AppDatabase.getExecutor().execute(() -> {
-            List<SubscriptionEntity> list = getDb().subscriptionDao().getAllSubscriptionsForGame(gameType.getCode());
-            AppDatabase.postToMain(() -> callback.onResult(list));
-        });
+        queryAsyncSafe(() -> {
+            int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
+            return getDb().subscriptionDao().getAllSubscriptionsForGame(code);
+        }, callback, Collections.emptyList());
     }
 
     public void insertSubscription(SubscriptionEntity entity, Callback<Long> callback) {
-        AppDatabase.getExecutor().execute(() -> {
-            long id = getDb().subscriptionDao().insert(entity);
-            if (callback != null) {
-                AppDatabase.postToMain(() -> callback.onResult(id));
-            }
-        });
+        queryAsyncSafe(() -> getDb().subscriptionDao().insert(entity), callback, -1L);
     }
 
     public void updateSubscription(SubscriptionEntity entity, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
-            getDb().subscriptionDao().update(entity);
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        executeAsyncSafe(() -> getDb().subscriptionDao().update(entity), onComplete);
     }
 
     public void deleteSubscription(SubscriptionEntity entity, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
-            getDb().subscriptionDao().delete(entity);
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        executeAsyncSafe(() -> getDb().subscriptionDao().delete(entity), onComplete);
     }
 
     public void deleteSubscriptionById(int id, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
-            getDb().subscriptionDao().deleteById(id);
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        executeAsyncSafe(() -> getDb().subscriptionDao().deleteById(id), onComplete);
     }
 
     public void syncGames(Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
-            getDb().syncGames();
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        executeAsyncSafe(() -> getDb().syncGames(), onComplete);
     }
 
     public void getAllGames(Callback<List<GameEntity>> callback) {
-        AppDatabase.getExecutor().execute(() -> {
-            List<GameEntity> games = getDb().gameDao().getAllGames();
-            if (callback != null) {
-                AppDatabase.postToMain(() -> callback.onResult(games));
-            }
-        });
+        queryAsyncSafe(() -> getDb().gameDao().getAllGames(), callback, Collections.emptyList());
     }
 
     public void getCompletedDailiesCount(GameType gameType, Callback<Integer> callback) {
-        AppDatabase.getExecutor().execute(() -> {
-            int count = 0;
+        queryAsyncSafe(() -> {
             if (gameType != null) {
-                count = getDb().calendarDao().getCompletedDailiesCount(gameType.getCode());
+                return getDb().calendarDao().getCompletedDailiesCount(gameType.getCode());
             }
-            final int finalCount = count;
-            if (callback != null) {
-                AppDatabase.postToMain(() -> callback.onResult(finalCount));
-            }
-        });
+            return 0;
+        }, callback, 0);
     }
 
     public void getSavings(GameType gameType, Callback<SavingsEntity> callback) {
-        AppDatabase.getExecutor().execute(() -> {
-            SavingsEntity entity = null;
+        queryAsyncSafe(() -> {
             if (gameType != null) {
-                entity = getDb().savingsDao().getSavings(gameType.getCode());
+                return getDb().savingsDao().getSavings(gameType.getCode());
             }
-            final SavingsEntity result = entity;
-            if (callback != null) {
-                AppDatabase.postToMain(() -> callback.onResult(result));
-            }
-        });
+            return null;
+        }, callback, null);
     }
 
     public void getAllSavings(Callback<List<SavingsEntity>> callback) {
-        AppDatabase.getExecutor().execute(() -> {
-            List<SavingsEntity> list = getDb().savingsDao().getAllSavings();
-            if (callback != null) {
-                AppDatabase.postToMain(() -> callback.onResult(list));
-            }
-        });
+        queryAsyncSafe(() -> getDb().savingsDao().getAllSavings(), callback, Collections.emptyList());
     }
 
     public void saveSavingsTarget(GameType gameType, int target, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
             if (gameType != null) {
                 getDb().savingsDao().updateTarget(gameType.getCode(), target);
             }
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
     public void saveSavingsManualProgress(GameType gameType, int progress, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
             if (gameType != null) {
                 getDb().savingsDao().updateManualProgress(gameType.getCode(), progress);
             }
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
     public void saveSavingsSubsProgress(GameType gameType, int progress, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
             if (gameType != null) {
                 getDb().savingsDao().updateSubsProgress(gameType.getCode(), progress);
             }
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
     public void saveSavingsDailiesProgress(GameType gameType, int progress, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
             if (gameType != null) {
                 getDb().savingsDao().updateDailiesProgress(gameType.getCode(), progress);
             }
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 
     public void resetSavings(GameType gameType, Runnable onComplete) {
-        AppDatabase.getExecutor().execute(() -> {
+        executeAsyncSafe(() -> {
             if (gameType != null) {
                 getDb().savingsDao().reset(gameType.getCode());
             }
-            if (onComplete != null) {
-                AppDatabase.postToMain(onComplete);
-            }
-        });
+        }, onComplete);
     }
 }

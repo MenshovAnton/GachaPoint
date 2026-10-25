@@ -26,6 +26,7 @@ import ru.menshovanton.gachapoint.data.db.entities.GameEntity;
 import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SavingsEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
+import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 
@@ -58,6 +59,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
+                        AppLogger.i("AppDatabase", "Room database created.");
                         syncGamesRaw(db);
                         syncSubscriptionsRaw(db);
                         syncSavingsRaw(context, db);
@@ -66,6 +68,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     @Override
                     public void onOpen(@NonNull SupportSQLiteDatabase db) {
                         super.onOpen(db);
+                        AppLogger.i("AppDatabase", "Room database opened.");
                         syncGamesRaw(db);
                         syncSubscriptionsRaw(db);
                         syncSavingsRaw(context, db);
@@ -304,7 +307,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            android.util.Log.e("AppDatabase", "Error syncing subscriptions", e);
+            AppLogger.e("AppDatabase", "Error syncing subscriptions", e);
         } finally {
             db.endTransaction();
         }
@@ -347,7 +350,7 @@ public abstract class AppDatabase extends RoomDatabase {
             prefs.saveBooleanPreference("savings_migrated_to_db", true);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            e.printStackTrace();
+            AppLogger.e("AppDatabase", "Error syncing savings", e);
         } finally {
             db.endTransaction();
         }
@@ -385,5 +388,6 @@ public abstract class AppDatabase extends RoomDatabase {
             INSTANCE.close();
         }
         INSTANCE = null;
+        AppLogger.i("AppDatabase", "Database instance closed and reset.");
     }
 }

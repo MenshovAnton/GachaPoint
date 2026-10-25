@@ -330,6 +330,10 @@
     <string name="feedback_default_subject_feature">[Idea] Feature suggestion</string>
     <string name="feedback_default_subject_review">[Review] GachaPoint review (%1$d/5)</string>
     <string name="feedback_email_client_not_found">No email app found</string>
+    <string name="feedback_btn_share_log">Share Diagnostic Log</string>
+    <string name="feedback_share_log_chooser">Share diagnostic log via…</string>
+    <string name="feedback_log_empty">Diagnostic log is empty</string>
+    <string name="feedback_share_log_error">Failed to share diagnostic log</string>
     <string name="one_rate" translatable="false">1 ★</string>
     <string name="two_rate" translatable="false">2 ★</string>
     <string name="three_rate" translatable="false">3 ★</string>

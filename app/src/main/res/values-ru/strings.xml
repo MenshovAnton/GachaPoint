@@ -306,6 +306,10 @@
     <string name="feedback_default_subject_feature">[Идея] Предложение по улучшению</string>
     <string name="feedback_default_subject_review">[Отзыв] Отзыв о GachaPoint (%1$d/5)</string>
     <string name="feedback_email_client_not_found">Почтовый клиент не найден</string>
+    <string name="feedback_btn_share_log">Поделиться логом диагностики</string>
+    <string name="feedback_share_log_chooser">Отправить лог диагностики через&#8230;</string>
+    <string name="feedback_log_empty">Журнал диагностики пуст</string>
+    <string name="feedback_share_log_error">Не удалось отправить лог диагностики</string>
 
     <!-- Accessibility Descriptions -->
     <string name="a11y_btn_back">Назад</string>

@@ -618,6 +618,14 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/feedback_btn_copy_telegram" />
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_share_diagnostic_log"
+                        style="@style/Button.GachaPoint.Outlined"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/feedback_btn_share_log" />
+
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>

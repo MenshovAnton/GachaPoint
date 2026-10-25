@@ -31,6 +31,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.data.local.AppLogger;
 
 public class FeedbackView extends Fragment {
 
@@ -61,6 +62,7 @@ public class FeedbackView extends Fragment {
     private MaterialButton btnSendEmail;
     private MaterialButton btnSendGithub;
     private MaterialButton btnCopyTelegram;
+    private MaterialButton btnShareDiagnosticLog;
 
     public FeedbackView() {}
 
@@ -116,6 +118,7 @@ public class FeedbackView extends Fragment {
         btnSendEmail = view.findViewById(R.id.btn_send_email);
         btnSendGithub = view.findViewById(R.id.btn_send_github);
         btnCopyTelegram = view.findViewById(R.id.btn_copy_telegram);
+        btnShareDiagnosticLog = view.findViewById(R.id.btn_share_diagnostic_log);
 
         tvDeviceInfoPreview.setText(getDiagnosticInfo());
     }
@@ -192,6 +195,10 @@ public class FeedbackView extends Fragment {
                     getDiagnosticInfo()
             );
         });
+
+        if (btnShareDiagnosticLog != null) {
+            btnShareDiagnosticLog.setOnClickListener(v -> shareDiagnosticLog());
+        }
     }
 
     private void observeViewModel() {
@@ -315,6 +322,34 @@ public class FeedbackView extends Fragment {
         }
     }
 
+    private void shareDiagnosticLog() {
+        java.io.File logFile = AppLogger.getLogFile(requireContext());
+        if (logFile == null || !logFile.exists() || logFile.length() == 0) {
+            Toast.makeText(requireContext(), R.string.feedback_log_empty, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            Uri logUri = androidx.core.content.FileProvider.getUriForFile(
+                    requireContext(),
+                    requireContext().getPackageName() + ".fileprovider",
+                    logFile
+            );
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, logUri);
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "GachaPoint Diagnostic Log - " + Build.MODEL);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, getDiagnosticInfo());
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.feedback_share_log_chooser)));
+        } catch (Exception e) {
+            AppLogger.e("FeedbackView", "Failed to share diagnostic log", e);
+            Toast.makeText(requireContext(), R.string.feedback_share_log_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -336,5 +371,6 @@ public class FeedbackView extends Fragment {
         btnSendEmail = null;
         btnSendGithub = null;
         btnCopyTelegram = null;
+        btnShareDiagnosticLog = null;
     }
 }
