@@ -191,6 +191,21 @@
     <string name="savings_current_pulls">Круток накоплено</string>
     <string name="savings_current_gems">В гемах</string>
     <string name="savings_quick_actions">Быстрые действия</string>
+    <string name="savings_mode_pulls">Крутки</string>
+    <string name="savings_mode_gems">Гемы</string>
+    <string name="savings_custom_input">Ввести число</string>
+    <string name="dialog_quick_add_title">Быстрый ввод</string>
+    <string name="dialog_quick_add_title_pulls">Ввести крутки</string>
+    <string name="dialog_quick_add_title_gems">Ввести гемы</string>
+    <string name="dialog_quick_add_hint_pulls">Количество круток</string>
+    <string name="dialog_quick_add_hint_gems">Количество гемов</string>
+    <string name="dialog_quick_add_preview">С автосхлопыванием: +%1$d кр., +%2$d валюты</string>
+    <string name="dialog_quick_remove_preview">Будет списано: %1$d кр., %2$d валюты</string>
+    <string name="action_add">Добавить</string>
+    <string name="action_deduct">Списать</string>
+    <string name="currency_name_genshin">Камни Истока</string>
+    <string name="currency_name_hsr">Звёздный нефрит</string>
+    <string name="currency_name_zzz">Полихромы</string>
     <string name="savings_reset_confirm">Сбросить текущую цель и накопленные крутки?</string>
     <string name="goal_not_set_or_reached">Цель не установлена или не достигнута</string>
     <string name="remark_piggy_bank">Гарант 1x = 77 круток</string>

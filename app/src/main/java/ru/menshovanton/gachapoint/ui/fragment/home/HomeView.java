@@ -98,6 +98,7 @@ public class HomeView extends Fragment {
 
     private Integer lastProgress = null;
     private Integer lastTarget = null;
+    private Integer lastGems = null;
 
     public HomeView() {}
 
@@ -411,8 +412,9 @@ public class HomeView extends Fragment {
 
         viewModel.getGameTypeLiveData().observe(getViewLifecycleOwner(), this::updateGameTheme);
 
-        viewModel.getPiggyProgressLiveData().observe(getViewLifecycleOwner(), progress -> updatePiggyProgress(progress, null));
-        viewModel.getPiggyTargetLiveData().observe(getViewLifecycleOwner(), target -> updatePiggyProgress(null, target));
+        viewModel.getPiggyProgressLiveData().observe(getViewLifecycleOwner(), progress -> updatePiggyProgress(progress, null, null));
+        viewModel.getPiggyTargetLiveData().observe(getViewLifecycleOwner(), target -> updatePiggyProgress(null, target, null));
+        viewModel.getPiggyGemsLiveData().observe(getViewLifecycleOwner(), gems -> updatePiggyProgress(null, null, gems));
 
         viewModel.getStatisticLiveData().observe(getViewLifecycleOwner(), this::updateStatisticsUi);
         viewModel.getDailiesMonthProgressLiveData().observe(getViewLifecycleOwner(), this::updateDailiesMonthUi);
@@ -515,9 +517,10 @@ public class HomeView extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void updatePiggyProgress(@Nullable Integer progress, @Nullable Integer target) {
+    private void updatePiggyProgress(@Nullable Integer progress, @Nullable Integer target, @Nullable Integer gems) {
         if (target != null) lastTarget = target;
         if (progress != null) lastProgress = progress;
+        if (gems != null) lastGems = gems;
 
         if (lastProgress == null || lastTarget == null) {
             return;
@@ -540,9 +543,9 @@ public class HomeView extends Fragment {
         if (tvSavingsCurrency != null) {
             GameType currentGame = viewModel.getGameTypeLiveData().getValue();
             int pullCost = (currentGame != null) ? currentGame.getPullCost() : GameType.GENSHIN.getPullCost();
-            NumberCountAnimator.animate(tvSavingsCurrency, curProgress, progressVal -> {
-                long totalCurrency = (long) progressVal * pullCost;
-                String formatted = NumberFormat.getIntegerInstance().format(totalCurrency);
+            int effectiveGems = lastGems != null ? lastGems : (curProgress * pullCost);
+            NumberCountAnimator.animate(tvSavingsCurrency, effectiveGems, progressVal -> {
+                String formatted = NumberFormat.getIntegerInstance().format(progressVal);
                 return getString(R.string.savings_currency_approx_format, formatted, getString(R.string.home_savings_in_currency));
             });
         }
@@ -613,7 +616,7 @@ public class HomeView extends Fragment {
             TextAnimator.crossfade(tvPityBannerName, labelRes);
         }
 
-        updatePiggyProgress(null, null);
+        updatePiggyProgress(null, null, null);
     }
 
     private void triggerVibration() {

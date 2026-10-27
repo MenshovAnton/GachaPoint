@@ -464,6 +464,22 @@ public class DatabaseRepository {
         }, onComplete);
     }
 
+    public void saveSavingsManualGems(GameType gameType, int gems, Runnable onComplete) {
+        executeAsyncSafe(() -> {
+            if (gameType != null) {
+                getDb().savingsDao().updateManualGems(gameType.getCode(), gems);
+            }
+        }, onComplete);
+    }
+
+    public void saveSavingsManual(GameType gameType, int progress, int gems, Runnable onComplete) {
+        executeAsyncSafe(() -> {
+            if (gameType != null) {
+                getDb().savingsDao().updateManualProgressAndGems(gameType.getCode(), progress, gems);
+            }
+        }, onComplete);
+    }
+
     public void saveSavingsSubsProgress(GameType gameType, int progress, Runnable onComplete) {
         executeAsyncSafe(() -> {
             if (gameType != null) {

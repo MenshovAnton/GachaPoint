@@ -41,6 +41,7 @@ public class HomeViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Integer> piggyProgressLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> piggyTargetLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Integer> piggyGemsLiveData = new MutableLiveData<>();
 
     private final MutableLiveData<Boolean> isDailyDoneTodayLiveData = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> isSubClaimedTodayLiveData = new MutableLiveData<>(false);
@@ -102,6 +103,7 @@ public class HomeViewModel extends AndroidViewModel {
             subsCountLiveData.setValue(calendarRepository.getSubsCount());
             int total = piggyBankRepository.getTotalProgress(finalGameType);
             int target = piggyBankRepository.getTarget(finalGameType);
+            int totalGems = piggyBankRepository.getTotalGems(finalGameType);
             Integer curTarget = piggyTargetLiveData.getValue();
             Integer curProgress = piggyProgressLiveData.getValue();
             int newProgress = target > 0 ? total : 0;
@@ -111,27 +113,28 @@ public class HomeViewModel extends AndroidViewModel {
             if (curProgress == null || curProgress != newProgress) {
                 piggyProgressLiveData.setValue(newProgress);
             }
+            piggyGemsLiveData.setValue(target > 0 ? totalGems : 0);
         });
 
         calendarRepository.getStatistic(gameType, currentYear, statisticLiveData::setValue);
 
         int totalProgress = piggyBankRepository.getTotalProgress(gameType);
         int target = piggyBankRepository.getTarget(gameType);
+        int totalGems = piggyBankRepository.getTotalGems(gameType);
         piggyTargetLiveData.setValue(target);
         piggyProgressLiveData.setValue(target > 0 ? totalProgress : 0);
+        piggyGemsLiveData.setValue(target > 0 ? totalGems : 0);
 
-        calendarRepository.getDayDailyStatus(currentYear, dayOfYear, gameType, status -> {
-            isDailyDoneTodayLiveData.setValue(status != null && status == 1);
-        });
+        calendarRepository.getDayDailyStatus(currentYear, dayOfYear, gameType, status ->
+                isDailyDoneTodayLiveData.setValue(status != null && status == 1));
 
         calendarRepository.getDayStatus(currentYear, dayOfYear, gameType, status -> {
             boolean claimed = (status != null) && (status == DayState.STATUS_RECEIVED || status == DayState.STATUS_OLD_RECEIVED);
             isSubClaimedTodayLiveData.setValue(claimed);
         });
 
-        calendarRepository.getDaySubDaysRemaining(currentYear, dayOfYear, gameType, rem -> {
-            subDaysRemainingTodayLiveData.setValue(rem != null ? rem : 0);
-        });
+        calendarRepository.getDaySubDaysRemaining(currentYear, dayOfYear, gameType, rem ->
+                subDaysRemainingTodayLiveData.setValue(rem != null ? rem : 0));
 
         calendarRepository.getMonthDates(currentYear, currentMonth, gameType, dates -> {
             if (dates != null) {
@@ -144,9 +147,8 @@ public class HomeViewModel extends AndroidViewModel {
             }
         });
 
-        databaseRepository.getPullsByBanner(gameType, BannerType.EVENT.getDbKey(), rawPulls -> {
-            calculatePityForHome(rawPulls, finalGameType);
-        });
+        databaseRepository.getPullsByBanner(gameType, BannerType.EVENT.getDbKey(), rawPulls ->
+                calculatePityForHome(rawPulls, finalGameType));
     }
 
     private void calculatePityForHome(List<Pull> rawPulls, GameType gameType) {
@@ -230,6 +232,7 @@ public class HomeViewModel extends AndroidViewModel {
     public LiveData<Statistic> getStatisticLiveData() { return statisticLiveData; }
     public LiveData<Integer> getPiggyProgressLiveData() { return piggyProgressLiveData; }
     public LiveData<Integer> getPiggyTargetLiveData() { return piggyTargetLiveData; }
+    public LiveData<Integer> getPiggyGemsLiveData() { return piggyGemsLiveData; }
 
     public LiveData<Boolean> getIsDailyDoneTodayLiveData() { return isDailyDoneTodayLiveData; }
     public LiveData<Boolean> getIsSubClaimedTodayLiveData() { return isSubClaimedTodayLiveData; }

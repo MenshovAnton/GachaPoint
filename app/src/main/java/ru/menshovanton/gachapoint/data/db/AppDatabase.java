@@ -316,6 +316,20 @@ public abstract class AppDatabase extends RoomDatabase {
     public static void syncSavingsRaw(Context context, SupportSQLiteDatabase db) {
         db.beginTransaction();
         try {
+            boolean hasManualGems = false;
+            try (android.database.Cursor cursor = db.query(new androidx.sqlite.db.SimpleSQLiteQuery("PRAGMA table_info(`savings`)"))) {
+                int nameIndex = cursor.getColumnIndex("name");
+                while (cursor.moveToNext()) {
+                    if ("manual_gems".equalsIgnoreCase(cursor.getString(nameIndex))) {
+                        hasManualGems = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasManualGems) {
+                db.execSQL("ALTER TABLE `savings` ADD COLUMN `manual_gems` INTEGER NOT NULL DEFAULT 0");
+            }
+
             Preferences prefs = new Preferences(context);
             boolean alreadyMigrated = prefs.getBooleanPreference("savings_migrated_to_db", false);
             for (GameType game : GameType.values()) {
@@ -334,7 +348,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     int prefManual = prefs.getPiggyBankManualProgress(game);
                     int prefSubs = prefs.getPiggyBankSubsProgress(game);
                     int prefDailies = prefs.getPiggyBankDailiesProgress(game);
-                    db.execSQL("INSERT INTO `savings` (`game_type`, `target`, `manual_progress`, `subs_progress`, `dailies_progress`) VALUES (?, ?, ?, ?, ?)",
+                    db.execSQL("INSERT INTO `savings` (`game_type`, `target`, `manual_progress`, `subs_progress`, `dailies_progress`, `manual_gems`) VALUES (?, ?, ?, ?, ?, 0)",
                             new Object[]{gameCode, prefTarget, prefManual, prefSubs, prefDailies});
                 } else if (!alreadyMigrated) {
                     int prefTarget = prefs.getPiggyBankTarget(game);

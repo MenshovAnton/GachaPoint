@@ -26,7 +26,7 @@ public class PiggyBankRepository {
 
     private void initCache() {
         for (GameType game : GameType.values()) {
-            cache.put(game, new SavingsEntity(game.getCode(), 0, 0, 0, 0));
+            cache.put(game, new SavingsEntity(game.getCode(), 0, 0, 0, 0, 0));
         }
         loadFromDatabase(null);
     }
@@ -53,6 +53,29 @@ public class PiggyBankRepository {
         SavingsEntity s = cache.get(gameType);
         if (s != null) s.manualProgress = safeProgress;
         databaseRepository.saveSavingsManualProgress(gameType, safeProgress, null);
+    }
+
+    public int getManualGems(GameType gameType) {
+        SavingsEntity s = cache.get(gameType);
+        return s != null ? s.manualGems : 0;
+    }
+
+    public void saveManualGems(GameType gameType, int gems) {
+        int safeGems = Math.max(0, gems);
+        SavingsEntity s = cache.get(gameType);
+        if (s != null) s.manualGems = safeGems;
+        databaseRepository.saveSavingsManualGems(gameType, safeGems, null);
+    }
+
+    public void saveManual(GameType gameType, int progress, int gems) {
+        int safeProgress = Math.max(0, progress);
+        int safeGems = Math.max(0, gems);
+        SavingsEntity s = cache.get(gameType);
+        if (s != null) {
+            s.manualProgress = safeProgress;
+            s.manualGems = safeGems;
+        }
+        databaseRepository.saveSavingsManual(gameType, safeProgress, safeGems, null);
     }
 
     public int getSubsProgress(GameType gameType) {
@@ -89,6 +112,11 @@ public class PiggyBankRepository {
         return getManualProgress(gameType) + getSubsProgress(gameType) + getDailiesProgress(gameType);
     }
 
+    public int getTotalGems(GameType gameType) {
+        if (gameType == null) return 0;
+        return getTotalProgress(gameType) * gameType.getPullCost() + getManualGems(gameType);
+    }
+
     public int getTarget(GameType gameType) {
         SavingsEntity s = cache.get(gameType);
         return s != null ? s.target : 0;
@@ -106,6 +134,7 @@ public class PiggyBankRepository {
         if (s != null) {
             s.target = 0;
             s.manualProgress = 0;
+            s.manualGems = 0;
         }
         databaseRepository.resetSavings(gameType, null);
     }

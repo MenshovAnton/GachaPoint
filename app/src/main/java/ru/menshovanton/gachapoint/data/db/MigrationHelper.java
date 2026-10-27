@@ -160,6 +160,21 @@ public class MigrationHelper {
                     database.execSQL("UPDATE `pulls` SET `order_index` = `id`");
                 }
                 database.execSQL("DROP INDEX IF EXISTS `idx_pull_order`");
+
+                boolean hasManualGems = false;
+                try (android.database.Cursor cursor = database.query(new androidx.sqlite.db.SimpleSQLiteQuery("PRAGMA table_info(`savings`)"))) {
+                    int nameIndex = cursor.getColumnIndex("name");
+                    while (cursor.moveToNext()) {
+                        if ("manual_gems".equalsIgnoreCase(cursor.getString(nameIndex))) {
+                            hasManualGems = true;
+                            break;
+                        }
+                    }
+                }
+                if (!hasManualGems) {
+                    database.execSQL("ALTER TABLE `savings` ADD COLUMN `manual_gems` INTEGER NOT NULL DEFAULT 0");
+                }
+
                 AppLogger.i("MigrationHelper", "Room database migration 2 -> 3 completed successfully.");
             } catch (Throwable t) {
                 AppLogger.e("MigrationHelper", "Room database migration 2 -> 3 FAILED!", t);

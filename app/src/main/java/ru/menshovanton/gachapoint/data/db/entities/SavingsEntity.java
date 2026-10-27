@@ -35,15 +35,24 @@ public class SavingsEntity {
     @ColumnInfo(name = "dailies_progress", defaultValue = "0")
     public int dailiesProgress;
 
+    @ColumnInfo(name = "manual_gems", defaultValue = "0")
+    public int manualGems;
+
     public SavingsEntity() {}
 
     @Ignore
     public SavingsEntity(int gameType, int target, int manualProgress, int subsProgress, int dailiesProgress) {
+        this(gameType, target, manualProgress, subsProgress, dailiesProgress, 0);
+    }
+
+    @Ignore
+    public SavingsEntity(int gameType, int target, int manualProgress, int subsProgress, int dailiesProgress, int manualGems) {
         this.gameType = gameType;
         this.target = target;
         this.manualProgress = manualProgress;
         this.subsProgress = subsProgress;
         this.dailiesProgress = dailiesProgress;
+        this.manualGems = manualGems;
     }
 
     public GameType getGameTypeEnum() {

@@ -197,6 +197,19 @@ public enum GameType {
         return currencyIconResId;
     }
 
+    @StringRes
+    public int getCurrencyNameResId() {
+        switch (this) {
+            case HSR:
+                return R.string.currency_name_hsr;
+            case ZZZ:
+                return R.string.currency_name_zzz;
+            case GENSHIN:
+            default:
+                return R.string.currency_name_genshin;
+        }
+    }
+
     @DrawableRes
     public int getPullIconResId() {
         return pullIconResId;

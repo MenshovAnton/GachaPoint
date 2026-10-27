@@ -49,14 +49,21 @@ public class PiggyBankViewModel extends AndroidViewModel {
     public void refreshData() {
         int totalProgress = repository.getTotalProgress(currentGameType);
         int target = repository.getTarget(currentGameType);
+        int remainderGems = repository.getManualGems(currentGameType);
+        int totalGems = repository.getTotalGems(currentGameType);
 
         PiggyBankState currentState = stateLiveData.getValue();
-        if (currentState == null || currentState.getProgress() != totalProgress || currentState.getTarget() != target) {
-            stateLiveData.setValue(new PiggyBankState(totalProgress, target));
+        if (currentState == null
+                || currentState.getProgress() != totalProgress
+                || currentState.getTarget() != target
+                || currentState.getRemainderGems() != remainderGems
+                || currentState.getTotalGems() != totalGems) {
+            stateLiveData.setValue(new PiggyBankState(totalProgress, target, remainderGems, totalGems));
         }
     }
 
     public void addProgress(int wishes) {
+        if (wishes <= 0) return;
         int totalProgress = repository.getTotalProgress(currentGameType);
         int target = repository.getTarget(currentGameType);
 
@@ -71,10 +78,49 @@ public class PiggyBankViewModel extends AndroidViewModel {
     }
 
     public void removeProgress(int wishes) {
+        if (wishes <= 0) return;
         int manualProgress = repository.getManualProgress(currentGameType);
         if (manualProgress <= 0) return;
         int diff = Math.min(wishes, manualProgress);
         repository.saveManualProgress(currentGameType, manualProgress - diff);
+        refreshData();
+    }
+
+    public void addGems(int gems) {
+        if (gems <= 0) return;
+        int pullCost = currentGameType.getPullCost();
+        int currentManualGems = repository.getManualGems(currentGameType);
+        int currentManualPulls = repository.getManualProgress(currentGameType);
+        int totalNewManualGems = currentManualGems + gems;
+        int additionalPulls = totalNewManualGems / pullCost;
+        int remainingGems = totalNewManualGems % pullCost;
+
+        int totalProgress = repository.getTotalProgress(currentGameType);
+        int target = repository.getTarget(currentGameType);
+
+        if (target > 0 && (totalProgress + additionalPulls > target ||
+                (totalProgress + additionalPulls == target && remainingGems > 0))) {
+            goalExceededEvent.call();
+            return;
+        }
+
+        repository.saveManual(currentGameType, currentManualPulls + additionalPulls, remainingGems);
+        refreshData();
+    }
+
+    public void removeGems(int gems) {
+        if (gems <= 0) return;
+        int pullCost = currentGameType.getPullCost();
+        int currentManualGems = repository.getManualGems(currentGameType);
+        int currentManualPulls = repository.getManualProgress(currentGameType);
+        int totalManualValue = currentManualPulls * pullCost + currentManualGems;
+
+        if (totalManualValue <= 0) return;
+        int remainingValue = Math.max(0, totalManualValue - gems);
+        int newPulls = remainingValue / pullCost;
+        int newGems = remainingValue % pullCost;
+
+        repository.saveManual(currentGameType, newPulls, newGems);
         refreshData();
     }
 

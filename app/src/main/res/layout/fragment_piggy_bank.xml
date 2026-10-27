@@ -142,14 +142,62 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/tv_saved_counter"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-black"
-                                android:textColor="@color/text"
-                                android:textSize="28sp"
-                                tools:text="45 / 90" />
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tv_saved_counter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-black"
+                                    android:textColor="@color/text"
+                                    android:textSize="28sp"
+                                    tools:text="45 / 90" />
+
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/card_remainder_gems"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:visibility="gone"
+                                    app:cardBackgroundColor="@color/badge_blue_bg"
+                                    app:cardCornerRadius="8dp"
+                                    app:cardElevation="0dp"
+                                    app:strokeWidth="0dp"
+                                    tools:visibility="visible">
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_vertical"
+                                        android:orientation="horizontal"
+                                        android:paddingHorizontal="6dp"
+                                        android:paddingVertical="3dp">
+
+                                        <ImageView
+                                            android:id="@+id/iv_remainder_gem_icon"
+                                            android:layout_width="14dp"
+                                            android:layout_height="14dp"
+                                            android:importantForAccessibility="no"
+                                            android:src="@drawable/icon_primogem" />
+
+                                        <TextView
+                                            android:id="@+id/tv_remainder_gems"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="3dp"
+                                            android:fontFamily="sans-serif-bold"
+                                            android:textColor="@color/check"
+                                            android:textSize="12sp"
+                                            tools:text="+20" />
+                                    </LinearLayout>
+
+                                </com.google.android.material.card.MaterialCardView>
+
+                            </LinearLayout>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -269,68 +317,207 @@
                     android:orientation="vertical"
                     android:padding="@dimen/card_inner_padding">
 
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/toggle_action_mode"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginBottom="12dp"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_mode_pulls"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="@string/savings_mode_pulls"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            app:icon="@drawable/icon_intertwined_fate"
+                            app:iconPadding="6dp"
+                            app:iconSize="16dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_mode_gems"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="@string/savings_mode_gems"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            app:icon="@drawable/icon_primogem"
+                            app:iconPadding="6dp"
+                            app:iconSize="16dp" />
+
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
                     <LinearLayout
+                        android:id="@+id/ll_pulls_actions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_add_one_pull"
-                            style="@style/Widget.Material3.Button.TonalButton"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/min_touch_target_size"
-                            android:layout_marginEnd="6dp"
-                            android:layout_weight="1"
-                            android:text="@string/plus_one"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_add_ten_pulls"
-                            style="@style/Widget.Material3.Button.TonalButton"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/min_touch_target_size"
-                            android:layout_marginStart="6dp"
-                            android:layout_weight="1"
-                            android:text="@string/plus_ten"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="12dp" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_add_one_pull"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/min_touch_target_size"
+                                android:layout_marginEnd="6dp"
+                                android:layout_weight="1"
+                                android:text="@string/plus_one"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                app:cornerRadius="12dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_add_ten_pulls"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/min_touch_target_size"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:text="@string/plus_ten"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                app:cornerRadius="12dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_minus_one_pull"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/min_touch_target_size"
+                                android:layout_marginEnd="6dp"
+                                android:layout_weight="1"
+                                android:text="@string/minus_one"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/divider_color" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_minus_ten_pulls"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/min_touch_target_size"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:text="@string/minus_ten"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/divider_color" />
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_gems_actions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_minus_one_pull"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/min_touch_target_size"
-                            android:layout_marginEnd="6dp"
-                            android:layout_weight="1"
-                            android:text="@string/minus_one"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="14sp"
-                            app:cornerRadius="12dp"
-                            app:strokeColor="@color/divider_color" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_minus_ten_pulls"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/min_touch_target_size"
-                            android:layout_marginStart="6dp"
-                            android:layout_weight="1"
-                            android:text="@string/minus_ten"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="14sp"
-                            app:cornerRadius="12dp"
-                            app:strokeColor="@color/divider_color" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_add_sixty_gems"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/min_touch_target_size"
+                                android:layout_marginEnd="6dp"
+                                android:layout_weight="1"
+                                android:text="@string/plus_sixty"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                app:cornerRadius="12dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_add_one_pull_gems"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/min_touch_target_size"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:text="@string/plus_one_hundred_sixty"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                app:cornerRadius="12dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_minus_sixty_gems"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/min_touch_target_size"
+                                android:layout_marginEnd="6dp"
+                                android:layout_weight="1"
+                                android:text="@string/minus_sixty"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/divider_color" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_minus_one_pull_gems"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/min_touch_target_size"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:text="@string/minus_one_hundred_sixty"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/divider_color" />
+                        </LinearLayout>
+
                     </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_custom_input"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/min_touch_target_size"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/savings_custom_input"
+                        android:textColor="@color/check"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="12dp"
+                        app:icon="@drawable/icon_edit"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:iconSize="16dp"
+                        app:iconTint="@color/check"
+                        app:strokeColor="@color/divider_color" />
 
                 </LinearLayout>
 

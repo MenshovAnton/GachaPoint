@@ -203,6 +203,25 @@
     <string name="savings_current_pulls">Pulls earned</string>
     <string name="savings_current_gems">In currency</string>
     <string name="savings_quick_actions">Quick actions</string>
+    <string name="savings_mode_pulls">Pulls</string>
+    <string name="savings_mode_gems">Currency</string>
+    <string name="savings_custom_input">Custom amount</string>
+    <string name="dialog_quick_add_title">Quick Input</string>
+    <string name="dialog_quick_add_title_pulls">Enter Pulls</string>
+    <string name="dialog_quick_add_title_gems">Enter Currency</string>
+    <string name="dialog_quick_add_hint_pulls">Number of pulls</string>
+    <string name="dialog_quick_add_hint_gems">Amount of currency</string>
+    <string name="dialog_quick_add_preview" tools:ignore="PluralsCandidate">Auto-collapse: +%1$d pulls, +%2$d currency</string>
+    <string name="dialog_quick_remove_preview" tools:ignore="PluralsCandidate">Will deduct: %1$d pulls, %2$d currency</string>
+    <string name="action_add">Add</string>
+    <string name="action_deduct">Deduct</string>
+    <string name="plus_sixty" translatable="false">+60</string>
+    <string name="plus_one_hundred_sixty" translatable="false">+160</string>
+    <string name="minus_sixty" translatable="false">-60</string>
+    <string name="minus_one_hundred_sixty" translatable="false">-160</string>
+    <string name="currency_name_genshin">Primogems</string>
+    <string name="currency_name_hsr">Stellar Jade</string>
+    <string name="currency_name_zzz">Polychromes</string>
     <string name="savings_reset_confirm">Reset current savings goal and progress?</string>
     <string name="goal_not_set_or_reached">Target not set or reached</string>
     <string name="remark_piggy_bank">Pity 1x = 77 pulls</string>
