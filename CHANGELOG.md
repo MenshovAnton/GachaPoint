@@ -30,3 +30,15 @@
 - Feedback & Community Hub: refreshed support screen with direct community links (Telegram, GitHub Issues) and a built-in issue submission form with device diagnostics.
 - Material 3 Design & Architecture: updated app styling, enhanced banner and game selection components, and improved database migration (v1 → v2).
 - Performance & Stability: eliminated fragment view memory leaks during navigation, fixed notification tap action to open the app, and optimized background workers.
+
+
+# v0.2.1
+- Smart Carousel & Game Visibility: customize which games appear via Settings or the quick-edit button at the end of the pills carousel.
+- Mono-Mode (Single Game): when only one game is active, the pills carousel is completely hidden across all screens (Home, Journal, Piggy Bank, Statistics, Tracker), freeing up space for widgets.
+- Default Startup Game: choose your favorite game to load immediately on app launch without manual switching.
+- Smooth Fluid Animations: seamless container transitions for carousel expand/collapse, animated pill insertion/removal glide (DiffUtil), and zero-flicker selection.
+- Android 8.0+ Notification Channels: separate system channels for "Subscription Reminders", "Daily Tasks", and "Important Events" with independent sound and vibration preferences.
+- "Smart Silence": intelligent notification dispatching checks today's progress — if your dailies and subscription are already claimed, you won't be disturbed. Disabled games are silenced automatically.
+- Pull Reordering in Journal: drag-and-drop pull reordering with smooth slide-in animations and instant pity recalculation.
+- Precise Piggy Bank Currency Input: track exact currency amounts (Primogems, Stellar Jades, Polychromes) alongside pulls, featuring a quick-input dialog.
+- Stability & Compatibility: fixed storage permissions on Android 8–9 (API ≤ 28), added local diagnostic file logger, and optimized database sync lifecycles.
