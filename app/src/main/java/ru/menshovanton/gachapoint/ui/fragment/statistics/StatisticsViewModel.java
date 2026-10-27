@@ -52,6 +52,7 @@ public class StatisticsViewModel extends AndroidViewModel {
     public LiveData<OverallStatisticsData> getStatisticsLiveData() { return statisticsLiveData; }
     public LiveData<Boolean> getIsLoadingLiveData() { return isLoadingLiveData; }
     public LiveData<GameType> getCurrentGameTypeLiveData() { return currentGameTypeLiveData; }
+    public GameType getCurrentGameType() { return currentGameTypeLiveData.getValue(); }
     public SingleLiveEvent<Intent> getShareIntentEvent() { return shareIntentEvent; }
     public SingleLiveEvent<Void> getSaveToGallerySuccessEvent() { return saveToGallerySuccessEvent; }
     public SingleLiveEvent<String> getErrorEvent() { return errorEvent; }

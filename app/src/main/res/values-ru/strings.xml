@@ -246,6 +246,39 @@
     <string name="notifications_title">Напоминание!</string>
     <string name="notifications_text">Не забудь собрать награды!</string>
 
+    <!-- Notification Channels & Reminders -->
+    <string name="channel_subscriptions_name">Напоминания о подписке</string>
+    <string name="channel_subscriptions_desc">Напоминания о сборе наград с активных подписок</string>
+    <string name="channel_dailies_name">Ежедневные задания</string>
+    <string name="channel_dailies_desc">Напоминания о выполнении ежедневных поручений</string>
+    <string name="channel_events_name">Важные события</string>
+    <string name="channel_events_desc">Уведомления о событиях, баннерах и обновлениях</string>
+
+    <string name="notification_sub_title">Напоминание о подписке</string>
+    <string name="notification_sub_text">Не забудьте забрать ежедневные награды подписки!</string>
+    <string name="notification_sub_text_game">Не забудьте забрать награды подписки в %s!</string>
+    <string name="notification_sub_text_games">Не забудьте забрать награды подписки: %s!</string>
+    <string name="notification_dailies_title">Ежедневные задания</string>
+    <string name="notification_dailies_text">Не забудьте выполнить ежедневные задания!</string>
+    <string name="notification_dailies_text_game">Не забудьте выполнить ежедневные задания в %s!</string>
+    <string name="notification_dailies_text_games">Не забудьте выполнить ежедневные задания: %s!</string>
+
+    <string name="notification_channels_setting_title">Каналы уведомлений</string>
+    <string name="notification_channels_setting_desc">Настройка звука, вибрации и важности в системе</string>
+
+    <!-- Games Configuration & Management -->
+    <string name="games_settings_title">Игры</string>
+    <string name="games_manage_title">Отображаемые игры</string>
+    <string name="games_manage_desc">Скрытие неиспользуемых игр и умная карусель</string>
+    <string name="games_default_title">Игра по умолчанию</string>
+    <string name="games_default_desc">Открывается сразу при запуске приложения</string>
+    <string name="games_sheet_title">Настройка игр</string>
+    <string name="games_sheet_desc">Выберите отображаемые игры и любимую игру по умолчанию</string>
+    <string name="games_error_last_one">Должна быть включена хотя бы одна игра</string>
+    <string name="games_default_tag">По умолчанию</string>
+    <string name="games_make_default">Сделать игрой по умолчанию</string>
+    <string name="games_done_button">Готово</string>
+
     <!-- Menu Screen -->
     <string name="menu_section_tools">Инструменты и сервисы</string>
     <string name="menu_section_app">Приложение</string>

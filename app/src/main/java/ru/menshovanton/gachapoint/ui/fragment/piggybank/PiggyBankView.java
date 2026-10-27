@@ -28,13 +28,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
+import ru.menshovanton.gachapoint.ui.animation.CarouselAnimator;
 import ru.menshovanton.gachapoint.ui.animation.NumberCountAnimator;
 import ru.menshovanton.gachapoint.ui.animation.TextAnimator;
+import ru.menshovanton.gachapoint.ui.main.GamesConfigBottomSheetDialog;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
 
@@ -45,6 +47,7 @@ public class PiggyBankView extends Fragment {
 
     private ImageButton btnBack;
     private RecyclerView rvGameTypes;
+    private PillsAdapter pillsAdapter;
 
     private ProgressBar progressBar;
     private TextView savedWishesCounter;
@@ -119,11 +122,6 @@ public class PiggyBankView extends Fragment {
     }
 
     private void setupGameTypesCarousel() {
-        List<String> categories = new ArrayList<>();
-        for (GameType type : GameType.values()) {
-            categories.add(getString(type.getNameResId()));
-        }
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         rvGameTypes.setLayoutManager(layoutManager);
 
@@ -131,19 +129,53 @@ public class PiggyBankView extends Fragment {
                 ? mainActivityView.getSubType()
                 : GameType.GENSHIN;
 
+        List<GameType> enabledGames = mainActivityView != null ? mainActivityView.getEnabledGames() : Collections.singletonList(GameType.GENSHIN);
+
         viewModel.setGameType(currentType);
 
-        PillsAdapter pillsAdapter = new PillsAdapter(categories, currentType.getCode(), (item, position) -> {
-            GameType selectedGame = GameType.fromCode(position);
-            if (mainActivityView != null) {
-                mainActivityView.setSubType(selectedGame);
-            }
-            viewModel.setGameType(selectedGame);
-            updateGameAppearance(selectedGame);
-        });
+        pillsAdapter = new PillsAdapter(
+                enabledGames,
+                currentType,
+                (selectedGame, position) -> {
+                    if (mainActivityView != null) {
+                        mainActivityView.setSubType(selectedGame);
+                    }
+                    viewModel.setGameType(selectedGame);
+                    updateGameAppearance(selectedGame);
+                },
+                () -> GamesConfigBottomSheetDialog.show(requireContext(), () -> {
+                    if (mainActivityView != null) mainActivityView.refreshGamesConfig();
+                })
+        );
 
+        CarouselAnimator.setupItemAnimator(rvGameTypes);
         rvGameTypes.setAdapter(pillsAdapter);
         updateGameAppearance(currentType);
+        updatePillsVisibility();
+    }
+
+    private void updatePillsVisibility() {
+        if (rvGameTypes == null || mainActivityView == null) return;
+        List<GameType> enabled = mainActivityView.getEnabledGames();
+        ViewGroup root = (getView() instanceof ViewGroup) ? (ViewGroup) getView() : null;
+        boolean isMultiGame = enabled.size() > 1;
+
+        CarouselAnimator.setCarouselVisibility(rvGameTypes, root, isMultiGame);
+
+        if (!isMultiGame) {
+            GameType monoGame = !enabled.isEmpty() ? enabled.get(0) : GameType.GENSHIN;
+            if (mainActivityView.getSubType() != monoGame) {
+                mainActivityView.setSubType(monoGame);
+            }
+            if (viewModel != null && viewModel.getCurrentGameType() != monoGame) {
+                viewModel.setGameType(monoGame);
+                updateGameAppearance(monoGame);
+            }
+        } else {
+            if (pillsAdapter != null) {
+                pillsAdapter.updateData(enabled, mainActivityView.getSubType());
+            }
+        }
     }
 
     private void setupActionButtons() {
@@ -197,6 +229,7 @@ public class PiggyBankView extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        updatePillsVisibility();
         if (viewModel != null) {
             viewModel.refreshData();
             viewModel.syncAndRefresh();
@@ -205,6 +238,20 @@ public class PiggyBankView extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void observeViewModels() {
+        if (mainActivityView != null) {
+            mainActivityView.getMainActivityViewModel().getEnabledGamesLiveData().observe(getViewLifecycleOwner(), games ->
+                    updatePillsVisibility());
+            mainActivityView.getMainActivityViewModel().getSubTypeLiveData().observe(getViewLifecycleOwner(), game -> {
+                if (pillsAdapter != null) {
+                    pillsAdapter.setSelectedGame(game);
+                }
+                if (viewModel != null && viewModel.getCurrentGameType() != game) {
+                    viewModel.setGameType(game);
+                    updateGameAppearance(game);
+                }
+            });
+        }
+
         viewModel.getStateLiveData().observe(getViewLifecycleOwner(), state -> {
             if (state == null) return;
 
@@ -264,6 +311,7 @@ public class PiggyBankView extends Fragment {
 
     @Override
     public void onDestroyView() {
+        pillsAdapter = null;
         super.onDestroyView();
         if (rvGameTypes != null) {
             rvGameTypes.setAdapter(null);

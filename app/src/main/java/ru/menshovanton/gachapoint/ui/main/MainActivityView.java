@@ -27,6 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
@@ -220,6 +221,20 @@ public class MainActivityView extends AppCompatActivity {
                 action.run();
                 dialog.dismiss();
             });
+        }
+    }
+
+    public MainActivityViewModel getMainActivityViewModel() {
+        return viewModel;
+    }
+
+    public List<GameType> getEnabledGames() {
+        return viewModel != null ? viewModel.getEnabledGames() : Collections.singletonList(GameType.GENSHIN);
+    }
+
+    public void refreshGamesConfig() {
+        if (viewModel != null) {
+            viewModel.refreshEnabledGames();
         }
     }
 

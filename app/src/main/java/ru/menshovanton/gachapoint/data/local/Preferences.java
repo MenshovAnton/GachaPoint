@@ -3,6 +3,10 @@ package ru.menshovanton.gachapoint.data.local;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 
 public class Preferences {
@@ -18,6 +22,9 @@ public class Preferences {
 
     public static final String CALENDAR_SIZE = "Calendar size";
     public static final String SUB_TYPE = "Selected sub type";
+
+    public static final String ENABLED_GAMES = "enabled_games";
+    public static final String DEFAULT_GAME = "default_game";
 
     public static final String PIGGY_BANK_TARGET_GENSHIN = "Piggy Bank target Genshin Impact";
     public static final String PIGGY_BANK_MANUAL_PROGRESS_GENSHIN = "Piggy Bank manual progress Genshin Impact";
@@ -37,6 +44,85 @@ public class Preferences {
 
     public Preferences(Context context) {
         settings = context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
+    }
+
+    public List<GameType> getEnabledGames() {
+        String raw = settings.getString(ENABLED_GAMES, null);
+        List<GameType> list = new ArrayList<>();
+        if (raw != null && !raw.trim().isEmpty()) {
+            String[] parts = raw.split(",");
+            for (String p : parts) {
+                try {
+                    int code = Integer.parseInt(p.trim());
+                    GameType type = GameType.fromCode(code);
+                    if (type != null && !list.contains(type)) {
+                        list.add(type);
+                    }
+                } catch (NumberFormatException ignored) {}
+            }
+        }
+        if (list.isEmpty()) {
+            list.addAll(Arrays.asList(GameType.values()));
+        }
+        return list;
+    }
+
+    public void setEnabledGames(List<GameType> games) {
+        if (games == null || games.isEmpty()) {
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < games.size(); i++) {
+            if (i > 0) sb.append(",");
+            sb.append(games.get(i).getCode());
+        }
+        settings.edit().putString(ENABLED_GAMES, sb.toString()).apply();
+    }
+
+    public boolean isGameEnabled(GameType gameType) {
+        if (gameType == null) return false;
+        return getEnabledGames().contains(gameType);
+    }
+
+    public void setGameEnabled(GameType gameType, boolean enabled) {
+        if (gameType == null) return;
+        List<GameType> current = new ArrayList<>(getEnabledGames());
+        if (enabled) {
+            if (!current.contains(gameType)) {
+                List<GameType> ordered = new ArrayList<>();
+                for (GameType g : GameType.values()) {
+                    if (current.contains(g) || g == gameType) {
+                        ordered.add(g);
+                    }
+                }
+                setEnabledGames(ordered);
+            }
+        } else {
+            if (current.size() <= 1) {
+                return;
+            }
+            current.remove(gameType);
+            setEnabledGames(current);
+
+            if (getDefaultGame() == gameType) {
+                setDefaultGame(current.get(0));
+            }
+        }
+    }
+
+    public GameType getDefaultGame() {
+        int code = settings.getInt(DEFAULT_GAME, GameType.GENSHIN.getCode());
+        GameType type = GameType.fromCode(code);
+        List<GameType> enabled = getEnabledGames();
+        if (type != null && enabled.contains(type)) {
+            return type;
+        }
+        return !enabled.isEmpty() ? enabled.get(0) : GameType.GENSHIN;
+    }
+
+    public void setDefaultGame(GameType gameType) {
+        if (gameType == null) return;
+        settings.edit().putInt(DEFAULT_GAME, gameType.getCode()).apply();
     }
 
     public static String getPiggyBankTargetKey(GameType gameType) {

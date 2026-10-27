@@ -46,6 +46,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -56,7 +57,9 @@ import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.enums.PityStatus;
 import ru.menshovanton.gachapoint.domain.models.BannerInfo;
 import ru.menshovanton.gachapoint.domain.models.Pull;
+import ru.menshovanton.gachapoint.ui.animation.CarouselAnimator;
 import ru.menshovanton.gachapoint.ui.animation.NumberCountAnimator;
+import ru.menshovanton.gachapoint.ui.main.GamesConfigBottomSheetDialog;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
 
@@ -167,11 +170,6 @@ public class JournalView extends Fragment {
     }
 
     private void setupGameTypeSelector() {
-        List<String> categories = new ArrayList<>();
-        for (GameType type : GameType.values()) {
-            categories.add(getString(type.getNameResId()));
-        }
-
         gameTypesLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         rvGameTypes.setLayoutManager(gameTypesLayoutManager);
 
@@ -179,26 +177,63 @@ public class JournalView extends Fragment {
                 ? mainActivityView.getSubType()
                 : GameType.GENSHIN;
 
+        List<GameType> enabledGames = mainActivityView != null ? mainActivityView.getEnabledGames() : Collections.singletonList(GameType.GENSHIN);
+
         viewModel.setGameType(currentType);
 
-        pillsAdapter = new PillsAdapter(categories, currentType.getCode(), (item, position) -> {
-            GameType selectedGame = GameType.fromCode(position);
-            if (mainActivityView != null) {
-                mainActivityView.setSubType(selectedGame);
-            }
-            if (appbarLayout != null) {
-                appbarLayout.setExpanded(true, true);
-            }
-            if (btnScrollTop != null && btnScrollTop.getVisibility() == View.VISIBLE) {
-                btnScrollTop.hide();
-            }
-            viewModel.setGameType(selectedGame);
-            updateBannerSelector(selectedGame);
-            smoothScrollToCenter(position);
-        });
+        pillsAdapter = new PillsAdapter(
+                enabledGames,
+                currentType,
+                (selectedGame, position) -> {
+                    if (mainActivityView != null) {
+                        mainActivityView.setSubType(selectedGame);
+                    }
+                    if (appbarLayout != null) {
+                        appbarLayout.setExpanded(true, true);
+                    }
+                    if (btnScrollTop != null && btnScrollTop.getVisibility() == View.VISIBLE) {
+                        btnScrollTop.hide();
+                    }
+                    viewModel.setGameType(selectedGame);
+                    updateBannerSelector(selectedGame);
+                    smoothScrollToCenter(position);
+                },
+                () -> GamesConfigBottomSheetDialog.show(requireContext(), () -> {
+                    if (mainActivityView != null) mainActivityView.refreshGamesConfig();
+                })
+        );
 
+        CarouselAnimator.setupItemAnimator(rvGameTypes);
         rvGameTypes.setAdapter(pillsAdapter);
-        centerPositionInstantly(currentType.getCode());
+        updatePillsVisibility();
+    }
+
+    private void updatePillsVisibility() {
+        if (rvGameTypes == null || mainActivityView == null) return;
+        List<GameType> enabled = mainActivityView.getEnabledGames();
+        ViewGroup root = (getView() instanceof ViewGroup) ? (ViewGroup) getView() : null;
+        boolean isMultiGame = enabled.size() > 1;
+
+        CarouselAnimator.setCarouselVisibility(rvGameTypes, root, isMultiGame);
+
+        if (!isMultiGame) {
+            GameType monoGame = !enabled.isEmpty() ? enabled.get(0) : GameType.GENSHIN;
+            if (mainActivityView.getSubType() != monoGame) {
+                mainActivityView.setSubType(monoGame);
+            }
+            if (viewModel != null && viewModel.getCurrentGameType() != monoGame) {
+                viewModel.setGameType(monoGame);
+                updateBannerSelector(monoGame);
+            }
+        } else {
+            if (pillsAdapter != null) {
+                pillsAdapter.updateData(enabled, mainActivityView.getSubType());
+                int pos = pillsAdapter.getPositionForGame(mainActivityView.getSubType());
+                if (pos != -1) {
+                    centerPositionInstantly(pos);
+                }
+            }
+        }
     }
 
     private void setupSelectionBar() {
@@ -397,6 +432,7 @@ public class JournalView extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        updatePillsVisibility();
         if (mainActivityView != null) {
             mainActivityView.setOnBottomNavReselectedListener(itemId -> {
                 if (itemId == R.id.nav_journal) {
@@ -405,10 +441,6 @@ public class JournalView extends Fragment {
             });
             if (mainActivityView.getSubType() != null) {
                 GameType current = mainActivityView.getSubType();
-                if (pillsAdapter != null && pillsAdapter.getSelectedPosition() != current.getCode()) {
-                    pillsAdapter.setSelectedPosition(current.getCode());
-                    centerPositionInstantly(current.getCode());
-                }
                 if (viewModel != null && viewModel.getCurrentGameType() != current) {
                     viewModel.setGameType(current);
                     updateBannerSelector(current);
@@ -555,6 +587,24 @@ public class JournalView extends Fragment {
     }
 
     private void observeViewModel() {
+        if (mainActivityView != null) {
+            mainActivityView.getMainActivityViewModel().getEnabledGamesLiveData().observe(getViewLifecycleOwner(), games ->
+                    updatePillsVisibility());
+            mainActivityView.getMainActivityViewModel().getSubTypeLiveData().observe(getViewLifecycleOwner(), game -> {
+                if (pillsAdapter != null) {
+                    pillsAdapter.setSelectedGame(game);
+                    int pos = pillsAdapter.getPositionForGame(game);
+                    if (pos != -1) {
+                        smoothScrollToCenter(pos);
+                    }
+                }
+                if (viewModel != null && viewModel.getCurrentGameType() != game) {
+                    viewModel.setGameType(game);
+                    updateBannerSelector(game);
+                }
+            });
+        }
+
         viewModel.getIsLoadingLiveData().observe(getViewLifecycleOwner(), isLoading -> {
             if (Boolean.TRUE.equals(isLoading)) {
                 progressBar.animate().cancel();
@@ -973,7 +1023,6 @@ public class JournalView extends Fragment {
 
     private void smoothScrollToCenter(int targetPosition) {
         if (pillsAdapter == null || gameTypesLayoutManager == null) return;
-        pillsAdapter.setSelectedPosition(targetPosition);
 
         if (rvGameTypes == null || getContext() == null) return;
 

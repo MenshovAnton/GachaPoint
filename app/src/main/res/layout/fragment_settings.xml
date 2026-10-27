@@ -58,7 +58,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:id="@+id/header_notifications"
+                android:id="@+id/header_games"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/screen_padding_horizontal"
@@ -67,6 +67,152 @@
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_settings_header"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/icon_star"
+                    app:tint="@color/check" />
+
+                <TextView
+                    android:id="@+id/tv_games_section_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/genshin_font"
+                    android:includeFontPadding="false"
+                    android:text="@string/games_settings_title"
+                    android:textColor="@color/check"
+                    android:textSize="@dimen/text_size_section_title"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_games_settings"
+                style="@style/Widget.GachaPoint.MaterialCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
+                android:layout_marginEnd="@dimen/card_margin_horizontal"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/header_games">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_configure_games"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="12dp">
+
+                        <TextView
+                            android:id="@+id/tv_games_config_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/games_manage_title"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toStartOf="@+id/ic_games_chevron"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_games_config_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/games_manage_desc"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/ic_games_chevron"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_games_config_title" />
+
+                        <ImageView
+                            android:id="@+id/ic_games_chevron"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/icon_right_arrow"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/text_secondary" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:background="@color/divider_color" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_default_game"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="12dp">
+
+                        <TextView
+                            android:id="@+id/tv_default_game_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/games_default_title"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/chip_default_game"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_default_game"
+                            style="@style/Chip.GachaPoint.Time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/genshin_font"
+                            app:chipCornerRadius="12dp"
+                            app:chipStrokeWidth="0dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="Genshin Impact" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:id="@+id/header_notifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding_horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mcv_games_settings"
                 tools:ignore="UseCompoundDrawables">
 
                 <ImageView
@@ -194,6 +340,60 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:text="12:00" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/divider_notification_channels"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:background="@color/divider_color" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_notification_channels"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="12dp">
+
+                        <TextView
+                            android:id="@+id/tv_channels_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/notification_channels_setting_title"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toStartOf="@+id/ic_channels_chevron"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_channels_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/notification_channels_setting_desc"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/ic_channels_chevron"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_channels_title" />
+
+                        <ImageView
+                            android:id="@+id/ic_channels_chevron"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/icon_right_arrow"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/text_secondary" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

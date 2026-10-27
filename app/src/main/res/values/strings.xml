@@ -264,6 +264,39 @@
     <string name="notifications_title">Reminder!</string>
     <string name="notifications_text">Don\'t forget to collect your rewards!</string>
 
+    <!-- Notification Channels & Reminders -->
+    <string name="channel_subscriptions_name">Subscription reminders</string>
+    <string name="channel_subscriptions_desc">Reminders to claim rewards from active subscriptions</string>
+    <string name="channel_dailies_name">Daily tasks</string>
+    <string name="channel_dailies_desc">Reminders to complete daily commissions and quests</string>
+    <string name="channel_events_name">Important events</string>
+    <string name="channel_events_desc">Notifications about events, banners, and updates</string>
+
+    <string name="notification_sub_title">Subscription reminder</string>
+    <string name="notification_sub_text">Don\'t forget to collect your daily subscription rewards!</string>
+    <string name="notification_sub_text_game">Don\'t forget to collect your subscription rewards in %s!</string>
+    <string name="notification_sub_text_games">Don\'t forget to collect your subscription rewards: %s!</string>
+    <string name="notification_dailies_title">Daily tasks</string>
+    <string name="notification_dailies_text">Don\'t forget to complete your daily tasks!</string>
+    <string name="notification_dailies_text_game">Don\'t forget to complete your daily tasks in %s!</string>
+    <string name="notification_dailies_text_games">Don\'t forget to complete your daily tasks: %s!</string>
+
+    <string name="notification_channels_setting_title">Notification channels</string>
+    <string name="notification_channels_setting_desc">Configure sound, vibration, and importance in system settings</string>
+
+    <!-- Games Configuration & Management -->
+    <string name="games_settings_title">Games</string>
+    <string name="games_manage_title">Displayed games</string>
+    <string name="games_manage_desc">Hide unused games and smart carousel</string>
+    <string name="games_default_title">Default game</string>
+    <string name="games_default_desc">Opens immediately on application launch</string>
+    <string name="games_sheet_title">Game settings</string>
+    <string name="games_sheet_desc">Select displayed games and your default startup game</string>
+    <string name="games_error_last_one">At least one game must remain active</string>
+    <string name="games_default_tag">Default</string>
+    <string name="games_make_default">Set as default game</string>
+    <string name="games_done_button">Done</string>
+
     <!-- Menu Screen -->
     <string name="menu_section_tools">Tools &amp; Services</string>
     <string name="menu_section_app">Application</string>

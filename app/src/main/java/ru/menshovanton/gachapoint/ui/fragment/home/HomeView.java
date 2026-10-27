@@ -31,7 +31,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +45,8 @@ import ru.menshovanton.gachapoint.domain.models.Statistic;
 import ru.menshovanton.gachapoint.ui.animation.NumberCountAnimator;
 import ru.menshovanton.gachapoint.ui.animation.TextAnimator;
 import ru.menshovanton.gachapoint.ui.fragment.home.model.HomeWidgetItem;
+import ru.menshovanton.gachapoint.ui.main.GamesConfigBottomSheetDialog;
+import ru.menshovanton.gachapoint.ui.animation.CarouselAnimator;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
 
@@ -54,6 +56,7 @@ public class HomeView extends Fragment {
     private HomeViewModel viewModel;
 
     private MaterialCardView mcvCustomizeWidgets;
+    private RecyclerView rvGameTypes;
     private PillsAdapter pillsAdapter;
     private LinearLayoutManager layoutManager;
 
@@ -132,6 +135,7 @@ public class HomeView extends Fragment {
         super.onDestroyView();
         mainActivityView = null;
         mcvCustomizeWidgets = null;
+        rvGameTypes = null;
         pillsAdapter = null;
         layoutManager = null;
         llWidgetsContainer = null;
@@ -319,12 +323,9 @@ public class HomeView extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        updatePillsVisibility();
         if (mainActivityView != null && mainActivityView.getSubType() != null) {
             GameType current = mainActivityView.getSubType();
-            if (pillsAdapter != null && pillsAdapter.getSelectedPosition() != current.getCode()) {
-                pillsAdapter.setSelectedPosition(current.getCode());
-                centerPositionInstantly(current.getCode());
-            }
             viewModel.setGameType(current);
         } else if (viewModel != null) {
             viewModel.loadData();
@@ -332,34 +333,82 @@ public class HomeView extends Fragment {
     }
 
     private void initGameTypePills(View view) {
-        RecyclerView gameTypeChanger = view.findViewById(R.id.rv_game_types);
-
-        List<String> categories = new ArrayList<>();
-        for (GameType type : GameType.values()) {
-            categories.add(getString(type.getNameResId()));
-        }
+        rvGameTypes = view.findViewById(R.id.rv_game_types);
 
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        gameTypeChanger.setLayoutManager(layoutManager);
+        rvGameTypes.setLayoutManager(layoutManager);
 
         GameType currentType = (mainActivityView != null && mainActivityView.getSubType() != null)
                 ? mainActivityView.getSubType()
                 : GameType.GENSHIN;
 
-        pillsAdapter = new PillsAdapter(categories, currentType.getCode(), (item, position) -> {
-            GameType selected = GameType.fromCode(position);
-            if (mainActivityView != null) mainActivityView.setSubType(selected);
-            lastProgress = null;
-            lastTarget = null;
-            viewModel.setGameType(selected);
-            smoothScrollToCenter(position);
-        });
+        List<GameType> enabledGames = mainActivityView != null ? mainActivityView.getEnabledGames() : Collections.singletonList(GameType.GENSHIN);
 
-        gameTypeChanger.setAdapter(pillsAdapter);
-        centerPositionInstantly(currentType.getCode());
+        pillsAdapter = new PillsAdapter(
+                enabledGames,
+                currentType,
+                (selected, position) -> {
+                    if (mainActivityView != null) mainActivityView.setSubType(selected);
+                    lastProgress = null;
+                    lastTarget = null;
+                    viewModel.setGameType(selected);
+                    smoothScrollToCenter(position);
+                },
+                () -> GamesConfigBottomSheetDialog.show(requireContext(), () -> {
+                    if (mainActivityView != null) mainActivityView.refreshGamesConfig();
+                })
+        );
+
+        CarouselAnimator.setupItemAnimator(rvGameTypes);
+        rvGameTypes.setAdapter(pillsAdapter);
+        updatePillsVisibility();
+    }
+
+    private void updatePillsVisibility() {
+        if (rvGameTypes == null || mainActivityView == null) return;
+        List<GameType> enabled = mainActivityView.getEnabledGames();
+        ViewGroup root = (getView() instanceof ViewGroup) ? (ViewGroup) getView() : null;
+        boolean isMultiGame = enabled.size() > 1;
+
+        CarouselAnimator.setCarouselVisibility(rvGameTypes, root, isMultiGame);
+
+        if (!isMultiGame) {
+            GameType monoGame = !enabled.isEmpty() ? enabled.get(0) : GameType.GENSHIN;
+            if (mainActivityView.getSubType() != monoGame) {
+                mainActivityView.setSubType(monoGame);
+            }
+            if (viewModel != null && viewModel.getGameTypeLiveData().getValue() != monoGame) {
+                viewModel.setGameType(monoGame);
+            }
+        } else {
+            if (pillsAdapter != null) {
+                pillsAdapter.updateData(enabled, mainActivityView.getSubType());
+                int pos = pillsAdapter.getPositionForGame(mainActivityView.getSubType());
+                if (pos != -1) {
+                    centerPositionInstantly(pos);
+                }
+            }
+        }
     }
 
     private void observeViewModel() {
+        if (mainActivityView != null) {
+            mainActivityView.getMainActivityViewModel().getEnabledGamesLiveData().observe(getViewLifecycleOwner(), games ->
+                    updatePillsVisibility());
+            mainActivityView.getMainActivityViewModel().getSubTypeLiveData().observe(getViewLifecycleOwner(), game -> {
+                if (pillsAdapter != null) {
+                    pillsAdapter.setSelectedGame(game);
+                    int pos = pillsAdapter.getPositionForGame(game);
+                    if (pos != -1) {
+                        smoothScrollToCenter(pos);
+                    }
+                }
+                if (viewModel != null && viewModel.getGameTypeLiveData().getValue() != game) {
+                    viewModel.setGameType(game);
+                }
+            });
+        }
+
         viewModel.getGameTypeLiveData().observe(getViewLifecycleOwner(), this::updateGameTheme);
 
         viewModel.getPiggyProgressLiveData().observe(getViewLifecycleOwner(), progress -> updatePiggyProgress(progress, null));
@@ -599,9 +648,8 @@ public class HomeView extends Fragment {
 
     private void smoothScrollToCenter(int targetPosition) {
         if (pillsAdapter == null || layoutManager == null) return;
-        pillsAdapter.setSelectedPosition(targetPosition);
 
-        RecyclerView recyclerView = getView() != null ? getView().findViewById(R.id.rv_game_types) : null;
+        RecyclerView recyclerView = rvGameTypes != null ? rvGameTypes : (getView() != null ? getView().findViewById(R.id.rv_game_types) : null);
         if (recyclerView == null || getContext() == null) return;
 
         View targetChild = layoutManager.findViewByPosition(targetPosition);

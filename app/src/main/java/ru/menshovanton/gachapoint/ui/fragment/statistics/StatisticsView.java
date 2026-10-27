@@ -27,17 +27,24 @@ import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.BannerInfo;
+import ru.menshovanton.gachapoint.ui.animation.CarouselAnimator;
 import ru.menshovanton.gachapoint.ui.animation.NumberCountAnimator;
 import ru.menshovanton.gachapoint.ui.fragment.statistics.adapter.SubscriptionHistoryAdapter;
 import ru.menshovanton.gachapoint.ui.fragment.statistics.model.OverallStatisticsData;
 import ru.menshovanton.gachapoint.ui.fragment.statistics.share.StatisticsShareSheetDialog;
 import ru.menshovanton.gachapoint.ui.fragment.statistics.views.BannerDistributionBarView;
 import ru.menshovanton.gachapoint.ui.fragment.statistics.views.SavingsSourceBarView;
+import ru.menshovanton.gachapoint.ui.main.GamesConfigBottomSheetDialog;
+import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
+
+import java.util.Collections;
 
 public class StatisticsView extends Fragment {
 
     private StatisticsViewModel viewModel;
+    private RecyclerView rvGameTypes;
+    private PillsAdapter pillsAdapter;
 
     private TextView tvTotalPullsCount;
     private TextView tvTotalCurrencySpent;
@@ -173,20 +180,66 @@ public class StatisticsView extends Fragment {
     }
 
     private void setupPills(View view) {
-        RecyclerView rvGameTypes = view.findViewById(R.id.rv_game_types);
-        List<String> gameNames = new ArrayList<>();
-        for (GameType game : GameType.values()) {
-            gameNames.add(getString(game.getNameResId()));
-        }
+        rvGameTypes = view.findViewById(R.id.rv_game_types);
+        rvGameTypes.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        PillsAdapter pillsAdapter = new PillsAdapter(gameNames, 0, (item, position) -> {
-            if (viewModel != null && position >= 0 && position < GameType.values().length) {
-                isHistoryExpanded = false;
-                viewModel.setGameType(GameType.values()[position]);
-            }
-        });
+        MainActivityView mainActivityView = (getActivity() instanceof MainActivityView) ? (MainActivityView) getActivity() : null;
+        GameType currentType = (mainActivityView != null && mainActivityView.getSubType() != null)
+                ? mainActivityView.getSubType()
+                : GameType.GENSHIN;
 
+        List<GameType> enabledGames = mainActivityView != null ? mainActivityView.getEnabledGames() : Collections.singletonList(GameType.GENSHIN);
+
+        pillsAdapter = new PillsAdapter(
+                enabledGames,
+                currentType,
+                (selectedGame, position) -> {
+                    if (viewModel != null) {
+                        isHistoryExpanded = false;
+                        if (mainActivityView != null) mainActivityView.setSubType(selectedGame);
+                        viewModel.setGameType(selectedGame);
+                    }
+                },
+                () -> GamesConfigBottomSheetDialog.show(requireContext(), () -> {
+                    if (mainActivityView != null) mainActivityView.refreshGamesConfig();
+                })
+        );
+
+        CarouselAnimator.setupItemAnimator(rvGameTypes);
         rvGameTypes.setAdapter(pillsAdapter);
+        updatePillsVisibility();
+    }
+
+    private void updatePillsVisibility() {
+        if (rvGameTypes == null) return;
+        MainActivityView mainActivityView = (getActivity() instanceof MainActivityView) ? (MainActivityView) getActivity() : null;
+        if (mainActivityView == null) return;
+        List<GameType> enabled = mainActivityView.getEnabledGames();
+        ViewGroup root = (getView() instanceof ViewGroup) ? (ViewGroup) getView() : null;
+        boolean isMultiGame = enabled.size() > 1;
+
+        CarouselAnimator.setCarouselVisibility(rvGameTypes, root, isMultiGame);
+
+        if (!isMultiGame) {
+            GameType monoGame = !enabled.isEmpty() ? enabled.get(0) : GameType.GENSHIN;
+            if (mainActivityView.getSubType() != monoGame) {
+                mainActivityView.setSubType(monoGame);
+            }
+            if (viewModel != null && viewModel.getCurrentGameType() != monoGame) {
+                isHistoryExpanded = false;
+                viewModel.setGameType(monoGame);
+            }
+        } else {
+            if (pillsAdapter != null) {
+                pillsAdapter.updateData(enabled, mainActivityView.getSubType());
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updatePillsVisibility();
     }
 
     @Override
@@ -200,6 +253,21 @@ public class StatisticsView extends Fragment {
     }
 
     private void observeViewModel() {
+        MainActivityView mainActivityView = (getActivity() instanceof MainActivityView) ? (MainActivityView) getActivity() : null;
+        if (mainActivityView != null) {
+            mainActivityView.getMainActivityViewModel().getEnabledGamesLiveData().observe(getViewLifecycleOwner(), games ->
+                    updatePillsVisibility());
+            mainActivityView.getMainActivityViewModel().getSubTypeLiveData().observe(getViewLifecycleOwner(), game -> {
+                if (pillsAdapter != null) {
+                    pillsAdapter.setSelectedGame(game);
+                }
+                if (viewModel != null && viewModel.getCurrentGameType() != game) {
+                    isHistoryExpanded = false;
+                    viewModel.setGameType(game);
+                }
+            });
+        }
+
         viewModel.getStatisticsLiveData().observe(getViewLifecycleOwner(), this::bindStatistics);
 
         viewModel.getShareIntentEvent().observe(getViewLifecycleOwner(), shareIntent -> {
@@ -363,6 +431,8 @@ public class StatisticsView extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        rvGameTypes = null;
+        pillsAdapter = null;
         if (rvSubsHistory != null) {
             rvSubsHistory.setAdapter(null);
             rvSubsHistory = null;

@@ -2,8 +2,11 @@ package ru.menshovanton.gachapoint.ui.fragment.settings;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +32,23 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
+import ru.menshovanton.gachapoint.data.local.AppLogger;
+import ru.menshovanton.gachapoint.data.local.Preferences;
+import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.ui.fragment.home.HomeWidgetsSheetDialog;
+import ru.menshovanton.gachapoint.ui.main.GamesConfigBottomSheetDialog;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
 public class SettingsView extends Fragment {
 
     private Chip timeChip;
     private View rowSelectTime;
+    private View rowNotificationChannels;
+    private View dividerNotificationChannels;
     private View rowHomeWidgets;
+    private View rowConfigureGames;
+    private View rowDefaultGame;
+    private Chip chipDefaultGame;
 
     private Button dbImportButton;
     private Button dbExportButton;
@@ -88,7 +100,12 @@ public class SettingsView extends Fragment {
         notificationsSwitch = view.findViewById(R.id.sm_notification_switch);
         timeChip = view.findViewById(R.id.btn_time_chip);
         rowSelectTime = view.findViewById(R.id.row_select_time);
+        rowNotificationChannels = view.findViewById(R.id.row_notification_channels);
+        dividerNotificationChannels = view.findViewById(R.id.divider_notification_channels);
         rowHomeWidgets = view.findViewById(R.id.row_home_widgets);
+        rowConfigureGames = view.findViewById(R.id.row_configure_games);
+        rowDefaultGame = view.findViewById(R.id.row_default_game);
+        chipDefaultGame = view.findViewById(R.id.chip_default_game);
         dbImportButton = view.findViewById(R.id.btn_import_database);
         dbExportButton = view.findViewById(R.id.btn_export_database);
         back = view.findViewById(R.id.btn_back);
@@ -135,7 +152,12 @@ public class SettingsView extends Fragment {
         notificationsSwitch = null;
         timeChip = null;
         rowSelectTime = null;
+        rowNotificationChannels = null;
+        dividerNotificationChannels = null;
         rowHomeWidgets = null;
+        rowConfigureGames = null;
+        rowDefaultGame = null;
+        chipDefaultGame = null;
         dbImportButton = null;
         dbExportButton = null;
         back = null;
@@ -165,10 +187,50 @@ public class SettingsView extends Fragment {
             rowSelectTime.setOnClickListener(timeClickListener);
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (rowNotificationChannels != null) {
+                rowNotificationChannels.setVisibility(View.VISIBLE);
+                rowNotificationChannels.setOnClickListener(v -> {
+                    try {
+                        Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                        intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().getPackageName());
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        AppLogger.e("SettingsView", "Could not open system notification settings", e);
+                    }
+                });
+            }
+            if (dividerNotificationChannels != null) {
+                dividerNotificationChannels.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (rowNotificationChannels != null) rowNotificationChannels.setVisibility(View.GONE);
+            if (dividerNotificationChannels != null) dividerNotificationChannels.setVisibility(View.GONE);
+        }
+
         if (rowHomeWidgets != null) {
             rowHomeWidgets.setOnClickListener(v ->
                     HomeWidgetsSheetDialog.show(requireContext(), null));
         }
+
+        View.OnClickListener openGamesConfigListener = v ->
+                GamesConfigBottomSheetDialog.show(requireContext(), () -> {
+                    if (mainActivityView != null) {
+                        mainActivityView.refreshGamesConfig();
+                    }
+                    updateDefaultGameDisplay();
+                });
+
+        if (rowConfigureGames != null) {
+            rowConfigureGames.setOnClickListener(openGamesConfigListener);
+        }
+        if (rowDefaultGame != null) {
+            rowDefaultGame.setOnClickListener(openGamesConfigListener);
+        }
+        if (chipDefaultGame != null) {
+            chipDefaultGame.setOnClickListener(openGamesConfigListener);
+        }
+        updateDefaultGameDisplay();
 
         dbExportButton.setOnClickListener(v -> viewModel.onExportDatabaseClicked());
         dbImportButton.setOnClickListener(v -> viewModel.onImportDatabaseClicked());
@@ -277,6 +339,10 @@ public class SettingsView extends Fragment {
                 if (timeChip != null) {
                     timeChip.setEnabled(enabled);
                 }
+                if (rowNotificationChannels != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    rowNotificationChannels.setEnabled(enabled);
+                    rowNotificationChannels.setAlpha(enabled ? 1.0f : 0.4f);
+                }
             }
         });
 
@@ -302,10 +368,10 @@ public class SettingsView extends Fragment {
         viewModel.getImportErrorEvent().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null && getContext() != null) {
                 new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog_GachaPoint_AlertDialog)
-                        .setTitle(getString(R.string.db_import_failed))
-                        .setMessage(errorMessage)
-                        .setPositiveButton(getString(R.string.ok_button), (dialog, which) -> dialog.dismiss())
-                        .show();
+                    .setTitle(getString(R.string.db_import_failed))
+                    .setMessage(errorMessage)
+                    .setPositiveButton(getString(R.string.ok_button), (dialog, which) -> dialog.dismiss())
+                    .show();
             }
         });
 
@@ -359,6 +425,13 @@ public class SettingsView extends Fragment {
         });
 
         bottomSheetDialog.show();
+    }
+
+    private void updateDefaultGameDisplay() {
+        if (chipDefaultGame == null || getContext() == null) return;
+        Preferences preferences = new Preferences(requireContext());
+        GameType defaultGame = preferences.getDefaultGame();
+        chipDefaultGame.setText(getString(defaultGame.getNameResId()));
     }
 
     public void showQuestionDialog(Context context, Uri fileUri) {

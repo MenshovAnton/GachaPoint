@@ -4,6 +4,7 @@ import android.app.Application;
 
 import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.di.AppContainer;
+import ru.menshovanton.gachapoint.worker.DailyNotificationWorker;
 
 public class App extends Application {
 
@@ -21,6 +22,8 @@ public class App extends Application {
                 defaultHandler.uncaughtException(thread, throwable);
             }
         });
+
+        DailyNotificationWorker.createNotificationChannels(this);
 
         appContainer = new AppContainer(this);
     }

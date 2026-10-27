@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    style="@style/Widget.GachaPoint.MaterialCardView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="12dp">
+
+        <ImageView
+            android:id="@+id/iv_game_icon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/ll_game_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_default_star"
+            app:layout_constraintStart_toEndOf="@+id/iv_game_icon"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_game_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Genshin Impact" />
+
+            <TextView
+                android:id="@+id/tv_default_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/pill_background"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:text="@string/games_default_tag"
+                android:textColor="@color/check"
+                android:textSize="11sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_default_star"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/games_make_default"
+            android:padding="6dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_star"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/switch_game_enabled"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/text_secondary" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/switch_game_enabled"
+            style="@style/Switch.GachaPoint.MaterialSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

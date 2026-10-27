@@ -1,67 +1,239 @@
 package ru.menshovanton.gachapoint.ui.main;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.domain.enums.GameType;
 
-public class PillsAdapter extends RecyclerView.Adapter<PillsAdapter.PillViewHolder> {
+public class PillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final List<String> items;
-    private int selectedPosition;
-    private final OnPillClickListener listener;
+    public static final int VIEW_TYPE_PILL = 0;
+    public static final int VIEW_TYPE_SETTINGS = 1;
+    public static final String PAYLOAD_SELECTION = "payload_selection";
 
-    public interface OnPillClickListener {
-        void onPillClick(String item, int position);
+    public static class PillItem {
+        public final int viewType;
+        public final GameType gameType;
+
+        public PillItem(int viewType, GameType gameType) {
+            this.viewType = viewType;
+            this.gameType = gameType;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof PillItem)) return false;
+            PillItem that = (PillItem) o;
+            return viewType == that.viewType && gameType == that.gameType;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = viewType;
+            result = 31 * result + (gameType != null ? gameType.hashCode() : 0);
+            return result;
+        }
     }
 
-    public PillsAdapter(List<String> items, OnPillClickListener listener) {
-        this(items, 0, listener);
+    private final List<PillItem> displayItems = new ArrayList<>();
+    private GameType selectedGame;
+    private final OnGamePillClickListener listener;
+    private final OnSettingsClickListener settingsListener;
+
+    public interface OnGamePillClickListener {
+        void onGamePillClick(GameType gameType, int position);
     }
 
-    public PillsAdapter(List<String> items, int initialSelectedPosition, OnPillClickListener listener) {
-        this.items = items;
-        this.selectedPosition = initialSelectedPosition;
+    public interface OnSettingsClickListener {
+        void onSettingsClick();
+    }
+
+    public PillsAdapter(List<GameType> items, GameType initialSelectedGame,
+                        OnGamePillClickListener listener,
+                        OnSettingsClickListener settingsListener) {
+        this.selectedGame = initialSelectedGame;
         this.listener = listener;
+        this.settingsListener = settingsListener;
+        this.displayItems.addAll(buildDisplayItems(items));
+    }
+
+    private List<PillItem> buildDisplayItems(List<GameType> games) {
+        List<PillItem> list = new ArrayList<>();
+        if (games != null) {
+            for (GameType g : games) {
+                list.add(new PillItem(VIEW_TYPE_PILL, g));
+            }
+            if (games.size() >= 2 && settingsListener != null) {
+                list.add(new PillItem(VIEW_TYPE_SETTINGS, null));
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return displayItems.get(position).viewType;
     }
 
     @NonNull
     @Override
-    public PillViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_pill, parent, false);
-        return new PillViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == VIEW_TYPE_SETTINGS) {
+            View view = inflater.inflate(R.layout.item_pill_settings, parent, false);
+            return new SettingsViewHolder(view);
+        } else {
+            View view = inflater.inflate(R.layout.item_pill, parent, false);
+            return new PillViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PillViewHolder holder, int position) {
-        holder.textView.setText(items.get(position));
-        holder.textView.setSelected(position == selectedPosition);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        onBindViewHolder(holder, position, new ArrayList<>());
+    }
 
-        holder.itemView.setOnClickListener(v -> {
-            int currentPos = holder.getAdapterPosition();
-            if (currentPos == RecyclerView.NO_POSITION) return;
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        PillItem item = displayItems.get(position);
 
-            setSelectedPosition(currentPos);
+        if (holder instanceof SettingsViewHolder) {
+            holder.itemView.setOnClickListener(v -> {
+                v.animate()
+                        .scaleX(0.88f)
+                        .scaleY(0.88f)
+                        .setDuration(60)
+                        .withEndAction(() -> v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(80).start())
+                        .start();
+                if (settingsListener != null) {
+                    settingsListener.onSettingsClick();
+                }
+            });
+            return;
+        }
 
-            if (listener != null) {
-                listener.onPillClick(items.get(currentPos), currentPos);
+        if (holder instanceof PillViewHolder) {
+            PillViewHolder pillHolder = (PillViewHolder) holder;
+            GameType game = item.gameType;
+
+            if (!payloads.isEmpty()) {
+                pillHolder.textView.setSelected(game == selectedGame);
+                return;
             }
-        });
+
+            Context context = holder.itemView.getContext();
+            if (game != null) {
+                pillHolder.textView.setText(context.getString(game.getNameResId()));
+                pillHolder.textView.setSelected(game == selectedGame);
+            }
+
+            holder.itemView.setOnClickListener(v -> {
+                v.animate()
+                        .scaleX(0.93f)
+                        .scaleY(0.93f)
+                        .setDuration(60)
+                        .withEndAction(() -> v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(80).start())
+                        .start();
+
+                int pos = holder.getBindingAdapterPosition();
+                if (pos == RecyclerView.NO_POSITION || pos >= displayItems.size()) return;
+
+                PillItem clickedItem = displayItems.get(pos);
+                if (clickedItem.viewType != VIEW_TYPE_PILL || clickedItem.gameType == null) return;
+
+                setSelectedGame(clickedItem.gameType);
+
+                if (listener != null) {
+                    listener.onGamePillClick(clickedItem.gameType, pos);
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return displayItems.size();
     }
 
-    public int getSelectedPosition() {
-        return selectedPosition;
+    public GameType getSelectedGame() {
+        return selectedGame;
+    }
+
+    public int getPositionForGame(GameType game) {
+        for (int i = 0; i < displayItems.size(); i++) {
+            PillItem item = displayItems.get(i);
+            if (item.viewType == VIEW_TYPE_PILL && item.gameType == game) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void setSelectedGame(GameType newGame) {
+        if (newGame == null || newGame == selectedGame) return;
+        GameType oldGame = selectedGame;
+        selectedGame = newGame;
+
+        int oldPos = getPositionForGame(oldGame);
+        int newPos = getPositionForGame(newGame);
+        if (oldPos != -1) notifyItemChanged(oldPos, PAYLOAD_SELECTION);
+        if (newPos != -1) notifyItemChanged(newPos, PAYLOAD_SELECTION);
+    }
+
+    public void updateData(List<GameType> newGames, GameType newSelectedGame) {
+        List<PillItem> oldList = new ArrayList<>(this.displayItems);
+        GameType oldSelectedGame = this.selectedGame;
+
+        List<PillItem> newList = buildDisplayItems(newGames);
+        this.selectedGame = newSelectedGame;
+
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return oldList.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newList.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                PillItem oldItem = oldList.get(oldItemPosition);
+                PillItem newItem = newList.get(newItemPosition);
+                if (oldItem.viewType != newItem.viewType) return false;
+                return oldItem.gameType == newItem.gameType;
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                PillItem oldItem = oldList.get(oldItemPosition);
+                PillItem newItem = newList.get(newItemPosition);
+                if (oldItem.viewType != newItem.viewType) return false;
+                if (oldItem.viewType == VIEW_TYPE_SETTINGS) return true;
+
+                boolean wasSelected = (oldItem.gameType == oldSelectedGame);
+                boolean isSelected = (newItem.gameType == newSelectedGame);
+                return wasSelected == isSelected;
+            }
+        });
+
+        this.displayItems.clear();
+        this.displayItems.addAll(newList);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public static class PillViewHolder extends RecyclerView.ViewHolder {
@@ -73,15 +245,9 @@ public class PillsAdapter extends RecyclerView.Adapter<PillsAdapter.PillViewHold
         }
     }
 
-    public void setSelectedPosition(int newPosition) {
-        if (newPosition < 0 || newPosition >= items.size() || newPosition == selectedPosition) {
-            return;
+    public static class SettingsViewHolder extends RecyclerView.ViewHolder {
+        public SettingsViewHolder(@NonNull View itemView) {
+            super(itemView);
         }
-
-        int previousPosition = selectedPosition;
-        selectedPosition = newPosition;
-
-        notifyItemChanged(previousPosition);
-        notifyItemChanged(selectedPosition);
     }
 }
