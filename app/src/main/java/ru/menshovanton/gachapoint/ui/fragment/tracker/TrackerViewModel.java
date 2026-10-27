@@ -172,7 +172,7 @@ public class TrackerViewModel extends AndroidViewModel {
                         int textColor;
 
                         if (currentMode == TrackerMode.SUBSCRIPTION) {
-                            boolean isClaimed = (dateObj.status == DayState.STATUS_RECEIVED || dateObj.status == DayState.STATUS_OLD_RECEIVED);
+                            boolean isClaimed = (dateObj.subDaysRemaining > 0) && (dateObj.status == DayState.STATUS_RECEIVED || dateObj.status == DayState.STATUS_OLD_RECEIVED);
                             if (isClaimed) {
                                 bg = isToday ? R.drawable.bg_calendar_cell_today_checked : R.drawable.bg_calendar_cell_checked;
                                 textColor = R.color.white;

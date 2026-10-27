@@ -97,6 +97,42 @@ public abstract class AppDatabase extends RoomDatabase {
             java.time.LocalDate today = java.time.LocalDate.now();
             long todayEpoch = today.toEpochDay();
 
+            List<Integer> corruptSubIds = new ArrayList<>();
+            try (android.database.Cursor cur = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
+                    "SELECT `id`, `game_type`, `count`, `start_date`, `end_date` FROM `subscriptions` WHERE `count` > 1"))) {
+                while (cur.moveToNext()) {
+                    int subId = cur.getInt(0);
+                    int gType = cur.getInt(1);
+                    long sEpoch = cur.getLong(3);
+                    long eEpoch = cur.getLong(4);
+
+                    try (android.database.Cursor statusCur = db.query(new androidx.sqlite.db.SimpleSQLiteQuery(
+                            "SELECT `year`, `day_of_year`, `sub_days_remaining` " +
+                                    "FROM `calendar_game_status` " +
+                                    "WHERE `game_type` = ? AND `sub_days_remaining` > 0",
+                            new Object[]{gType}))) {
+                        while (statusCur.moveToNext()) {
+                            int y = statusCur.getInt(0);
+                            int doy = statusCur.getInt(1);
+                            int rem = statusCur.getInt(2);
+                            java.time.LocalDate d = java.time.LocalDate.ofYearDay(y, doy);
+                            long dEpoch = d.toEpochDay();
+                            if (dEpoch >= sEpoch && dEpoch <= eEpoch) {
+                                java.time.LocalDate expectedEnd = d.plusDays(rem - 1);
+                                if (expectedEnd.toEpochDay() < eEpoch - 1) {
+                                    corruptSubIds.add(subId);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (int badId : corruptSubIds) {
+                db.execSQL("DELETE FROM `subscriptions` WHERE `id` = ?", new Object[]{badId});
+            }
+
             for (GameType gameType : GameType.values()) {
                 int gameCode = gameType.getCode();
                 int currencyPerDay = gameType.getCurrencyPerDay();
@@ -109,6 +145,10 @@ public abstract class AppDatabase extends RoomDatabase {
                     while (cur.moveToNext()) {
                         existingRanges.add(new long[]{cur.getLong(0), cur.getLong(1)});
                     }
+                }
+
+                if (!existingRanges.isEmpty()) {
+                    continue;
                 }
 
                 class DayRecord {
@@ -160,16 +200,22 @@ public abstract class AppDatabase extends RoomDatabase {
                 currentCluster.add(uncovered.get(0));
 
                 for (int i = 1; i < uncovered.size(); i++) {
-                    DayRecord prev = uncovered.get(i - 1);
                     DayRecord curr = uncovered.get(i);
-                    long gap = curr.epoch - prev.epoch;
-                    if (gap <= subDuration) {
-                        currentCluster.add(curr);
-                    } else {
+                    java.time.LocalDate maxEndInCluster = currentCluster.get(0).date.plusDays(Math.max(1, currentCluster.get(0).subDays) - 1);
+                    for (DayRecord r : currentCluster) {
+                        if (r.subDays > 0) {
+                            java.time.LocalDate endR = r.date.plusDays(r.subDays - 1);
+                            if (endR.isAfter(maxEndInCluster)) {
+                                maxEndInCluster = endR;
+                            }
+                        }
+                    }
+
+                    if (curr.date.isAfter(maxEndInCluster)) {
                         clusters.add(currentCluster);
                         currentCluster = new ArrayList<>();
-                        currentCluster.add(curr);
                     }
+                    currentCluster.add(curr);
                 }
                 clusters.add(currentCluster);
 

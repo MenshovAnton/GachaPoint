@@ -91,9 +91,7 @@ public class DatabaseImporter {
                     if (tempShmFile.exists()) tempShmFile.delete();
 
                     AppDatabase newDb = AppDatabase.getInstance(context);
-                    androidx.sqlite.db.SupportSQLiteDatabase writableDb = newDb.getOpenHelper().getWritableDatabase();
-                    AppDatabase.syncSubscriptionsRaw(writableDb);
-                    AppDatabase.syncSavingsRaw(context, writableDb);
+                    newDb.getOpenHelper().getWritableDatabase();
 
                     cleanupTempFiles(bakDbFile, bakWalFile, bakShmFile);
 

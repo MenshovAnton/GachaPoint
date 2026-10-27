@@ -84,7 +84,7 @@ public class CalendarRepository {
 
                     if (matchingSub != null) {
                         date.subDaysRemaining = (int) (matchingSub.endDate - dateEpoch + 1);
-                    } else if (date.subDaysRemaining <= 0) {
+                    } else {
                         date.subDaysRemaining = 0;
                     }
                 }
@@ -337,10 +337,14 @@ public class CalendarRepository {
                 activeSub.endDate = newEnd.toEpochDay();
                 activeSub.wait = Math.max(0, activeSub.wait - gameType.getCurrencyPerDay() * gameType.getSubscriptionDurationDays());
 
-                databaseRepository.updateSubscription(activeSub, () -> {
-                    subsCount = activeSub.count;
-                    if (callback != null) callback.onResult(true);
-                });
+                databaseRepository.clearCalendarStatusesInRange(gameType, newEnd.plusDays(1), curEnd, () ->
+                        databaseRepository.updateSubscription(activeSub, () -> {
+                            subsCount = activeSub.count;
+                            calculateMissesAndClaims(gameType, today.getYear(), () -> {
+                                if (callback != null) callback.onResult(true);
+                            });
+                        })
+                );
             } else {
                 LocalDate subStartDate = LocalDate.ofEpochDay(activeSub.startDate);
                 LocalDate subEndDate = LocalDate.ofEpochDay(activeSub.endDate);
@@ -377,14 +381,11 @@ public class CalendarRepository {
             }
 
             final int finalRem = subDaysRemaining;
-            calendar.getDay(year, dayOfYear, gameType, date -> {
-                int remToUse = finalRem > 0 ? finalRem : (date != null ? date.subDaysRemaining : 0);
-
-                calendar.updateDay(year, dayOfYear, gameType, status, remToUse, () ->
-                        calculateMissesAndClaims(gameType, year, () -> {
-                    if (onComplete != null) onComplete.run();
-                }));
-            });
+            calendar.getDay(year, dayOfYear, gameType, date ->
+                    calendar.updateDay(year, dayOfYear, gameType, status, finalRem, () ->
+                    calculateMissesAndClaims(gameType, year, () -> {
+                if (onComplete != null) onComplete.run();
+            })));
         });
     }
 
@@ -511,10 +512,7 @@ public class CalendarRepository {
                 int rem = (int) (sub.endDate - dateEpoch + 1);
                 if (callback != null) callback.onResult(Math.max(0, rem));
             } else {
-                calendar.getDay(year, dayOfYear, gameType, day -> {
-                    int rem = day != null ? day.subDaysRemaining : 0;
-                    if (callback != null) callback.onResult(Math.max(0, rem));
-                });
+                if (callback != null) callback.onResult(0);
             }
         });
     }
