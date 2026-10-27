@@ -157,42 +157,22 @@ public class DatabaseRepository {
         executeAsyncSafe(() -> {
             AppDatabase db = getDb();
             db.runInTransaction(() -> {
-                List<Long> orderIndices = new ArrayList<>(reorderedPulls.size());
+                int size = reorderedPulls.size();
                 long maxOrder = 0;
-                boolean allSame = true;
-                for (int i = 0; i < reorderedPulls.size(); i++) {
+                for (int i = 0; i < size; i++) {
                     Pull p = reorderedPulls.get(i);
                     long oi = p.getOrderIndex();
-                    if (oi == 0) oi = p.getId();
-                    orderIndices.add(oi);
+                    if (oi <= 0) oi = p.getId();
                     if (oi > maxOrder) maxOrder = oi;
-                    if (i > 0 && !orderIndices.get(i).equals(orderIndices.get(0))) {
-                        allSame = false;
-                    }
                 }
 
-                if (allSame || maxOrder == 0) {
-                    long base = Math.max(maxOrder, reorderedPulls.size() * 10L);
-                    for (int i = 0; i < reorderedPulls.size(); i++) {
-                        Pull pull = reorderedPulls.get(i);
-                        long newOrder = base - ((long) i * 10L);
+                long baseOrder = Math.max(maxOrder, (long) size * 10L + 1000L);
+                for (int i = 0; i < size; i++) {
+                    Pull pull = reorderedPulls.get(i);
+                    long newOrder = baseOrder - ((long) i * 10L);
+                    if (pull.getOrderIndex() != newOrder) {
                         pull.setOrderIndex(newOrder);
                         db.pullDao().updateOrderIndex(pull.getId(), newOrder);
-                    }
-                } else {
-                    orderIndices.sort(Collections.reverseOrder());
-                    for (int i = 0; i < orderIndices.size() - 1; i++) {
-                        if (orderIndices.get(i) <= orderIndices.get(i + 1)) {
-                            orderIndices.set(i + 1, orderIndices.get(i) - 1);
-                        }
-                    }
-                    for (int i = 0; i < reorderedPulls.size(); i++) {
-                        Pull pull = reorderedPulls.get(i);
-                        long newOrder = orderIndices.get(i);
-                        if (pull.getOrderIndex() != newOrder) {
-                            pull.setOrderIndex(newOrder);
-                            db.pullDao().updateOrderIndex(pull.getId(), newOrder);
-                        }
                     }
                 }
             });

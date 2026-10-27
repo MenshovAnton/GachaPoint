@@ -419,6 +419,7 @@
     <string name="stat_share_sheet_save">Save to Gallery</string>
     <string name="stat_share_sheet_save_desc">Save image to device storage</string>
     <string name="stat_report_saved_success">Report successfully saved to gallery!</string>
+    <string name="stat_share_permission_denied">Storage permission is required to save the report to gallery</string>
     <string name="stat_section_pulls_title">Pulls &amp; Rarity</string>
     <string name="stat_card_total_pulls">Total Pulls</string>
     <string name="stat_card_currency_spent">Currency Spent</string>

@@ -381,6 +381,7 @@
     <string name="stat_share_sheet_save">Сохранить в галерею</string>
     <string name="stat_share_sheet_save_desc">Сохранить изображение на устройство</string>
     <string name="stat_report_saved_success">Отчет успешно сохранен в галерею!</string>
+    <string name="stat_share_permission_denied">Требуется разрешение на запись для сохранения отчета в галерею</string>
     <string name="stat_section_pulls_title">Крутки и молитвы</string>
     <string name="stat_card_total_pulls">Всего круток</string>
     <string name="stat_card_currency_spent">Потрачено валюты</string>

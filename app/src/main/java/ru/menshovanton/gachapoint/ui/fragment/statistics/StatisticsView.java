@@ -1,5 +1,8 @@
 package ru.menshovanton.gachapoint.ui.fragment.statistics;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +11,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -82,6 +88,32 @@ public class StatisticsView extends Fragment {
     private boolean isHistoryExpanded = false;
     private List<SubscriptionEntity> fullHistoryList = new ArrayList<>();
 
+    private final ActivityResultLauncher<String> requestStoragePermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    if (viewModel != null && getContext() != null) {
+                        viewModel.saveReportToGallery(requireContext());
+                    }
+                } else {
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), R.string.stat_share_permission_denied, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+    private void checkAndSaveToGallery() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestStoragePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                return;
+            }
+        }
+        if (viewModel != null) {
+            viewModel.saveReportToGallery(requireContext());
+        }
+    }
+
     public StatisticsView() {}
 
     public static StatisticsView newInstance() {
@@ -143,9 +175,7 @@ public class StatisticsView extends Fragment {
 
                     @Override
                     public void onSaveToGallery() {
-                        if (viewModel != null) {
-                            viewModel.saveReportToGallery(requireContext());
-                        }
+                        checkAndSaveToGallery();
                     }
                 });
                 sheet.show(getChildFragmentManager(), "StatisticsShareSheetDialog");

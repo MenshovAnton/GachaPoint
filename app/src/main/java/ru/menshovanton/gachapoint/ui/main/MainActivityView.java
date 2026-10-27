@@ -255,8 +255,9 @@ public class MainActivityView extends AppCompatActivity {
         if (intent != null) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            this.finish();
-            Runtime.getRuntime().exit(0);
+            finishAffinity();
+        } else {
+            recreate();
         }
     }
 }
