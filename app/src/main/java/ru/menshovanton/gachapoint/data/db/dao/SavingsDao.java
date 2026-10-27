@@ -42,6 +42,9 @@ public interface SavingsDao {
     @Query("UPDATE savings SET dailies_progress = :dailiesProgress WHERE game_type = :gameType")
     void updateDailiesProgress(int gameType, int dailiesProgress);
 
-    @Query("UPDATE savings SET target = 0, manual_progress = 0, manual_gems = 0 WHERE game_type = :gameType")
+    @Query("UPDATE savings SET manual_progress = :manualProgress, subs_progress = :subsProgress, dailies_progress = :dailiesProgress, manual_gems = :manualGems WHERE game_type = :gameType")
+    void updateAllProgress(int gameType, int manualProgress, int subsProgress, int dailiesProgress, int manualGems);
+
+    @Query("UPDATE savings SET target = 0, manual_progress = 0, manual_gems = 0, subs_progress = 0, dailies_progress = 0 WHERE game_type = :gameType")
     void reset(int gameType);
 }

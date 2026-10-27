@@ -219,6 +219,10 @@
     <string name="sheet_pity_2_desc">+154 крутки к цели</string>
     <string name="sheet_pity_6_desc">+462 крутки к цели</string>
     <string name="sheet_reset_desc">Обнулить текущий прогресс цели</string>
+    <string name="sheet_clear_auto_title">Очистить авто-накопления</string>
+    <string name="sheet_clear_auto_desc">Обнулить гемы с подписок и дейликов</string>
+    <string name="savings_clear_auto_confirm">Сбросить накопления с подписок и дейликов? Ручные крутки и цель останутся без изменений.</string>
+    <string name="savings_clear_auto_success">Авто-накопления очищены</string>
 
     <!-- Settings Screen -->
     <string name="ui_setting_title">Внешний вид и поведение</string>

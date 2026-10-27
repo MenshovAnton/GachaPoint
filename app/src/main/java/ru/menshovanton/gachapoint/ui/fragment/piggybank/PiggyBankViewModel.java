@@ -79,10 +79,40 @@ public class PiggyBankViewModel extends AndroidViewModel {
 
     public void removeProgress(int wishes) {
         if (wishes <= 0) return;
-        int manualProgress = repository.getManualProgress(currentGameType);
-        if (manualProgress <= 0) return;
-        int diff = Math.min(wishes, manualProgress);
-        repository.saveManualProgress(currentGameType, manualProgress - diff);
+        int totalProgress = repository.getTotalProgress(currentGameType);
+        if (totalProgress <= 0) return;
+
+        int toRemove = Math.min(wishes, totalProgress);
+        int manual = repository.getManualProgress(currentGameType);
+        int subs = repository.getSubsProgress(currentGameType);
+        int dailies = repository.getDailiesProgress(currentGameType);
+
+        int fromManual = Math.min(toRemove, manual);
+        manual -= fromManual;
+        toRemove -= fromManual;
+
+        int deductedSubs = 0;
+        if (toRemove > 0) {
+            deductedSubs = Math.min(toRemove, subs);
+            subs -= deductedSubs;
+            toRemove -= deductedSubs;
+        }
+
+        int deductedDailies = 0;
+        if (toRemove > 0) {
+            deductedDailies = Math.min(toRemove, dailies);
+            dailies -= deductedDailies;
+            toRemove -= deductedDailies;
+        }
+
+        if (deductedSubs > 0) {
+            calendarRepository.recordSpentSubs(currentGameType, deductedSubs);
+        }
+        if (deductedDailies > 0) {
+            calendarRepository.recordSpentDailies(currentGameType, deductedDailies);
+        }
+
+        repository.saveAllProgress(currentGameType, manual, subs, dailies, repository.getManualGems(currentGameType));
         refreshData();
     }
 
@@ -112,15 +142,58 @@ public class PiggyBankViewModel extends AndroidViewModel {
         if (gems <= 0) return;
         int pullCost = currentGameType.getPullCost();
         int currentManualGems = repository.getManualGems(currentGameType);
-        int currentManualPulls = repository.getManualProgress(currentGameType);
-        int totalManualValue = currentManualPulls * pullCost + currentManualGems;
+        int manualPulls = repository.getManualProgress(currentGameType);
+        int subsPulls = repository.getSubsProgress(currentGameType);
+        int dailiesPulls = repository.getDailiesProgress(currentGameType);
 
-        if (totalManualValue <= 0) return;
-        int remainingValue = Math.max(0, totalManualValue - gems);
-        int newPulls = remainingValue / pullCost;
-        int newGems = remainingValue % pullCost;
+        int totalPulls = manualPulls + subsPulls + dailiesPulls;
+        long totalGemsValue = (long) totalPulls * pullCost + currentManualGems;
 
-        repository.saveManual(currentGameType, newPulls, newGems);
+        if (totalGemsValue <= 0) return;
+        long remainingValue = Math.max(0, totalGemsValue - gems);
+        int newTotalPulls = (int) (remainingValue / pullCost);
+        int newManualGems = (int) (remainingValue % pullCost);
+
+        int pullsToRemove = totalPulls - newTotalPulls;
+
+        // Cascading removal of pulls
+        int toRemove = pullsToRemove;
+        int newManual = manualPulls;
+        int newSubs = subsPulls;
+        int newDailies = dailiesPulls;
+
+        int fromManual = Math.min(toRemove, newManual);
+        newManual -= fromManual;
+        toRemove -= fromManual;
+
+        int deductedSubs = 0;
+        if (toRemove > 0) {
+            deductedSubs = Math.min(toRemove, newSubs);
+            newSubs -= deductedSubs;
+            toRemove -= deductedSubs;
+        }
+
+        int deductedDailies = 0;
+        if (toRemove > 0) {
+            deductedDailies = Math.min(toRemove, newDailies);
+            newDailies -= deductedDailies;
+            toRemove -= deductedDailies;
+        }
+
+        if (deductedSubs > 0) {
+            calendarRepository.recordSpentSubs(currentGameType, deductedSubs);
+        }
+        if (deductedDailies > 0) {
+            calendarRepository.recordSpentDailies(currentGameType, deductedDailies);
+        }
+
+        repository.saveAllProgress(currentGameType, newManual, newSubs, newDailies, newManualGems);
+        refreshData();
+    }
+
+    public void clearAutoProgress() {
+        calendarRepository.clearAutoProgress(currentGameType);
+        repository.clearAutoProgress(currentGameType);
         refreshData();
     }
 

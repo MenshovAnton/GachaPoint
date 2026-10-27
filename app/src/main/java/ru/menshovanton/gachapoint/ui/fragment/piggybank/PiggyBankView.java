@@ -578,6 +578,18 @@ public class PiggyBankView extends Fragment {
             @Override public void onAddOnePity() { viewModel.addTargetMultiplier(1); }
             @Override public void onAddTwoPity() { viewModel.addTargetMultiplier(2); }
             @Override public void onAddSixPity() { viewModel.addTargetMultiplier(6); }
+            @Override public void onClearAutoProgress() {
+                Context themeContext = new ContextThemeWrapper(requireContext(), R.style.Dialog_GachaPoint_AlertDialog);
+                new MaterialAlertDialogBuilder(themeContext, R.style.Dialog_GachaPoint_AlertDialog)
+                    .setTitle(R.string.warning)
+                    .setMessage(R.string.savings_clear_auto_confirm)
+                    .setPositiveButton(R.string.reset, (d, w) -> {
+                        viewModel.clearAutoProgress();
+                        Toast.makeText(requireContext(), R.string.savings_clear_auto_success, Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+            }
             @Override public void onReset() {
                 Context themeContext = new ContextThemeWrapper(requireContext(), R.style.Dialog_GachaPoint_AlertDialog);
                 new MaterialAlertDialogBuilder(themeContext, R.style.Dialog_GachaPoint_AlertDialog)

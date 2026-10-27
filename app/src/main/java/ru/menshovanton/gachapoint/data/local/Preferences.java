@@ -253,4 +253,27 @@ public class Preferences {
             return defValue;
         }
     }
+
+    private static final String PREFIX_PIGGY_SPENT_SUBS = "piggy_bank_spent_subs_";
+    private static final String PREFIX_PIGGY_SPENT_DAILIES = "piggy_bank_spent_dailies_";
+
+    public int getPiggyBankSpentSubs(GameType game) {
+        if (game == null) return 0;
+        return settings.getInt(PREFIX_PIGGY_SPENT_SUBS + game.name(), 0);
+    }
+
+    public void savePiggyBankSpentSubs(GameType game, int spent) {
+        if (game == null) return;
+        settings.edit().putInt(PREFIX_PIGGY_SPENT_SUBS + game.name(), Math.max(0, spent)).apply();
+    }
+
+    public int getPiggyBankSpentDailies(GameType game) {
+        if (game == null) return 0;
+        return settings.getInt(PREFIX_PIGGY_SPENT_DAILIES + game.name(), 0);
+    }
+
+    public void savePiggyBankSpentDailies(GameType game, int spent) {
+        if (game == null) return;
+        settings.edit().putInt(PREFIX_PIGGY_SPENT_DAILIES + game.name(), Math.max(0, spent)).apply();
+    }
 }

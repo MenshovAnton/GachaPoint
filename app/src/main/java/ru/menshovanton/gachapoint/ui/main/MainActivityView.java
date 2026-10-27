@@ -180,6 +180,7 @@ public class MainActivityView extends AppCompatActivity {
         void onAddOnePity();
         void onAddTwoPity();
         void onAddSixPity();
+        void onClearAutoProgress();
         void onReset();
     }
 
@@ -190,6 +191,7 @@ public class MainActivityView extends AppCompatActivity {
         setDialogClickListener(dialog, R.id.layoutAddOneGarant, listener::onAddOnePity);
         setDialogClickListener(dialog, R.id.layoutAddTwoGarant, listener::onAddTwoPity);
         setDialogClickListener(dialog, R.id.layoutAddSixGarant, listener::onAddSixPity);
+        setDialogClickListener(dialog, R.id.layoutClearAutoProgress, listener::onClearAutoProgress);
         setDialogClickListener(dialog, R.id.layoutResetGoal, listener::onReset);
 
         dialog.show();

@@ -476,6 +476,14 @@ public class DatabaseRepository {
         }, onComplete);
     }
 
+    public void saveAllSavingsProgress(GameType gameType, int manual, int subs, int dailies, int manualGems, Runnable onComplete) {
+        executeAsyncSafe(() -> {
+            if (gameType != null) {
+                getDb().savingsDao().updateAllProgress(gameType.getCode(), manual, subs, dailies, manualGems);
+            }
+        }, onComplete);
+    }
+
     public void resetSavings(GameType gameType, Runnable onComplete) {
         executeAsyncSafe(() -> {
             if (gameType != null) {

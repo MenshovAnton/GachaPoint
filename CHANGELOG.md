@@ -42,3 +42,4 @@
 - Pull Reordering in Journal: drag-and-drop pull reordering with smooth slide-in animations and instant pity recalculation.
 - Precise Piggy Bank Currency Input: track exact currency amounts (Primogems, Stellar Jades, Polychromes) alongside pulls, featuring a quick-input dialog.
 - Stability & Compatibility: fixed storage permissions on Android 8–9 (API ≤ 28), added local diagnostic file logger, and optimized database sync lifecycles.
+- Piggy Bank Hotfix: cascading deduction of pulls and gems across all sources (including subscriptions and dailies), plus an option in the menu to clear auto-savings.

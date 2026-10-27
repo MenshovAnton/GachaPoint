@@ -129,12 +129,33 @@ public class PiggyBankRepository {
         databaseRepository.saveSavingsTarget(gameType, safeTarget, null);
     }
 
+    public void saveAllProgress(GameType gameType, int manual, int subs, int dailies, int manualGems) {
+        int safeManual = Math.max(0, manual);
+        int safeSubs = Math.max(0, subs);
+        int safeDailies = Math.max(0, dailies);
+        int safeGems = Math.max(0, manualGems);
+        SavingsEntity s = cache.get(gameType);
+        if (s != null) {
+            s.manualProgress = safeManual;
+            s.subsProgress = safeSubs;
+            s.dailiesProgress = safeDailies;
+            s.manualGems = safeGems;
+        }
+        databaseRepository.saveAllSavingsProgress(gameType, safeManual, safeSubs, safeDailies, safeGems, null);
+    }
+
+    public void clearAutoProgress(GameType gameType) {
+        saveAllProgress(gameType, getManualProgress(gameType), 0, 0, getManualGems(gameType));
+    }
+
     public void reset(GameType gameType) {
         SavingsEntity s = cache.get(gameType);
         if (s != null) {
             s.target = 0;
             s.manualProgress = 0;
             s.manualGems = 0;
+            s.subsProgress = 0;
+            s.dailiesProgress = 0;
         }
         databaseRepository.resetSavings(gameType, null);
     }
