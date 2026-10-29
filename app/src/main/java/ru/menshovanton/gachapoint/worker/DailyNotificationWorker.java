@@ -10,12 +10,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Looper;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,7 +29,7 @@ import ru.menshovanton.gachapoint.domain.enums.DayState;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.ui.main.MainActivityView;
 
-public class DailyNotificationWorker extends Worker {
+public final class DailyNotificationWorker {
 
     public static final String CHANNEL_SUBSCRIPTIONS = "channel_subscriptions";
     public static final String CHANNEL_DAILIES = "channel_dailies";
@@ -43,26 +40,7 @@ public class DailyNotificationWorker extends Worker {
     public static final int NOTIFICATION_ID_EVENTS = 1003;
     public static final String NOTIFICATION_GROUP_DAILY = "ru.menshovanton.gachapoint.DAILY_REMINDERS";
 
-    public static final String WORK_TAG = "daily_notification_work";
-
-    public DailyNotificationWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
-        super(context, workerParams);
-    }
-
-    @NonNull
-    @Override
-    public Result doWork() {
-        Context context = getApplicationContext();
-        AppLogger.i("DailyNotificationWorker", "DailyNotificationWorker started execution.");
-
-        try {
-            dispatchNotification(context);
-            return Result.success();
-        } catch (Throwable t) {
-            AppLogger.e("DailyNotificationWorker", "Error executing DailyNotificationWorker", t);
-            return Result.failure();
-        }
-    }
+    private DailyNotificationWorker() {}
 
     public static void createNotificationChannels(Context context) {
         if (context == null) {

@@ -5,8 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.work.WorkManager;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -57,10 +55,6 @@ public class NotificationScheduler {
                 AppLogger.i("NotificationScheduler", "Daily notification scheduled via AlarmManager for " + targetTime);
             }
 
-            try {
-                WorkManager.getInstance(context).cancelUniqueWork(DailyNotificationWorker.WORK_TAG);
-            } catch (Throwable ignored) {}
-
         } catch (Throwable t) {
             AppLogger.e("NotificationScheduler", "Failed to schedule daily notification", t);
         }
@@ -79,10 +73,6 @@ public class NotificationScheduler {
                 );
                 alarmManager.cancel(pendingIntent);
             }
-
-            try {
-                WorkManager.getInstance(context).cancelUniqueWork(DailyNotificationWorker.WORK_TAG);
-            } catch (Throwable ignored) {}
 
             AppLogger.i("NotificationScheduler", "Daily notification cancelled.");
         } catch (Throwable t) {
