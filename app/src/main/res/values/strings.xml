@@ -2,7 +2,7 @@
 
     <!-- General & Navigation -->
     <string name="app_name" translatable="false">GachaPoint</string>
-    <string name="app_version" translatable="false">v0.2.1-hotfix</string>
+    <string name="app_version" translatable="false">v0.2.2</string>
     <string name="description">GachaPoint is an open-source companion app for players of Genshin Impact, Honkai: Star Rail, and Zenless Zone Zero. It helps you manage daily subscription rewards, maintain detailed wish histories and pity counters, and plan your savings toward upcoming banners.</string>
     <string name="copyright_info">© 2024–2026 Menshov Anton. Licensed under the Apache-2.0 License.\n\nAll rights to Genshin Impact™, Honkai: Star Rail™, Zenless Zone Zero™, their respective logos, characters, names, and visual assets belong to COGNOSPHERE PTE. LTD. and miHoYo Co., Ltd. GachaPoint is an independent fan-made project and is not affiliated with, endorsed by, or sponsored by HoYoverse or miHoYo.</string>
     <string name="nav_home">Home</string>
@@ -338,7 +338,7 @@
     <string name="menu_feature_in_dev">This feature is currently under development!</string>
 
     <!-- About Screen -->
-    <string name="about_version_badge" translatable="false">v0.2.1 • Offline &amp; Open Source</string>
+    <string name="about_version_badge" translatable="false">v0.2.2 • Offline &amp; Open Source</string>
     <string name="about_section_project">About Project</string>
     <string name="about_section_links">Links &amp; Community</string>
     <string name="about_github_title">Source Code</string>

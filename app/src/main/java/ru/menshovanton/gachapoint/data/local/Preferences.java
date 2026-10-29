@@ -40,6 +40,8 @@ public class Preferences {
     public static final String HOME_WIDGETS_CONFIG = "home_widgets_config";
     public static final String DEFAULT_HOME_WIDGETS = "quick_actions:true,savings:true,statistics:true,pity:true";
 
+    public static final String KEY_LEGACY_DATA_SYNCED = "legacy_data_synced_v3";
+
     private final SharedPreferences settings;
 
     public Preferences(Context context) {

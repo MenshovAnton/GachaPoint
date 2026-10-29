@@ -8,10 +8,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.io.File;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
+import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 
@@ -19,6 +19,7 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     private final MutableLiveData<GameType> subType;
     private final MutableLiveData<List<GameType>> enabledGamesLiveData;
+    private final MutableLiveData<Boolean> isDbReadyLiveData = new MutableLiveData<>(false);
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
@@ -71,12 +72,20 @@ public class MainActivityViewModel extends AndroidViewModel {
         }
     }
 
+    public LiveData<Boolean> isDbReady() {
+        return isDbReadyLiveData;
+    }
+
     private void ensureDatabaseInitialized() {
         Context context = getApplication().getApplicationContext();
-        File dbFile = context.getDatabasePath(AppDatabase.DATABASE_NAME);
-        if (!dbFile.exists()) {
-            AppDatabase.getExecutor().execute(() ->
-                    AppDatabase.getInstance(context).getOpenHelper().getWritableDatabase());
-        }
+        AppDatabase.getExecutor().execute(() -> {
+            try {
+                AppDatabase.getInstance(context).getOpenHelper().getWritableDatabase();
+            } catch (Throwable t) {
+                AppLogger.e("MainActivityViewModel", "Error initializing database on startup", t);
+            } finally {
+                AppDatabase.postToMain(() -> isDbReadyLiveData.setValue(true));
+            }
+        });
     }
 }

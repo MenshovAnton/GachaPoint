@@ -50,7 +50,7 @@ public class MainActivityView extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen.installSplashScreen(this);
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
 
         Preferences preferences = new Preferences(this);
         int themeMode = preferences.getIntPreference(Preferences.APP_THEME);
@@ -67,6 +67,7 @@ public class MainActivityView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+        splashScreen.setKeepOnScreenCondition(() -> !Boolean.TRUE.equals(viewModel.isDbReady().getValue()));
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
