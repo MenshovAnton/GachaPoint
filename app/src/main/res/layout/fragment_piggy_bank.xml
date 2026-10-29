@@ -97,6 +97,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
                             android:text="@string/savings_target_label"
                             android:textColor="@color/text_secondary"
                             android:textSize="13sp"
@@ -130,41 +132,56 @@
 
                         <ImageView
                             android:id="@+id/iv_pull"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_intertwined_fate" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
+                            android:layout_marginStart="12dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_saved_counter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-black"
+                                android:includeFontPadding="false"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/text"
+                                android:textSize="26sp"
+                                app:autoSizeMaxTextSize="26sp"
+                                app:autoSizeMinTextSize="18sp"
+                                app:autoSizeStepGranularity="1sp"
+                                app:autoSizeTextType="uniform"
+                                tools:text="45 / 90" />
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
 
                                 <TextView
-                                    android:id="@+id/tv_saved_counter"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="sans-serif-black"
-                                    android:textColor="@color/text"
-                                    android:textSize="28sp"
-                                    tools:text="45 / 90" />
+                                    android:text="@string/savings_current_pulls"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
 
                                 <com.google.android.material.card.MaterialCardView
                                     android:id="@+id/card_remainder_gems"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
+                                    android:layout_marginStart="6dp"
                                     android:visibility="gone"
                                     app:cardBackgroundColor="@color/badge_blue_bg"
-                                    app:cardCornerRadius="8dp"
+                                    app:cardCornerRadius="6dp"
                                     app:cardElevation="0dp"
                                     app:strokeWidth="0dp"
                                     tools:visibility="visible">
@@ -175,12 +192,12 @@
                                         android:gravity="center_vertical"
                                         android:orientation="horizontal"
                                         android:paddingHorizontal="6dp"
-                                        android:paddingVertical="3dp">
+                                        android:paddingVertical="2dp">
 
                                         <ImageView
                                             android:id="@+id/iv_remainder_gem_icon"
-                                            android:layout_width="14dp"
-                                            android:layout_height="14dp"
+                                            android:layout_width="12dp"
+                                            android:layout_height="12dp"
                                             android:importantForAccessibility="no"
                                             android:src="@drawable/icon_primogem" />
 
@@ -190,8 +207,11 @@
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="3dp"
                                             android:fontFamily="sans-serif-bold"
+                                            android:includeFontPadding="false"
+                                            android:maxLines="1"
+                                            android:singleLine="true"
                                             android:textColor="@color/check"
-                                            android:textSize="12sp"
+                                            android:textSize="11sp"
                                             tools:text="+20" />
                                     </LinearLayout>
 
@@ -199,18 +219,13 @@
 
                             </LinearLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/savings_current_pulls"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="12sp" />
                         </LinearLayout>
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/card_percent_badge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
                             app:cardBackgroundColor="@color/badge_blue_bg"
                             app:cardCornerRadius="10dp"
                             app:cardElevation="0dp"
@@ -221,6 +236,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-bold"
+                                android:includeFontPadding="false"
+                                android:maxLines="1"
+                                android:singleLine="true"
                                 android:paddingHorizontal="10dp"
                                 android:paddingVertical="5dp"
                                 android:textColor="@color/check"
@@ -270,7 +288,14 @@
                             android:layout_marginEnd="10dp"
                             android:layout_weight="1"
                             android:fontFamily="sans-serif-bold"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:singleLine="true"
                             android:textSize="17sp"
+                            app:autoSizeMaxTextSize="17sp"
+                            app:autoSizeMinTextSize="13sp"
+                            app:autoSizeStepGranularity="1sp"
+                            app:autoSizeTextType="uniform"
                             tools:text="7 200" />
 
                         <TextView

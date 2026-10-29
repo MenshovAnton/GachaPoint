@@ -19,7 +19,7 @@
     <dimen name="calendar_cell_margin">2dp</dimen>
     <dimen name="calendar_cell_min_height">44dp</dimen>
     <dimen name="calendar_cell_max_height">64dp</dimen>
-    <dimen name="calendar_day_number_size">38dp</dimen>
+    <dimen name="calendar_day_number_size">36dp</dimen>
 
     <!-- Interactive Elements & Touch Targets -->
     <dimen name="min_touch_target_size">48dp</dimen>

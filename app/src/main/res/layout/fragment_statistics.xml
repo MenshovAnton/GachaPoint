@@ -144,9 +144,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:fontFamily="@font/genshin_font"
+                                android:includeFontPadding="false"
+                                android:maxLines="1"
+                                android:singleLine="true"
                                 android:textColor="@color/text"
                                 android:textSize="26sp"
                                 android:textStyle="bold"
+                                app:autoSizeMaxTextSize="26sp"
+                                app:autoSizeMinTextSize="18sp"
+                                app:autoSizeStepGranularity="1sp"
+                                app:autoSizeTextType="uniform"
                                 tools:text="342" />
 
                         </LinearLayout>
@@ -172,9 +179,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:fontFamily="@font/genshin_font"
+                                android:includeFontPadding="false"
+                                android:maxLines="1"
+                                android:singleLine="true"
                                 android:textColor="@color/rare_legendary"
                                 android:textSize="26sp"
                                 android:textStyle="bold"
+                                app:autoSizeMaxTextSize="26sp"
+                                app:autoSizeMinTextSize="18sp"
+                                app:autoSizeStepGranularity="1sp"
+                                app:autoSizeTextType="uniform"
                                 tools:text="54 720" />
 
                         </LinearLayout>
@@ -225,6 +239,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
                                     android:fontFamily="@font/genshin_font"
+                                    android:includeFontPadding="false"
+                                    android:maxLines="1"
+                                    android:singleLine="true"
                                     android:textColor="@color/text"
                                     android:textSize="22sp"
                                     android:textStyle="bold"
@@ -276,6 +293,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
                                     android:fontFamily="@font/genshin_font"
+                                    android:includeFontPadding="false"
+                                    android:maxLines="1"
+                                    android:singleLine="true"
                                     android:textColor="@color/text"
                                     android:textSize="22sp"
                                     android:textStyle="bold"

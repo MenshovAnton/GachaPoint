@@ -468,4 +468,11 @@
     <string name="stat_watermark_text">GachaPoint • Your offline gacha companion</string>
     <string name="move_up">Move up</string>
     <string name="move_down">Move down</string>
+
+    <!-- Future date warning -->
+    <string name="future_date_warning_title">Future Date</string>
+    <string name="future_date_action_confirm_message">You are changing status for a future date (%1$s). Are you sure?</string>
+    <string name="future_sub_confirm_message">The subscription will start on a future date (%1$s). Are you sure you want to start from this date instead of today?</string>
+    <string name="future_selection_confirm_message">Some of the selected dates are in the future. Are you sure you want to apply changes to them?</string>
+    <string name="future_date_badge">Future date</string>
 </resources>

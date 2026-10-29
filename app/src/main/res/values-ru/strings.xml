@@ -430,4 +430,11 @@
     <string name="stat_watermark_text">GachaPoint • Твой офлайн гача-компаньон</string>
     <string name="move_up">Переместить выше</string>
     <string name="move_down">Переместить ниже</string>
+
+    <!-- Future date warning -->
+    <string name="future_date_warning_title">Будущая дата</string>
+    <string name="future_date_action_confirm_message">Вы меняете отметку на день в будущем (%1$s). Вы уверены?</string>
+    <string name="future_sub_confirm_message">Подписка начнется с даты в будущем (%1$s). Вы действительно хотите оформить ее с этой даты, а не с сегодняшней?</string>
+    <string name="future_selection_confirm_message">Среди выбранных дней есть даты в будущем. Применить изменения ко всем выбранным дням?</string>
+    <string name="future_date_badge">День в будущем</string>
 </resources>

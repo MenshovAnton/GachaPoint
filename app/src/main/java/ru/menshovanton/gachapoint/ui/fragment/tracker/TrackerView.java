@@ -259,7 +259,7 @@ public class TrackerView extends Fragment {
                     .setDuration(70)
                     .withEndAction(() -> btnSelectionMark.animate().scaleX(1.0f).scaleY(1.0f).setDuration(90).start())
                     .start();
-            viewModel.markSelectedDays(true);
+            applySelectionWithFutureCheck(true);
         });
 
         btnSelectionUnmark.setOnClickListener(v -> {
@@ -269,7 +269,7 @@ public class TrackerView extends Fragment {
                     .setDuration(70)
                     .withEndAction(() -> btnSelectionUnmark.animate().scaleX(1.0f).scaleY(1.0f).setDuration(90).start())
                     .start();
-            viewModel.markSelectedDays(false);
+            applySelectionWithFutureCheck(false);
         });
 
         btnSelectAll.setOnClickListener(v -> {
@@ -905,8 +905,7 @@ public class TrackerView extends Fragment {
 
             View selectionOverlay = new View(context);
             selectionOverlay.setId(R.id.view_selection_overlay);
-            int overlaySizePx = (int) (40 * density);
-            FrameLayout.LayoutParams overlayParams = new FrameLayout.LayoutParams(overlaySizePx, overlaySizePx, Gravity.CENTER);
+            FrameLayout.LayoutParams overlayParams = new FrameLayout.LayoutParams(tvSizePx, tvSizePx, Gravity.CENTER);
             selectionOverlay.setLayoutParams(overlayParams);
             selectionOverlay.setBackgroundResource(R.drawable.bg_calendar_cell_selected);
             selectionOverlay.setVisibility(View.GONE);
@@ -932,6 +931,7 @@ public class TrackerView extends Fragment {
         dialog.setContentView(R.layout.dialog_day_details_sheet);
 
         TextView tvDate = dialog.findViewById(R.id.tv_sheet_date);
+        TextView tvFutureBadge = dialog.findViewById(R.id.tv_future_date_badge);
         TextView tvGame = dialog.findViewById(R.id.tv_sheet_game);
         MaterialSwitch switchDaily = dialog.findViewById(R.id.switch_daily);
         View rowSub = dialog.findViewById(R.id.row_sub);
@@ -943,19 +943,35 @@ public class TrackerView extends Fragment {
         ImageView ivSubIcon = dialog.findViewById(R.id.iv_sub_icon);
 
         LocalDate dateObj = LocalDate.of(cell.year, cell.month, cell.dayOfMonth);
+        boolean isFuture = dateObj.isAfter(LocalDate.now());
         Locale locale = LocaleList.getDefault().get(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", locale);
         String formattedDate = dateObj.format(formatter);
         formattedDate = formattedDate.substring(0, 1).toUpperCase(locale) + formattedDate.substring(1);
 
         if (tvDate != null) tvDate.setText(formattedDate);
+        if (tvFutureBadge != null) {
+            tvFutureBadge.setVisibility(isFuture ? View.VISIBLE : View.GONE);
+        }
         if (tvGame != null) tvGame.setText(getString(viewModel.getCurrentGameType().getNameResId()));
+
+        final String finalFormattedDate = formattedDate;
 
         if (switchDaily != null) {
             switchDaily.setChecked(cell.dailyStatus == 1);
             switchDaily.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (buttonView.isPressed()) {
-                    viewModel.toggleDailyStatus(cell.year, cell.dayOfYear, isChecked);
+                    if (isFuture) {
+                        new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
+                                .setTitle(R.string.future_date_warning_title)
+                                .setMessage(getString(R.string.future_date_action_confirm_message, finalFormattedDate))
+                                .setPositiveButton(R.string.ok_button, (d, w) -> viewModel.toggleDailyStatus(cell.year, cell.dayOfYear, isChecked))
+                                .setNegativeButton(R.string.cancel, (d, w) -> switchDaily.setChecked(!isChecked))
+                                .setOnCancelListener(d -> switchDaily.setChecked(!isChecked))
+                                .show();
+                    } else {
+                        viewModel.toggleDailyStatus(cell.year, cell.dayOfYear, isChecked);
+                    }
                 }
             });
         }
@@ -995,7 +1011,17 @@ public class TrackerView extends Fragment {
                 switchSub.setChecked(isClaimed);
                 switchSub.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (buttonView.isPressed()) {
-                        viewModel.toggleSubStatus(cell.year, cell.dayOfYear, isChecked);
+                        if (isFuture) {
+                            new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
+                                    .setTitle(R.string.future_date_warning_title)
+                                    .setMessage(getString(R.string.future_date_action_confirm_message, finalFormattedDate))
+                                    .setPositiveButton(R.string.ok_button, (d, w) -> viewModel.toggleSubStatus(cell.year, cell.dayOfYear, isChecked))
+                                    .setNegativeButton(R.string.cancel, (d, w) -> switchSub.setChecked(!isChecked))
+                                    .setOnCancelListener(d -> switchSub.setChecked(!isChecked))
+                                    .show();
+                        } else {
+                            viewModel.toggleSubStatus(cell.year, cell.dayOfYear, isChecked);
+                        }
                     }
                 });
             }
@@ -1191,8 +1217,23 @@ public class TrackerView extends Fragment {
 
         if (btnConfirm != null) {
             btnConfirm.setOnClickListener(v -> {
-                dialog.dismiss();
-                viewModel.addSubscriptionChain(selectedCount[0], effectiveStartDate);
+                if (effectiveStartDate.isAfter(LocalDate.now())) {
+                    Locale locale = LocaleList.getDefault().get(0);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", locale);
+                    String dateFormatted = effectiveStartDate.format(formatter);
+                    new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
+                            .setTitle(R.string.future_date_warning_title)
+                            .setMessage(getString(R.string.future_sub_confirm_message, dateFormatted))
+                            .setPositiveButton(R.string.ok_button, (d, w) -> {
+                                dialog.dismiss();
+                                viewModel.addSubscriptionChain(selectedCount[0], effectiveStartDate);
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
+                } else {
+                    dialog.dismiss();
+                    viewModel.addSubscriptionChain(selectedCount[0], effectiveStartDate);
+                }
             });
         }
 
@@ -1209,6 +1250,31 @@ public class TrackerView extends Fragment {
                 })
                 .setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+    private void applySelectionWithFutureCheck(boolean mark) {
+        Set<LocalDate> selected = viewModel.getSelectedDatesLiveData().getValue();
+        if (selected == null || selected.isEmpty()) return;
+
+        LocalDate today = LocalDate.now();
+        boolean hasFuture = false;
+        for (LocalDate d : selected) {
+            if (d.isAfter(today)) {
+                hasFuture = true;
+                break;
+            }
+        }
+
+        if (hasFuture) {
+            new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog_GachaPoint_AlertDialog)
+                    .setTitle(R.string.future_date_warning_title)
+                    .setMessage(R.string.future_selection_confirm_message)
+                    .setPositiveButton(R.string.ok_button, (dialog, which) -> viewModel.markSelectedDays(mark))
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+        } else {
+            viewModel.markSelectedDays(mark);
+        }
     }
 
     private void playSound(int resId) {

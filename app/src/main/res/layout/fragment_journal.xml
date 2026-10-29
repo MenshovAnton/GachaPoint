@@ -189,10 +189,13 @@
                             app:cardBackgroundColor="@color/badge_gold_bg"
                             app:cardCornerRadius="6dp"
                             app:cardElevation="0dp"
-                            app:strokeWidth="0dp"
+                            app:layout_constrainedWidth="true"
                             app:layout_constraintBottom_toBottomOf="@+id/tv_label_5star"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_pity_5star_counter"
+                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toEndOf="@+id/tv_label_5star"
-                            app:layout_constraintTop_toTopOf="@+id/tv_label_5star">
+                            app:layout_constraintTop_toTopOf="@+id/tv_label_5star"
+                            app:strokeWidth="0dp">
 
                             <TextView
                                 android:id="@+id/tv_pity_status_badge"

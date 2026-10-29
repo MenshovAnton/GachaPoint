@@ -393,13 +393,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/genshin_font"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:singleLine="true"
                             android:textColor="@color/text"
                             android:textSize="22sp"
                             android:textStyle="bold"
-                            tools:text="45 / 90"
+                            app:autoSizeMaxTextSize="22sp"
+                            app:autoSizeMinTextSize="16sp"
+                            app:autoSizeStepGranularity="1sp"
+                            app:autoSizeTextType="uniform"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_saved_pulls"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintHorizontal_chainStyle="packed"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            tools:text="45 / 90" />
 
                         <ImageView
                             android:id="@+id/iv_saved_pulls"
@@ -407,27 +418,34 @@
                             android:layout_height="26dp"
                             android:layout_marginStart="6dp"
                             android:contentDescription="@string/a11y_pull_icon"
-                            app:srcCompat="@drawable/icon_intertwined_fate"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_saved_percent"
+                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toEndOf="@+id/tv_saved_counter"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:srcCompat="@drawable/icon_intertwined_fate" />
 
                         <TextView
                             android:id="@+id/tv_saved_percent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
                             android:background="@drawable/pill_background"
                             android:backgroundTint="@color/badge_blue_bg"
                             android:fontFamily="@font/genshin_font"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:singleLine="true"
                             android:paddingHorizontal="10dp"
                             android:paddingVertical="4dp"
                             android:textColor="@color/check"
                             android:textSize="13sp"
                             android:textStyle="bold"
-                            tools:text="50%"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            tools:text="50%" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -788,13 +806,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/genshin_font"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:singleLine="true"
                             android:textColor="@color/text"
                             android:textSize="22sp"
                             android:textStyle="bold"
-                            tools:text="34 / 90"
+                            app:autoSizeMaxTextSize="22sp"
+                            app:autoSizeMinTextSize="16sp"
+                            app:autoSizeStepGranularity="1sp"
+                            app:autoSizeTextType="uniform"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_pity_star"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintHorizontal_chainStyle="packed"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            tools:text="34 / 90" />
 
                         <ImageView
                             android:id="@+id/iv_pity_star"
@@ -803,27 +832,34 @@
                             android:layout_marginStart="6dp"
                             android:contentDescription="@null"
                             android:src="@drawable/icon_star"
-                            app:tint="@color/rare_legendary"
+                            app:layout_constrainedWidth="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_pity_guarantee_badge"
+                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toEndOf="@+id/tv_pity_5star_counter"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:tint="@color/rare_legendary" />
 
                         <TextView
                             android:id="@+id/tv_pity_guarantee_badge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
                             android:background="@drawable/pill_background"
                             android:backgroundTint="@color/badge_gold_bg"
                             android:fontFamily="@font/genshin_font"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:singleLine="true"
                             android:paddingHorizontal="10dp"
                             android:paddingVertical="4dp"
                             android:textColor="@color/rare_legendary"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            tools:text="100% гарант"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            tools:text="100% гарант" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
