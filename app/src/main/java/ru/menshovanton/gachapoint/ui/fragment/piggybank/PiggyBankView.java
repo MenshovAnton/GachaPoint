@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +70,14 @@ public class PiggyBankView extends Fragment {
     private TextView tvCurrencyAmount;
 
     private Button btnEditTarget;
+    private ViewGroup mcvGoalCard;
+    private ScrollView svPiggyBank;
+    private androidx.constraintlayout.widget.Group groupPiggyBankContent;
+    private View llPiggyBankEmpty;
+    private TextView tvEmptySavingsTitle;
+    private TextView tvEmptySavingsDesc;
+    private View btnEmptySavingsSetGoal;
+    private boolean isFirstLoad = true;
 
     private MaterialButtonToggleGroup toggleActionMode;
     private MaterialButton btnModePulls;
@@ -115,7 +124,14 @@ public class PiggyBankView extends Fragment {
         btnBack = view.findViewById(R.id.btn_back);
         rvGameTypes = view.findViewById(R.id.rv_game_types);
 
+        mcvGoalCard = view.findViewById(R.id.mcv_goal_card);
         btnEditTarget = view.findViewById(R.id.btn_edit_target);
+        svPiggyBank = view.findViewById(R.id.sv_piggy_bank);
+        groupPiggyBankContent = view.findViewById(R.id.group_piggy_bank_content);
+        llPiggyBankEmpty = view.findViewById(R.id.ll_piggy_bank_empty);
+        tvEmptySavingsTitle = view.findViewById(R.id.tv_empty_savings_title);
+        tvEmptySavingsDesc = view.findViewById(R.id.tv_empty_savings_desc);
+        btnEmptySavingsSetGoal = view.findViewById(R.id.btn_empty_savings_set_goal);
 
         toggleActionMode = view.findViewById(R.id.toggle_action_mode);
         btnModePulls = view.findViewById(R.id.btn_mode_pulls);
@@ -267,6 +283,9 @@ public class PiggyBankView extends Fragment {
         }
 
         btnEditTarget.setOnClickListener(this::showTargetMenu);
+        if (btnEmptySavingsSetGoal != null) {
+            btnEmptySavingsSetGoal.setOnClickListener(this::showTargetMenu);
+        }
     }
 
     private void showQuickInputDialog() {
@@ -320,7 +339,7 @@ public class PiggyBankView extends Fragment {
 
         final int pullCost = gameType.getPullCost();
 
-        Runnable updateUi = () -> {
+        @SuppressLint("SetTextI18n") Runnable updateUi = () -> {
             boolean inGems = (toggleUnit.getCheckedButtonId() == R.id.btn_unit_gems);
             boolean isAdd = (toggleOp.getCheckedButtonId() == R.id.btn_op_add);
 
@@ -508,10 +527,40 @@ public class PiggyBankView extends Fragment {
             int totalGems = state.getTotalGems();
 
             GameType gameType = viewModel.getCurrentGameType();
+            boolean wasEmpty = llPiggyBankEmpty != null && llPiggyBankEmpty.getVisibility() == View.VISIBLE;
+            boolean wasContentVisible = groupPiggyBankContent != null && groupPiggyBankContent.getVisibility() == View.VISIBLE;
+            boolean nowEmpty = target <= 0;
+
+            if (!isFirstLoad && (wasEmpty || wasContentVisible) && wasEmpty != nowEmpty && getView() instanceof ViewGroup) {
+                android.transition.TransitionManager.beginDelayedTransition((ViewGroup) getView(),
+                        new android.transition.AutoTransition().setDuration(240));
+            }
+            isFirstLoad = false;
+
+            if (target <= 0) {
+                if (llPiggyBankEmpty != null) llPiggyBankEmpty.setVisibility(View.VISIBLE);
+                if (groupPiggyBankContent != null) groupPiggyBankContent.setVisibility(View.GONE);
+                if (svPiggyBank != null) {
+                    svPiggyBank.setNestedScrollingEnabled(false);
+                    svPiggyBank.scrollTo(0, 0);
+                }
+
+                if (tvEmptySavingsDesc != null && gameType != null) {
+                    tvEmptySavingsDesc.setText(gameType.getEmptySavingsGoalDescResId());
+                }
+                return;
+            } else {
+                if (llPiggyBankEmpty != null) llPiggyBankEmpty.setVisibility(View.GONE);
+                if (groupPiggyBankContent != null) groupPiggyBankContent.setVisibility(View.VISIBLE);
+                if (svPiggyBank != null) {
+                    svPiggyBank.setNestedScrollingEnabled(true);
+                }
+            }
+
             int pullCost = gameType != null ? gameType.getPullCost() : 160;
             int targetGems = target * pullCost;
 
-            progressBar.setMax(Math.max(1, targetGems > 0 ? targetGems : target));
+            progressBar.setMax(targetGems > 0 ? targetGems : target);
             progressBar.setProgress(targetGems > 0 ? totalGems : progress, true);
 
             NumberCountAnimator.animateFraction(savedWishesCounter, progress, target);
@@ -539,6 +588,9 @@ public class PiggyBankView extends Fragment {
     @SuppressLint("SetTextI18n")
     private void updateGameAppearance(GameType gameType) {
         if (gameType == null) return;
+        if (tvEmptySavingsDesc != null) {
+            tvEmptySavingsDesc.setText(gameType.getEmptySavingsGoalDescResId());
+        }
         wishIcon.setImageResource(gameType.getPullIconResId());
         currencyIcon.setImageResource(gameType.getCurrencyIconResId());
         if (ivRemainderGemIcon != null) {
@@ -622,6 +674,14 @@ public class PiggyBankView extends Fragment {
         currencyIcon = null;
         tvCurrencyAmount = null;
         btnEditTarget = null;
+        mcvGoalCard = null;
+        svPiggyBank = null;
+        groupPiggyBankContent = null;
+        llPiggyBankEmpty = null;
+        tvEmptySavingsTitle = null;
+        tvEmptySavingsDesc = null;
+        btnEmptySavingsSetGoal = null;
+        isFirstLoad = true;
         toggleActionMode = null;
         btnModePulls = null;
         btnModeGems = null;

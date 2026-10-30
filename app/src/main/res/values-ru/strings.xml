@@ -43,6 +43,9 @@
     <string name="home_action_journal">Журнал</string>
     <string name="home_action_journal_desc">История круток</string>
     <string name="home_savings_in_currency">в эквиваленте гемов</string>
+    <string name="home_savings_goal_not_set">Цель накоплений не выбрана</string>
+    <string name="home_savings_set_goal_btn">Поставить цель</string>
+    <string name="home_pity_record_hint"> • Нажмите для записи</string>
     <string name="home_stat_subs_remaining">Подписка: %1$d дн.</string>
     <string name="home_stat_subs_inactive">Нет подписки</string>
     <string name="home_stat_dailies_month">Дейлики: %1$d из %2$d дн.</string>
@@ -140,7 +143,50 @@
     <string name="hint_input_content">Персонаж/Оружие</string>
     <string name="select_rare">Выберите редкость</string>
     <string name="default_pull_content">Неизвестно</string>
-    <string name="empty_pulls_list">Круток еще нет :(</string>
+    <string name="empty_pulls_list">История молитв пуста</string>
+    <string name="empty_journal_title">История молитв пуста</string>
+    <string name="empty_journal_desc">Здесь будут отображаться ваши крутки и отсчет до легендарного предмета. Нажмите кнопку ниже, чтобы внести первую запись.</string>
+    <string name="empty_journal_add_one">+1 крутка</string>
+    <string name="empty_journal_add_ten">+10 круток</string>
+
+    <string name="empty_journal_title_genshin">История молитв пуста</string>
+    <string name="empty_journal_desc_genshin">Здесь будут отображаться ваши молитвы и отсчет до легендарного предмета. Нажмите кнопку ниже, чтобы внести первую запись.</string>
+    <string name="empty_journal_add_one_genshin">+1 молитва</string>
+    <string name="empty_journal_add_ten_genshin">+10 молитв</string>
+
+    <string name="empty_journal_title_hsr">История прыжков пуста</string>
+    <string name="empty_journal_desc_hsr">Здесь будут отображаться ваши прыжки и отсчет до 5★ персонажа или светового конуса. Нажмите кнопку ниже, чтобы внести первую запись.</string>
+    <string name="empty_journal_add_one_hsr">+1 прыжок</string>
+    <string name="empty_journal_add_ten_hsr">+10 прыжков</string>
+
+    <string name="empty_journal_title_zzz">История поиска сигналов пуста</string>
+    <string name="empty_journal_desc_zzz">Здесь будут отображаться результаты поиска сигналов и отсчет до агента или амплификатора S-ранга. Нажмите кнопку ниже, чтобы внести первую запись.</string>
+    <string name="empty_journal_add_one_zzz">+1 сигнал</string>
+    <string name="empty_journal_add_ten_zzz">+10 сигналов</string>
+
+    <!-- Empty Piggy Bank Goal -->
+    <string name="empty_savings_goal_title">Цель накоплений не установлена</string>
+    <string name="empty_savings_goal_desc_genshin">Выберите количество гарантов (1, 2 или 6), чтобы отслеживать прогресс накопленных молитв и камней истока.</string>
+    <string name="empty_savings_goal_desc_hsr">Выберите количество гарантов (1, 2 или 6), чтобы отслеживать прогресс накопленных прыжков и звездного нефрита.</string>
+    <string name="empty_savings_goal_desc_zzz">Выберите количество гарантов (1, 2 или 6), чтобы отслеживать прогресс накопленных поисков сигнала и полихромов.</string>
+    <string name="empty_savings_goal_btn">Поставить цель</string>
+
+    <!-- Empty Statistics -->
+    <string name="empty_stats_title_genshin">Недостаточно данных для статистики</string>
+    <string name="empty_stats_desc_genshin">Вносите свои молитвы в Журнал и отмечайте дни в Календаре, чтобы здесь появился детальный анализ удачи, винрейт 50/50 и распределение по баннерам.</string>
+    <string name="empty_stats_title_hsr">Недостаточно данных для статистики</string>
+    <string name="empty_stats_desc_hsr">Вносите свои прыжки в Журнал и отмечайте дни в Календаре, чтобы здесь появился детальный анализ удачи, винрейт 50/50 и распределение по баннерам.</string>
+    <string name="empty_stats_title_zzz">Недостаточно данных для статистики</string>
+    <string name="empty_stats_desc_zzz">Вносите результаты поиска сигналов в Журнал и отмечайте дни в Календаре, чтобы здесь появился детальный анализ удачи, винрейт 50/50 и распределение по баннерам.</string>
+    <string name="empty_stats_title_default">Недостаточно данных для статистики</string>
+    <string name="empty_stats_desc_default">Вносите свои крутки в Журнал и отмечайте дни в Календаре, чтобы здесь появился детальный анализ удачи, винрейт 50/50 и распределение по баннерам.</string>
+    <string name="empty_stats_btn_go_journal">Перейти в журнал</string>
+
+    <!-- Tracker Empty Sub -->
+    <string name="tracker_sub_empty_title">Подписка не активна</string>
+    <string name="tracker_sub_empty_desc">Добавьте период действия (30 дн.), чтобы отмечать ежедневные награды и следить за днями до завершения.</string>
+    <string name="tracker_btn_add_sub">Добавить подписку</string>
+
     <string name="pulls">Круток</string>
     <string name="banner_type_genshin_event">Ивентовый баннер</string>
     <string name="banner_type_genshin_weapon">Оружейный баннер</string>

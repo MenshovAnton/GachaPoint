@@ -1,0 +1,42 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="72dp"
+    android:height="72dp"
+    android:viewportWidth="72"
+    android:viewportHeight="72">
+
+    <path
+        android:fillColor="@color/check"
+        android:fillAlpha="0.15"
+        android:pathData="M14,20 C14,17.79 15.79,16 18,16 L50,16 C52.21,16 54,17.79 54,20 L54,54 C54,56.21 52.21,58 50,58 L18,58 C15.79,58 14,56.21 14,54 Z" />
+
+    <path
+        android:fillColor="@color/check"
+        android:pathData="M18,16 C15.79,16 14,17.79 14,20 L14,54 C14,56.21 15.79,58 18,58 L50,58 C52.21,58 54,56.21 54,54 L54,20 C54,17.79 52.21,16 50,16 L18,16 Z M50,54 L18,54 C17.45,54 17,53.55 17,53 L17,21 C17,20.45 17.45,20 18,20 L50,20 C50.55,20 51,20.45 51,21 L51,53 C51,53.55 50.55,54 50,54 Z" />
+
+    <path
+        android:fillColor="@color/check"
+        android:fillAlpha="0.4"
+        android:pathData="M17,20 L23,20 L23,54 L17,54 Z" />
+
+    <path
+        android:fillColor="@color/check"
+        android:fillAlpha="0.5"
+        android:pathData="M27,26 L45,26 C45.55,26 46,26.45 46,27 C46,27.55 45.55,28 45,28 L27,28 C26.45,28 26,27.55 26,27 C26,26.45 26.45,26 27,26 Z
+                         M27,33 L41,33 C41.55,33 42,33.45 42,34 C42,34.55 41.55,35 41,35 L27,35 C26.45,35 26,34.55 26,34 C26,33.45 26.45,33 27,33 Z
+                         M27,40 L37,40 C37.55,40 38,40.45 38,41 C38,41.55 37.55,42 37,42 L27,42 C26.45,42 26,41.55 26,41 C26,40.45 26.45,40 27,40 Z" />
+
+    <path
+        android:fillColor="@color/rare_legendary"
+        android:pathData="M52,38 C52,32 55,29 61,29 C55,29 52,26 52,20 C52,26 49,29 43,29 C49,29 52,32 52,38 Z" />
+
+    <path
+        android:fillColor="@color/rare_legendary"
+        android:fillAlpha="0.8"
+        android:pathData="M22,12 C22,9 23.5,7.5 26.5,7.5 C23.5,7.5 22,6 22,3 C22,6 20.5,7.5 17.5,7.5 C20.5,7.5 22,9 22,12 Z" />
+
+    <path
+        android:fillColor="@color/rare_legendary"
+        android:fillAlpha="0.7"
+        android:pathData="M58,47 C58,45 59,44 61,44 C59,44 58,43 58,41 C58,43 57,44 55,44 C57,44 58,45 58,47 Z" />
+
+</vector>

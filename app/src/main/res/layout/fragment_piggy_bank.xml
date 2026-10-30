@@ -7,11 +7,11 @@
     tools:context=".ui.fragment.piggybank.PiggyBankView">
 
     <ScrollView
+        android:id="@+id/sv_piggy_bank"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:fillViewport="true"
-        android:paddingBottom="90dp"
         tools:ignore="UselessParent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,6 +68,79 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_savings_header"
                 tools:listitem="@layout/item_pill"
                 tools:orientation="horizontal" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/group_piggy_bank_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="mcv_goal_card,tv_quick_actions_header,mcv_actions_card,tv_calc_header,mcv_calc_card" />
+
+
+            <LinearLayout
+                android:id="@+id/ll_piggy_bank_empty"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="28dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rv_game_types"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/iv_empty_savings"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_empty_savings" />
+
+                <TextView
+                    android:id="@+id/tv_empty_savings_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/genshin_font"
+                    android:gravity="center"
+                    android:text="@string/empty_savings_goal_title"
+                    android:textColor="@color/text"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_empty_savings_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@string/empty_savings_goal_desc_genshin"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_empty_savings_set_goal"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="20dp"
+                    android:minHeight="0dp"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="0dp"
+                    android:text="@string/empty_savings_goal_btn"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/check"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/icon_edit"
+                    app:iconPadding="6dp"
+                    app:iconSize="16dp"
+                    app:iconTint="@color/white" />
+
+            </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_goal_card"
@@ -192,7 +265,8 @@
                                         android:gravity="center_vertical"
                                         android:orientation="horizontal"
                                         android:paddingHorizontal="6dp"
-                                        android:paddingVertical="2dp">
+                                        android:paddingVertical="2dp"
+                                        tools:ignore="TooDeepLayout,UseCompoundDrawables">
 
                                         <ImageView
                                             android:id="@+id/iv_remainder_gem_icon"
@@ -569,7 +643,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
                 android:layout_marginTop="@dimen/card_margin_vertical"
+                android:layout_marginBottom="88dp"
                 app:cardCornerRadius="@dimen/card_corner_radius"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_calc_header">

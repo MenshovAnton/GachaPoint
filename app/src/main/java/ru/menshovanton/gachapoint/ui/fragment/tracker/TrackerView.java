@@ -104,6 +104,10 @@ public class TrackerView extends Fragment {
 
     private MaterialButton checkButton;
     private TextView statsHeader;
+    private MaterialCardView mcvStatsCard;
+    private View llTrackerSubEmpty;
+    private View clTrackerStatsActive;
+    private MaterialButton btnTrackerAddSubEmpty;
 
     private FrameLayout flActionsContainer;
     private LinearLayout llActions;
@@ -188,6 +192,14 @@ public class TrackerView extends Fragment {
         monthHeader = view.findViewById(R.id.tv_month);
         yearHeader = view.findViewById(R.id.tv_year);
         statsHeader = view.findViewById(R.id.tv_stats_header);
+        mcvStatsCard = view.findViewById(R.id.mcv_stats_card);
+        llTrackerSubEmpty = view.findViewById(R.id.ll_tracker_sub_empty);
+        clTrackerStatsActive = view.findViewById(R.id.cl_tracker_stats_active);
+        btnTrackerAddSubEmpty = view.findViewById(R.id.btn_tracker_add_sub_empty);
+
+        if (btnTrackerAddSubEmpty != null) {
+            btnTrackerAddSubEmpty.setOnClickListener(v -> showAddSubscriptionDialog(LocalDate.now()));
+        }
 
         claimPrimogems = view.findViewById(R.id.tv_received_gems);
         missedPrimogems = view.findViewById(R.id.tv_omitted_gems);
@@ -371,6 +383,10 @@ public class TrackerView extends Fragment {
         ivModeDailiesIcon = null;
         checkButton = null;
         statsHeader = null;
+        mcvStatsCard = null;
+        llTrackerSubEmpty = null;
+        clTrackerStatsActive = null;
+        btnTrackerAddSubEmpty = null;
         flActionsContainer = null;
         llActions = null;
         llSelectionActions = null;
@@ -526,19 +542,11 @@ public class TrackerView extends Fragment {
             tvModeDailiesTitle.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
             ivModeDailiesIcon.setColorFilter(ContextCompat.getColor(context, R.color.text_secondary));
 
-            if (!isFirstRender) {
-                TextAnimator.crossfade(checkButton, R.string.btn_mark_sub);
-                TextAnimator.crossfade(statsHeader, R.string.stat_header_sub);
-                GameType game = viewModel.getCurrentGameType();
-                TextAnimator.crossfade(subsCountTitle, game.getSubTitleResId());
-            } else {
-                checkButton.setText(R.string.btn_mark_sub);
-                statsHeader.setText(R.string.stat_header_sub);
-                GameType game = viewModel.getCurrentGameType();
-                subsCountTitle.setText(game.getSubTitleResId());
-            }
+            statsHeader.setText(R.string.stat_header_sub);
+            GameType game = viewModel.getCurrentGameType();
+            subsCountTitle.setText(game.getSubTitleResId());
             Integer count = viewModel.getSubsCountLiveData().getValue();
-            NumberCountAnimator.animate(subsCounterView, count != null ? count : 0);
+            subsCounterView.setText(String.valueOf(count != null ? count : 0));
         } else {
             cardModeDailies.setStrokeColor(ContextCompat.getColor(context, R.color.check));
             cardModeDailies.setStrokeWidth((int) (2 * density));
@@ -550,27 +558,60 @@ public class TrackerView extends Fragment {
             tvModeSubTitle.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
             ivModeSubIcon.setColorFilter(ContextCompat.getColor(context, R.color.text_secondary));
 
-            if (!isFirstRender) {
-                TextAnimator.crossfade(checkButton, R.string.btn_mark_dailies);
-                TextAnimator.crossfade(statsHeader, R.string.stat_header_dailies);
-                TextAnimator.crossfade(subsCountTitle, R.string.sheet_status_completed);
-            } else {
-                checkButton.setText(R.string.btn_mark_dailies);
-                statsHeader.setText(R.string.stat_header_dailies);
-                subsCountTitle.setText(R.string.sheet_status_completed);
-            }
+            statsHeader.setText(R.string.stat_header_dailies);
+            subsCountTitle.setText(R.string.sheet_status_completed);
             int[] progress = viewModel.getDailiesProgressLiveData().getValue();
             if (progress != null && progress.length >= 2) {
-                NumberCountAnimator.animate(subsCounterView, progress[0], val -> getString(R.string.tracker_mode_dailies_subtitle, val, progress[1]));
+                subsCounterView.setText(getString(R.string.tracker_mode_dailies_subtitle, progress[0], progress[1]));
             }
         }
+        updateTrackerSubscriptionStateUi();
     }
 
     private void updateSubsCountUi(Integer count) {
         int cnt = (count != null) ? count : 0;
         tvModeSubSubtitle.setText(getString(R.string.tracker_mode_sub_subtitle, cnt));
         if (viewModel.getCurrentMode() == TrackerMode.SUBSCRIPTION) {
-            NumberCountAnimator.animate(subsCounterView, cnt);
+            subsCounterView.setText(String.valueOf(cnt));
+        }
+        updateTrackerSubscriptionStateUi();
+    }
+
+    private void updateTrackerSubscriptionStateUi() {
+        if (getContext() == null || checkButton == null) return;
+        TrackerMode mode = viewModel.getCurrentMode();
+        Integer count = viewModel.getSubsCountLiveData().getValue();
+        int cnt = (count != null) ? count : 0;
+        float density = getResources().getDisplayMetrics().density;
+
+        boolean isSubMode = (mode == TrackerMode.SUBSCRIPTION);
+        boolean isSubEmpty = isSubMode && (cnt <= 0);
+
+        boolean wasEmpty = llTrackerSubEmpty != null && llTrackerSubEmpty.getVisibility() == View.VISIBLE;
+        if (mcvStatsCard != null && wasEmpty != isSubEmpty && !isFirstRender) {
+            android.transition.TransitionManager.beginDelayedTransition(mcvStatsCard,
+                    new android.transition.AutoTransition().setDuration(240));
+        }
+
+        if (isSubMode) {
+            if (isSubEmpty) {
+                if (llTrackerSubEmpty != null) llTrackerSubEmpty.setVisibility(View.VISIBLE);
+                if (clTrackerStatsActive != null) clTrackerStatsActive.setVisibility(View.GONE);
+                checkButton.setText(R.string.tracker_btn_add_sub);
+                checkButton.setIconResource(R.drawable.icon_plus);
+                checkButton.setIconGravity(MaterialButton.ICON_GRAVITY_TEXT_START);
+                checkButton.setIconPadding((int) (8 * density));
+            } else {
+                if (llTrackerSubEmpty != null) llTrackerSubEmpty.setVisibility(View.GONE);
+                if (clTrackerStatsActive != null) clTrackerStatsActive.setVisibility(View.VISIBLE);
+                checkButton.setText(R.string.btn_mark_sub);
+                checkButton.setIcon(null);
+            }
+        } else {
+            if (llTrackerSubEmpty != null) llTrackerSubEmpty.setVisibility(View.GONE);
+            if (clTrackerStatsActive != null) clTrackerStatsActive.setVisibility(View.VISIBLE);
+            checkButton.setText(R.string.btn_mark_dailies);
+            checkButton.setIcon(null);
         }
     }
 
@@ -578,7 +619,7 @@ public class TrackerView extends Fragment {
         if (progress == null || progress.length < 2) return;
         tvModeDailiesSubtitle.setText(getString(R.string.tracker_mode_dailies_subtitle, progress[0], progress[1]));
         if (viewModel.getCurrentMode() == TrackerMode.DAILIES) {
-            NumberCountAnimator.animate(subsCounterView, progress[0], val -> getString(R.string.tracker_mode_dailies_subtitle, val, progress[1]));
+            subsCounterView.setText(getString(R.string.tracker_mode_dailies_subtitle, progress[0], progress[1]));
         }
     }
 
@@ -664,11 +705,7 @@ public class TrackerView extends Fragment {
         gemIcon.setImageResource(gameType.getCurrencyIconResId());
         wishIcon.setImageResource(gameType.getPullIconResId());
         if (viewModel.getCurrentMode() == TrackerMode.SUBSCRIPTION) {
-            if (!isFirstRender) {
-                TextAnimator.crossfade(subsCountTitle, gameType.getSubTitleResId());
-            } else {
-                subsCountTitle.setText(gameType.getSubTitleResId());
-            }
+            subsCountTitle.setText(gameType.getSubTitleResId());
         }
     }
 

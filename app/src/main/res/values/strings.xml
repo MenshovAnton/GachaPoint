@@ -48,6 +48,9 @@
     <string name="home_action_journal">Journal</string>
     <string name="home_action_journal_desc">Pulls history</string>
     <string name="home_savings_in_currency">Equivalent in currency</string>
+    <string name="home_savings_goal_not_set">Savings goal is not set</string>
+    <string name="home_savings_set_goal_btn">Set goal</string>
+    <string name="home_pity_record_hint"> • Tap to record</string>
     <string name="home_stat_subs_remaining">Sub: %1$d d. left</string>
     <string name="home_stat_subs_inactive">No active subscription</string>
     <string name="home_stat_dailies_month">Dailies: %1$d / %2$d</string>
@@ -145,7 +148,49 @@
     <string name="hint_input_content">Character/Weapon</string>
     <string name="select_rare">Select item rarity</string>
     <string name="default_pull_content">Unknown</string>
-    <string name="empty_pulls_list">No pulls yet :(</string>
+    <string name="empty_pulls_list">Wish history is empty</string>
+    <string name="empty_journal_title">Wish history is empty</string>
+    <string name="empty_journal_desc">Your pulls and pity counter will appear here. Tap a button below to add your first record.</string>
+    <string name="empty_journal_add_one">+1 pull</string>
+    <string name="empty_journal_add_ten">+10 pulls</string>
+
+    <string name="empty_journal_title_genshin">Wish history is empty</string>
+    <string name="empty_journal_desc_genshin">Your wishes and pity counter will appear here. Tap a button below to add your first record.</string>
+    <string name="empty_journal_add_one_genshin">+1 wish</string>
+    <string name="empty_journal_add_ten_genshin">+10 wishes</string>
+
+    <string name="empty_journal_title_hsr">Warp history is empty</string>
+    <string name="empty_journal_desc_hsr">Your warps and pity counter will appear here. Tap a button below to add your first record.</string>
+    <string name="empty_journal_add_one_hsr">+1 warp</string>
+    <string name="empty_journal_add_ten_hsr">+10 warps</string>
+
+    <string name="empty_journal_title_zzz">Signal Search history is empty</string>
+    <string name="empty_journal_desc_zzz">Your signal searches and pity counter will appear here. Tap a button below to add your first record.</string>
+    <string name="empty_journal_add_one_zzz">+1 search</string>
+    <string name="empty_journal_add_ten_zzz">+10 searches</string>
+
+    <!-- Empty Piggy Bank Goal -->
+    <string name="empty_savings_goal_title">Savings goal is not set</string>
+    <string name="empty_savings_goal_desc_genshin">Select the target pity multiplier (1, 2, or 6) to track your progress in wishes and primogems.</string>
+    <string name="empty_savings_goal_desc_hsr">Select the target pity multiplier (1, 2, or 6) to track your progress in warps and stellar jade.</string>
+    <string name="empty_savings_goal_desc_zzz">Select the target pity multiplier (1, 2, or 6) to track your progress in signal searches and polychromes.</string>
+    <string name="empty_savings_goal_btn">Set goal</string>
+
+    <!-- Empty Statistics -->
+    <string name="empty_stats_title_genshin">Not enough data for statistics</string>
+    <string name="empty_stats_desc_genshin">Record your wishes in the Journal and track days in the Calendar to see 50/50 win rates, average pity, and banner analytics.</string>
+    <string name="empty_stats_title_hsr">Not enough data for statistics</string>
+    <string name="empty_stats_desc_hsr">Record your warps in the Journal and track days in the Calendar to see 50/50 win rates, average pity, and banner analytics.</string>
+    <string name="empty_stats_title_zzz">Not enough data for statistics</string>
+    <string name="empty_stats_desc_zzz">Record your signal searches in the Journal and track days in the Calendar to see 50/50 win rates, average pity, and banner analytics.</string>
+    <string name="empty_stats_title_default">Not enough data for statistics</string>
+    <string name="empty_stats_desc_default">Record your pulls in the Journal and track days in the Calendar to see 50/50 win rates, average pity, and banner analytics.</string>
+    <string name="empty_stats_btn_go_journal">Open Journal</string>
+    <!-- Tracker Empty Sub -->
+    <string name="tracker_sub_empty_title">Subscription is not active</string>
+    <string name="tracker_sub_empty_desc">Add an active period (30 days) to track daily rewards and countdown to expiration.</string>
+    <string name="tracker_btn_add_sub">Add subscription</string>
+
     <string name="pulls">Pulls</string>
     <string name="five_star" translatable="false">5★</string>
     <string name="four_star" translatable="false">4★</string>

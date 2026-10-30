@@ -261,4 +261,97 @@ public enum GameType {
         }
         return BannerType.SPECIAL.getDbKey();
     }
+
+    @StringRes
+    public int getEmptyJournalTitleResId() {
+        switch (this) {
+            case HSR:
+                return R.string.empty_journal_title_hsr;
+            case ZZZ:
+                return R.string.empty_journal_title_zzz;
+            case GENSHIN:
+            default:
+                return R.string.empty_journal_title_genshin;
+        }
+    }
+
+    @StringRes
+    public int getEmptyJournalDescResId() {
+        switch (this) {
+            case HSR:
+                return R.string.empty_journal_desc_hsr;
+            case ZZZ:
+                return R.string.empty_journal_desc_zzz;
+            case GENSHIN:
+            default:
+                return R.string.empty_journal_desc_genshin;
+        }
+    }
+
+    @StringRes
+    public int getAddOnePullResId() {
+        switch (this) {
+            case HSR:
+                return R.string.empty_journal_add_one_hsr;
+            case ZZZ:
+                return R.string.empty_journal_add_one_zzz;
+            case GENSHIN:
+            default:
+                return R.string.empty_journal_add_one_genshin;
+        }
+    }
+
+    @StringRes
+    public int getAddTenPullsResId() {
+        switch (this) {
+            case HSR:
+                return R.string.empty_journal_add_ten_hsr;
+            case ZZZ:
+                return R.string.empty_journal_add_ten_zzz;
+            case GENSHIN:
+            default:
+                return R.string.empty_journal_add_ten_genshin;
+        }
+    }
+
+    @StringRes
+    public int getEmptySavingsGoalDescResId() {
+        switch (this) {
+            case HSR:
+                return R.string.empty_savings_goal_desc_hsr;
+            case ZZZ:
+                return R.string.empty_savings_goal_desc_zzz;
+            case GENSHIN:
+            default:
+                return R.string.empty_savings_goal_desc_genshin;
+        }
+    }
+
+    @StringRes
+    public int getEmptyStatsTitleResId() {
+        switch (this) {
+            case HSR:
+                return R.string.empty_stats_title_hsr;
+            case ZZZ:
+                return R.string.empty_stats_title_zzz;
+            case GENSHIN:
+                return R.string.empty_stats_title_genshin;
+            default:
+                return R.string.empty_stats_title_default;
+        }
+    }
+
+    @StringRes
+    public int getEmptyStatsDescResId() {
+        switch (this) {
+            case HSR:
+                return R.string.empty_stats_desc_hsr;
+            case ZZZ:
+                return R.string.empty_stats_desc_zzz;
+            case GENSHIN:
+                return R.string.empty_stats_desc_genshin;
+            default:
+                return R.string.empty_stats_desc_default;
+        }
+    }
 }

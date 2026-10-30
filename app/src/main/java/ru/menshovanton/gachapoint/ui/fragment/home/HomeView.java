@@ -43,7 +43,6 @@ import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.BannerInfo;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
 import ru.menshovanton.gachapoint.ui.animation.NumberCountAnimator;
-import ru.menshovanton.gachapoint.ui.animation.TextAnimator;
 import ru.menshovanton.gachapoint.ui.fragment.home.model.HomeWidgetItem;
 import ru.menshovanton.gachapoint.ui.main.GamesConfigBottomSheetDialog;
 import ru.menshovanton.gachapoint.ui.animation.CarouselAnimator;
@@ -466,11 +465,13 @@ public class HomeView extends Fragment {
         int checkColor = ContextCompat.getColor(requireContext(), R.color.check);
 
         if (isDone != null && isDone) {
-            TextAnimator.crossfadeTextAndColor(tvQuickDailyStatus, R.string.home_action_daily_done, checkedColor);
+            tvQuickDailyStatus.setText(R.string.home_action_daily_done);
+            tvQuickDailyStatus.setTextColor(checkedColor);
             ivQuickDailyIcon.setImageResource(R.drawable.icon_check);
             ivQuickDailyIcon.setImageTintList(ColorStateList.valueOf(checkedColor));
         } else {
-            TextAnimator.crossfadeTextAndColor(tvQuickDailyStatus, R.string.home_action_daily_todo, checkColor);
+            tvQuickDailyStatus.setText(R.string.home_action_daily_todo);
+            tvQuickDailyStatus.setTextColor(checkColor);
             ivQuickDailyIcon.setImageResource(R.drawable.icon_daily_task);
             ivQuickDailyIcon.setImageTintList(ColorStateList.valueOf(checkColor));
         }
@@ -487,15 +488,18 @@ public class HomeView extends Fragment {
         int secondaryColor = ContextCompat.getColor(requireContext(), R.color.text_secondary);
 
         if (remaining == null || remaining <= 0) {
-            TextAnimator.crossfadeTextAndColor(tvQuickSubStatus, R.string.home_action_sub_none, secondaryColor);
+            tvQuickSubStatus.setText(R.string.home_action_sub_none);
+            tvQuickSubStatus.setTextColor(secondaryColor);
             ivQuickSubIcon.setImageResource(R.drawable.icon_subscription);
             ivQuickSubIcon.setImageTintList(ColorStateList.valueOf(secondaryColor));
         } else if (isClaimed != null && isClaimed) {
-            TextAnimator.crossfadeTextAndColor(tvQuickSubStatus, R.string.home_action_sub_claimed, checkedColor);
+            tvQuickSubStatus.setText(R.string.home_action_sub_claimed);
+            tvQuickSubStatus.setTextColor(checkedColor);
             ivQuickSubIcon.setImageResource(R.drawable.icon_check);
             ivQuickSubIcon.setImageTintList(ColorStateList.valueOf(checkedColor));
         } else {
-            TextAnimator.crossfadeTextAndColor(tvQuickSubStatus, R.string.home_action_sub_claim, checkColor);
+            tvQuickSubStatus.setText(R.string.home_action_sub_claim);
+            tvQuickSubStatus.setTextColor(checkColor);
             ivQuickSubIcon.setImageResource(R.drawable.icon_subscription);
             ivQuickSubIcon.setImageTintList(ColorStateList.valueOf(checkColor));
         }
@@ -505,9 +509,9 @@ public class HomeView extends Fragment {
         updateSubClaimStatusUi();
         if (tvStatSubsInfo == null) return;
         if (remaining != null && remaining > 0) {
-            TextAnimator.crossfade(tvStatSubsInfo, getString(R.string.home_stat_subs_remaining, remaining));
+            tvStatSubsInfo.setText(getString(R.string.home_stat_subs_remaining, remaining));
         } else {
-            TextAnimator.crossfade(tvStatSubsInfo, R.string.home_stat_subs_inactive);
+            tvStatSubsInfo.setText(R.string.home_stat_subs_inactive);
         }
     }
 
@@ -581,24 +585,28 @@ public class HomeView extends Fragment {
 
         int until = Math.max(0, m - p);
         if (tvPityUntil5Star != null) {
-            NumberCountAnimator.animate(tvPityUntil5Star, until, val -> getString(R.string.home_pity_until_5star, val));
+            if (p == 0) {
+                NumberCountAnimator.animate(tvPityUntil5Star, until, val ->
+                        getString(R.string.home_pity_until_5star, val) + getString(R.string.home_pity_record_hint));
+            } else {
+                NumberCountAnimator.animate(tvPityUntil5Star, until, val ->
+                        getString(R.string.home_pity_until_5star, val));
+            }
         }
 
         if (tvPityGuaranteeBadge != null) {
             if (isGuar) {
                 int goldBg = ContextCompat.getColor(requireContext(), R.color.badge_gold_bg);
                 int goldText = ContextCompat.getColor(requireContext(), R.color.rare_legendary);
-                TextAnimator.crossfade(tvPityGuaranteeBadge, getString(R.string.home_pity_guaranteed_badge), () -> {
-                    tvPityGuaranteeBadge.setTextColor(goldText);
-                    tvPityGuaranteeBadge.setBackgroundTintList(ColorStateList.valueOf(goldBg));
-                });
+                tvPityGuaranteeBadge.setText(R.string.home_pity_guaranteed_badge);
+                tvPityGuaranteeBadge.setTextColor(goldText);
+                tvPityGuaranteeBadge.setBackgroundTintList(ColorStateList.valueOf(goldBg));
             } else {
                 int blueBg = ContextCompat.getColor(requireContext(), R.color.badge_blue_bg);
                 int blueText = ContextCompat.getColor(requireContext(), R.color.check);
-                TextAnimator.crossfade(tvPityGuaranteeBadge, getString(R.string.home_pity_fifty_fifty_badge), () -> {
-                    tvPityGuaranteeBadge.setTextColor(blueText);
-                    tvPityGuaranteeBadge.setBackgroundTintList(ColorStateList.valueOf(blueBg));
-                });
+                tvPityGuaranteeBadge.setText(R.string.home_pity_fifty_fifty_badge);
+                tvPityGuaranteeBadge.setTextColor(blueText);
+                tvPityGuaranteeBadge.setBackgroundTintList(ColorStateList.valueOf(blueBg));
             }
         }
     }
@@ -613,7 +621,7 @@ public class HomeView extends Fragment {
         if (tvPityBannerName != null && getContext() != null) {
             BannerInfo banner = gameType.getBannerInfo(BannerType.EVENT.getDbKey());
             int labelRes = (banner != null) ? banner.getLabelResId() : R.string.home_pity_event;
-            TextAnimator.crossfade(tvPityBannerName, labelRes);
+            tvPityBannerName.setText(labelRes);
         }
 
         updatePiggyProgress(null, null, null);

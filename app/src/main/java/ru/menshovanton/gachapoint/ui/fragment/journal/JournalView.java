@@ -11,6 +11,7 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AutoCompleteTextView;
 import ru.menshovanton.gachapoint.ui.common.NoFilterArrayAdapter;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -85,6 +87,12 @@ public class JournalView extends Fragment {
     private AutoCompleteTextView bannerSelector;
     private RecyclerView recyclerView;
     private View emptyView;
+    private View emptyContentView;
+    private View cardBannerDashboard;
+    private TextView tvEmptyTitle;
+    private TextView tvEmptyDesc;
+    private MaterialButton btnEmptyAddOne;
+    private MaterialButton btnEmptyAddTen;
     private LinearProgressIndicator progressBar;
 
     private TextView tvPity5StarCounter;
@@ -117,6 +125,7 @@ public class JournalView extends Fragment {
         View view = inflater.inflate(R.layout.fragment_journal, container, false);
 
         appbarLayout = view.findViewById(R.id.appbar_journal);
+        cardBannerDashboard = view.findViewById(R.id.card_banner_dashboard);
         rvGameTypes = view.findViewById(R.id.rv_game_types);
         btnAdd = view.findViewById(R.id.btn_add);
         btnScrollTop = view.findViewById(R.id.btn_scroll_top);
@@ -129,6 +138,11 @@ public class JournalView extends Fragment {
         bannerSelector = view.findViewById(R.id.mac_banner_selector);
         recyclerView = view.findViewById(R.id.rv_pulls_list);
         emptyView = view.findViewById(R.id.ll_empty_state);
+        emptyContentView = view.findViewById(R.id.ll_empty_content);
+        tvEmptyTitle = view.findViewById(R.id.tv_empty_title);
+        tvEmptyDesc = view.findViewById(R.id.tv_empty_desc);
+        btnEmptyAddOne = view.findViewById(R.id.btn_empty_add_one);
+        btnEmptyAddTen = view.findViewById(R.id.btn_empty_add_ten);
         progressBar = view.findViewById(R.id.progress_loading);
 
         tvPity5StarCounter = view.findViewById(R.id.tv_pity_5star_counter);
@@ -156,6 +170,13 @@ public class JournalView extends Fragment {
 
         btnAdd.setOnClickListener(this::showMoreMenu);
         btnScrollTop.setOnClickListener(v -> scrollToTop());
+
+        if (btnEmptyAddOne != null) {
+            btnEmptyAddOne.setOnClickListener(v -> viewModel.saveOneWish());
+        }
+        if (btnEmptyAddTen != null) {
+            btnEmptyAddTen.setOnClickListener(v -> showWishDialog(null, getString(R.string.five_star), true));
+        }
 
         if (appbarLayout != null && emptyView != null) {
             appbarLayout.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
@@ -484,6 +505,7 @@ public class JournalView extends Fragment {
         pillsAdapter = null;
         gameTypesLayoutManager = null;
         appbarLayout = null;
+        cardBannerDashboard = null;
         btnAdd = null;
         btnScrollTop = null;
         tilBannerSelector = null;
@@ -493,6 +515,11 @@ public class JournalView extends Fragment {
         btnSelectAll = null;
         btnDeleteSelected = null;
         emptyView = null;
+        emptyContentView = null;
+        tvEmptyTitle = null;
+        tvEmptyDesc = null;
+        btnEmptyAddOne = null;
+        btnEmptyAddTen = null;
         progressBar = null;
         tvPity5StarCounter = null;
         progressPity5Star = null;
@@ -541,6 +568,23 @@ public class JournalView extends Fragment {
 
         bannerSelector.setText(currentLabel, false);
         updateDashboardLimits();
+        updateEmptyState(gameType);
+    }
+
+    private void updateEmptyState(GameType gameType) {
+        if (gameType == null) return;
+        if (tvEmptyTitle != null) {
+            tvEmptyTitle.setText(gameType.getEmptyJournalTitleResId());
+        }
+        if (tvEmptyDesc != null) {
+            tvEmptyDesc.setText(gameType.getEmptyJournalDescResId());
+        }
+        if (btnEmptyAddOne != null) {
+            btnEmptyAddOne.setText(gameType.getAddOnePullResId());
+        }
+        if (btnEmptyAddTen != null) {
+            btnEmptyAddTen.setText(gameType.getAddTenPullsResId());
+        }
     }
 
     private void updateDashboardLimits() {
@@ -652,6 +696,21 @@ public class JournalView extends Fragment {
                     }
                 }
 
+                if (appbarLayout != null && appbarLayout.getLayoutParams() instanceof CoordinatorLayout.LayoutParams) {
+                    CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appbarLayout.getLayoutParams();
+                    AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) lp.getBehavior();
+                    if (behavior == null) {
+                        behavior = new AppBarLayout.Behavior();
+                        lp.setBehavior(behavior);
+                    }
+                    behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+                        @Override
+                        public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
+                            return !isEmpty;
+                        }
+                    });
+                }
+
                 if (!isEmpty && (newList.size() > previousSize || bannerChanged)) {
                     recyclerView.post(() -> {
                         LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -698,18 +757,50 @@ public class JournalView extends Fragment {
 
         viewToShow.setAlpha(0f);
         viewToShow.setVisibility(View.VISIBLE);
+
+        if (viewToShow == emptyView && emptyContentView != null) {
+            emptyContentView.setScaleX(0.92f);
+            emptyContentView.setScaleY(0.92f);
+            emptyContentView.setAlpha(0f);
+            emptyContentView.animate()
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(240)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .setListener(null);
+        }
+
         viewToShow.animate()
                 .alpha(1f)
-                .setDuration(150)
+                .setDuration(240)
+                .setInterpolator(new DecelerateInterpolator())
                 .setListener(null);
+
+        if (viewToHide == emptyView && emptyContentView != null) {
+            emptyContentView.animate()
+                    .alpha(0f)
+                    .scaleX(0.92f)
+                    .scaleY(0.92f)
+                    .setDuration(220)
+                    .setInterpolator(new AccelerateInterpolator())
+                    .setListener(null);
+        }
 
         viewToHide.animate()
                 .alpha(0f)
-                .setDuration(150)
+                .setDuration(240)
+                .setInterpolator(new AccelerateInterpolator())
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         viewToHide.setVisibility(View.GONE);
+                        viewToHide.setAlpha(1f);
+                        if (emptyContentView != null) {
+                            emptyContentView.setScaleX(1f);
+                            emptyContentView.setScaleY(1f);
+                            emptyContentView.setAlpha(1f);
+                        }
                     }
                 });
     }

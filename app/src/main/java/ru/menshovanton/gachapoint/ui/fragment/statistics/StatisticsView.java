@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,6 +24,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -52,6 +55,14 @@ public class StatisticsView extends Fragment {
     private RecyclerView rvGameTypes;
     private PillsAdapter pillsAdapter;
 
+    private ScrollView svStatistics;
+    private Group groupStatisticsContent;
+    private View llStatisticsEmpty;
+    private TextView tvEmptyStatsTitle;
+    private TextView tvEmptyStatsDesc;
+    private MaterialButton btnEmptyStatsGoJournal;
+    private ImageButton btnShare;
+    private boolean isFirstLoad = true;
     private TextView tvTotalPullsCount;
     private TextView tvTotalCurrencySpent;
     private TextView tvLegendaryStat;
@@ -126,9 +137,26 @@ public class StatisticsView extends Fragment {
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
         ImageButton btnBack = view.findViewById(R.id.btn_back);
-        ImageButton btnShare = view.findViewById(R.id.btn_share);
+        btnShare = view.findViewById(R.id.btn_share);
+        svStatistics = view.findViewById(R.id.sv_statistics);
+
+        groupStatisticsContent = view.findViewById(R.id.group_statistics_content);
+        llStatisticsEmpty = view.findViewById(R.id.ll_statistics_empty);
+        tvEmptyStatsTitle = view.findViewById(R.id.tv_empty_stats_title);
+        tvEmptyStatsDesc = view.findViewById(R.id.tv_empty_stats_desc);
+        btnEmptyStatsGoJournal = view.findViewById(R.id.btn_empty_stats_go_journal);
+
+        if (btnEmptyStatsGoJournal != null) {
+            btnEmptyStatsGoJournal.setOnClickListener(v -> {
+                BottomNavigationView bnv = requireActivity().findViewById(R.id.bnv_main);
+                if (bnv != null) {
+                    bnv.setSelectedItemId(R.id.nav_journal);
+                }
+            });
+        }
 
         tvTotalPullsCount = view.findViewById(R.id.tv_total_pulls_count);
+
         tvTotalCurrencySpent = view.findViewById(R.id.tv_total_currency_spent);
         tvLegendaryStat = view.findViewById(R.id.tv_legendary_stat);
         tvLegendarySub = view.findViewById(R.id.tv_legendary_sub);
@@ -320,6 +348,40 @@ public class StatisticsView extends Fragment {
         if (data == null) return;
 
         GameType gameType = data.getGameType();
+        boolean isEmpty = data.getTotalPulls() <= 0;
+        boolean wasEmpty = llStatisticsEmpty != null && llStatisticsEmpty.getVisibility() == View.VISIBLE;
+        boolean wasContentVisible = groupStatisticsContent != null && groupStatisticsContent.getVisibility() == View.VISIBLE;
+
+        if (!isFirstLoad && (wasEmpty || wasContentVisible) && wasEmpty != isEmpty && getView() instanceof ViewGroup) {
+            android.transition.TransitionManager.beginDelayedTransition((ViewGroup) getView(),
+                    new android.transition.AutoTransition().setDuration(240));
+        }
+        isFirstLoad = false;
+
+        if (isEmpty) {
+            if (llStatisticsEmpty != null) llStatisticsEmpty.setVisibility(View.VISIBLE);
+            if (groupStatisticsContent != null) groupStatisticsContent.setVisibility(View.GONE);
+            if (btnShare != null) btnShare.setVisibility(View.GONE);
+            if (svStatistics != null) {
+                svStatistics.setNestedScrollingEnabled(false);
+                svStatistics.scrollTo(0, 0);
+            }
+
+            if (tvEmptyStatsTitle != null && gameType != null) {
+                tvEmptyStatsTitle.setText(gameType.getEmptyStatsTitleResId());
+            }
+            if (tvEmptyStatsDesc != null && gameType != null) {
+                tvEmptyStatsDesc.setText(gameType.getEmptyStatsDescResId());
+            }
+            return;
+        } else {
+            if (llStatisticsEmpty != null) llStatisticsEmpty.setVisibility(View.GONE);
+            if (groupStatisticsContent != null) groupStatisticsContent.setVisibility(View.VISIBLE);
+            if (btnShare != null) btnShare.setVisibility(View.VISIBLE);
+            if (svStatistics != null) {
+                svStatistics.setNestedScrollingEnabled(true);
+            }
+        }
 
         NumberCountAnimator.animate(tvTotalPullsCount, data.getTotalPulls(),
                 val -> String.format(Locale.getDefault(), "%,d", val).replace(',', ' '));
@@ -469,6 +531,14 @@ public class StatisticsView extends Fragment {
         }
         historyAdapter = null;
         btnHistoryToggle = null;
+        svStatistics = null;
+        groupStatisticsContent = null;
+        llStatisticsEmpty = null;
+        tvEmptyStatsTitle = null;
+        tvEmptyStatsDesc = null;
+        btnEmptyStatsGoJournal = null;
+        btnShare = null;
+        isFirstLoad = true;
         tvTotalPullsCount = null;
         tvTotalCurrencySpent = null;
         tvLegendaryStat = null;
