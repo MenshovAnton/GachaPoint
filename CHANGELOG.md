@@ -43,3 +43,12 @@
 - Precise Piggy Bank Currency Input: track exact currency amounts (Primogems, Stellar Jades, Polychromes) alongside pulls, featuring a quick-input dialog.
 - Stability & Compatibility: fixed storage permissions on Android 8–9 (API ≤ 28), added local diagnostic file logger, and optimized database sync lifecycles.
 - Piggy Bank Hotfix: cascading deduction of pulls and gems across all sources (including subscriptions and dailies), plus an option in the menu to clear auto-savings.
+
+# v0.2.2
+- In-App Help & FAQ: comprehensive visual guide explaining key GachaPoint features (Piggy Bank mechanics, Wish Journal, pity rules, database backups) located in the More menu.
+- Interactive Empty States: informative illustrated placeholders in Journal, Piggy Bank, and Statistics offering quick-action buttons for seamless onboarding.
+- Project Support: added a direct DonationAlerts link to the "About App" screen for anyone wishing to support future development.
+- Future Date Guard: confirmation prompt prevents accidental marking of subscriptions or daily tasks on future calendar dates.
+- Carousel & Navigation Stability: fixed carousel scroll conflicts when switching tabs and eliminated pill disappearance during fast navigation.
+- Compact Screen Adaptability: polished layout margins, text wrapping, and dialog sizing for small-screen and high-density devices.
+- Architecture & Database Optimization: streamlined Room initialization lifecycles, decoupled background WorkManager workers, and cleaned up unused dependencies.
