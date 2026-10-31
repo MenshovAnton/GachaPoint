@@ -400,7 +400,11 @@ public class HomeView extends Fragment {
                     pillsAdapter.setSelectedGame(game);
                     int pos = pillsAdapter.getPositionForGame(game);
                     if (pos != -1) {
-                        smoothScrollToCenter(pos);
+                        if (rvGameTypes != null && rvGameTypes.isLaidOut()) {
+                            smoothScrollToCenter(pos);
+                        } else {
+                            centerPositionInstantly(pos);
+                        }
                     }
                 }
                 if (viewModel != null && viewModel.getGameTypeLiveData().getValue() != game) {
@@ -662,6 +666,11 @@ public class HomeView extends Fragment {
 
         RecyclerView recyclerView = rvGameTypes != null ? rvGameTypes : (getView() != null ? getView().findViewById(R.id.rv_game_types) : null);
         if (recyclerView == null || getContext() == null) return;
+
+        if (!recyclerView.isLaidOut() || recyclerView.getWidth() == 0) {
+            centerPositionInstantly(targetPosition);
+            return;
+        }
 
         View targetChild = layoutManager.findViewByPosition(targetPosition);
         if (targetChild != null) {

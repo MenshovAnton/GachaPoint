@@ -107,6 +107,13 @@ public class PillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        holder.itemView.setAlpha(1.0f);
+        holder.itemView.setScaleX(1.0f);
+        holder.itemView.setScaleY(1.0f);
+        holder.itemView.setTranslationX(0f);
+        holder.itemView.setTranslationY(0f);
+        holder.itemView.setVisibility(View.VISIBLE);
+
         PillItem item = displayItems.get(position);
 
         if (holder instanceof SettingsViewHolder) {
@@ -163,6 +170,17 @@ public class PillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
+    public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        holder.itemView.setAlpha(1.0f);
+        holder.itemView.setScaleX(1.0f);
+        holder.itemView.setScaleY(1.0f);
+        holder.itemView.setTranslationX(0f);
+        holder.itemView.setTranslationY(0f);
+        holder.itemView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public int getItemCount() {
         return displayItems.size();
     }
@@ -199,6 +217,26 @@ public class PillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         List<PillItem> newList = buildDisplayItems(newGames);
         this.selectedGame = newSelectedGame;
 
+        boolean sameItems = (oldList.size() == newList.size());
+        if (sameItems) {
+            for (int i = 0; i < oldList.size(); i++) {
+                if (!oldList.get(i).equals(newList.get(i))) {
+                    sameItems = false;
+                    break;
+                }
+            }
+        }
+
+        if (sameItems) {
+            if (oldSelectedGame != newSelectedGame) {
+                int oldPos = getPositionForGame(oldSelectedGame);
+                int newPos = getPositionForGame(newSelectedGame);
+                if (oldPos != -1) notifyItemChanged(oldPos, PAYLOAD_SELECTION);
+                if (newPos != -1) notifyItemChanged(newPos, PAYLOAD_SELECTION);
+            }
+            return;
+        }
+
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -228,6 +266,12 @@ public class PillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 boolean wasSelected = (oldItem.gameType == oldSelectedGame);
                 boolean isSelected = (newItem.gameType == newSelectedGame);
                 return wasSelected == isSelected;
+            }
+
+            @NonNull
+            @Override
+            public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+                return PAYLOAD_SELECTION;
             }
         });
 

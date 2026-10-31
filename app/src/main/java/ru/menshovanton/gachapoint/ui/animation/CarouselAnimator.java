@@ -21,7 +21,7 @@ public class CarouselAnimator {
         animator.setAddDuration(240);
         animator.setRemoveDuration(200);
         animator.setMoveDuration(260);
-        animator.setChangeDuration(150);
+        animator.setChangeDuration(0);
         animator.setSupportsChangeAnimations(false);
         recyclerView.setItemAnimator(animator);
     }

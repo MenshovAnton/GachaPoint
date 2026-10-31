@@ -639,7 +639,11 @@ public class JournalView extends Fragment {
                     pillsAdapter.setSelectedGame(game);
                     int pos = pillsAdapter.getPositionForGame(game);
                     if (pos != -1) {
-                        smoothScrollToCenter(pos);
+                        if (rvGameTypes != null && rvGameTypes.isLaidOut()) {
+                            smoothScrollToCenter(pos);
+                        } else {
+                            centerPositionInstantly(pos);
+                        }
                     }
                 }
                 if (viewModel != null && viewModel.getCurrentGameType() != game) {
@@ -1116,6 +1120,11 @@ public class JournalView extends Fragment {
         if (pillsAdapter == null || gameTypesLayoutManager == null) return;
 
         if (rvGameTypes == null || getContext() == null) return;
+
+        if (!rvGameTypes.isLaidOut() || rvGameTypes.getWidth() == 0) {
+            centerPositionInstantly(targetPosition);
+            return;
+        }
 
         View targetChild = gameTypesLayoutManager.findViewByPosition(targetPosition);
         if (targetChild != null) {
