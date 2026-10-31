@@ -338,9 +338,20 @@ public class StatsReportGenerator {
         textPaint.setFakeBoldText(false);
         canvas.drawText(context.getString(R.string.stat_winrate_5050_label), padding + 28f, currentY + 42f, textPaint);
 
-        String winrateStr = (stats.getWin5050Count() + stats.getLoss5050Count() > 0)
-                ? String.format(Locale.getDefault(), "%.1f%%", stats.getWin5050Rate())
-                : "—";
+        boolean hasFiftyFifty = stats.getGameType() != null && stats.getGameType().hasAnyFiftyFifty();
+        String winrateStr;
+        String winrateCountStr;
+        if (stats.getWin5050Count() + stats.getLoss5050Count() > 0) {
+            winrateStr = String.format(Locale.getDefault(), "%.1f%%", stats.getWin5050Rate());
+            winrateCountStr = String.format(Locale.getDefault(), "%dW / %dL", stats.getWin5050Count(), stats.getLoss5050Count());
+        } else if (!hasFiftyFifty) {
+            winrateStr = context.getString(R.string.stat_winrate_no_5050);
+            winrateCountStr = context.getString(R.string.stat_winrate_no_5050_desc);
+        } else {
+            winrateStr = "—";
+            winrateCountStr = String.format(Locale.getDefault(), "%dW / %dL", 0, 0);
+        }
+
         textPaint.setColor(Color.parseColor("#4CAF50"));
         textPaint.setTextSize(42f);
         textPaint.setFakeBoldText(true);
@@ -349,7 +360,7 @@ public class StatsReportGenerator {
         textPaint.setColor(Color.parseColor("#8E9FBA"));
         textPaint.setTextSize(19f);
         textPaint.setFakeBoldText(false);
-        canvas.drawText(String.format(Locale.getDefault(), "%dW / %dL", stats.getWin5050Count(), stats.getLoss5050Count()), padding + 28f, currentY + 128f, textPaint);
+        canvas.drawText(winrateCountStr, padding + 28f, currentY + 128f, textPaint);
 
         textPaint.setColor(Color.parseColor("#8E9FBA"));
         textPaint.setTextSize(22f);

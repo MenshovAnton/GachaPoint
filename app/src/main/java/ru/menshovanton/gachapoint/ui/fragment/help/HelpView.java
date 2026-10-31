@@ -77,6 +77,11 @@ public class HelpView extends Fragment {
                 view.findViewById(R.id.content_help_radiance),
                 view.findViewById(R.id.iv_chevron_radiance)
         );
+        setupCollapsibleCard(
+                view.findViewById(R.id.header_help_hi3),
+                view.findViewById(R.id.content_help_hi3),
+                view.findViewById(R.id.iv_chevron_hi3)
+        );
 
         setupCollapsibleCard(
                 view.findViewById(R.id.header_help_savings),

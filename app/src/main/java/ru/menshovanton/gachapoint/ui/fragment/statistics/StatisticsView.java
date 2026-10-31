@@ -407,11 +407,15 @@ public class StatisticsView extends Fragment {
             tvEpicSub.setText(String.format(Locale.getDefault(), getString(R.string.stat_badge_sub_empty_count), getString(R.string.stat_subs_unit)));
         }
 
+        boolean hasFiftyFiftyMechanic = data.getGameType() != null && data.getGameType().hasAnyFiftyFifty();
         int total5050 = data.getWin5050Count() + data.getLoss5050Count();
         if (total5050 > 0) {
             NumberCountAnimator.animate(tvWinratePercent, Math.round(data.getWin5050Rate() * 10f),
                     val -> String.format(Locale.getDefault(), "%.1f%%", val / 10f));
             tvWinrateCounts.setText(String.format(Locale.getDefault(), "%dW / %dL", data.getWin5050Count(), data.getLoss5050Count()));
+        } else if (!hasFiftyFiftyMechanic) {
+            tvWinratePercent.setText(R.string.stat_winrate_no_5050);
+            tvWinrateCounts.setText(R.string.stat_winrate_no_5050_desc);
         } else {
             tvWinratePercent.setText("—");
             tvWinrateCounts.setText(getString(R.string.stat_empty_pulls));

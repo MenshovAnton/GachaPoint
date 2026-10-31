@@ -80,6 +80,22 @@ public class MigrationHelper {
         }
     };
 
+    public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(@NotNull SupportSQLiteDatabase database) {
+            AppLogger.i("MigrationHelper", "Starting Room database migration from version 3 to 4 (Honkai Impact 3rd support)...");
+            try {
+                database.execSQL("INSERT OR IGNORE INTO `games` (`id`, `code_name`, `display_name`) VALUES (3, 'HI3', 'HI3')");
+                database.execSQL("INSERT OR IGNORE INTO `savings` (`game_type`, `target`, `manual_progress`, `subs_progress`, `dailies_progress`, `manual_gems`) " +
+                        "VALUES (3, 0, 0, 0, 0, 0)");
+                AppLogger.i("MigrationHelper", "Room database migration 3 -> 4 completed successfully.");
+            } catch (Throwable t) {
+                AppLogger.e("MigrationHelper", "Room database migration 3 -> 4 FAILED!", t);
+                throw t;
+            }
+        }
+    };
+
     public static void migrateLegacyCalendarAndSchemaIfNeeded(SupportSQLiteDatabase database) {
         boolean hasGameStatus = false;
         try (android.database.Cursor cur = database.query(new SimpleSQLiteQuery(
@@ -123,6 +139,7 @@ public class MigrationHelper {
             database.execSQL("INSERT OR IGNORE INTO `games` (`id`, `code_name`, `display_name`) VALUES (0, 'GENSHIN', 'Genshin')");
             database.execSQL("INSERT OR IGNORE INTO `games` (`id`, `code_name`, `display_name`) VALUES (1, 'HSR', 'HSR')");
             database.execSQL("INSERT OR IGNORE INTO `games` (`id`, `code_name`, `display_name`) VALUES (2, 'ZZZ', 'ZZZ')");
+            database.execSQL("INSERT OR IGNORE INTO `games` (`id`, `code_name`, `display_name`) VALUES (3, 'HI3', 'HI3')");
 
             database.execSQL(
                     "CREATE TEMP TABLE `calendar_temp_status` AS " +
@@ -228,7 +245,7 @@ public class MigrationHelper {
             );
 
             database.execSQL("INSERT OR IGNORE INTO `savings` (`game_type`, `target`, `manual_progress`, `subs_progress`, `dailies_progress`, `manual_gems`) " +
-                    "VALUES (0, 0, 0, 0, 0, 0), (1, 0, 0, 0, 0, 0), (2, 0, 0, 0, 0, 0)");
+                    "VALUES (0, 0, 0, 0, 0, 0), (1, 0, 0, 0, 0, 0), (2, 0, 0, 0, 0, 0), (3, 0, 0, 0, 0, 0)");
 
             syncSubscriptionsRaw(database);
             database.setTransactionSuccessful();

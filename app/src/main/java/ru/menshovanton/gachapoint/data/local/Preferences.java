@@ -41,6 +41,7 @@ public class Preferences {
     public static final String DEFAULT_HOME_WIDGETS = "quick_actions:true,savings:true,statistics:true,pity:true";
 
     public static final String KEY_LEGACY_DATA_SYNCED = "legacy_data_synced_v3";
+    public static final String KEY_HI3_DEFAULT_ADDED = "hi3_default_added_v1";
 
     private final SharedPreferences settings;
 
@@ -65,6 +66,12 @@ public class Preferences {
         }
         if (list.isEmpty()) {
             list.addAll(Arrays.asList(GameType.values()));
+        } else if (!settings.getBoolean(KEY_HI3_DEFAULT_ADDED, false)) {
+            settings.edit().putBoolean(KEY_HI3_DEFAULT_ADDED, true).apply();
+            if (!list.contains(GameType.HI3)) {
+                list.add(GameType.HI3);
+                setEnabledGames(list);
+            }
         }
         return list;
     }

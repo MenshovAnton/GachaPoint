@@ -2,9 +2,9 @@
 
     <!-- General & Navigation -->
     <string name="app_name" translatable="false">GachaPoint</string>
-    <string name="app_version" translatable="false">v0.2.2</string>
-    <string name="description">GachaPoint is an open-source companion app for players of Genshin Impact, Honkai: Star Rail, and Zenless Zone Zero. It helps you manage daily subscription rewards, maintain detailed wish histories and pity counters, and plan your savings toward upcoming banners.</string>
-    <string name="copyright_info">© 2024–2026 Menshov Anton. Licensed under the Apache-2.0 License.\n\nAll rights to Genshin Impact™, Honkai: Star Rail™, Zenless Zone Zero™, their respective logos, characters, names, and visual assets belong to COGNOSPHERE PTE. LTD. and miHoYo Co., Ltd. GachaPoint is an independent fan-made project and is not affiliated with, endorsed by, or sponsored by HoYoverse or miHoYo.</string>
+    <string name="app_version" translatable="false">v0.3.0</string>
+    <string name="description">GachaPoint is an open-source companion app for players of Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, and Honkai Impact 3rd. It helps you manage daily subscription rewards, maintain detailed wish histories and pity counters, and plan your savings toward upcoming banners.</string>
+    <string name="copyright_info">© 2024–2026 Menshov Anton. Licensed under the Apache-2.0 License.\n\nAll rights to Genshin Impact™, Honkai: Star Rail™, Zenless Zone Zero™, Honkai Impact 3rd™, their respective logos, characters, names, and visual assets belong to COGNOSPHERE PTE. LTD. and miHoYo Co., Ltd. GachaPoint is an independent fan-made project and is not affiliated with, endorsed by, or sponsored by HoYoverse or miHoYo.</string>
     <string name="nav_home">Home</string>
     <string name="nav_tracker">Calendar</string>
     <string name="nav_journal">Pulls history</string>
@@ -14,6 +14,7 @@
     <string name="genshin" translatable="false">Genshin Impact</string>
     <string name="hsr" translatable="false">Honkai Star Rail</string>
     <string name="zzz" translatable="false">Zenless Zone Zero</string>
+    <string name="hi3" translatable="false">Honkai Impact 3rd</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
@@ -82,9 +83,11 @@
     <string name="sub_name_genshin">Blessing of the Welkin Moon</string>
     <string name="sub_name_hsr">Express Supply Pass</string>
     <string name="sub_name_zzz">Inter-Knot Membership</string>
+    <string name="sub_name_hi3">Monthly Card</string>
     <string name="blessing_of_the_welkin_moon_count_header">Number of moons:</string>
     <string name="star_rail_special_pass_count_header">Number of express passes:</string>
     <string name="inter_knot_member_count_header">Number of Inter-Knot subs:</string>
+    <string name="hi3_monthly_card_count_header">Number of monthly cards:</string>
     <string name="sheet_header_actions">Actions</string>
     <string name="sheet_header_edit">Edit</string>
     <string name="check_button_text">Mark</string>
@@ -169,11 +172,17 @@
     <string name="empty_journal_add_one_zzz">+1 search</string>
     <string name="empty_journal_add_ten_zzz">+10 searches</string>
 
+    <string name="empty_journal_title_hi3">Supply history is empty</string>
+    <string name="empty_journal_desc_hi3">Your supply drops and pity counter will appear here. Tap a button below to add your first record.</string>
+    <string name="empty_journal_add_one_hi3">+1 drop</string>
+    <string name="empty_journal_add_ten_hi3">+10 drops</string>
+
     <!-- Empty Piggy Bank Goal -->
     <string name="empty_savings_goal_title">Savings goal is not set</string>
     <string name="empty_savings_goal_desc_genshin">Select the target pity multiplier (1, 2, or 6) to track your progress in wishes and primogems.</string>
     <string name="empty_savings_goal_desc_hsr">Select the target pity multiplier (1, 2, or 6) to track your progress in warps and stellar jade.</string>
     <string name="empty_savings_goal_desc_zzz">Select the target pity multiplier (1, 2, or 6) to track your progress in signal searches and polychromes.</string>
+    <string name="empty_savings_goal_desc_hi3">Select the target pity multiplier (1, 2, or 6) to track your progress in supply drops and crystals.</string>
     <string name="empty_savings_goal_btn">Set goal</string>
 
     <!-- Empty Statistics -->
@@ -183,6 +192,8 @@
     <string name="empty_stats_desc_hsr">Record your warps in the Journal and track days in the Calendar to see 50/50 win rates, average pity, and banner analytics.</string>
     <string name="empty_stats_title_zzz">Not enough data for statistics</string>
     <string name="empty_stats_desc_zzz">Record your signal searches in the Journal and track days in the Calendar to see 50/50 win rates, average pity, and banner analytics.</string>
+    <string name="empty_stats_title_hi3">Not enough data for statistics</string>
+    <string name="empty_stats_desc_hi3">Record your supply drops in the Journal and track days in the Calendar to see average pity and banner analytics.</string>
     <string name="empty_stats_title_default">Not enough data for statistics</string>
     <string name="empty_stats_desc_default">Record your pulls in the Journal and track days in the Calendar to see 50/50 win rates, average pity, and banner analytics.</string>
     <string name="empty_stats_btn_go_journal">Open Journal</string>
@@ -210,6 +221,11 @@
     <string name="banner_type_zzz_std">Stable Channel</string>
     <string name="banner_type_zzz_novice">Subsidized Channel</string>
     <string name="banner_type_zzz_bangboo">Bangboo Channel</string>
+    <string name="banner_type_hi3_event">Battlesuit Supply</string>
+    <string name="banner_type_hi3_weapon">Equipment Supply</string>
+    <string name="banner_type_hi3_std">Dorm Supply</string>
+    <string name="banner_type_hi3_novice">Starter Supply</string>
+    <string name="banner_type_hi3_astralop">AstralOP / ELF Supply</string>
     <string name="banner_type_spec">Special</string>
     <string name="pity_status_none">None</string>
     <string name="pity_status_win">Won 50/50</string>
@@ -267,6 +283,7 @@
     <string name="currency_name_genshin">Primogems</string>
     <string name="currency_name_hsr">Stellar Jade</string>
     <string name="currency_name_zzz">Polychromes</string>
+    <string name="currency_name_hi3">Crystals</string>
     <string name="savings_reset_confirm">Reset current savings goal and progress?</string>
     <string name="goal_not_set_or_reached">Target not set or reached</string>
     <string name="remark_piggy_bank">Pity 1x = 77 pulls</string>
@@ -480,6 +497,8 @@
     <string name="stat_section_rarity_title">Rarity Breakdown</string>
     <string name="stat_section_luck_title">50/50 &amp; Guarantee Luck</string>
     <string name="stat_winrate_5050_label">50/50 Win Rate</string>
+    <string name="stat_winrate_no_5050">100%</string>
+    <string name="stat_winrate_no_5050_desc">No 50/50 system</string>
     <string name="stat_avg_pity_label">Average 5★ Pity</string>
     <string name="stat_pity_pulls_unit">pulls</string>
     <string name="stat_pity_range">Range: %1$d – %2$d</string>
@@ -563,6 +582,10 @@
     <string name="help_mech_radiance_title">Capturing Radiance (Genshin Impact)</string>
     <string name="help_mech_radiance_summary">Bad luck protection in Genshin Impact 5.0+</string>
     <string name="help_mech_radiance_detail">• From version 5.0 onward, Genshin Impact includes «Capturing Radiance» (indicated by a special animation on the banner).\n\n• When a 50/50 loss would occur, an additional background check may flip the result into a featured character win, lifting the overall effective 50/50 winrate to around 55%.</string>
+
+    <string name="help_mech_hi3_title">Honkai Impact 3rd Mechanics</string>
+    <string name="help_mech_hi3_summary">No 50/50, 90 Battlesuit &amp; 60 Equipment pity</string>
+    <string name="help_mech_hi3_detail">• Battlesuit Supply: Guaranteed S-Rank Valkyrie at 90 drops (soft pity starts at ~75). There is NO 50/50 mechanic — when an S-rank drops, you are 100% guaranteed to receive the featured Valkyrie!\n\n• Equipment Supply: Hard pity is 60 drops for the featured weapon (soft pity at ~45) with guaranteed 4★ equipment every 10 drops.\n\n• Supply Cost: 1 supply drop costs 280 Crystals (10 drops = 2800 Crystals).\n\n• Monthly Card: Gives 60 Crystals daily (for 30 days), and Daily Duty gives 40 Crystals daily (at 150 Duty points).</string>
 
     <string name="help_faq_savings_title">Savings Calculation Formula</string>
     <string name="help_faq_savings_summary">Balance from three sources and pity presets (1x, 2x, 6x)</string>

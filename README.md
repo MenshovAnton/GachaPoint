@@ -7,7 +7,7 @@
 <h1 align="center">GachaPoint</h1>
 
 <p align="center">
-  An open-source companion app for Genshin Impact, Honkai: Star Rail, and Zenless Zone Zero.
+  An open-source companion app for Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, and Honkai Impact 3rd.
 </p>
 
 <p align="center">
@@ -33,7 +33,7 @@
 
 ## Key Features
 
-- **Subscriptions & Dailies Calendar:** Keep track of daily pass claims (Welkin Moon, Express Supply Pass, Inter-Knot Membership) and daily commissions, monitor missed days, and forecast upcoming resource yields.
+- **Subscriptions & Dailies Calendar:** Keep track of daily pass claims (Welkin Moon, Express Supply Pass, Inter-Knot Membership, Monthly Card) and daily commissions, monitor missed days, and forecast upcoming resource yields.
 - **Pulls & Pity Tracker:** Save summon/wish history across all banner types (event, weapon, standard, and bangboo), with intuitive visual pity gauges (5★ and 4★) and 50/50 win-rate calculation.
 - **Savings & Goals:** Monitor saved resources both in raw pulls and currency equivalents, define saving goals for upcoming characters, and use the quick conversion calculator.
 - **Analytics & Statistics:** Detailed insights including currency expenditure, 50/50 win-rate percentages, average pulls per 5-star drop, and banner roll distribution.

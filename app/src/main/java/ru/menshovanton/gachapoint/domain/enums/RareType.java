@@ -23,9 +23,15 @@ public enum RareType {
     }
 
     public static RareType from(String rarity, Context context) {
-        if (context.getString(R.string.four_star).equalsIgnoreCase(rarity)) {
+        if (rarity == null) {
+            return DEFAULT;
+        }
+        String clean = rarity.trim();
+        if (context.getString(R.string.four_star).equalsIgnoreCase(clean)
+                || "A".equalsIgnoreCase(clean) || "A-Rank".equalsIgnoreCase(clean) || "A-ранг".equalsIgnoreCase(clean)) {
             return EPIC;
-        } else if (context.getString(R.string.five_star).equalsIgnoreCase(rarity)) {
+        } else if (context.getString(R.string.five_star).equalsIgnoreCase(clean)
+                || "S".equalsIgnoreCase(clean) || "S-Rank".equalsIgnoreCase(clean) || "S-ранг".equalsIgnoreCase(clean)) {
             return LEGENDARY;
         } else {
             return DEFAULT;

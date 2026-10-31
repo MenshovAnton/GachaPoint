@@ -81,6 +81,29 @@ public enum GameType {
                     new BannerInfo(BannerType.BANGBOO, R.string.banner_type_zzz_bangboo, 80, 65, 10, false),
                     new BannerInfo(BannerType.SPECIAL, R.string.banner_type_spec, 90, 74, 10, false)
             )
+    ),
+    HI3(
+            3,
+            "HI3",
+            60,
+            280,
+            6,
+            40,
+            30,
+            75,
+            R.string.hi3,
+            R.drawable.icon_hi3_crystal,
+            R.drawable.icon_hi3_supply_card,
+            R.string.hi3_monthly_card_count_header,
+            R.string.sub_name_hi3,
+            Arrays.asList(
+                    new BannerInfo(BannerType.EVENT, R.string.banner_type_hi3_event, 90, 75, 10, false),
+                    new BannerInfo(BannerType.WEAPON, R.string.banner_type_hi3_weapon, 60, 45, 10, false),
+                    new BannerInfo(BannerType.STANDARD, R.string.banner_type_hi3_std, 100, 75, 10, false),
+                    new BannerInfo(BannerType.BEGINNER, R.string.banner_type_hi3_novice, 90, 75, 10, false),
+                    new BannerInfo(BannerType.BANGBOO, R.string.banner_type_hi3_astralop, 60, 45, 10, false),
+                    new BannerInfo(BannerType.SPECIAL, R.string.banner_type_spec, 90, 75, 10, false)
+            )
     );
 
     private final int code;
@@ -204,6 +227,8 @@ public enum GameType {
                 return R.string.currency_name_hsr;
             case ZZZ:
                 return R.string.currency_name_zzz;
+            case HI3:
+                return R.string.currency_name_hi3;
             case GENSHIN:
             default:
                 return R.string.currency_name_genshin;
@@ -269,6 +294,8 @@ public enum GameType {
                 return R.string.empty_journal_title_hsr;
             case ZZZ:
                 return R.string.empty_journal_title_zzz;
+            case HI3:
+                return R.string.empty_journal_title_hi3;
             case GENSHIN:
             default:
                 return R.string.empty_journal_title_genshin;
@@ -282,6 +309,8 @@ public enum GameType {
                 return R.string.empty_journal_desc_hsr;
             case ZZZ:
                 return R.string.empty_journal_desc_zzz;
+            case HI3:
+                return R.string.empty_journal_desc_hi3;
             case GENSHIN:
             default:
                 return R.string.empty_journal_desc_genshin;
@@ -295,6 +324,8 @@ public enum GameType {
                 return R.string.empty_journal_add_one_hsr;
             case ZZZ:
                 return R.string.empty_journal_add_one_zzz;
+            case HI3:
+                return R.string.empty_journal_add_one_hi3;
             case GENSHIN:
             default:
                 return R.string.empty_journal_add_one_genshin;
@@ -308,6 +339,8 @@ public enum GameType {
                 return R.string.empty_journal_add_ten_hsr;
             case ZZZ:
                 return R.string.empty_journal_add_ten_zzz;
+            case HI3:
+                return R.string.empty_journal_add_ten_hi3;
             case GENSHIN:
             default:
                 return R.string.empty_journal_add_ten_genshin;
@@ -321,6 +354,8 @@ public enum GameType {
                 return R.string.empty_savings_goal_desc_hsr;
             case ZZZ:
                 return R.string.empty_savings_goal_desc_zzz;
+            case HI3:
+                return R.string.empty_savings_goal_desc_hi3;
             case GENSHIN:
             default:
                 return R.string.empty_savings_goal_desc_genshin;
@@ -334,6 +369,8 @@ public enum GameType {
                 return R.string.empty_stats_title_hsr;
             case ZZZ:
                 return R.string.empty_stats_title_zzz;
+            case HI3:
+                return R.string.empty_stats_title_hi3;
             case GENSHIN:
                 return R.string.empty_stats_title_genshin;
             default:
@@ -348,10 +385,21 @@ public enum GameType {
                 return R.string.empty_stats_desc_hsr;
             case ZZZ:
                 return R.string.empty_stats_desc_zzz;
+            case HI3:
+                return R.string.empty_stats_desc_hi3;
             case GENSHIN:
                 return R.string.empty_stats_desc_genshin;
             default:
                 return R.string.empty_stats_desc_default;
         }
+    }
+
+    public boolean hasAnyFiftyFifty() {
+        for (BannerInfo banner : banners) {
+            if (banner.hasFiftyFifty()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

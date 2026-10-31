@@ -2,8 +2,8 @@
 <resources>
 
     <!-- General & Navigation -->
-    <string name="description">GachaPoint — приложение-компаньон с открытым исходным кодом для игроков в Genshin Impact, Honkai: Star Rail и Zenless Zone Zero. Помогает контролировать сбор наград по ежедневным подпискам, вести детальный учет истории молитв и гаранта, а также планировать накопления к желанным баннерам.</string>
-    <string name="copyright_info">© 2024–2026 Menshov Anton. Распространяется под лицензией Apache-2.0.\n\nВсе права на Genshin Impact™, Honkai: Star Rail™, Zenless Zone Zero™, их наименования, графические ресурсы и товарные знаки принадлежат COGNOSPHERE PTE. LTD. и miHoYo Co., Ltd. GachaPoint является независимым фанатским проектом, не связан с разработчиками или издателями игр и не спонсируется ими.</string>
+    <string name="description">GachaPoint — приложение-компаньон с открытым исходным кодом для игроков в Genshin Impact, Honkai: Star Rail, Zenless Zone Zero и Honkai Impact 3rd. Помогает контролировать сбор наград по ежедневным подпискам, вести детальный учет истории молитв и гаранта, а также планировать накопления к желанным баннерам.</string>
+    <string name="copyright_info">© 2024–2026 Menshov Anton. Распространяется под лицензией Apache-2.0.\n\nВсе права на Genshin Impact™, Honkai: Star Rail™, Zenless Zone Zero™, Honkai Impact 3rd™, их наименования, графические ресурсы и товарные знаки принадлежат COGNOSPHERE PTE. LTD. и miHoYo Co., Ltd. GachaPoint является независимым фанатским проектом, не связан с разработчиками или издателями игр и не спонсируется ими.</string>
     <string name="nav_home">Домашняя</string>
     <string name="nav_tracker">Календарь</string>
     <string name="nav_journal">Журнал круток</string>
@@ -77,9 +77,11 @@
     <string name="sub_name_genshin">Благословение полой луны</string>
     <string name="sub_name_hsr">Пропуск снабжения экспресса</string>
     <string name="sub_name_zzz">Интернот-подписка</string>
+    <string name="sub_name_hi3">Месячная карта</string>
     <string name="blessing_of_the_welkin_moon_count_header">Кол-во лун:</string>
     <string name="star_rail_special_pass_count_header">Кол-во пропусков экспресса:</string>
     <string name="inter_knot_member_count_header">Кол-во интернот-подписок:</string>
+    <string name="hi3_monthly_card_count_header">Кол-во месячных карт:</string>
     <string name="sheet_header_actions">Действия</string>
     <string name="sheet_header_edit">Правка</string>
     <string name="check_button_text">Отметка</string>
@@ -164,11 +166,17 @@
     <string name="empty_journal_add_one_zzz">+1 сигнал</string>
     <string name="empty_journal_add_ten_zzz">+10 сигналов</string>
 
+    <string name="empty_journal_title_hi3">История снабжения пуста</string>
+    <string name="empty_journal_desc_hi3">Здесь будут отображаться ваши поставки и отсчет до валькирии или снаряжения S-ранга. Нажмите кнопку ниже, чтобы внести первую запись.</string>
+    <string name="empty_journal_add_one_hi3">+1 поставка</string>
+    <string name="empty_journal_add_ten_hi3">+10 поставок</string>
+
     <!-- Empty Piggy Bank Goal -->
     <string name="empty_savings_goal_title">Цель накоплений не установлена</string>
     <string name="empty_savings_goal_desc_genshin">Выберите количество гарантов (1, 2 или 6), чтобы отслеживать прогресс накопленных молитв и камней истока.</string>
     <string name="empty_savings_goal_desc_hsr">Выберите количество гарантов (1, 2 или 6), чтобы отслеживать прогресс накопленных прыжков и звездного нефрита.</string>
     <string name="empty_savings_goal_desc_zzz">Выберите количество гарантов (1, 2 или 6), чтобы отслеживать прогресс накопленных поисков сигнала и полихромов.</string>
+    <string name="empty_savings_goal_desc_hi3">Выберите количество гарантов (1, 2 или 6), чтобы отслеживать прогресс накопленных поставок и кристаллов.</string>
     <string name="empty_savings_goal_btn">Поставить цель</string>
 
     <!-- Empty Statistics -->
@@ -178,6 +186,8 @@
     <string name="empty_stats_desc_hsr">Вносите свои прыжки в Журнал и отмечайте дни в Календаре, чтобы здесь появился детальный анализ удачи, винрейт 50/50 и распределение по баннерам.</string>
     <string name="empty_stats_title_zzz">Недостаточно данных для статистики</string>
     <string name="empty_stats_desc_zzz">Вносите результаты поиска сигналов в Журнал и отмечайте дни в Календаре, чтобы здесь появился детальный анализ удачи, винрейт 50/50 и распределение по баннерам.</string>
+    <string name="empty_stats_title_hi3">Недостаточно данных для статистики</string>
+    <string name="empty_stats_desc_hi3">Записывайте поставки в Журнал и отмечайте дни в Календаре, чтобы видеть средний гарант и аналитику снабжения.</string>
     <string name="empty_stats_title_default">Недостаточно данных для статистики</string>
     <string name="empty_stats_desc_default">Вносите свои крутки в Журнал и отмечайте дни в Календаре, чтобы здесь появился детальный анализ удачи, винрейт 50/50 и распределение по баннерам.</string>
     <string name="empty_stats_btn_go_journal">Перейти в журнал</string>
@@ -203,6 +213,11 @@
     <string name="banner_type_zzz_std">Стандартный поиск</string>
     <string name="banner_type_zzz_novice">Поиск новичка</string>
     <string name="banner_type_zzz_bangboo">Поиск Банбу</string>
+    <string name="banner_type_hi3_event">Поставка боекостюма</string>
+    <string name="banner_type_hi3_weapon">Поставка снаряжения</string>
+    <string name="banner_type_hi3_std">Снабжение общежития</string>
+    <string name="banner_type_hi3_novice">Снабжение новичка</string>
+    <string name="banner_type_hi3_astralop">Поставка AstralOP / Ассистента</string>
     <string name="banner_type_spec">Специальный</string>
     <string name="pity_status_none">Нет</string>
     <string name="pity_status_win">Выигрыш 50/50</string>
@@ -252,6 +267,7 @@
     <string name="currency_name_genshin">Камни Истока</string>
     <string name="currency_name_hsr">Звёздный нефрит</string>
     <string name="currency_name_zzz">Полихромы</string>
+    <string name="currency_name_hi3">Кристаллы</string>
     <string name="savings_reset_confirm">Сбросить текущую цель и накопленные крутки?</string>
     <string name="goal_not_set_or_reached">Цель не установлена или не достигнута</string>
     <string name="remark_piggy_bank">Гарант 1x = 77 круток</string>
@@ -443,6 +459,8 @@
     <string name="stat_section_rarity_title">Распределение редкости</string>
     <string name="stat_section_luck_title">Удача и гарант</string>
     <string name="stat_winrate_5050_label">Винрейт 50/50</string>
+    <string name="stat_winrate_no_5050">100%</string>
+    <string name="stat_winrate_no_5050_desc">Без системы 50/50</string>
     <string name="stat_avg_pity_label">Средний гарант 5★</string>
     <string name="stat_pity_pulls_unit">круток</string>
     <string name="stat_pity_range">Диапазон: %1$d – %2$d</string>
@@ -526,6 +544,10 @@
     <string name="help_mech_radiance_title">Пленительное сияние (Genshin Impact)</string>
     <string name="help_mech_radiance_summary">Защита от серий проигрышей в Genshin Impact 5.0+</string>
     <string name="help_mech_radiance_detail">• Начиная с версии 5.0 в Genshin Impact действует скрытая механика «Capturing Radiance» (анимация с радугой на баннере).\n\n• При потенциальном проигрыше 50/50 система проводит дополнительную проверку, которая может обратить проигрыш в победу. Это повышает фактический процент побед в 50/50 примерно до 55% на дистанции.</string>
+
+    <string name="help_mech_hi3_title">Механики Honkai Impact 3rd</string>
+    <string name="help_mech_hi3_summary">Без 50/50, гарант 90 на валькирию и 60 на оружие</string>
+    <string name="help_mech_hi3_detail">• Поставка боекостюма (Battlesuit Supply): Гарант валькирии S-ранга — 90 поставок (софт-гарант с ~75-й). Механика 50/50 ОТСУТСТВУЕТ — при выпадении S-ранга вы со 100% вероятностью получаете целевую валькирию баннера!\n\n• Поставка снаряжения (Equipment Supply): Жесткий гарант на сигнатурное оружие — 60 поставок (софт с ~45-й), каждые 10 поставок гарантирована 4★ экипировка.\n\n• Стоимость снабжения: 1 поставка стоит 280 кристаллов (10 поставок = 2800 кристаллов).\n\n• Месячная карта дает 60 кристаллов в день (30 дней), а ежедневные задания (Duty) приносят 40 кристаллов в день (на 150 очков Duty).</string>
 
     <string name="help_faq_savings_title">Формула накоплений в Копилке</string>
     <string name="help_faq_savings_summary">Баланс из трех источников и пресеты гарантов (1x, 2x, 6x)</string>
