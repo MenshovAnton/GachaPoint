@@ -145,6 +145,10 @@ public enum GameType {
         return code;
     }
 
+    public int getId() {
+        return code;
+    }
+
     public String getName() {
         return name;
     }
@@ -156,6 +160,10 @@ public enum GameType {
             }
         }
         return GENSHIN;
+    }
+
+    public static GameType fromId(int id) {
+        return fromCode(id);
     }
 
     public int getCurrencyPerDay() {
@@ -215,8 +223,18 @@ public enum GameType {
         return nameResId;
     }
 
+    @StringRes
+    public int getDisplayNameResId() {
+        return nameResId;
+    }
+
     @DrawableRes
     public int getCurrencyIconResId() {
+        return currencyIconResId;
+    }
+
+    @DrawableRes
+    public int getPrimaryCurrencyDrawableResId() {
         return currencyIconResId;
     }
 

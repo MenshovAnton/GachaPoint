@@ -28,6 +28,7 @@ public class MoreView extends Fragment {
     private View rowStatistics;
     private View rowCalculator;
     private View rowPromocodes;
+    private View rowBanners;
 
     public MoreView() {}
 
@@ -54,6 +55,7 @@ public class MoreView extends Fragment {
         rowStatistics = view.findViewById(R.id.row_statistics);
         rowCalculator = view.findViewById(R.id.row_calculator);
         rowPromocodes = view.findViewById(R.id.row_promocodes);
+        rowBanners = view.findViewById(R.id.row_banners);
 
         if (rowSavings != null) {
             rowSavings.setOnClickListener(v -> viewModel.onSavingsButtonClicked());
@@ -90,6 +92,12 @@ public class MoreView extends Fragment {
 
         viewModel.getNavigateToStatisticsEvent().observe(getViewLifecycleOwner(), unused ->
                 NavHostFragment.findNavController(this).navigate(R.id.action_to_statistics));
+
+        viewModel.getNavigateToPromocodesEvent().observe(getViewLifecycleOwner(), unused ->
+                NavHostFragment.findNavController(this).navigate(R.id.action_to_promocodes));
+
+        viewModel.getNavigateToBannersEvent().observe(getViewLifecycleOwner(), unused ->
+                NavHostFragment.findNavController(this).navigate(R.id.action_to_banners));
     }
 
     private void setupListeners() {
@@ -110,11 +118,18 @@ public class MoreView extends Fragment {
             rowStatistics.setOnClickListener(v -> viewModel.onStatisticsButtonClicked());
         }
 
+        if (rowPromocodes != null) {
+            rowPromocodes.setOnClickListener(v -> viewModel.onPromocodesButtonClicked());
+        }
+
+        if (rowBanners != null) {
+            rowBanners.setOnClickListener(v -> viewModel.onBannersButtonClicked());
+        }
+
         View.OnClickListener comingSoonListener = v ->
                 Toast.makeText(requireContext(), R.string.menu_feature_in_dev, Toast.LENGTH_SHORT).show();
 
         if (rowCalculator != null) rowCalculator.setOnClickListener(comingSoonListener);
-        if (rowPromocodes != null) rowPromocodes.setOnClickListener(comingSoonListener);
     }
 
     @Override

@@ -17,7 +17,7 @@
     <color name="text">#FFFFFF</color>
     <color name="text_secondary">#9E9E9E</color>
     <color name="divider_color">#1FFFFFFF</color>
-    <color name="card_background_light">#EAEDF0</color>
+    <color name="card_background_light">#202020</color>
     <color name="sheet_card_background">#222222</color>
     <color name="badge_gold_bg">#332510</color>
     <color name="badge_purple_bg">#281636</color>

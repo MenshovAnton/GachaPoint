@@ -25,6 +25,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
@@ -40,7 +41,12 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
+
+import ru.menshovanton.gachapoint.data.repository.CatalogRepository;
+import ru.menshovanton.gachapoint.domain.models.CatalogItem;
+import ru.menshovanton.gachapoint.ui.common.HapticHelper;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -170,6 +176,13 @@ public class JournalView extends Fragment {
 
         btnAdd.setOnClickListener(this::showMoreMenu);
         btnScrollTop.setOnClickListener(v -> scrollToTop());
+
+        if (cardBannerDashboard != null) {
+            cardBannerDashboard.setOnClickListener(v -> {
+                HapticHelper.performClickHaptic(requireContext(), v);
+                NavHostFragment.findNavController(this).navigate(R.id.action_journal_to_banners);
+            });
+        }
 
         if (btnEmptyAddOne != null) {
             btnEmptyAddOne.setOnClickListener(v -> viewModel.saveOneWish());
@@ -673,6 +686,8 @@ public class JournalView extends Fragment {
             lastLoadedBannerKey = currentBannerKey;
             int previousSize = pullsAdapter.getItemCount();
 
+            pullsAdapter.setCurrentGameType(viewModel.getCurrentGameType());
+
             List<Pull> newList = new ArrayList<>(pulls);
             pullsAdapter.submitList(newList, () -> {
                 progressBar.setVisibility(View.GONE);
@@ -718,15 +733,8 @@ public class JournalView extends Fragment {
                 if (!isEmpty && (newList.size() > previousSize || bannerChanged)) {
                     recyclerView.post(() -> {
                         LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
-                        int firstVisible = lm != null ? lm.findFirstVisibleItemPosition() : 0;
-                        if (firstVisible > 0) {
-                            recyclerView.smoothScrollToPosition(0);
-                        }
-                        if (appbarLayout != null) {
-                            appbarLayout.setExpanded(true, true);
-                        }
-                        if (btnScrollTop != null && btnScrollTop.getVisibility() == View.VISIBLE) {
-                            btnScrollTop.hide();
+                        if (lm != null) {
+                            lm.scrollToPositionWithOffset(0, 0);
                         }
                     });
                 }
@@ -835,6 +843,7 @@ public class JournalView extends Fragment {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void showWishDialog(@Nullable Pull wishToEdit, @Nullable String defaultRarity, boolean isBatch) {
         BottomSheetDialog dialog = new BottomSheetDialog(requireContext(), R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
         @SuppressLint("InflateParams") View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_pull_record, null);
@@ -860,7 +869,7 @@ public class JournalView extends Fragment {
         MaterialButtonToggleGroup toggleRarity = dialogView.findViewById(R.id.toggle_rarity);
         View pityStatusContainer = dialogView.findViewById(R.id.ll_pity_status_container);
         MaterialButtonToggleGroup togglePityStatus = dialogView.findViewById(R.id.toggle_pity_status);
-        TextInputEditText editDropType = dialogView.findViewById(R.id.tiet_drop_name_edit);
+        MaterialAutoCompleteTextView editDropType = dialogView.findViewById(R.id.tiet_drop_name_edit);
         TextInputEditText editDate = dialogView.findViewById(R.id.tiet_edit_date);
         MaterialButton btnSave = dialogView.findViewById(R.id.btn_save_pull);
 
@@ -1004,13 +1013,45 @@ public class JournalView extends Fragment {
         updateOutcomeVisibility.accept(false);
         editDate.setText(selectedDate[0].format(displayFormatter));
 
+        GameType currentGameType = viewModel.getCurrentGameType();
+        CatalogRepository catalogRepo = CatalogRepository.getInstance(requireContext());
+
+        List<CatalogItem> catalogItems = catalogRepo.getItemsForGame(currentGameType);
+        CatalogAutoCompleteAdapter autoAdapter = new CatalogAutoCompleteAdapter(requireContext(), catalogItems);
+        editDropType.setAdapter(autoAdapter);
+        editDropType.setOnItemClickListener((parent, view1, position, id) -> {
+            CatalogItem selectedItem = autoAdapter.getItem(position);
+            if (selectedItem != null) {
+                editDropType.setText(selectedItem.getName(requireContext()), false);
+                if (selectedItem.isFiveStar()) {
+                    toggleRarity.check(R.id.btn_rare_5);
+                    updateOutcomeVisibility.accept(true);
+                    if (selectedItem.isStandard()) {
+                        togglePityStatus.check(R.id.btn_pity_loss);
+                        android.widget.Toast.makeText(requireContext(), R.string.journal_standard_loss_hint, android.widget.Toast.LENGTH_SHORT).show();
+                    } else {
+                        Boolean guaranteed = viewModel.getIsGuaranteedLiveData().getValue();
+                        if (Boolean.TRUE.equals(guaranteed)) {
+                            togglePityStatus.check(R.id.btn_pity_guaranteed);
+                        } else {
+                            togglePityStatus.check(R.id.btn_pity_win);
+                        }
+                    }
+                } else if (selectedItem.isFourStar()) {
+                    toggleRarity.check(R.id.btn_rare_4);
+                    updateOutcomeVisibility.accept(true);
+                }
+                HapticHelper.performClickHaptic(requireContext(), editDropType);
+            }
+        });
+
         toggleRarity.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
                 updateOutcomeVisibility.accept(true);
                 String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
                 if (TextUtils.isEmpty(currentText)) {
                     if (checkedId == R.id.btn_rare_3) {
-                        editDropType.setText(getString(R.string.default_pull_content));
+                        editDropType.setText(getString(R.string.default_pull_content), false);
                     }
                 }
             }

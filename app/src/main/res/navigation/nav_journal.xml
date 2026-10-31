@@ -9,6 +9,21 @@
         android:id="@+id/journalView"
         android:name="ru.menshovanton.gachapoint.ui.fragment.journal.JournalView"
         android:label="@string/nav_journal"
-        tools:layout="@layout/fragment_journal" />
+        tools:layout="@layout/fragment_journal">
+
+        <action
+            android:id="@+id/action_journal_to_banners"
+            app:destination="@id/bannersView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/bannersView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.banners.BannersView"
+        android:label="@string/banners_title"
+        tools:layout="@layout/fragment_banners" />
 
 </navigation>

@@ -59,7 +59,35 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out"/>
 
+        <action
+            android:id="@+id/action_to_promocodes"
+            app:destination="@id/promocodesView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+
+        <action
+            android:id="@+id/action_to_banners"
+            app:destination="@id/bannersView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+
     </fragment>
+
+    <fragment
+        android:id="@+id/promocodesView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.promocodes.PromocodesView"
+        android:label="@string/menu_promo_title"
+        tools:layout="@layout/fragment_promocodes" />
+
+    <fragment
+        android:id="@+id/bannersView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.banners.BannersView"
+        android:label="@string/banners_title"
+        tools:layout="@layout/fragment_banners" />
 
     <fragment
         android:id="@+id/helpView"

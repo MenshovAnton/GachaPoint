@@ -295,6 +295,7 @@
             app:trackColor="@android:color/transparent"
             app:trackThickness="3dp" />
 
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView

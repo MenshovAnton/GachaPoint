@@ -1,0 +1,881 @@
+{
+  "version": 1,
+  "updated_at": "2026-10-31T12:00:00Z",
+  "games": [
+    {
+      "game_type": 0,
+      "items": [
+        {
+          "name": "Скирк",
+          "name_ru": "Скирк",
+          "name_en": "Skirk",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Skirk.png"
+        },
+        {
+          "name": "Эскофье",
+          "name_ru": "Эскофье",
+          "name_en": "Escoffier",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Escoffier.png"
+        },
+        {
+          "name": "Митя",
+          "name_ru": "Митя",
+          "name_en": "Mitya",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Фурина",
+          "name_ru": "Фурина",
+          "name_en": "Furina",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Furina.png"
+        },
+        {
+          "name": "Мавуика",
+          "name_ru": "Мавуика",
+          "name_en": "Mavuika",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Mavuika.png"
+        },
+        {
+          "name": "Ситлали",
+          "name_ru": "Ситлали",
+          "name_en": "Citlali",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Citlali.png"
+        },
+        {
+          "name": "Часка",
+          "name_ru": "Часка",
+          "name_en": "Chasca",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Chasca.png"
+        },
+        {
+          "name": "Шилонен",
+          "name_ru": "Шилонен",
+          "name_en": "Xilonen",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Xilonen.png"
+        },
+        {
+          "name": "Кинич",
+          "name_ru": "Кинич",
+          "name_en": "Kinich",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Kinich.png"
+        },
+        {
+          "name": "Муалани",
+          "name_ru": "Муалани",
+          "name_en": "Mualani",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Mualani.png"
+        },
+        {
+          "name": "Невиллет",
+          "name_ru": "Невиллет",
+          "name_en": "Neuvillette",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Neuvillette.png"
+        },
+        {
+          "name": "Чжун Ли",
+          "name_ru": "Чжун Ли",
+          "name_en": "Zhongli",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Zhongli.png"
+        },
+        {
+          "name": "Райдэн",
+          "name_ru": "Райдэн",
+          "name_en": "Raiden Shogun",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Shougun.png"
+        },
+        {
+          "name": "Нахида",
+          "name_ru": "Нахида",
+          "name_en": "Nahida",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Nahida.png"
+        },
+        {
+          "name": "Кадзуха",
+          "name_ru": "Кадзуха",
+          "name_en": "Kaedehara Kazuha",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Kazuha.png"
+        },
+        {
+          "name": "Ху Тао",
+          "name_ru": "Ху Тао",
+          "name_en": "Hu Tao",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Hutao.png"
+        },
+        {
+          "name": "Тиори",
+          "name_ru": "Тиори",
+          "name_en": "Chiori",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Chiori.png"
+        },
+        {
+          "name": "Лини",
+          "name_ru": "Лини",
+          "name_en": "Lyney",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Liney.png"
+        },
+        {
+          "name": "Арлекино",
+          "name_ru": "Арлекино",
+          "name_en": "Arlecchino",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Arlecchino.png"
+        },
+        {
+          "name": "Клоринда",
+          "name_ru": "Клоринда",
+          "name_en": "Clorinde",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Clorinde.png"
+        },
+        {
+          "name": "Эмилия",
+          "name_ru": "Эмилия",
+          "name_en": "Emilie",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Emilie.png"
+        },
+        {
+          "name": "Сяо",
+          "name_ru": "Сяо",
+          "name_en": "Xiao",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Xiao.png"
+        },
+        {
+          "name": "Елань",
+          "name_ru": "Елань",
+          "name_en": "Yelan",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Yelan.png"
+        },
+        {
+          "name": "Венти",
+          "name_ru": "Венти",
+          "name_en": "Venti",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Venti.png"
+        },
+        {
+          "name": "Гань Юй",
+          "name_ru": "Гань Юй",
+          "name_en": "Ganyu",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Ganyu.png"
+        },
+        {
+          "name": "Аяка",
+          "name_ru": "Аяка",
+          "name_en": "Kamisato Ayaka",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Ayaka.png"
+        },
+        {
+          "name": "Аято",
+          "name_ru": "Аято",
+          "name_en": "Kamisato Ayato",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Ayato.png"
+        },
+        {
+          "name": "Джинн",
+          "name_ru": "Джинн",
+          "name_en": "Jean",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Qin.png"
+        },
+        {
+          "name": "Дилюк",
+          "name_ru": "Дилюк",
+          "name_en": "Diluc",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Diluc.png"
+        },
+        {
+          "name": "Мона",
+          "name_ru": "Мона",
+          "name_en": "Mona",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Mona.png"
+        },
+        {
+          "name": "Кэ Цин",
+          "name_ru": "Кэ Цин",
+          "name_en": "Keqing",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Keqing.png"
+        },
+        {
+          "name": "Ци Ци",
+          "name_ru": "Ци Ци",
+          "name_en": "Qiqi",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Qiqi.png"
+        },
+        {
+          "name": "Тигнари",
+          "name_ru": "Тигнари",
+          "name_en": "Tighnari",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Tighnari.png"
+        },
+        {
+          "name": "Дэхья",
+          "name_ru": "Дэхья",
+          "name_en": "Dehya",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Dehya.png"
+        },
+        {
+          "name": "Мика",
+          "name_ru": "Мика",
+          "name_en": "Mika",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Mika.png"
+        },
+        {
+          "name": "Кандакия",
+          "name_ru": "Кандакия",
+          "name_en": "Candace",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Candace.png"
+        },
+        {
+          "name": "Далия",
+          "name_ru": "Далия",
+          "name_en": "Dahlia",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Качина",
+          "name_ru": "Качина",
+          "name_en": "Kachina",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Kachina.png"
+        },
+        {
+          "name": "Оророн",
+          "name_ru": "Оророн",
+          "name_en": "Ororon",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Ororon.png"
+        },
+        {
+          "name": "Лань Янь",
+          "name_ru": "Лань Янь",
+          "name_en": "Lan Yan",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Беннет",
+          "name_ru": "Беннет",
+          "name_en": "Bennett",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Bennett.png"
+        },
+        {
+          "name": "Сян Лин",
+          "name_ru": "Сян Лин",
+          "name_en": "Xiangling",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Xiangling.png"
+        },
+        {
+          "name": "Син Цю",
+          "name_ru": "Син Цю",
+          "name_en": "Xingqiu",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Xingqiu.png"
+        },
+        {
+          "name": "Куки Синобу",
+          "name_ru": "Куки Синобу",
+          "name_en": "Kuki Shinobu",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://enka.network/ui/UI_AvatarIcon_Shinobu.png"
+        }
+      ]
+    },
+    {
+      "game_type": 1,
+      "items": [
+        {
+          "name": "Гиацина",
+          "name_ru": "Гиацина",
+          "name_en": "Hyacine",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Церейдра",
+          "name_ru": "Церейдра",
+          "name_en": "Cerydra",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Аглая",
+          "name_ru": "Аглая",
+          "name_en": "Aglaea",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Воскресенье",
+          "name_ru": "Воскресенье",
+          "name_en": "Sunday",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Раппа",
+          "name_ru": "Раппа",
+          "name_en": "Rappa",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1317.png"
+        },
+        {
+          "name": "Фэйсяо",
+          "name_ru": "Фэйсяо",
+          "name_en": "Feixiao",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1220.png"
+        },
+        {
+          "name": "Светлячок",
+          "name_ru": "Светлячок",
+          "name_en": "Firefly",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1310.png"
+        },
+        {
+          "name": "Ахерон",
+          "name_ru": "Ахерон",
+          "name_en": "Acheron",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1308.png"
+        },
+        {
+          "name": "Авантюрин",
+          "name_ru": "Авантюрин",
+          "name_en": "Aventurine",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1303.png"
+        },
+        {
+          "name": "Зарянка",
+          "name_ru": "Зарянка",
+          "name_en": "Robin",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1309.png"
+        },
+        {
+          "name": "Искорка",
+          "name_ru": "Искорка",
+          "name_en": "Sparkle",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1306.png"
+        },
+        {
+          "name": "Чёрный Лебедь",
+          "name_ru": "Чёрный Лебедь",
+          "name_en": "Black Swan",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1304.png"
+        },
+        {
+          "name": "Жуань Мэй",
+          "name_ru": "Жуань Мэй",
+          "name_en": "Ruan Mei",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1307.png"
+        },
+        {
+          "name": "Цзинлю",
+          "name_ru": "Цзинлю",
+          "name_en": "Jingliu",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1212.png"
+        },
+        {
+          "name": "Дань Хэн Пожиратель Луны",
+          "name_ru": "Дань Хэн Пожиратель Луны",
+          "name_en": "Dan Heng Imbibitor Lunae",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1213.png"
+        },
+        {
+          "name": "Кафка",
+          "name_ru": "Кафка",
+          "name_en": "Kafka",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1005.png"
+        },
+        {
+          "name": "Блейд",
+          "name_ru": "Блейд",
+          "name_en": "Blade",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1205.png"
+        },
+        {
+          "name": "Химеко",
+          "name_ru": "Химеко",
+          "name_en": "Himeko",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1003.png"
+        },
+        {
+          "name": "Вельт",
+          "name_ru": "Вельт",
+          "name_en": "Welt",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1004.png"
+        },
+        {
+          "name": "Броня",
+          "name_ru": "Броня",
+          "name_en": "Bronya",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1101.png"
+        },
+        {
+          "name": "Гепард",
+          "name_ru": "Гепард",
+          "name_en": "Gepard",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1104.png"
+        },
+        {
+          "name": "Клара",
+          "name_ru": "Клара",
+          "name_en": "Clara",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1107.png"
+        },
+        {
+          "name": "Яньцин",
+          "name_ru": "Яньцин",
+          "name_en": "Yanqing",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1209.png"
+        },
+        {
+          "name": "Байлу",
+          "name_ru": "Байлу",
+          "name_en": "Bailu",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1211.png"
+        },
+        {
+          "name": "Галлахер",
+          "name_ru": "Галлахер",
+          "name_en": "Gallagher",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1301.png"
+        },
+        {
+          "name": "Тинъюнь",
+          "name_ru": "Тинъюнь",
+          "name_en": "Tingyun",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1202.png"
+        },
+        {
+          "name": "Пела",
+          "name_ru": "Пела",
+          "name_en": "Pela",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/icon/character/1106.png"
+        }
+      ]
+    },
+    {
+      "game_type": 2,
+      "items": [
+        {
+          "name": "Феникс",
+          "name_ru": "Феникс",
+          "name_en": "Phoenix",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Велина",
+          "name_ru": "Велина",
+          "name_en": "Velina",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Севериан",
+          "name_ru": "Севериан",
+          "name_en": "Severian",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Норма",
+          "name_ru": "Норма",
+          "name_en": "Norma",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Лайтер",
+          "name_ru": "Лайтер",
+          "name_en": "Lighter",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Янаги",
+          "name_ru": "Янаги",
+          "name_en": "Yanagi",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Бёрнис",
+          "name_ru": "Бёрнис",
+          "name_en": "Burnice",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Цезарь",
+          "name_ru": "Цезарь",
+          "name_en": "Caesar",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Джейн Доу",
+          "name_ru": "Джейн Доу",
+          "name_en": "Jane Doe",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Цинъи",
+          "name_ru": "Цинъи",
+          "name_en": "Qingyi",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Чжу Юань",
+          "name_ru": "Чжу Юань",
+          "name_en": "Zhu Yuan",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Эллен",
+          "name_ru": "Эллен",
+          "name_en": "Ellen Joe",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Солдат 11",
+          "name_ru": "Солдат 11",
+          "name_en": "Soldier 11",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": null
+        },
+        {
+          "name": "Грейс",
+          "name_ru": "Грейс",
+          "name_en": "Grace",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": null
+        },
+        {
+          "name": "Александрина",
+          "name_ru": "Александрина",
+          "name_en": "Alexandrina",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": null
+        },
+        {
+          "name": "Коляда",
+          "name_ru": "Коляда",
+          "name_en": "Koleda",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": null
+        },
+        {
+          "name": "Фон Ликаон",
+          "name_ru": "Фон Ликаон",
+          "name_en": "Von Lycaon",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": null
+        },
+        {
+          "name": "Нэкомата",
+          "name_ru": "Нэкомата",
+          "name_en": "Nekomata",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": true,
+          "icon_url": null
+        },
+        {
+          "name": "Энби",
+          "name_ru": "Энби",
+          "name_en": "Anby",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Николь",
+          "name_ru": "Николь",
+          "name_en": "Nicole",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Билли",
+          "name_ru": "Билли",
+          "name_en": "Billy",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        }
+      ]
+    },
+    {
+      "game_type": 3,
+      "items": [
+        {
+          "name": "Спаркл: Тысяча масок",
+          "name_ru": "Спаркл: Тысяча масок",
+          "name_en": "Sparkle: Thousand Faces",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Сенадина",
+          "name_ru": "Сенадина",
+          "name_en": "Senadina",
+          "rarity": "5★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        },
+        {
+          "name": "Валькирия Стрела",
+          "name_ru": "Валькирия Стрела",
+          "name_en": "Valkyrie Boltstorm",
+          "rarity": "4★",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_url": null
+        }
+      ]
+    }
+  ]
+}

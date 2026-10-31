@@ -96,6 +96,19 @@ public class MigrationHelper {
         }
     };
 
+    public static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(@NotNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `promocode_statuses` (" +
+                    "`code_id` TEXT NOT NULL, " +
+                    "`is_redeemed` INTEGER NOT NULL DEFAULT 0, " +
+                    "`redeemed_at` INTEGER NOT NULL DEFAULT 0, " +
+                    "`is_notified` INTEGER NOT NULL DEFAULT 0, " +
+                    "`is_expired_by_user` INTEGER NOT NULL DEFAULT 0, " +
+                    "PRIMARY KEY(`code_id`))");
+        }
+    };
+
     public static void migrateLegacyCalendarAndSchemaIfNeeded(SupportSQLiteDatabase database) {
         boolean hasGameStatus = false;
         try (android.database.Cursor cur = database.query(new SimpleSQLiteQuery(

@@ -17,12 +17,14 @@ import java.util.concurrent.Executors;
 
 import ru.menshovanton.gachapoint.data.db.dao.CalendarDao;
 import ru.menshovanton.gachapoint.data.db.dao.GameDao;
+import ru.menshovanton.gachapoint.data.db.dao.PromocodeDao;
 import ru.menshovanton.gachapoint.data.db.dao.PullDao;
 import ru.menshovanton.gachapoint.data.db.dao.SavingsDao;
 import ru.menshovanton.gachapoint.data.db.dao.SubscriptionDao;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarEntity;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarGameStatusEntity;
 import ru.menshovanton.gachapoint.data.db.entities.GameEntity;
+import ru.menshovanton.gachapoint.data.db.entities.PromocodeStatusEntity;
 import ru.menshovanton.gachapoint.data.db.entities.PullEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SavingsEntity;
 import ru.menshovanton.gachapoint.data.db.entities.SubscriptionEntity;
@@ -31,8 +33,8 @@ import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 
 @Database(
-        entities = {CalendarEntity.class, CalendarGameStatusEntity.class, PullEntity.class, SubscriptionEntity.class, GameEntity.class, SavingsEntity.class},
-        version = 4
+        entities = {CalendarEntity.class, CalendarGameStatusEntity.class, PullEntity.class, SubscriptionEntity.class, GameEntity.class, SavingsEntity.class, PromocodeStatusEntity.class},
+        version = 5
 )
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -47,6 +49,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract SubscriptionDao subscriptionDao();
     public abstract GameDao gameDao();
     public abstract SavingsDao savingsDao();
+    public abstract PromocodeDao promocodeDao();
 
     public static RoomDatabase.Builder<AppDatabase> createDatabaseBuilder(Context context, String databaseName) {
         return Room.databaseBuilder(
@@ -54,7 +57,7 @@ public abstract class AppDatabase extends RoomDatabase {
                         AppDatabase.class,
                         databaseName
                 )
-                .addMigrations(MigrationHelper.MIGRATION_1_2, MigrationHelper.MIGRATION_2_3, MigrationHelper.MIGRATION_3_4)
+                .addMigrations(MigrationHelper.MIGRATION_1_2, MigrationHelper.MIGRATION_2_3, MigrationHelper.MIGRATION_3_4, MigrationHelper.MIGRATION_4_5)
                 .addCallback(new RoomDatabase.Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {

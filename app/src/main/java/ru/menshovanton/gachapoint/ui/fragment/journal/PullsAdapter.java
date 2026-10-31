@@ -44,6 +44,14 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
     private boolean isSelectionMode = false;
     private final Set<Integer> selectedPullIds = new HashSet<>();
     private final List<Pull> items = new ArrayList<>();
+    private ru.menshovanton.gachapoint.domain.enums.GameType currentGameType = ru.menshovanton.gachapoint.domain.enums.GameType.GENSHIN;
+
+    public void setCurrentGameType(ru.menshovanton.gachapoint.domain.enums.GameType gameType) {
+        if (gameType != null && this.currentGameType != gameType) {
+            this.currentGameType = gameType;
+            notifyDataSetChanged();
+        }
+    }
 
     public interface OnItemClickListener {
         void onItemClick(Pull pull);
@@ -272,6 +280,45 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
         holder.dropRare.setText(pull.getDropRare());
         holder.dropType.setText(pull.getDropType());
 
+        if (holder.cardAvatar != null && holder.tvAvatarLetter != null) {
+            String name = pull.getDropType() != null ? pull.getDropType().trim() : "";
+            String letter = !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase() : "•";
+            holder.tvAvatarLetter.setText(letter);
+
+            RareType rare = RareType.from(pull.getDropRare(), context);
+            if (rare == RareType.LEGENDARY) {
+                holder.cardAvatar.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.badge_gold_bg)));
+                holder.cardAvatar.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.rare_legendary)));
+                holder.tvAvatarLetter.setTextColor(ContextCompat.getColor(context, R.color.rare_legendary));
+            } else if (rare == RareType.EPIC) {
+                holder.cardAvatar.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.badge_purple_bg)));
+                holder.cardAvatar.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.rare_epic)));
+                holder.tvAvatarLetter.setTextColor(ContextCompat.getColor(context, R.color.rare_epic));
+            } else {
+                holder.cardAvatar.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.pull_pity_badge_bg)));
+                holder.cardAvatar.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.pull_row_stroke)));
+                holder.tvAvatarLetter.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
+            }
+
+            if (holder.ivPullAvatar != null) {
+                ru.menshovanton.gachapoint.domain.models.CatalogItem catalogItem =
+                        ru.menshovanton.gachapoint.data.repository.CatalogRepository.getInstance(context)
+                                .findItemByName(currentGameType, name);
+                if (catalogItem != null && catalogItem.getIconUrl() != null && !catalogItem.getIconUrl().isEmpty()) {
+                    holder.ivPullAvatar.setVisibility(View.VISIBLE);
+                    holder.tvAvatarLetter.setVisibility(View.GONE);
+                    com.bumptech.glide.Glide.with(context)
+                            .load(catalogItem.getIconUrl())
+                            .circleCrop()
+                            .into(holder.ivPullAvatar);
+                } else {
+                    holder.ivPullAvatar.setImageDrawable(null);
+                    holder.ivPullAvatar.setVisibility(View.GONE);
+                    holder.tvAvatarLetter.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
         String rawDate = pull.getDateTime();
         if (rawDate != null) {
             try {
@@ -280,8 +327,22 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
             } catch (Exception e) {
                 holder.date.setText(rawDate);
             }
+
+            if (holder.tvPullPatch != null) {
+                String patch = ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository.getInstance(context)
+                        .getPatchForDate(currentGameType, rawDate);
+                if (patch != null && !patch.isEmpty()) {
+                    holder.tvPullPatch.setText(patch);
+                    holder.tvPullPatch.setVisibility(View.VISIBLE);
+                } else {
+                    holder.tvPullPatch.setVisibility(View.GONE);
+                }
+            }
         } else {
             holder.date.setText("");
+            if (holder.tvPullPatch != null) {
+                holder.tvPullPatch.setVisibility(View.GONE);
+            }
         }
 
         applySelectionAndStyling(holder, pull, context);
@@ -393,10 +454,14 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
         MaterialCardView cardView;
         MaterialCardView badgeCard;
         TextView tvPityBadge;
+        MaterialCardView cardAvatar;
+        ImageView ivPullAvatar;
+        TextView tvAvatarLetter;
         TextView dropRare;
         TextView dropType;
         TextView tvOutcome;
         TextView date;
+        TextView tvPullPatch;
         MaterialCheckBox cbSelect;
         ImageView ivDragHandle;
 
@@ -405,10 +470,14 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
             cardView = itemView.findViewById(R.id.card_pull);
             badgeCard = itemView.findViewById(R.id.badge_pity_count);
             tvPityBadge = itemView.findViewById(R.id.tv_pity_badge);
+            cardAvatar = itemView.findViewById(R.id.card_avatar);
+            ivPullAvatar = itemView.findViewById(R.id.iv_pull_avatar);
+            tvAvatarLetter = itemView.findViewById(R.id.tv_avatar_letter);
             dropRare = itemView.findViewById(R.id.dropRare);
             dropType = itemView.findViewById(R.id.dropType);
             tvOutcome = itemView.findViewById(R.id.tv_pull_outcome);
             date = itemView.findViewById(R.id.date);
+            tvPullPatch = itemView.findViewById(R.id.tv_pull_patch);
             cbSelect = itemView.findViewById(R.id.cb_select);
             ivDragHandle = itemView.findViewById(R.id.iv_drag_handle);
         }

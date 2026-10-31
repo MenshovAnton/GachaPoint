@@ -55,6 +55,10 @@ public final class AppLogger {
         }
     }
 
+    public static void d(String tag, String message) {
+        log("DEBUG", tag, message, null);
+    }
+
     public static void i(String tag, String message) {
         log("INFO", tag, message, null);
     }

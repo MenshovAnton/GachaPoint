@@ -24,6 +24,8 @@ public class App extends Application {
         });
 
         DailyNotificationWorker.createNotificationChannels(this);
+        ru.menshovanton.gachapoint.worker.PromocodeSyncTask.createNotificationChannel(this);
+        ru.menshovanton.gachapoint.worker.PromocodeSyncTask.checkStreamPromocodesAsync(this);
 
         appContainer = new AppContainer(this);
     }

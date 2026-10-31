@@ -1,0 +1,674 @@
+{
+  "version": 1,
+  "updated_at": "2026-10-31T18:08:43Z",
+  "codes": [
+    {
+      "id": "genshin_6ls3f3",
+      "game_type": 0,
+      "code": "6LS3F3LS5K87",
+      "rewards_description": "20 Камней Истока, 160 Репликационных геод",
+      "rewards_description_ru": "20 Камней Истока, 160 Репликационных геод",
+      "rewards_description_en": "20 Primogems, 160 Geodes of Replication",
+      "reward_types": [
+        "PRIMOGEM",
+        "OTHER"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-25T23:59:59Z",
+      "created_at": "2026-10-20T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "genshin_la5e77",
+      "game_type": 0,
+      "code": "LA5E77CLZX5V",
+      "rewards_description": "60 Камней Истока, 5 Опыта искателя приключений",
+      "rewards_description_ru": "60 Камней Истока, 5 Опыта искателя приключений",
+      "rewards_description_en": "60 Primogems, 5 Adventurer's Experience",
+      "reward_types": [
+        "PRIMOGEM",
+        "EXP"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-19T23:59:59Z",
+      "created_at": "2026-10-29T12:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "genshin_neeijb",
+      "game_type": 0,
+      "code": "NEEIJB764CA3",
+      "rewards_description": "60 Камней Истока, 5 Опыта искателя приключений",
+      "rewards_description_ru": "60 Камней Истока, 5 Опыта искателя приключений",
+      "rewards_description_en": "60 Primogems, 5 Adventurer's Experience",
+      "reward_types": [
+        "PRIMOGEM",
+        "EXP"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-20T23:59:59Z",
+      "created_at": "2026-10-25T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "genshin_pj2keb",
+      "game_type": 0,
+      "code": "PJ2KEBRAYSRM",
+      "rewards_description": "60 Камней Истока, 5 Опыта искателя приключений",
+      "rewards_description_ru": "60 Камней Истока, 5 Опыта искателя приключений",
+      "rewards_description_en": "60 Primogems, 5 Adventurer's Experience",
+      "reward_types": [
+        "PRIMOGEM",
+        "EXP"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-20T23:59:59Z",
+      "created_at": "2026-10-20T12:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "genshin_vesna",
+      "game_type": 0,
+      "code": "VESNAONPATROL",
+      "rewards_description": "40 Камней Истока, 20 000 Моры, 3 Опыта героя",
+      "rewards_description_ru": "40 Камней Истока, 20 000 Моры, 3 Опыта героя",
+      "rewards_description_en": "40 Primogems, 20,000 Mora, 3 Hero's Wit",
+      "reward_types": [
+        "PRIMOGEM",
+        "MORA",
+        "EXP"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-10-25T23:59:59Z",
+      "created_at": "2026-10-10T00:00:00Z",
+      "is_stream": false,
+      "is_active": false
+    },
+    {
+      "id": "genshin_y6jymk",
+      "game_type": 0,
+      "code": "Y6JYMKV6JKSL",
+      "rewards_description": "60 Камней Истока, 5 Опыта искателя приключений",
+      "rewards_description_ru": "60 Камней Истока, 5 Опыта искателя приключений",
+      "rewards_description_en": "60 Primogems, 5 Adventurer's Experience",
+      "reward_types": [
+        "PRIMOGEM",
+        "EXP"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-20T23:59:59Z",
+      "created_at": "2026-10-25T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "genshin_genshingift",
+      "game_type": 0,
+      "code": "GENSHINGIFT",
+      "rewards_description": "50 Камней Истока, 3 Опыта героя",
+      "rewards_description_ru": "50 Камней Истока, 3 Опыта героя",
+      "rewards_description_en": "50 Primogems, 3 Hero's Wit",
+      "reward_types": [
+        "PRIMOGEM",
+        "EXP"
+      ],
+      "status": "PERMANENT",
+      "expires_at": null,
+      "created_at": "2020-09-28T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "hsr_creationnymph",
+      "game_type": 1,
+      "code": "CREATIONNYMPH",
+      "rewards_description": "60 Звёздного нефрита, 1 Топливо",
+      "rewards_description_ru": "60 Звёздного нефрита, 1 Топливо",
+      "rewards_description_en": "60 Stellar Jade, 1 Fuel",
+      "reward_types": [
+        "JADE",
+        "OTHER"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-20T23:59:59Z",
+      "created_at": "2026-10-20T12:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "hsr_dslspn",
+      "game_type": 1,
+      "code": "DSLSPNBREASP",
+      "rewards_description": "50 Звёздного нефрита, 10 000 Кредитов",
+      "rewards_description_ru": "50 Звёздного нефрита, 10 000 Кредитов",
+      "rewards_description_en": "50 Stellar Jade, 10,000 Credits",
+      "reward_types": [
+        "JADE",
+        "CREDIT"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-15T23:59:59Z",
+      "created_at": "2026-10-15T12:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "hsr_eb3kuy",
+      "game_type": 1,
+      "code": "EB3KUYQW833P",
+      "rewards_description": "50 Звёздного нефрита, 10 000 Кредитов",
+      "rewards_description_ru": "50 Звёздного нефрита, 10 000 Кредитов",
+      "rewards_description_en": "50 Stellar Jade, 10,000 Credits",
+      "reward_types": [
+        "JADE",
+        "CREDIT"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-20T23:59:59Z",
+      "created_at": "2026-10-23T12:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "hsr_farewell",
+      "game_type": 1,
+      "code": "FAREWELL",
+      "rewards_description": "60 Звёздного нефрита, 1 Топливо",
+      "rewards_description_ru": "60 Звёздного нефрита, 1 Топливо",
+      "rewards_description_en": "60 Stellar Jade, 1 Fuel",
+      "reward_types": [
+        "JADE",
+        "OTHER"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-20T23:59:59Z",
+      "created_at": "2026-10-20T12:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "hsr_ifyouarereadingthis",
+      "game_type": 1,
+      "code": "IFYOUAREREADINGTHIS",
+      "rewards_description": "60 Звёздного нефрита, 1 Топливо",
+      "rewards_description_ru": "60 Звёздного нефрита, 1 Топливо",
+      "rewards_description_en": "60 Stellar Jade, 1 Fuel",
+      "reward_types": [
+        "JADE",
+        "OTHER"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-25T23:59:59Z",
+      "created_at": "2026-10-25T12:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "hsr_omega",
+      "game_type": 1,
+      "code": "OMEGA",
+      "rewards_description": "60 Звёздного нефрита, 1 Топливо",
+      "rewards_description_ru": "60 Звёздного нефрита, 1 Топливо",
+      "rewards_description_en": "60 Stellar Jade, 1 Fuel",
+      "reward_types": [
+        "JADE",
+        "OTHER"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-20T23:59:59Z",
+      "created_at": "2026-10-20T12:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "hsr_starrailgift",
+      "game_type": 1,
+      "code": "STARRAILGIFT",
+      "rewards_description": "50 Звёздного нефрита, 2 Путеводителя, 10 000 Кредитов",
+      "rewards_description_ru": "50 Звёздного нефрита, 2 Путеводителя, 10 000 Кредитов",
+      "rewards_description_en": "50 Stellar Jade, 2 Traveler's Guide, 10,000 Credits",
+      "reward_types": [
+        "JADE",
+        "EXP",
+        "CREDIT"
+      ],
+      "status": "PERMANENT",
+      "expires_at": null,
+      "created_at": "2023-04-26T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "zzz_hsahlwfefe",
+      "game_type": 2,
+      "code": "HSAHLWFEFE",
+      "rewards_description": "60 Полихромов, 6 666 Денни",
+      "rewards_description_ru": "60 Полихромов, 6 666 Денни",
+      "rewards_description_en": "60 Polychromes, 6,666 Dennies",
+      "reward_types": [
+        "POLYCHROME",
+        "DENNY"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-20T23:59:59Z",
+      "created_at": "2026-10-16T12:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "zzz_2year",
+      "game_type": 2,
+      "code": "ZZZ2YEAR",
+      "rewards_description": "50 Полихромов",
+      "rewards_description_ru": "50 Полихромов",
+      "rewards_description_en": "50 Polychromes",
+      "reward_types": [
+        "POLYCHROME"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-30T23:59:59Z",
+      "created_at": "2026-10-15T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "zzz_31remielle",
+      "game_type": 2,
+      "code": "ZZZ31REMIELLE",
+      "rewards_description": "60 Полихромов, 6 666 Денни",
+      "rewards_description_ru": "60 Полихромов, 6 666 Денни",
+      "rewards_description_en": "60 Polychromes, 6,666 Dennies",
+      "reward_types": [
+        "POLYCHROME",
+        "DENNY"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-25T23:59:59Z",
+      "created_at": "2026-10-16T12:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "zzz_zzzgfn24",
+      "game_type": 2,
+      "code": "ZZZGFN24",
+      "rewards_description": "20 000 Денни, 3 Журнала специалиста, 3 Источника питания",
+      "rewards_description_ru": "20 000 Денни, 3 Журнала специалиста, 3 Источника питания",
+      "rewards_description_en": "20,000 Dennies, 3 Official Investigator Logs, 3 W-Engine Power Supplies",
+      "reward_types": [
+        "DENNY",
+        "EXP"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-30T23:59:59Z",
+      "created_at": "2026-10-01T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "zzz_zenlessgift",
+      "game_type": 2,
+      "code": "ZENLESSGIFT",
+      "rewards_description": "50 Полихромов, 2 Журнала специалиста, 3 Источника питания",
+      "rewards_description_ru": "50 Полихромов, 2 Журнала специалиста, 3 Источника питания",
+      "rewards_description_en": "50 Polychromes, 2 Official Investigator Logs, 3 W-Engine Power Supplies",
+      "reward_types": [
+        "POLYCHROME",
+        "EXP"
+      ],
+      "status": "PERMANENT",
+      "expires_at": null,
+      "created_at": "2024-07-04T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "zzz_tvcm",
+      "game_type": 2,
+      "code": "ZZZTVCM",
+      "rewards_description": "50 Полихромов, 1 Бустер",
+      "rewards_description_ru": "50 Полихромов, 1 Бустер",
+      "rewards_description_en": "50 Polychromes, 1 Booster",
+      "reward_types": [
+        "POLYCHROME"
+      ],
+      "status": "PERMANENT",
+      "expires_at": null,
+      "created_at": "2024-07-04T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "hi3_v86celeb",
+      "game_type": 3,
+      "code": "HI3V86CELEB",
+      "rewards_description": "100 Кристаллов, 1 Энергетический напиток",
+      "rewards_description_ru": "100 Кристаллов, 1 Энергетический напиток",
+      "rewards_description_en": "100 Crystals, 1 Energy Drink",
+      "reward_types": [
+        "CRYSTAL"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-30T23:59:59Z",
+      "created_at": "2026-10-15T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "hi3_vitaplanet",
+      "game_type": 3,
+      "code": "VITAPLANET",
+      "rewards_description": "60 Кристаллов, 3 Опыта",
+      "rewards_description_ru": "60 Кристаллов, 3 Опыта",
+      "rewards_description_en": "60 Crystals, 3 EXP",
+      "reward_types": [
+        "CRYSTAL",
+        "EXP"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-20T23:59:59Z",
+      "created_at": "2026-10-20T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "hi3_honkaigift",
+      "game_type": 3,
+      "code": "HONKAIGIFT",
+      "rewards_description": "30 Кристаллов, 2 000 Монет",
+      "rewards_description_ru": "30 Кристаллов, 2 000 Монет",
+      "rewards_description_en": "30 Crystals, 2,000 Coins",
+      "reward_types": [
+        "CRYSTAL"
+      ],
+      "status": "PERMANENT",
+      "expires_at": null,
+      "created_at": "2021-01-01T00:00:00Z",
+      "is_stream": false,
+      "is_active": true
+    },
+    {
+      "id": "genshin_stream_7_2_1",
+      "game_type": 0,
+      "code": "HOUROFRUIN",
+      "rewards_description": "100 Камней Истока, 10 Волшебной руды",
+      "rewards_description_ru": "100 Камней Истока, 10 Волшебной руды",
+      "rewards_description_en": "100 Primogems, 10 Mystic Enhancement Ore",
+      "reward_types": [
+        "PRIMOGEM"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-10-26T16:00:00Z",
+      "created_at": "2026-10-25T12:00:00Z",
+      "is_stream": true,
+      "is_active": false
+    },
+    {
+      "id": "genshin_stream_7_2_2",
+      "game_type": 0,
+      "code": "EXPERTMITYA",
+      "rewards_description": "100 Камней Истока, 5 Опыта героя",
+      "rewards_description_ru": "100 Камней Истока, 5 Опыта героя",
+      "rewards_description_en": "100 Primogems, 5 Hero's Wit",
+      "reward_types": [
+        "PRIMOGEM",
+        "EXP"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-10-26T16:00:00Z",
+      "created_at": "2026-10-25T12:00:00Z",
+      "is_stream": true,
+      "is_active": false
+    },
+    {
+      "id": "genshin_stream_7_2_3",
+      "game_type": 0,
+      "code": "PHOTOTIME",
+      "rewards_description": "100 Камней Истока, 50 000 Моры",
+      "rewards_description_ru": "100 Камней Истока, 50 000 Моры",
+      "rewards_description_en": "100 Primogems, 50,000 Mora",
+      "reward_types": [
+        "PRIMOGEM",
+        "MORA"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-10-26T16:00:00Z",
+      "created_at": "2026-10-25T12:00:00Z",
+      "is_stream": true,
+      "is_active": false
+    },
+    {
+      "id": "zzz_stream_3_1",
+      "game_type": 2,
+      "code": "ZZZY2ANNIV",
+      "rewards_description": "300 Полихромов, 30 000 Денни, 2 Журнала эксперта",
+      "rewards_description_ru": "300 Полихромов, 30 000 Денни, 2 Журнала эксперта",
+      "rewards_description_en": "300 Polychromes, 30,000 Dennies, 2 Senior Investigator Logs",
+      "reward_types": [
+        "POLYCHROME",
+        "DENNY",
+        "EXP"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-10-16T16:00:00Z",
+      "created_at": "2026-10-15T12:00:00Z",
+      "is_stream": true,
+      "is_active": false
+    },
+    {
+      "id": "hsr_stream_4_3_1",
+      "game_type": 1,
+      "code": "CA395VK8ULCP",
+      "rewards_description": "100 Звёздного нефрита, 50 000 Кредитов",
+      "rewards_description_ru": "100 Звёздного нефрита, 50 000 Кредитов",
+      "rewards_description_en": "100 Stellar Jade, 50,000 Credits",
+      "reward_types": [
+        "JADE",
+        "CREDIT"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-10-12T16:00:00Z",
+      "created_at": "2026-10-11T12:00:00Z",
+      "is_stream": true,
+      "is_active": false
+    },
+    {
+      "id": "hsr_stream_4_3_2",
+      "game_type": 1,
+      "code": "YT295D38DLEB",
+      "rewards_description": "100 Звёздного нефрита, 5 Путеводителей",
+      "rewards_description_ru": "100 Звёздного нефрита, 5 Путеводителей",
+      "rewards_description_en": "100 Stellar Jade, 5 Traveler's Guide",
+      "reward_types": [
+        "JADE",
+        "EXP"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-10-12T16:00:00Z",
+      "created_at": "2026-10-11T12:00:00Z",
+      "is_stream": true,
+      "is_active": false
+    },
+    {
+      "id": "hsr_stream_4_3_3",
+      "game_type": 1,
+      "code": "EB395CJ8V5XF",
+      "rewards_description": "100 Звёздного нефрита, 4 Очищенного эфира",
+      "rewards_description_ru": "100 Звёздного нефрита, 4 Очищенного эфира",
+      "rewards_description_en": "100 Stellar Jade, 4 Refined Aether",
+      "reward_types": [
+        "JADE",
+        "OTHER"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-10-12T16:00:00Z",
+      "created_at": "2026-10-11T12:00:00Z",
+      "is_stream": true,
+      "is_active": false
+    },
+    {
+      "id": "genshin_stream_7_1_1",
+      "game_type": 0,
+      "code": "REKVIEM",
+      "rewards_description": "100 Камней Истока, 10 Волшебной руды усиления",
+      "rewards_description_ru": "100 Камней Истока, 10 Волшебной руды усиления",
+      "rewards_description_en": "100 Primogems, 10 Mystic Enhancement Ore",
+      "reward_types": [
+        "PRIMOGEM"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-09-13T16:00:00Z",
+      "created_at": "2026-09-12T12:00:00Z",
+      "is_stream": true,
+      "is_active": false
+    },
+    {
+      "id": "genshin_stream_7_1_2",
+      "game_type": 0,
+      "code": "VESNA0923",
+      "rewards_description": "100 Камней Истока, 5 Опыта героя",
+      "rewards_description_ru": "100 Камней Истока, 5 Опыта героя",
+      "rewards_description_en": "100 Primogems, 5 Hero's Wit",
+      "reward_types": [
+        "PRIMOGEM",
+        "EXP"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-09-13T16:00:00Z",
+      "created_at": "2026-09-12T12:00:00Z",
+      "is_stream": true,
+      "is_active": false
+    },
+    {
+      "id": "genshin_stream_7_1_3",
+      "game_type": 0,
+      "code": "PRIMADONNA",
+      "rewards_description": "100 Камней Истока, 50 000 Моры",
+      "rewards_description_ru": "100 Камней Истока, 50 000 Моры",
+      "rewards_description_en": "100 Primogems, 50,000 Mora",
+      "reward_types": [
+        "PRIMOGEM",
+        "MORA"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-09-13T16:00:00Z",
+      "created_at": "2026-09-12T12:00:00Z",
+      "is_stream": true,
+      "is_active": false
+    },
+    {
+      "id": "genshin_operacollab",
+      "game_type": 0,
+      "code": "OPERACOLLAB",
+      "rewards_description": "30 Камней Истока, 20 000 Моры, 2 Опыта героя",
+      "rewards_description_ru": "30 Камней Истока, 20 000 Моры, 2 Опыта героя",
+      "rewards_description_en": "30 Primogems, 20,000 Mora, 2 Hero's Wit",
+      "reward_types": [
+        "PRIMOGEM",
+        "MORA",
+        "EXP"
+      ],
+      "status": "ACTIVE",
+      "is_stream": false,
+      "is_active": true,
+      "expires_at": "2026-11-20T23:59:59Z"
+    },
+    {
+      "id": "genshin_oktcv8",
+      "game_type": 0,
+      "code": "OKTCV81F9H8D",
+      "rewards_description": "10 000 Моры, 10 Опыта искателя приключений, 5 Руды",
+      "rewards_description_ru": "10 000 Моры, 10 Опыта искателя приключений, 5 Руды",
+      "rewards_description_en": "10,000 Mora, 10 Adventurer's Experience, 5 Fine Ore",
+      "reward_types": [
+        "MORA",
+        "EXP",
+        "ORE"
+      ],
+      "status": "ACTIVE",
+      "is_stream": false,
+      "is_active": true,
+      "expires_at": "2026-11-25T23:59:59Z"
+    },
+    {
+      "id": "hsr_pearlappraise",
+      "game_type": 1,
+      "code": "PEARLAPPRAISE",
+      "rewards_description": "3 Путеводителя путешественника, 2 Шутки",
+      "rewards_description_ru": "3 Путеводителя путешественника, 2 Шутки",
+      "rewards_description_en": "3 Traveler's Guides, 2 Cold Jokes",
+      "reward_types": [
+        "EXP"
+      ],
+      "status": "ACTIVE",
+      "is_stream": false,
+      "is_active": true,
+      "expires_at": "2026-11-30T23:59:59Z"
+    },
+    {
+      "id": "zzz_sunbringer",
+      "game_type": 2,
+      "code": "SUNBRINGER",
+      "rewards_description": "30 Полихромов",
+      "rewards_description_ru": "30 Полихромов",
+      "rewards_description_en": "30 Polychromes",
+      "reward_types": [
+        "POLYCHROME"
+      ],
+      "status": "ACTIVE",
+      "is_stream": false,
+      "is_active": true,
+      "expires_at": "2026-11-30T23:59:59Z"
+    },
+    {
+      "id": "zzz_hollowrun33",
+      "game_type": 2,
+      "code": "HOLLOWRUN33",
+      "rewards_description": "20 Полихромов, 2 222 Денни",
+      "rewards_description_ru": "20 Полихромов, 2 222 Денни",
+      "rewards_description_en": "20 Polychromes, 2,222 Dennies",
+      "reward_types": [
+        "POLYCHROME",
+        "DENNY"
+      ],
+      "status": "ACTIVE",
+      "is_stream": false,
+      "is_active": true,
+      "expires_at": "2026-11-30T23:59:59Z"
+    },
+    {
+      "id": "zzz_inkshift33",
+      "game_type": 2,
+      "code": "INKSHIFT33",
+      "rewards_description": "20 Полихромов",
+      "rewards_description_ru": "20 Полихромов",
+      "rewards_description_en": "20 Polychromes",
+      "reward_types": [
+        "POLYCHROME"
+      ],
+      "status": "ACTIVE",
+      "is_stream": false,
+      "is_active": true,
+      "expires_at": "2026-11-30T23:59:59Z"
+    },
+    {
+      "id": "zzz_levelup33",
+      "game_type": 2,
+      "code": "LEVELUP33",
+      "rewards_description": "20 Полихромов",
+      "rewards_description_ru": "20 Полихромов",
+      "rewards_description_en": "20 Polychromes",
+      "reward_types": [
+        "POLYCHROME"
+      ],
+      "status": "ACTIVE",
+      "is_stream": false,
+      "is_active": true,
+      "expires_at": "2026-11-30T23:59:59Z"
+    }
+  ]
+}

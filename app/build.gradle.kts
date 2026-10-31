@@ -53,6 +53,8 @@ dependencies {
     implementation(libs.recyclerview)
     implementation(libs.room.runtime)
     implementation(libs.splashscreen)
+    implementation(libs.browser)
+    implementation(libs.glide)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     annotationProcessor(libs.room.compiler)
