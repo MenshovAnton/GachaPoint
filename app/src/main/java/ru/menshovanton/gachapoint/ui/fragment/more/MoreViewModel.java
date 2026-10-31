@@ -10,6 +10,7 @@ import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 
 public class MoreViewModel extends AndroidViewModel {
 
+    private final SingleLiveEvent<Void> navigateToHelpEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> navigateToInfoEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> navigateToSettingsEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> navigateToFeedbackEvent = new SingleLiveEvent<>();
@@ -18,6 +19,10 @@ public class MoreViewModel extends AndroidViewModel {
 
     public MoreViewModel(@NonNull Application application) {
         super(application);
+    }
+
+    public LiveData<Void> getNavigateToHelpEvent() {
+        return navigateToHelpEvent;
     }
 
     public LiveData<Void> getNavigateToInfoEvent() {
@@ -40,9 +45,14 @@ public class MoreViewModel extends AndroidViewModel {
         return navigateToStatisticsEvent;
     }
 
+    public void onHelpButtonClicked() {
+        navigateToHelpEvent.call();
+    }
+
     public void onInfoButtonClicked() {
         navigateToInfoEvent.call();
     }
+
     public void onSettingsButtonClicked() {
         navigateToSettingsEvent.call();
     }

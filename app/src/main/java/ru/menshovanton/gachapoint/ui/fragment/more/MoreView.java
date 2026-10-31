@@ -20,6 +20,7 @@ public class MoreView extends Fragment {
 
     private MoreViewModel viewModel;
 
+    private View helpButton;
     private View infoButton;
     private View settingsButton;
     private View feedbackButton;
@@ -44,6 +45,7 @@ public class MoreView extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_more, container, false);
 
+        helpButton = view.findViewById(R.id.mcv_item_help);
         infoButton = view.findViewById(R.id.mcv_item_about);
         settingsButton = view.findViewById(R.id.mcv_item_settings);
         feedbackButton = view.findViewById(R.id.mcv_item_feedback);
@@ -71,6 +73,9 @@ public class MoreView extends Fragment {
     }
 
     private void observeViewModel() {
+        viewModel.getNavigateToHelpEvent().observe(getViewLifecycleOwner(), unused ->
+                NavHostFragment.findNavController(this).navigate(R.id.action_to_help));
+
         viewModel.getNavigateToPiggyBankEvent().observe(getViewLifecycleOwner(), unused ->
                 NavHostFragment.findNavController(this).navigate(R.id.action_to_piggy_bank));
 
@@ -88,6 +93,9 @@ public class MoreView extends Fragment {
     }
 
     private void setupListeners() {
+        if (helpButton != null) {
+            helpButton.setOnClickListener(v -> viewModel.onHelpButtonClicked());
+        }
         if (infoButton != null) {
             infoButton.setOnClickListener(v -> viewModel.onInfoButtonClicked());
         }
@@ -112,6 +120,7 @@ public class MoreView extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        helpButton = null;
         infoButton = null;
         settingsButton = null;
         feedbackButton = null;

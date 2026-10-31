@@ -23,6 +23,7 @@ public class InfoView extends Fragment {
 
     private View rowGithub;
     private View rowTelegram;
+    private View rowDonation;
     private View rowDeveloper;
 
     public InfoView() {}
@@ -37,6 +38,7 @@ public class InfoView extends Fragment {
         back = view.findViewById(R.id.btn_back);
         rowGithub = view.findViewById(R.id.row_github);
         rowTelegram = view.findViewById(R.id.row_telegram);
+        rowDonation = view.findViewById(R.id.row_donation);
         rowDeveloper = view.findViewById(R.id.row_developer);
         return view;
     }
@@ -53,6 +55,9 @@ public class InfoView extends Fragment {
         }
         if (rowTelegram != null) {
             rowTelegram.setOnClickListener(v -> openUrl("https://t.me/GachaPoint_official"));
+        }
+        if (rowDonation != null) {
+            rowDonation.setOnClickListener(v -> openUrl("https://www.donationalerts.com/r/gahapoint"));
         }
         if (rowDeveloper != null) {
             rowDeveloper.setOnClickListener(v -> openUrl("https://github.com/MenshovAnton"));
@@ -79,6 +84,7 @@ public class InfoView extends Fragment {
         back = null;
         rowGithub = null;
         rowTelegram = null;
+        rowDonation = null;
         rowDeveloper = null;
     }
 }

@@ -368,6 +368,8 @@
     <!-- Menu Screen -->
     <string name="menu_section_tools">Tools &amp; Services</string>
     <string name="menu_section_app">Application</string>
+    <string name="menu_help_title">Help &amp; FAQ</string>
+    <string name="menu_help_desc">Feature guide, gacha mechanics &amp; FAQ</string>
     <string name="menu_savings_title">Savings &amp; Targets</string>
     <string name="menu_savings_desc">Track savings, goals and pull conversions</string>
     <string name="menu_stats_title">Overall Statistics</string>
@@ -390,6 +392,9 @@
     <string name="about_github_desc" translatable="false">github.com/MenshovAnton/GachaPoint</string>
     <string name="about_telegram_title">Telegram Channel</string>
     <string name="about_telegram_desc">Project news and discussion</string>
+    <string name="about_donation_title">Support the Project</string>
+    <string name="about_donation_desc">DonationAlerts • Help development</string>
+    <string name="a11y_btn_donation">Support the project on DonationAlerts</string>
     <string name="about_developer_desc">MenshovAnton • Project author</string>
 
     <!-- Feedback Screen -->
@@ -520,4 +525,54 @@
     <string name="future_sub_confirm_message">The subscription will start on a future date (%1$s). Are you sure you want to start from this date instead of today?</string>
     <string name="future_selection_confirm_message">Some of the selected dates are in the future. Are you sure you want to apply changes to them?</string>
     <string name="future_date_badge">Future date</string>
+
+    <!-- Help & FAQ Screen -->
+    <string name="help_title">Help &amp; FAQ</string>
+    <string name="help_section_features">GachaPoint Features</string>
+    <string name="help_section_mechanics">Gacha Mechanics</string>
+    <string name="help_section_faq">Frequently Asked Questions (FAQ)</string>
+
+    <string name="help_feature_pulls_title">Logging Pulls &amp; Drops</string>
+    <string name="help_feature_pulls_summary">Adding 1 or 10 pulls and recording 4★ and 5★</string>
+    <string name="help_feature_pulls_detail">• In the Pulls Journal, tap the floating «+» button to open the action sheet:\n— «Add 1 pull» or «Add 10 pulls» — quickly increment the counter toward pity. When logging a 10-pull batch, you can mark if a 4★ or 5★ dropped.\n— «Record 5★» and «Record 4★» — log a specific character or weapon. For 5★, specify the pity status (win 50/50, loss, or guaranteed), and the banner counter automatically resets.\n\n• If the journal is empty, «+1» and «+10» shortcut buttons appear directly in the center of the screen.</string>
+
+    <string name="help_feature_widgets_title">Modular Home Screen Widgets</string>
+    <string name="help_feature_widgets_summary">Hide widgets and change their layout order</string>
+    <string name="help_feature_widgets_detail">• The home screen consists of independent widgets: «Quick Actions», «Savings Overview», «Monthly Statistics», and «Pity &amp; Banners».\n\n• Tap «Customize widgets» on the home screen or open «Settings» → «Interface» → «Customize widgets».\n\n• Toggle visibility of widgets you don\'t need, and drag the reorder handles to arrange them to your liking.</string>
+
+    <string name="help_feature_calendar_title">Tracking Subscriptions &amp; Dailies</string>
+    <string name="help_feature_calendar_summary">Two tracking modes and multi-date selection</string>
+    <string name="help_feature_calendar_detail">• The Calendar supports two independent modes (toggled via top cards): «Subscription» (Welkin, Express, Inter-Knot) and «Dailies» (daily commissions).\n\n• Quick check-in: select a day and tap the bottom action button.\n\n• Multi-select mode: long-press any date to activate multi-select. Pick any days (or tap «Select all») and use the bottom bar to «Mark» or «Unmark».\n\n• If dates in the future are selected, a confirmation dialog appears to prevent accidental check-ins.</string>
+
+    <string name="help_feature_backup_title">Backup &amp; Data Migration</string>
+    <string name="help_feature_backup_summary">Local database export and restoration</string>
+    <string name="help_feature_backup_detail">• The app operates entirely offline and stores all records in a local SQLite database.\n\n• To transfer data to another phone or safeguard your logs, go to «Settings» → «Data» → «Import». Save your database file (.db) to storage or cloud.\n\n• On a new device, tap «Export» and choose your saved .db file — all pulls history, calendar entries, and savings will be restored.</string>
+
+    <string name="help_mech_pity_title">Soft &amp; Hard Pity</string>
+    <string name="help_mech_pity_summary">Base rates and probability ramp-up thresholds</string>
+    <string name="help_mech_pity_detail">• Base drop rate for a 5★ item is 0.6%.\n\n• «Soft Pity»: starting at pull 74 in Genshin Impact and Honkai: Star Rail (pull 73 in Zenless Zone Zero), the chance to get a 5★ spikes drastically with each pull (up to ~32% per pull).\n\n• «Hard Pity»: reached at pull 90, guaranteeing a 5★. In practice, the vast majority of players obtain a 5★ around pulls 75–81. That is why the Piggy Bank uses 77 pulls as its standard 1x Pity calculation.</string>
+
+    <string name="help_mech_5050_title">50/50 Rule &amp; Guarantee Carryover</string>
+    <string name="help_mech_5050_summary">Featured character chance and pity inheritance</string>
+    <string name="help_mech_5050_detail">• The first 5★ drop on a featured banner has a 50% chance of being the rate-up character and 50% of being a standard character.\n\n• Losing the 50/50 guarantees that your next 5★ will be the 100% featured character.\n\n• Pull counts and guarantee status carry over seamlessly between banner rotations of the same type.</string>
+
+    <string name="help_mech_weapon_title">Weapon Banner Mechanics</string>
+    <string name="help_mech_weapon_summary">Fate points in Genshin, 75/25 in HSR &amp; ZZZ</string>
+    <string name="help_mech_weapon_detail">• Genshin Impact: Hard pity is 80 (soft starts at 63). The Epitomized Path guarantees the chosen weapon with 1 Fate Point. Important: pull counts carry over across banners, but accumulated Fate Points reset when the banner rotates!\n\n• Honkai: Star Rail: Light Cone banner has a 75/25 rate (80 hard pity, soft at 65), with no expiring Fate Points.\n\n• Zenless Zone Zero: W-Engine banner also uses the 75/25 rule with hard pity at 80 pulls.</string>
+
+    <string name="help_mech_radiance_title">Capturing Radiance (Genshin Impact)</string>
+    <string name="help_mech_radiance_summary">Bad luck protection in Genshin Impact 5.0+</string>
+    <string name="help_mech_radiance_detail">• From version 5.0 onward, Genshin Impact includes «Capturing Radiance» (indicated by a special animation on the banner).\n\n• When a 50/50 loss would occur, an additional background check may flip the result into a featured character win, lifting the overall effective 50/50 winrate to around 55%.</string>
+
+    <string name="help_faq_savings_title">Savings Calculation Formula</string>
+    <string name="help_faq_savings_summary">Balance from three sources and pity presets (1x, 2x, 6x)</string>
+    <string name="help_faq_savings_detail">• Total Piggy Bank savings are composed of three sources:\n1) Manually added pulls and currency (gems/jades/polychromes convert at a 160:1 ratio, with remainder currency displayed separately).\n2) Savings from active subscriptions (recorded automatically via Calendar claims).\n3) Savings from daily commissions (synced from Calendar: completed dailies credit currency into savings).\n\n• When deducting pulls, the app deducts from manual first, then subscriptions, then dailies.\n\n• Savings Target can be set manually or via quick presets in the card menu:\n— «1 Pity» (+77 pulls) — estimated average pulls needed for a 5★.\n— «2 Pities» (+154 pulls) — guaranteed character acquisition accounting for a possible 50/50 loss.\n— «6 Pities» (+462 pulls) — target for maximum constellations / eidolons (C6/E6).</string>
+
+    <string name="help_faq_stats_title">Average Pity &amp; 50/50 Winrate Formula</string>
+    <string name="help_faq_stats_summary">Pure luck statistics without distortion from guarantees</string>
+    <string name="help_faq_stats_detail">• Average Pity: total pulls spent on all 5★ divided by the total number of 5★ obtained across banner history. Best (minimum) and worst (maximum) pity counts are also displayed.\n\n• 50/50 Winrate: calculated strictly as:\n(50/50 Wins) / (50/50 Wins + 50/50 Losses) × 100%.\n\n• Guaranteed 5★ drops (obtained after a loss) are excluded from this formula so that the winrate genuinely measures your personal luck rather than inflating the percentage.</string>
+
+    <string name="help_faq_privacy_title">Offline Storage &amp; Data Security</string>
+    <string name="help_faq_privacy_summary">Local database without servers or account linking</string>
+    <string name="help_faq_privacy_detail">• GachaPoint works completely offline with no network connections or telemetry.\n\n• No game accounts or credentials are required. All records stay solely on your phone.\n\n• Remember to periodically export a backup in Settings to safeguard your history.</string>
 </resources>

@@ -12,6 +12,14 @@
         tools:layout="@layout/fragment_more">
 
         <action
+            android:id="@+id/action_to_help"
+            app:destination="@id/helpView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+
+        <action
             android:id="@+id/action_to_info"
             app:destination="@id/infoView"
             app:enterAnim="@anim/fade_in"
@@ -52,6 +60,12 @@
             app:popExitAnim="@anim/fade_out"/>
 
     </fragment>
+
+    <fragment
+        android:id="@+id/helpView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.help.HelpView"
+        android:label="@string/help_title"
+        tools:layout="@layout/fragment_help" />
 
     <fragment
         android:id="@+id/piggyBankView"
