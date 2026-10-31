@@ -59,12 +59,13 @@ public final class JsonDataLoader {
     }
 
     private static boolean isJsonEmpty(String json) {
-        if (json == null) return false;
+        if (json == null) return true;
         String trimmed = json.trim();
-        return !trimmed.isEmpty() && !trimmed.equals("{}")
-                && !trimmed.equals("{\"codes\":[]}")
-                && !trimmed.contains("\"codes\": []")
-                && !trimmed.contains("\"codes\":[]");
+        return trimmed.isEmpty()
+                || trimmed.equals("{}")
+                || trimmed.equals("{\"codes\":[]}")
+                || trimmed.contains("\"codes\": []")
+                || trimmed.contains("\"codes\":[]");
     }
 
     @Nullable
