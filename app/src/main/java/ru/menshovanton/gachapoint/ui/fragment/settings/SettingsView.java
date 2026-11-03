@@ -14,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 import ru.menshovanton.gachapoint.ui.common.NoFilterArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -52,6 +53,8 @@ public class SettingsView extends Fragment {
 
     private Button dbImportButton;
     private Button dbExportButton;
+    private Button btnClearCache;
+    private TextView tvCacheDesc;
     private ImageButton back;
 
     private MaterialSwitch notificationsSwitch;
@@ -108,6 +111,8 @@ public class SettingsView extends Fragment {
         chipDefaultGame = view.findViewById(R.id.chip_default_game);
         dbImportButton = view.findViewById(R.id.btn_import_database);
         dbExportButton = view.findViewById(R.id.btn_export_database);
+        btnClearCache = view.findViewById(R.id.btn_clear_cache);
+        tvCacheDesc = view.findViewById(R.id.tv_cache_desc);
         back = view.findViewById(R.id.btn_back);
         themeSelector = view.findViewById(R.id.mac_theme_selector);
         languageSelector = view.findViewById(R.id.mac_lang_selector);
@@ -160,6 +165,8 @@ public class SettingsView extends Fragment {
         chipDefaultGame = null;
         dbImportButton = null;
         dbExportButton = null;
+        btnClearCache = null;
+        tvCacheDesc = null;
         back = null;
         vibrationSwitch = null;
         mainActivityView = null;
@@ -234,6 +241,9 @@ public class SettingsView extends Fragment {
 
         dbExportButton.setOnClickListener(v -> viewModel.onExportDatabaseClicked());
         dbImportButton.setOnClickListener(v -> viewModel.onImportDatabaseClicked());
+        if (btnClearCache != null) {
+            btnClearCache.setOnClickListener(v -> showClearCacheDialog());
+        }
         back.setOnClickListener(view -> viewModel.onBackToMenuClicked());
     }
 
@@ -380,6 +390,24 @@ public class SettingsView extends Fragment {
                 Toast.makeText(getContext(), resId, Toast.LENGTH_SHORT).show();
             }
         });
+
+        viewModel.getCacheSizeText().observe(getViewLifecycleOwner(), sizeText -> {
+            if (tvCacheDesc != null && sizeText != null) {
+                tvCacheDesc.setText(getString(R.string.settings_cache_desc) + " (" + sizeText + ")");
+            }
+        });
+    }
+
+    private void showClearCacheDialog() {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog_GachaPoint_AlertDialog)
+                .setTitle(R.string.settings_cache_dialog_title)
+                .setMessage(R.string.settings_cache_dialog_msg)
+                .setPositiveButton(R.string.settings_cache_clear_button, (dialog, which) -> {
+                    viewModel.clearAppCache();
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     @SuppressLint("DefaultLocale")

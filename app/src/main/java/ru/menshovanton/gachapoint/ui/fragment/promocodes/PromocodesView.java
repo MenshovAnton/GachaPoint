@@ -111,6 +111,12 @@ public class PromocodesView extends Fragment {
         });
 
         observeViewModel();
+
+        ru.menshovanton.gachapoint.data.repository.PromocodeRepository.getInstance(requireContext())
+                .markAllPromocodesAsViewed();
+        if (getActivity() instanceof ru.menshovanton.gachapoint.ui.main.MainActivityView) {
+            ((ru.menshovanton.gachapoint.ui.main.MainActivityView) getActivity()).updatePromocodesBadge();
+        }
     }
 
     private void showModerationDialog(PromoCode code) {

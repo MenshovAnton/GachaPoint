@@ -84,11 +84,89 @@ public class BannerScheduleRepository {
         return banners.get(banners.size() - 1);
     }
 
+    @Nullable
+    public synchronized BannerScheduleItem getBannerForDate(@Nullable GameType gameType, @Nullable LocalDate date) {
+        if (gameType == null || date == null) return null;
+        List<BannerScheduleItem> banners = bannerCache.get(gameType.getId());
+        if (banners == null || banners.isEmpty()) return null;
+
+        DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
+
+        // 1. Look for a banner whose start_date <= date <= end_date
+        for (BannerScheduleItem banner : banners) {
+            try {
+                LocalDate start = LocalDate.parse(banner.getStartDate(), fmt);
+                LocalDate end = LocalDate.parse(banner.getEndDate(), fmt);
+                if (!date.isBefore(start) && !date.isAfter(end)) {
+                    return banner;
+                }
+            } catch (Exception ignored) {}
+        }
+
+        // 2. If date is today, return current
+        if (date.equals(LocalDate.now())) {
+            return getCurrentBanner(gameType);
+        }
+
+        // 3. Fallback: closest banner to that date
+        BannerScheduleItem closest = null;
+        long minDiff = Long.MAX_VALUE;
+        for (BannerScheduleItem banner : banners) {
+            try {
+                LocalDate start = LocalDate.parse(banner.getStartDate(), fmt);
+                long diff = Math.abs(ChronoUnit.DAYS.between(start, date));
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closest = banner;
+                }
+            } catch (Exception ignored) {}
+        }
+        return closest != null ? closest : getCurrentBanner(gameType);
+    }
+
     @NonNull
     public synchronized List<BannerScheduleItem> getBanners(@Nullable GameType gameType) {
         if (gameType == null) return Collections.emptyList();
         List<BannerScheduleItem> list = bannerCache.get(gameType.getId());
-        return list != null ? new ArrayList<>(list) : Collections.emptyList();
+        if (list == null || list.isEmpty()) return Collections.emptyList();
+        List<BannerScheduleItem> result = new ArrayList<>(list);
+        Collections.reverse(result);
+        return result;
+    }
+
+    public synchronized int getUnviewedBannersCount() {
+        ru.menshovanton.gachapoint.data.local.Preferences prefs =
+                new ru.menshovanton.gachapoint.data.local.Preferences(context);
+        java.util.Set<String> viewed = prefs.getViewedBanners();
+        int count = 0;
+        for (List<BannerScheduleItem> list : bannerCache.values()) {
+            if (list == null) continue;
+            for (BannerScheduleItem banner : list) {
+                String st = banner.getStatus();
+                if ("CURRENT".equalsIgnoreCase(st) || "ANNOUNCED".equalsIgnoreCase(st)) {
+                    if (!viewed.contains(banner.getId())) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    public synchronized void markAllBannersAsViewed() {
+        ru.menshovanton.gachapoint.data.local.Preferences prefs =
+                new ru.menshovanton.gachapoint.data.local.Preferences(context);
+        List<String> ids = new ArrayList<>();
+        for (List<BannerScheduleItem> list : bannerCache.values()) {
+            if (list == null) continue;
+            for (BannerScheduleItem banner : list) {
+                String st = banner.getStatus();
+                if ("CURRENT".equalsIgnoreCase(st) || "ANNOUNCED".equalsIgnoreCase(st)) {
+                    ids.add(banner.getId());
+                }
+            }
+        }
+        prefs.markBannersAsViewed(ids);
     }
 
     @NonNull
@@ -118,6 +196,20 @@ public class BannerScheduleRepository {
         return null;
     }
 
+    private static boolean listContainsName(List<String> list, String query) {
+        if (list == null || query == null || query.trim().isEmpty()) return false;
+        String cleanQuery = query.trim().toLowerCase(java.util.Locale.ROOT).replace('ё', 'е');
+        for (String item : list) {
+            if (item != null) {
+                String cleanItem = item.trim().toLowerCase(java.util.Locale.ROOT).replace('ё', 'е');
+                if (cleanItem.equals(cleanQuery) || cleanItem.contains(cleanQuery) || cleanQuery.contains(cleanItem)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public synchronized int getDaysSinceLastRerun(@Nullable GameType gameType, @NonNull String characterName) {
         if (gameType == null) return -1;
         List<BannerScheduleItem> banners = bannerCache.get(gameType.getId());
@@ -127,7 +219,9 @@ public class BannerScheduleRepository {
         LocalDate latestEnd = null;
 
         for (BannerScheduleItem banner : banners) {
-            if (banner.getFeaturedFiveStars().contains(characterName)) {
+            if (listContainsName(banner.getFeaturedFiveStars(), characterName)
+                    || listContainsName(banner.getFeaturedFiveStarsRu(), characterName)
+                    || listContainsName(banner.getFeaturedFiveStarsEn(), characterName)) {
                 try {
                     LocalDate end = LocalDate.parse(banner.getEndDate(), DateTimeFormatter.ISO_LOCAL_DATE);
                     if (latestEnd == null || end.isAfter(latestEnd)) {
@@ -165,12 +259,12 @@ public class BannerScheduleRepository {
             String latestVersion = null;
 
             for (BannerScheduleItem banner : banners) {
-                boolean matches = banner.getFeaturedFiveStars().contains(charName)
-                        || banner.getFeaturedFiveStars().contains(item.getNameRu())
-                        || banner.getFeaturedFiveStars().contains(item.getNameEn())
-                        || banner.getFeaturedFiveStarsRu().contains(charName)
-                        || banner.getFeaturedFiveStarsRu().contains(item.getNameRu())
-                        || banner.getFeaturedFiveStarsEn().contains(item.getNameEn());
+                boolean matches = listContainsName(banner.getFeaturedFiveStars(), charName)
+                        || listContainsName(banner.getFeaturedFiveStars(), item.getNameRu())
+                        || listContainsName(banner.getFeaturedFiveStars(), item.getNameEn())
+                        || listContainsName(banner.getFeaturedFiveStarsRu(), charName)
+                        || listContainsName(banner.getFeaturedFiveStarsRu(), item.getNameRu())
+                        || listContainsName(banner.getFeaturedFiveStarsEn(), item.getNameEn());
 
                 if (matches) {
                     try {
@@ -246,87 +340,54 @@ public class BannerScheduleRepository {
                 for (JsonElement gElem : games) {
                     if (!gElem.isJsonObject()) continue;
                     JsonObject gObj = gElem.getAsJsonObject();
-                    int gameType = gObj.has("game_type") ? gObj.get("game_type").getAsInt() : 0;
+                    int gameType = optInt(gObj, "game_type", 0);
 
                     List<PatchInfo> patchList = new ArrayList<>();
-                    if (gObj.has("patches")) {
+                    if (gObj.has("patches") && gObj.get("patches").isJsonArray()) {
                         for (JsonElement pElem : gObj.getAsJsonArray("patches")) {
                             if (!pElem.isJsonObject()) continue;
                             JsonObject pObj = pElem.getAsJsonObject();
                             patchList.add(new PatchInfo(
-                                    pObj.has("version") ? pObj.get("version").getAsString() : "",
-                                    pObj.has("title") ? pObj.get("title").getAsString() : "",
-                                    pObj.has("start_date") ? pObj.get("start_date").getAsString() : "",
-                                    pObj.has("end_date") ? pObj.get("end_date").getAsString() : ""
+                                    optString(pObj, "version", ""),
+                                    optString(pObj, "title", ""),
+                                    optString(pObj, "start_date", ""),
+                                    optString(pObj, "end_date", "")
                             ));
                         }
                     }
                     patchCache.put(gameType, patchList);
 
                     List<BannerScheduleItem> bannerList = new ArrayList<>();
-                    if (gObj.has("banners")) {
+                    if (gObj.has("banners") && gObj.get("banners").isJsonArray()) {
                         for (JsonElement bElem : gObj.getAsJsonArray("banners")) {
                             if (!bElem.isJsonObject()) continue;
                             JsonObject bObj = bElem.getAsJsonObject();
 
-                            List<String> fiveStars = new ArrayList<>();
-                            if (bObj.has("featured_five_stars") && bObj.get("featured_five_stars").isJsonArray()) {
-                                for (JsonElement fe : bObj.getAsJsonArray("featured_five_stars")) {
-                                    fiveStars.add(fe.getAsString());
-                                }
-                            }
+                            List<String> fiveStarsRu = safeStringList(bObj, "featured_five_stars_ru");
+                            List<String> fiveStarsEn = safeStringList(bObj, "featured_five_stars_en");
+                            List<String> fiveStars = !fiveStarsRu.isEmpty() ? fiveStarsRu : fiveStarsEn;
 
-                            List<String> fiveStarsRu = new ArrayList<>();
-                            if (bObj.has("featured_five_stars_ru") && bObj.get("featured_five_stars_ru").isJsonArray()) {
-                                for (JsonElement fe : bObj.getAsJsonArray("featured_five_stars_ru")) {
-                                    fiveStarsRu.add(fe.getAsString());
-                                }
-                            }
+                            List<String> fourStarsRu = safeStringList(bObj, "featured_four_stars_ru");
+                            List<String> fourStarsEn = safeStringList(bObj, "featured_four_stars_en");
+                            List<String> fourStars = !fourStarsRu.isEmpty() ? fourStarsRu : fourStarsEn;
 
-                            List<String> fiveStarsEn = new ArrayList<>();
-                            if (bObj.has("featured_five_stars_en") && bObj.get("featured_five_stars_en").isJsonArray()) {
-                                for (JsonElement fe : bObj.getAsJsonArray("featured_five_stars_en")) {
-                                    fiveStarsEn.add(fe.getAsString());
-                                }
-                            }
-
-                            List<String> fourStars = new ArrayList<>();
-                            if (bObj.has("featured_four_stars") && bObj.get("featured_four_stars").isJsonArray()) {
-                                for (JsonElement fe : bObj.getAsJsonArray("featured_four_stars")) {
-                                    fourStars.add(fe.getAsString());
-                                }
-                            }
-
-                            List<String> fourStarsRu = new ArrayList<>();
-                            if (bObj.has("featured_four_stars_ru") && bObj.get("featured_four_stars_ru").isJsonArray()) {
-                                for (JsonElement fe : bObj.getAsJsonArray("featured_four_stars_ru")) {
-                                    fourStarsRu.add(fe.getAsString());
-                                }
-                            }
-
-                            List<String> fourStarsEn = new ArrayList<>();
-                            if (bObj.has("featured_four_stars_en") && bObj.get("featured_four_stars_en").isJsonArray()) {
-                                for (JsonElement fe : bObj.getAsJsonArray("featured_four_stars_en")) {
-                                    fourStarsEn.add(fe.getAsString());
-                                }
-                            }
-
-                            String bannerImageUrl = bObj.has("banner_image_url") ? bObj.get("banner_image_url").getAsString() : null;
+                            String bannerImageUrl = bObj.has("banner_image_url") && !bObj.get("banner_image_url").isJsonNull()
+                                    ? optString(bObj, "banner_image_url", null) : null;
 
                             bannerList.add(new BannerScheduleItem(
-                                    bObj.has("id") ? bObj.get("id").getAsString() : "",
+                                    optString(bObj, "id", ""),
                                     gameType,
-                                    bObj.has("version") ? bObj.get("version").getAsString() : "",
-                                    bObj.has("phase") ? bObj.get("phase").getAsInt() : 1,
-                                    bObj.has("start_date") ? bObj.get("start_date").getAsString() : "",
-                                    bObj.has("end_date") ? bObj.get("end_date").getAsString() : "",
-                                    bObj.has("status") ? bObj.get("status").getAsString() : "PAST",
+                                    optString(bObj, "version", ""),
+                                    optInt(bObj, "phase", 1),
+                                    optString(bObj, "start_date", ""),
+                                    optString(bObj, "end_date", ""),
+                                    optString(bObj, "status", "PAST"),
                                     fiveStars,
                                     fourStars,
-                                    !fiveStarsRu.isEmpty() ? fiveStarsRu : fiveStars,
-                                    !fiveStarsEn.isEmpty() ? fiveStarsEn : fiveStars,
-                                    !fourStarsRu.isEmpty() ? fourStarsRu : fourStars,
-                                    !fourStarsEn.isEmpty() ? fourStarsEn : fourStars,
+                                    fiveStarsRu,
+                                    fiveStarsEn,
+                                    fourStarsRu,
+                                    fourStarsEn,
                                     bannerImageUrl
                             ));
                         }
@@ -337,5 +398,41 @@ public class BannerScheduleRepository {
         } catch (Exception e) {
             AppLogger.e("BannerScheduleRepository", "Failed to parse banners schedule JSON", e);
         }
+    }
+
+    private static String optString(@NonNull JsonObject obj, @NonNull String key, @Nullable String defVal) {
+        if (!obj.has(key) || obj.get(key).isJsonNull()) return defVal;
+        try {
+            return obj.get(key).getAsString();
+        } catch (Exception e) {
+            return defVal;
+        }
+    }
+
+    private static int optInt(@NonNull JsonObject obj, @NonNull String key, int defVal) {
+        if (!obj.has(key) || obj.get(key).isJsonNull()) return defVal;
+        try {
+            return obj.get(key).getAsInt();
+        } catch (Exception e) {
+            return defVal;
+        }
+    }
+
+    @NonNull
+    private static List<String> safeStringList(@NonNull JsonObject obj, @NonNull String key) {
+        List<String> list = new ArrayList<>();
+        if (obj.has(key) && obj.get(key).isJsonArray()) {
+            for (JsonElement elem : obj.getAsJsonArray(key)) {
+                if (elem != null && !elem.isJsonNull()) {
+                    try {
+                        String s = elem.getAsString().trim();
+                        if (!s.isEmpty()) {
+                            list.add(s);
+                        }
+                    } catch (Exception ignored) {}
+                }
+            }
+        }
+        return list;
     }
 }

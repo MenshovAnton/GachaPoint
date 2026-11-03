@@ -225,6 +225,8 @@
     <string name="pity_status_guaranteed">Гарант 100%</string>
     <string name="pity_5star_title">Гарант 5★</string>
     <string name="pity_4star_title">Гарант 4★</string>
+    <string name="pity_s_rank_title">Гарант S-ранга</string>
+    <string name="pity_a_rank_title">Гарант A-ранга</string>
     <string name="pity_status_fifty_fifty">Шанс 50/50</string>
     <string name="pity_status_guaranteed_badge" formatted="false">Гарант 100%</string>
     <string name="pity_pull_at">%d-я крутка</string>
@@ -373,6 +375,7 @@
     <string name="menu_calc_desc">Расчет накоплений к баннерам</string>
     <string name="menu_promo_title">Агрегатор промокодов</string>
     <string name="menu_promo_desc">Свежие коды на гемы</string>
+    <string name="promocode_new_badge">НОВОЕ</string>
     <string name="promocodes_notification_channel_name">Промокоды</string>
     <string name="promocodes_notification_channel_desc">Уведомления о стримовых и срочных промокодах</string>
     <string name="promocode_stream_push_title">Срочный промокод со стрима %s!</string>
@@ -414,6 +417,28 @@
     <string name="promocode_status_stream_expired">Истёк (Стрим)</string>
     <string name="promocodes_empty">Для этой игры пока нет промокодов</string>
     <string name="journal_standard_loss_hint">Стандартный 5★: выбран проигрыш 50/50</string>
+    <string name="journal_outcome_auto_win">Исход: Авто (Выигрыш 50/50)</string>
+    <string name="journal_outcome_auto_loss">Исход: Авто (Проигрыш 50/50)</string>
+    <string name="journal_outcome_auto_guaranteed">Исход: Авто (Гарант 100%)</string>
+    <string name="journal_select_drop_chip">Выберите персонажа или предмет</string>
+    <string name="journal_custom_name">Другое название…</string>
+
+    <!-- Cache Management -->
+    <string name="settings_cache_title">Кеш данных и баннеров</string>
+    <string name="settings_cache_desc">Кешированные баннеры, промокоды и аватарки</string>
+    <string name="settings_cache_clear_button">Очистить</string>
+    <string name="settings_cache_cleared_toast">Кеш успешно очищен</string>
+    <string name="settings_cache_dialog_title">Очистить кеш?</string>
+    <string name="settings_cache_dialog_msg">Удалить загруженные копии баннеров, промокодов и временные изображения? Ваши крутки, накопления и статус забранных промокодов сохранятся в полной безопасности.</string>
+
+    <!-- Banner & Code Notifications -->
+    <string name="channel_banners_name">Баннеры и события</string>
+    <string name="channel_banners_desc">Оповещения об анонсах, окончании и старте баннеров</string>
+    <string name="notification_banner_announced_title">Анонс баннера: %s</string>
+    <string name="notification_banner_upcoming_title">Завтра старт баннера: %s</string>
+    <string name="notification_banner_active_title">Баннер уже доступен: %s!</string>
+    <string name="notification_hot_code_title">Горящий промокод (%1$s): %2$s</string>
+    <string name="notification_hot_code_desc">Истекает менее чем через 24 часа! Заберите награды.</string>
     <string name="drop_type_character">Персонаж</string>
     <string name="drop_type_weapon">Оружие</string>
     <string name="banners_title">Хроника и баннеры</string>
@@ -425,6 +450,7 @@
     <string name="banners_days_left">Осталось дней: %d</string>
     <string name="banners_starts_in">До старта дней: %d</string>
     <string name="banners_rerun_days_ago">%d дней без рерана</string>
+    <string name="banners_rerun_active">Сейчас в баннере</string>
     <string name="banners_last_seen">Был в патче %s</string>
     <string name="banners_five_star_characters">5★ Персонажи</string>
     <string name="banners_four_star_characters">4★ Персонажи</string>
@@ -588,15 +614,15 @@
 
     <string name="help_mech_pity_title">Мягкий и жесткий гарант (Soft Pity)</string>
     <string name="help_mech_pity_summary">Базовые шансы и пороги резкого роста вероятности</string>
-    <string name="help_mech_pity_detail">• Базовый шанс получить 5★ составляет всего 0.6%.\n\n• «Мягкий гарант» (Soft Pity): начиная с 74-й крутки в Genshin Impact и Honkai: Star Rail (с 73-й в Zenless Zone Zero) шанс получить 5★ возрастает в десятки раз с каждым броском (до ~32% за крутку).\n\n• «Жесткий гарант» (Hard Pity): наступает на 90-й крутке, гарантируя выпадение 5★. На практике абсолютное большинство игроков забирают легу в районе 75–81 крутки. Именно поэтому в Копилке базовый расчет 1 гаранта равен 77 круткам.</string>
+    <string name="help_mech_pity_detail" formatted="false">• Базовый шанс получить 5★ составляет всего 0.6%.\n\n• «Мягкий гарант» (Soft Pity): начиная с 74-й крутки в Genshin Impact и Honkai: Star Rail (с 73-й в Zenless Zone Zero) шанс получить 5★ возрастает в десятки раз с каждым броском (до ~32% за крутку).\n\n• «Жесткий гарант» (Hard Pity): наступает на 90-й крутке, гарантируя выпадение 5★. На практике абсолютное большинство игроков забирают легу в районе 75–81 крутки. Именно поэтому в Копилке базовый расчет 1 гаранта равен 77 круткам.</string>
 
     <string name="help_mech_5050_title">Правило 50/50 и перенос гаранта</string>
     <string name="help_mech_5050_summary">Ивентовые персонажи, стандартные леги и наследование счетчика</string>
-    <string name="help_mech_5050_detail">• Первая выпавшая 5★ на ивентовом баннере имеет шанс 50% оказаться баннерным персонажем и 50% — стандартным.\n\n• При проигрыше 50/50 следующая полученная 5★ будет 100% гарантированной ивентовой.\n\n• Счетчик открученных молитв и статус гаранта полностью переносятся между сменами баннеров одного типа (например, с одного ивентового баннера на следующий).</string>
+    <string name="help_mech_5050_detail" formatted="false">• Первая выпавшая 5★ на ивентовом баннере имеет шанс 50% оказаться баннерным персонажем и 50% — стандартным.\n\n• При проигрыше 50/50 следующая полученная 5★ будет 100% гарантированной ивентовой.\n\n• Счетчик открученных молитв и статус гаранта полностью переносятся между сменами баннеров одного типа (например, с одного ивентового баннера на следующий).</string>
 
     <string name="help_mech_weapon_title">Особенности оружейных баннеров</string>
     <string name="help_mech_weapon_summary">Очки судьбы в Genshin, баннеры 75/25 в HSR и ZZZ</string>
-    <string name="help_mech_weapon_detail">• Genshin Impact: базовый гарант на оружие равен 80 (софт с 63-й). Система «Курс» гарантирует выбранное оружие максимум за 1 очко судьбы. Важно: открученные крутки переносятся на следующие баннеры, но накопленные очки судьбы сгорают при смене баннера!\n\n• Honkai: Star Rail: баннер световых конусов имеет шанс 75% на сигнатуру и 25% на стандарт, жесткий гарант — 80 (софт с 65-й), сгорающих очков судьбы нет.\n\n• Zenless Zone Zero: баннер амплификаторов также работает по схеме 75/25 с жестким гарантом на 80-й крутке.</string>
+    <string name="help_mech_weapon_detail" formatted="false">• Genshin Impact: базовый гарант на оружие равен 80 (софт с 63-й). Система «Курс» гарантирует выбранное оружие максимум за 1 очко судьбы. Важно: открученные крутки переносятся на следующие баннеры, но накопленные очки судьбы сгорают при смене баннера!\n\n• Honkai: Star Rail: баннер световых конусов имеет шанс 75% на сигнатуру и 25% на стандарт, жесткий гарант — 80 (софт с 65-й), сгорающих очков судьбы нет.\n\n• Zenless Zone Zero: баннер амплификаторов также работает по схеме 75/25 с жестким гарантом на 80-й крутке.</string>
 
     <string name="help_mech_radiance_title">Пленительное сияние (Genshin Impact)</string>
     <string name="help_mech_radiance_summary">Защита от серий проигрышей в Genshin Impact 5.0+</string>
@@ -612,7 +638,7 @@
 
     <string name="help_faq_stats_title">Формула среднего гаранта и винрейта 50/50</string>
     <string name="help_faq_stats_summary">Чистая математика удачи без искажения гарантами</string>
-    <string name="help_faq_stats_detail">• Средний гарант: сумма всех круток, затраченных на получение 5★, деленная на общее количество полученных 5★ за всю историю баннеров. Также отображаются лучший (минимальный) и худший (максимальный) показатель.\n\n• Винрейт 50/50: процент побед вычисляется строго по формуле:\n(Победы 50/50) / (Победы 50/50 + Проигрыши 50/50) × 100%.\n\n• Легендарки, полученные по 100% гаранту (после проигрыша), исключаются из этой формулы, чтобы показывать честную вероятность вашей персональной удачи, а не искаженную цифру.</string>
+    <string name="help_faq_stats_detail" formatted="false">• Средний гарант: сумма всех круток, затраченных на получение 5★, деленная на общее количество полученных 5★ за всю историю баннеров. Также отображаются лучший (минимальный) и худший (максимальный) показатель.\n\n• Винрейт 50/50: процент побед вычисляется строго по формуле:\n(Победы 50/50) / (Победы 50/50 + Проигрыши 50/50) × 100%.\n\n• Легендарки, полученные по 100% гаранту (после проигрыша), исключаются из этой формулы, чтобы показывать честную вероятность вашей персональной удачи, а не искаженную цифру.</string>
 
     <string name="help_faq_privacy_title">Автономность и безопасность данных</string>
     <string name="help_faq_privacy_summary">Локальное хранение без серверов и аккаунтов</string>

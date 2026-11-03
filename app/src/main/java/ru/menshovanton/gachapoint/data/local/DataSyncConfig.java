@@ -11,12 +11,12 @@ public final class DataSyncConfig {
 
     private DataSyncConfig() {}
 
-    public static final String PROMOCODES_REMOTE_URL =
-            "https://raw.githubusercontent.com/menshovanton/GachaPoint-Data/main/promocodes.json";
-    public static final String BANNERS_REMOTE_URL =
-            "https://raw.githubusercontent.com/menshovanton/GachaPoint-Data/main/banners_schedule.json";
-    public static final String CATALOG_REMOTE_URL =
-            "https://raw.githubusercontent.com/menshovanton/GachaPoint-Data/main/game_catalog.json";
+    public static final String BASE_REMOTE_URL =
+            "https://raw.githubusercontent.com/menshovanton/GachaPoint-Data/main/";
+
+    public static final String PROMOCODES_REMOTE_URL = BASE_REMOTE_URL + "promocodes.json";
+    public static final String BANNERS_REMOTE_URL = BASE_REMOTE_URL + "banners_schedule.json";
+    public static final String CATALOG_REMOTE_URL = BASE_REMOTE_URL + "game_catalog.json";
 
     public static final String ASSET_PROMOCODES = "data/promocodes.json";
     public static final String ASSET_BANNERS = "data/banners_schedule.json";
@@ -25,6 +25,20 @@ public final class DataSyncConfig {
     public static final String CACHE_PROMOCODES = "promocodes_v1_cache.json";
     public static final String CACHE_BANNERS = "banners_v1_cache.json";
     public static final String CACHE_CATALOG = "catalog_v1_cache.json";
+
+    @Nullable
+    public static String resolveRemotePath(@Nullable String path) {
+        if (path == null) return null;
+        String clean = path.trim().replace('\\', '/');
+        if (clean.isEmpty()) return null;
+        if (clean.startsWith("http://") || clean.startsWith("https://")) {
+            return clean;
+        }
+        while (clean.startsWith("/")) {
+            clean = clean.substring(1);
+        }
+        return BASE_REMOTE_URL + clean;
+    }
 
     private static final Pattern CODE_PATTERN = Pattern.compile("^[A-Za-z0-9_-]{3,30}$");
 

@@ -115,13 +115,83 @@
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
+        <TextView
+            android:id="@+id/tv_select_drop_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:fontFamily="@font/genshin_font"
+            android:text="@string/journal_select_drop_chip"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+
+        <HorizontalScrollView
+            android:id="@+id/hsv_drop_chips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:scrollbars="none"
+            android:clipToPadding="false">
+
+            <LinearLayout
+                android:id="@+id/ll_drop_chips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+
+        <!-- Hybrid Outcome Indicator Badge -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_auto_outcome"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/badge_gold_bg"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/rare_legendary"
+            app:strokeWidth="1dp"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp">
+
+                <TextView
+                    android:id="@+id/tv_auto_outcome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/genshin_font"
+                    android:textColor="@color/rare_legendary"
+                    android:textSize="12sp"
+                    tools:text="Исход: Авто (Проигрыш 50/50)" />
+
+                <ImageView
+                    android:id="@+id/iv_outcome_chevron"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="6dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/icon_down_arrow"
+                    app:tint="@color/rare_legendary" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Power user override container for outcome -->
         <LinearLayout
             android:id="@+id/ll_pity_status_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="true"
             android:orientation="vertical"
-            android:paddingTop="12dp"
+            android:paddingTop="10dp"
             android:visibility="gone"
             tools:visibility="visible">
 
@@ -187,17 +257,31 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/btn_toggle_custom_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/genshin_font"
+            android:text="@string/journal_custom_name"
+            android:textColor="@color/check"
+            android:textSize="12sp" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_drop_name"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="8dp"
             android:hint="@string/hint_input_content"
+            android:visibility="gone"
             app:boxCornerRadiusBottomEnd="14dp"
             app:boxCornerRadiusBottomStart="14dp"
             app:boxCornerRadiusTopEnd="14dp"
-            app:boxCornerRadiusTopStart="14dp">
+            app:boxCornerRadiusTopStart="14dp"
+            tools:visibility="visible">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/tiet_drop_name_edit"

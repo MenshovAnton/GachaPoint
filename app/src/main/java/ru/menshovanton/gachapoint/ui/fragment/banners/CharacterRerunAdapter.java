@@ -50,28 +50,20 @@ public class CharacterRerunAdapter extends RecyclerView.Adapter<CharacterRerunAd
         holder.tvName.setText(rerun.getCharacterName());
 
         String name = rerun.getCharacterName();
-        String letter = !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase() : "";
-        holder.tvAvatarLetter.setText(letter);
+        ru.menshovanton.gachapoint.domain.enums.GameType gt =
+                ru.menshovanton.gachapoint.domain.enums.GameType.fromId(rerun.getGameType());
+        ru.menshovanton.gachapoint.domain.models.CatalogItem item =
+                ru.menshovanton.gachapoint.data.repository.CatalogRepository.getInstance(context)
+                        .findItemByName(gt, name);
+        String iconUrl = (item != null) ? item.getIconUrl() : null;
 
-        if (holder.ivAvatar != null) {
-            ru.menshovanton.gachapoint.domain.enums.GameType gt =
-                    ru.menshovanton.gachapoint.domain.enums.GameType.fromId(rerun.getGameType());
-            ru.menshovanton.gachapoint.domain.models.CatalogItem item =
-                    ru.menshovanton.gachapoint.data.repository.CatalogRepository.getInstance(context)
-                            .findItemByName(gt, name);
-            if (item != null && item.getIconUrl() != null && !item.getIconUrl().isEmpty()) {
-                holder.ivAvatar.setVisibility(View.VISIBLE);
-                holder.tvAvatarLetter.setVisibility(View.GONE);
-                com.bumptech.glide.Glide.with(context)
-                        .load(item.getIconUrl())
-                        .circleCrop()
-                        .into(holder.ivAvatar);
-            } else {
-                holder.ivAvatar.setImageDrawable(null);
-                holder.ivAvatar.setVisibility(View.GONE);
-                holder.tvAvatarLetter.setVisibility(View.VISIBLE);
-            }
-        }
+        ru.menshovanton.gachapoint.ui.common.AvatarImageLoader.loadAvatar(
+                context,
+                iconUrl,
+                name,
+                holder.ivAvatar,
+                holder.tvAvatarLetter
+        );
 
         int days = rerun.getDaysSinceLastRerun();
         if (days == 999 || rerun.getLastVersion() == null) {
@@ -79,6 +71,11 @@ public class CharacterRerunAdapter extends RecyclerView.Adapter<CharacterRerunAd
             holder.tvDaysBadge.setText("—");
             holder.cardDaysBadge.setCardBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.pull_pity_badge_bg)));
             holder.tvDaysBadge.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
+        } else if (days <= 0) {
+            holder.tvLastSeen.setText(context.getString(R.string.banners_last_seen, "v" + rerun.getLastVersion()));
+            holder.tvDaysBadge.setText(context.getString(R.string.banners_rerun_active));
+            holder.cardDaysBadge.setCardBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.badge_green_bg)));
+            holder.tvDaysBadge.setTextColor(ContextCompat.getColor(context, R.color.checked));
         } else {
             holder.tvLastSeen.setText(context.getString(R.string.banners_last_seen, "v" + rerun.getLastVersion()));
             holder.tvDaysBadge.setText(context.getString(R.string.banners_rerun_days_ago, days));

@@ -55,10 +55,23 @@ public class PromocodesViewModel extends AndroidViewModel {
 
     private List<PromoCode> rawCodes = new ArrayList<>();
 
+    private final ru.menshovanton.gachapoint.data.local.JsonDataLoader.OnDataUpdatedListener dataUpdatedListener = cacheFileName -> {
+        if (ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_PROMOCODES.equals(cacheFileName)) {
+            loadPromocodes(false);
+        }
+    };
+
     public PromocodesViewModel(@NonNull Application application) {
         super(application);
         this.repository = PromocodeRepository.getInstance(application);
+        ru.menshovanton.gachapoint.data.local.JsonDataLoader.addDataUpdatedListener(dataUpdatedListener);
         loadPromocodes(false);
+    }
+
+    @Override
+    protected void onCleared() {
+        ru.menshovanton.gachapoint.data.local.JsonDataLoader.removeDataUpdatedListener(dataUpdatedListener);
+        super.onCleared();
     }
 
     public LiveData<GameType> getSelectedGameType() { return selectedGameType; }
@@ -123,13 +136,13 @@ public class PromocodesViewModel extends AndroidViewModel {
             boolean isStr = code.isStream() || "STREAM".equalsIgnoreCase(code.getStatus());
             boolean isPerm = code.isPermanent();
 
-            if (!isExp && !isRed && !isStr && !isPerm) {
+            if (!isExp && !isRed) {
                 activeCount++;
             }
             if (isStr && !isExp && !isRed) {
                 streamCount++;
             }
-            if (isPerm && !isRed) {
+            if (isPerm && !isExp && !isRed) {
                 permanentCount++;
             }
             if (isExp) {
@@ -149,11 +162,12 @@ public class PromocodesViewModel extends AndroidViewModel {
             boolean isPerm = code.isPermanent();
 
             if (mode == FilterMode.ACTIVE) {
-                if (isExp || isRed || isStr || isPerm) continue;
+                // ACTIVE tab displays all currently actionable working promo codes
+                if (isExp || isRed) continue;
             } else if (mode == FilterMode.STREAM) {
-                if (!isStr) continue;
+                if (!isStr || isExp || isRed) continue;
             } else if (mode == FilterMode.PERMANENT) {
-                if (!isPerm) continue;
+                if (!isPerm || isExp || isRed) continue;
             } else if (mode == FilterMode.EXPIRED) {
                 if (!isExp) continue;
             } else if (mode == FilterMode.REDEEMED) {
@@ -162,9 +176,44 @@ public class PromocodesViewModel extends AndroidViewModel {
             filtered.add(code);
         }
 
-        filtered.sort(Comparator.comparingInt(this::getCodePriority));
+        filtered.sort(this::compareCodes);
 
         displayedCodes.setValue(filtered);
+    }
+
+    private int compareCodes(PromoCode c1, PromoCode c2) {
+        int p1 = getCodePriority(c1);
+        int p2 = getCodePriority(c2);
+        if (p1 != p2) {
+            return Integer.compare(p1, p2);
+        }
+
+        if (c1.isStream() && c2.isStream()) {
+            long rem1 = c1.getRemainingHours();
+            long rem2 = c2.getRemainingHours();
+            if (rem1 > 0 && rem2 > 0 && rem1 != rem2) {
+                return Long.compare(rem1, rem2);
+            }
+        }
+
+        if (c1.isExpired() && c2.isExpired()) {
+            String e1 = c1.getExpiresAt() != null ? c1.getExpiresAt() : (c1.getCreatedAt() != null ? c1.getCreatedAt() : "");
+            String e2 = c2.getExpiresAt() != null ? c2.getExpiresAt() : (c2.getCreatedAt() != null ? c2.getCreatedAt() : "");
+            return e2.compareTo(e1);
+        }
+
+        if (c1.isNew() != c2.isNew()) {
+            return c1.isNew() ? -1 : 1;
+        }
+
+        String d1 = c1.getCreatedAt() != null ? c1.getCreatedAt() : "";
+        String d2 = c2.getCreatedAt() != null ? c2.getCreatedAt() : "";
+        int dateCmp = d2.compareTo(d1);
+        if (dateCmp != 0) {
+            return dateCmp;
+        }
+
+        return c1.getCode().compareTo(c2.getCode());
     }
 
     private int getCodePriority(PromoCode code) {

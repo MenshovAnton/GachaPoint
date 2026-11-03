@@ -233,6 +233,8 @@
     <string name="pity_status_guaranteed">Guaranteed</string>
     <string name="pity_5star_title">5★ Guarantee</string>
     <string name="pity_4star_title">4★ Guarantee</string>
+    <string name="pity_s_rank_title">S-Rank Guarantee</string>
+    <string name="pity_a_rank_title">A-Rank Guarantee</string>
     <string name="pity_status_fifty_fifty">50/50 Chance</string>
     <string name="pity_status_guaranteed_badge" formatted="false">100% Guaranteed</string>
     <string name="pity_pull_at" tools:ignore="PluralsCandidate">%d pull</string>
@@ -395,6 +397,7 @@
     <string name="menu_calc_desc">Savings planner for future banners</string>
     <string name="menu_promo_title">Promo Codes Hub</string>
     <string name="menu_promo_desc">Latest codes for primogems and jade</string>
+    <string name="promocode_new_badge">NEW</string>
     <string name="promocodes_notification_channel_name">Promo Codes</string>
     <string name="promocodes_notification_channel_desc">Stream and emergency promo code notifications</string>
     <string name="promocode_stream_push_title">Urgent stream promo code for %s!</string>
@@ -436,6 +439,28 @@
     <string name="promocode_status_stream_expired">Expired (Stream)</string>
     <string name="promocodes_empty">No promo codes found for this game yet</string>
     <string name="journal_standard_loss_hint">Standard 5★: 50/50 Loss auto-selected</string>
+    <string name="journal_outcome_auto_win">Outcome: Auto (Won 50/50)</string>
+    <string name="journal_outcome_auto_loss">Outcome: Auto (Lost 50/50)</string>
+    <string name="journal_outcome_auto_guaranteed">Outcome: Auto (Guaranteed)</string>
+    <string name="journal_select_drop_chip">Select character or item</string>
+    <string name="journal_custom_name">Custom name / other…</string>
+
+    <!-- Cache Management -->
+    <string name="settings_cache_title">Cache &amp; Offline Data</string>
+    <string name="settings_cache_desc">Cached banners, promo codes, and avatars</string>
+    <string name="settings_cache_clear_button">Clear</string>
+    <string name="settings_cache_cleared_toast">Cache cleared successfully</string>
+    <string name="settings_cache_dialog_title">Clear Cache?</string>
+    <string name="settings_cache_dialog_msg">Delete cached banners, promo codes, and temporary images? Your pulls history, savings, and redeemed statuses will remain completely safe.</string>
+
+    <!-- Banner & Code Notifications -->
+    <string name="channel_banners_name">Banners &amp; Events</string>
+    <string name="channel_banners_desc">Notifications for announcements, countdowns, and banner launches</string>
+    <string name="notification_banner_announced_title">New Banner Announced: %s</string>
+    <string name="notification_banner_upcoming_title">Starting Tomorrow: %s</string>
+    <string name="notification_banner_active_title">Banner is Now Live: %s!</string>
+    <string name="notification_hot_code_title">Expiring Promo Code (%1$s): %2$s</string>
+    <string name="notification_hot_code_desc">Expires in less than 24 hours! Tap to redeem your rewards.</string>
     <string name="drop_type_character">Character</string>
     <string name="drop_type_weapon">Weapon</string>
     <string name="banners_title">Banners &amp; Chronicle</string>
@@ -447,6 +472,7 @@
     <string name="banners_days_left">%d days left</string>
     <string name="banners_starts_in">Starts in %d days</string>
     <string name="banners_rerun_days_ago">%d days without rerun</string>
+    <string name="banners_rerun_active">Currently in banner</string>
     <string name="banners_last_seen">Last banner in %s</string>
     <string name="banners_five_star_characters">5★ Characters</string>
     <string name="banners_four_star_characters">4★ Characters</string>
@@ -626,15 +652,15 @@
 
     <string name="help_mech_pity_title">Soft &amp; Hard Pity</string>
     <string name="help_mech_pity_summary">Base rates and probability ramp-up thresholds</string>
-    <string name="help_mech_pity_detail">• Base drop rate for a 5★ item is 0.6%.\n\n• «Soft Pity»: starting at pull 74 in Genshin Impact and Honkai: Star Rail (pull 73 in Zenless Zone Zero), the chance to get a 5★ spikes drastically with each pull (up to ~32% per pull).\n\n• «Hard Pity»: reached at pull 90, guaranteeing a 5★. In practice, the vast majority of players obtain a 5★ around pulls 75–81. That is why the Piggy Bank uses 77 pulls as its standard 1x Pity calculation.</string>
+    <string name="help_mech_pity_detail" formatted="false">• Base drop rate for a 5★ item is 0.6%.\n\n• «Soft Pity»: starting at pull 74 in Genshin Impact and Honkai: Star Rail (pull 73 in Zenless Zone Zero), the chance to get a 5★ spikes drastically with each pull (up to ~32% per pull).\n\n• «Hard Pity»: reached at pull 90, guaranteeing a 5★. In practice, the vast majority of players obtain a 5★ around pulls 75–81. That is why the Piggy Bank uses 77 pulls as its standard 1x Pity calculation.</string>
 
     <string name="help_mech_5050_title">50/50 Rule &amp; Guarantee Carryover</string>
     <string name="help_mech_5050_summary">Featured character chance and pity inheritance</string>
-    <string name="help_mech_5050_detail">• The first 5★ drop on a featured banner has a 50% chance of being the rate-up character and 50% of being a standard character.\n\n• Losing the 50/50 guarantees that your next 5★ will be the 100% featured character.\n\n• Pull counts and guarantee status carry over seamlessly between banner rotations of the same type.</string>
+    <string name="help_mech_5050_detail" formatted="false">• The first 5★ drop on a featured banner has a 50% chance of being the rate-up character and 50% of being a standard character.\n\n• Losing the 50/50 guarantees that your next 5★ will be the 100% featured character.\n\n• Pull counts and guarantee status carry over seamlessly between banner rotations of the same type.</string>
 
     <string name="help_mech_weapon_title">Weapon Banner Mechanics</string>
     <string name="help_mech_weapon_summary">Fate points in Genshin, 75/25 in HSR &amp; ZZZ</string>
-    <string name="help_mech_weapon_detail">• Genshin Impact: Hard pity is 80 (soft starts at 63). The Epitomized Path guarantees the chosen weapon with 1 Fate Point. Important: pull counts carry over across banners, but accumulated Fate Points reset when the banner rotates!\n\n• Honkai: Star Rail: Light Cone banner has a 75/25 rate (80 hard pity, soft at 65), with no expiring Fate Points.\n\n• Zenless Zone Zero: W-Engine banner also uses the 75/25 rule with hard pity at 80 pulls.</string>
+    <string name="help_mech_weapon_detail" formatted="false">• Genshin Impact: Hard pity is 80 (soft starts at 63). The Epitomized Path guarantees the chosen weapon with 1 Fate Point. Important: pull counts carry over across banners, but accumulated Fate Points reset when the banner rotates!\n\n• Honkai: Star Rail: Light Cone banner has a 75/25 rate (80 hard pity, soft at 65), with no expiring Fate Points.\n\n• Zenless Zone Zero: W-Engine banner also uses the 75/25 rule with hard pity at 80 pulls.</string>
 
     <string name="help_mech_radiance_title">Capturing Radiance (Genshin Impact)</string>
     <string name="help_mech_radiance_summary">Bad luck protection in Genshin Impact 5.0+</string>
@@ -650,7 +676,7 @@
 
     <string name="help_faq_stats_title">Average Pity &amp; 50/50 Winrate Formula</string>
     <string name="help_faq_stats_summary">Pure luck statistics without distortion from guarantees</string>
-    <string name="help_faq_stats_detail">• Average Pity: total pulls spent on all 5★ divided by the total number of 5★ obtained across banner history. Best (minimum) and worst (maximum) pity counts are also displayed.\n\n• 50/50 Winrate: calculated strictly as:\n(50/50 Wins) / (50/50 Wins + 50/50 Losses) × 100%.\n\n• Guaranteed 5★ drops (obtained after a loss) are excluded from this formula so that the winrate genuinely measures your personal luck rather than inflating the percentage.</string>
+    <string name="help_faq_stats_detail" formatted="false">• Average Pity: total pulls spent on all 5★ divided by the total number of 5★ obtained across banner history. Best (minimum) and worst (maximum) pity counts are also displayed.\n\n• 50/50 Winrate: calculated strictly as:\n(50/50 Wins) / (50/50 Wins + 50/50 Losses) × 100%.\n\n• Guaranteed 5★ drops (obtained after a loss) are excluded from this formula so that the winrate genuinely measures your personal luck rather than inflating the percentage.</string>
 
     <string name="help_faq_privacy_title">Offline Storage &amp; Data Security</string>
     <string name="help_faq_privacy_summary">Local database without servers or account linking</string>

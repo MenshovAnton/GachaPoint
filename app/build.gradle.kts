@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.splashscreen)
     implementation(libs.browser)
     implementation(libs.glide)
+    implementation(libs.work.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     annotationProcessor(libs.room.compiler)

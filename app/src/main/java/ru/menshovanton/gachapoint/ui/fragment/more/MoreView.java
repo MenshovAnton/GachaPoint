@@ -29,6 +29,8 @@ public class MoreView extends Fragment {
     private View rowCalculator;
     private View rowPromocodes;
     private View rowBanners;
+    private View badgeNewPromocodes;
+    private View badgeNewBanners;
 
     public MoreView() {}
 
@@ -56,6 +58,8 @@ public class MoreView extends Fragment {
         rowCalculator = view.findViewById(R.id.row_calculator);
         rowPromocodes = view.findViewById(R.id.row_promocodes);
         rowBanners = view.findViewById(R.id.row_banners);
+        badgeNewPromocodes = view.findViewById(R.id.badge_new_promocodes);
+        badgeNewBanners = view.findViewById(R.id.badge_new_banners);
 
         if (rowSavings != null) {
             rowSavings.setOnClickListener(v -> viewModel.onSavingsButtonClicked());
@@ -130,10 +134,55 @@ public class MoreView extends Fragment {
                 Toast.makeText(requireContext(), R.string.menu_feature_in_dev, Toast.LENGTH_SHORT).show();
 
         if (rowCalculator != null) rowCalculator.setOnClickListener(comingSoonListener);
+        ru.menshovanton.gachapoint.data.local.JsonDataLoader.addDataUpdatedListener(dataUpdatedListener);
+    }
+
+    private final ru.menshovanton.gachapoint.data.local.JsonDataLoader.OnDataUpdatedListener dataUpdatedListener = cacheFileName -> {
+        if (ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_PROMOCODES.equals(cacheFileName)) {
+            updatePromocodesBadge();
+        } else if (ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_BANNERS.equals(cacheFileName)) {
+            updateBannersBadge();
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updatePromocodesBadge();
+        updateBannersBadge();
+    }
+
+    private void updatePromocodesBadge() {
+        if (getContext() == null || badgeNewPromocodes == null) return;
+        ru.menshovanton.gachapoint.data.db.AppDatabase.getExecutor().execute(() -> {
+            ru.menshovanton.gachapoint.data.repository.PromocodeRepository repo =
+                    ru.menshovanton.gachapoint.data.repository.PromocodeRepository.getInstance(requireContext());
+            int unviewed = repo.getUnviewedPromoCodesCount();
+            ru.menshovanton.gachapoint.data.db.AppDatabase.postToMain(() -> {
+                if (badgeNewPromocodes != null) {
+                    badgeNewPromocodes.setVisibility(unviewed > 0 ? View.VISIBLE : View.GONE);
+                }
+            });
+        });
+    }
+
+    private void updateBannersBadge() {
+        if (getContext() == null || badgeNewBanners == null) return;
+        ru.menshovanton.gachapoint.data.db.AppDatabase.getExecutor().execute(() -> {
+            ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository repo =
+                    ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository.getInstance(requireContext());
+            int unviewed = repo.getUnviewedBannersCount();
+            ru.menshovanton.gachapoint.data.db.AppDatabase.postToMain(() -> {
+                if (badgeNewBanners != null) {
+                    badgeNewBanners.setVisibility(unviewed > 0 ? View.VISIBLE : View.GONE);
+                }
+            });
+        });
     }
 
     @Override
     public void onDestroyView() {
+        ru.menshovanton.gachapoint.data.local.JsonDataLoader.removeDataUpdatedListener(dataUpdatedListener);
         super.onDestroyView();
         helpButton = null;
         infoButton = null;
@@ -142,5 +191,8 @@ public class MoreView extends Fragment {
         rowStatistics = null;
         rowCalculator = null;
         rowPromocodes = null;
+        rowBanners = null;
+        badgeNewPromocodes = null;
+        badgeNewBanners = null;
     }
 }

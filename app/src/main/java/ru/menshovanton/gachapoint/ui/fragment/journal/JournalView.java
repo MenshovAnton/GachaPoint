@@ -44,7 +44,12 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 
+import com.bumptech.glide.Glide;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository;
 import ru.menshovanton.gachapoint.data.repository.CatalogRepository;
+import ru.menshovanton.gachapoint.domain.models.BannerScheduleItem;
 import ru.menshovanton.gachapoint.domain.models.CatalogItem;
 import ru.menshovanton.gachapoint.ui.common.HapticHelper;
 
@@ -102,10 +107,12 @@ public class JournalView extends Fragment {
     private LinearProgressIndicator progressBar;
 
     private TextView tvPity5StarCounter;
+    private TextView tvLabel5Star;
     private LinearProgressIndicator progressPity5Star;
     private MaterialCardView badgePityStatus;
     private TextView tvPityStatusBadge;
     private TextView tvPity4StarCounter;
+    private TextView tvLabel4Star;
     private LinearProgressIndicator progressPity4Star;
 
     private PullsAdapter pullsAdapter;
@@ -152,10 +159,12 @@ public class JournalView extends Fragment {
         progressBar = view.findViewById(R.id.progress_loading);
 
         tvPity5StarCounter = view.findViewById(R.id.tv_pity_5star_counter);
+        tvLabel5Star = view.findViewById(R.id.tv_label_5star);
         progressPity5Star = view.findViewById(R.id.progress_pity_5star);
         badgePityStatus = view.findViewById(R.id.badge_pity_status);
         tvPityStatusBadge = view.findViewById(R.id.tv_pity_status_badge);
         tvPity4StarCounter = view.findViewById(R.id.tv_pity_4star_counter);
+        tvLabel4Star = view.findViewById(R.id.tv_label_4star);
         progressPity4Star = view.findViewById(R.id.progress_pity_4star);
 
         return view;
@@ -535,10 +544,12 @@ public class JournalView extends Fragment {
         btnEmptyAddTen = null;
         progressBar = null;
         tvPity5StarCounter = null;
+        tvLabel5Star = null;
         progressPity5Star = null;
         badgePityStatus = null;
         tvPityStatusBadge = null;
         tvPity4StarCounter = null;
+        tvLabel4Star = null;
         progressPity4Star = null;
         pullsAdapter = null;
         super.onDestroyView();
@@ -612,6 +623,16 @@ public class JournalView extends Fragment {
     @SuppressLint("SetTextI18n")
     private void updatePityTexts() {
         BannerInfo bannerInfo = viewModel.getCurrentBannerInfo();
+        GameType gameType = viewModel.getCurrentGameType();
+        if (tvLabel5Star != null) {
+            boolean usesRanks = (gameType == GameType.ZZZ || gameType == GameType.HI3);
+            tvLabel5Star.setText(usesRanks ? R.string.pity_s_rank_title : R.string.pity_5star_title);
+        }
+        if (tvLabel4Star != null) {
+            boolean usesRanks = (gameType == GameType.ZZZ || gameType == GameType.HI3);
+            tvLabel4Star.setText(usesRanks ? R.string.pity_a_rank_title : R.string.pity_4star_title);
+        }
+
         int max5 = bannerInfo != null ? bannerInfo.getMaxPity5Star() : 90;
         int max4 = bannerInfo != null ? bannerInfo.getMaxPity4Star() : 10;
 
@@ -866,98 +887,253 @@ public class JournalView extends Fragment {
         TextView dialogTitle = dialogView.findViewById(R.id.tv_dialog_header);
         ImageButton btnDelete = dialogView.findViewById(R.id.btn_dialog_delete);
         ImageButton btnClose = dialogView.findViewById(R.id.btn_dialog_close);
+        GameType currentGameType = viewModel.getCurrentGameType();
         MaterialButtonToggleGroup toggleRarity = dialogView.findViewById(R.id.toggle_rarity);
+        MaterialButton btnRare5 = dialogView.findViewById(R.id.btn_rare_5);
+        MaterialButton btnRare4 = dialogView.findViewById(R.id.btn_rare_4);
+        MaterialButton btnRare3 = dialogView.findViewById(R.id.btn_rare_3);
+        if (btnRare5 != null) btnRare5.setText(ru.menshovanton.gachapoint.domain.enums.Rarity.LEGENDARY.getDisplayRank(currentGameType, requireContext()));
+        if (btnRare4 != null) btnRare4.setText(ru.menshovanton.gachapoint.domain.enums.Rarity.EPIC.getDisplayRank(currentGameType, requireContext()));
+        if (btnRare3 != null) btnRare3.setText(ru.menshovanton.gachapoint.domain.enums.Rarity.COMMON.getDisplayRank(currentGameType, requireContext()));
         View pityStatusContainer = dialogView.findViewById(R.id.ll_pity_status_container);
         MaterialButtonToggleGroup togglePityStatus = dialogView.findViewById(R.id.toggle_pity_status);
         MaterialAutoCompleteTextView editDropType = dialogView.findViewById(R.id.tiet_drop_name_edit);
         TextInputEditText editDate = dialogView.findViewById(R.id.tiet_edit_date);
         MaterialButton btnSave = dialogView.findViewById(R.id.btn_save_pull);
 
+        LinearLayout llDropChips = dialogView.findViewById(R.id.ll_drop_chips);
+        MaterialCardView cardAutoOutcome = dialogView.findViewById(R.id.card_auto_outcome);
+        TextView tvAutoOutcome = dialogView.findViewById(R.id.tv_auto_outcome);
+        TextView btnToggleCustomName = dialogView.findViewById(R.id.btn_toggle_custom_name);
+        View tilDropName = dialogView.findViewById(R.id.til_drop_name);
+
         DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.getDefault());
         DateTimeFormatter dbFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
         final LocalDate[] selectedDate = new LocalDate[1];
         boolean isEditMode = (wishToEdit != null);
+        if (isEditMode) {
+            try {
+                selectedDate[0] = LocalDate.parse(wishToEdit.getDateTime(), dbFormatter);
+            } catch (Exception e) {
+                selectedDate[0] = LocalDate.now();
+            }
+        } else {
+            selectedDate[0] = LocalDate.now();
+        }
+        final boolean[] suppressAutoOutcomeChange = new boolean[]{isEditMode};
 
         BannerInfo bannerInfo = viewModel.getCurrentBannerInfo();
         boolean bannerHas5050 = bannerInfo != null && bannerInfo.hasFiftyFifty();
-        final ValueAnimator[] outcomeAnimator = new ValueAnimator[1];
 
-        java.util.function.Consumer<Boolean> updateOutcomeVisibility = animate -> {
-            boolean shouldShow = bannerHas5050 && toggleRarity.getCheckedButtonId() == R.id.btn_rare_5;
-            if (outcomeAnimator[0] != null && outcomeAnimator[0].isRunning()) {
-                outcomeAnimator[0].cancel();
-            }
+        CatalogRepository catalogRepo = CatalogRepository.getInstance(requireContext());
+        List<CatalogItem> catalogItems = catalogRepo.getItemsForGame(currentGameType);
 
-            if (shouldShow) {
-                if (pityStatusContainer.getVisibility() != View.VISIBLE || pityStatusContainer.getHeight() == 0) {
-                    if (Boolean.TRUE.equals(animate)) {
-                        pityStatusContainer.setVisibility(View.VISIBLE);
-                        pityStatusContainer.measure(
-                                View.MeasureSpec.makeMeasureSpec(dialogView.getWidth() > 0 ? dialogView.getWidth() : dialogView.getResources().getDisplayMetrics().widthPixels, View.MeasureSpec.EXACTLY),
-                                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                        );
-                        int measuredH = pityStatusContainer.getMeasuredHeight();
-                        int targetH = measuredH > 0 ? measuredH : (int) (68 * dialogView.getResources().getDisplayMetrics().density);
-                        int startH = Math.max(0, pityStatusContainer.getHeight());
-
-                        outcomeAnimator[0] = ValueAnimator.ofInt(startH, targetH);
-                        outcomeAnimator[0].setDuration(240);
-                        outcomeAnimator[0].setInterpolator(new DecelerateInterpolator());
-                        outcomeAnimator[0].addUpdateListener(animation -> {
-                            pityStatusContainer.getLayoutParams().height = (int) (Integer) animation.getAnimatedValue();
-                            pityStatusContainer.setAlpha(animation.getAnimatedFraction());
-                            pityStatusContainer.requestLayout();
-                        });
-                        outcomeAnimator[0].addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                pityStatusContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                                pityStatusContainer.setAlpha(1f);
-                                pityStatusContainer.requestLayout();
-                            }
-                        });
-                        outcomeAnimator[0].start();
-                    } else {
-                        pityStatusContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        pityStatusContainer.setAlpha(1f);
-                        pityStatusContainer.setVisibility(View.VISIBLE);
-                    }
-                }
-            } else {
-                if (pityStatusContainer.getVisibility() == View.VISIBLE) {
-                    if (Boolean.TRUE.equals(animate)) {
-                        int startH = pityStatusContainer.getHeight();
-                        if (startH <= 0) {
-                            pityStatusContainer.setVisibility(View.GONE);
-                            pityStatusContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                            return;
-                        }
-                        outcomeAnimator[0] = ValueAnimator.ofInt(startH, 0);
-                        outcomeAnimator[0].setDuration(200);
-                        outcomeAnimator[0].setInterpolator(new DecelerateInterpolator());
-                        outcomeAnimator[0].addUpdateListener(animation -> {
-                            pityStatusContainer.getLayoutParams().height = (int) (Integer) animation.getAnimatedValue();
-                            pityStatusContainer.setAlpha(1f - animation.getAnimatedFraction());
-                            pityStatusContainer.requestLayout();
-                        });
-                        outcomeAnimator[0].addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                pityStatusContainer.setVisibility(View.GONE);
-                                pityStatusContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                                pityStatusContainer.setAlpha(1f);
-                                pityStatusContainer.requestLayout();
-                            }
-                        });
-                        outcomeAnimator[0].start();
-                    } else {
-                        pityStatusContainer.setVisibility(View.GONE);
-                        pityStatusContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    }
-                }
-            }
+        java.util.function.Function<LocalDate, BannerScheduleItem> resolveBannerForDate = date -> {
+            BannerScheduleRepository bannerRepo = BannerScheduleRepository.getInstance(requireContext());
+            BannerScheduleItem b = bannerRepo.getBannerForDate(currentGameType, date);
+            return b != null ? b : bannerRepo.getCurrentBanner(currentGameType);
         };
+
+        java.lang.Runnable updatePityStatusBadge = () -> {
+            if (!bannerHas5050 || toggleRarity.getCheckedButtonId() != R.id.btn_rare_5) {
+                if (cardAutoOutcome != null) cardAutoOutcome.setVisibility(View.GONE);
+                if (pityStatusContainer != null) pityStatusContainer.setVisibility(View.GONE);
+                return;
+            }
+
+            BannerScheduleItem activeBanner = resolveBannerForDate.apply(selectedDate[0]);
+            List<String> featuredFives = activeBanner != null ? activeBanner.getFeaturedFiveStars(requireContext()) : Collections.emptyList();
+
+            String currentName = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
+            boolean isFeatured = false;
+            for (String feat : featuredFives) {
+                if (feat != null && feat.trim().equalsIgnoreCase(currentName)) {
+                    isFeatured = true;
+                    break;
+                }
+            }
+            boolean isStd = catalogRepo.isStandardFiveStar(currentGameType, currentName);
+
+            if (suppressAutoOutcomeChange[0]) {
+                if (wishToEdit != null && wishToEdit.getPityStatus() != null) {
+                    PityStatus st = wishToEdit.getPityStatus();
+                    if (st == PityStatus.LOSS_50_50) {
+                        tvAutoOutcome.setText(R.string.journal_outcome_auto_loss);
+                        cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_purple_bg)));
+                        cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.rare_epic)));
+                        tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.rare_epic));
+                    } else if (st == PityStatus.GUARANTEED) {
+                        tvAutoOutcome.setText(R.string.journal_outcome_auto_guaranteed);
+                        cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_green_bg)));
+                        cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.checked)));
+                        tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.checked));
+                    } else {
+                        tvAutoOutcome.setText(R.string.journal_outcome_auto_win);
+                        cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_gold_bg)));
+                        cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.rare_legendary)));
+                        tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.rare_legendary));
+                    }
+                }
+                cardAutoOutcome.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            if (isStd || (!featuredFives.isEmpty() && !isFeatured)) {
+                togglePityStatus.check(R.id.btn_pity_loss);
+                tvAutoOutcome.setText(R.string.journal_outcome_auto_loss);
+                cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_purple_bg)));
+                cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.rare_epic)));
+                tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.rare_epic));
+            } else {
+                Boolean guaranteed = viewModel.getIsGuaranteedLiveData().getValue();
+                if (Boolean.TRUE.equals(guaranteed)) {
+                    togglePityStatus.check(R.id.btn_pity_guaranteed);
+                    tvAutoOutcome.setText(R.string.journal_outcome_auto_guaranteed);
+                    cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_green_bg)));
+                    cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.checked)));
+                    tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.checked));
+                } else {
+                    togglePityStatus.check(R.id.btn_pity_win);
+                    tvAutoOutcome.setText(R.string.journal_outcome_auto_win);
+                    cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_gold_bg)));
+                    cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.rare_legendary)));
+                    tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.rare_legendary));
+                }
+            }
+            cardAutoOutcome.setVisibility(View.VISIBLE);
+        };
+
+        java.util.function.Consumer<Integer> populateChips = rarityId -> {
+            if (llDropChips == null) return;
+            llDropChips.removeAllViews();
+
+            BannerScheduleItem activeBanner = resolveBannerForDate.apply(selectedDate[0]);
+            List<String> featuredFives = activeBanner != null ? activeBanner.getFeaturedFiveStars(requireContext()) : Collections.emptyList();
+            List<String> featuredFours = activeBanner != null ? activeBanner.getFeaturedFourStars(requireContext()) : Collections.emptyList();
+
+            if (rarityId == R.id.btn_rare_3) {
+                View chipView = LayoutInflater.from(requireContext()).inflate(R.layout.item_drop_chip, llDropChips, false);
+                MaterialCardView cardChip = chipView.findViewById(R.id.card_chip);
+                TextView tvName = chipView.findViewById(R.id.tv_chip_name);
+                TextView tvLetter = chipView.findViewById(R.id.tv_chip_letter);
+                tvName.setText(R.string.default_pull_content);
+                tvLetter.setText(ru.menshovanton.gachapoint.domain.enums.Rarity.COMMON.getDisplayRank(currentGameType, requireContext()));
+
+                cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_gold_bg)));
+                cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.check)));
+                editDropType.setText(getString(R.string.default_pull_content), false);
+                llDropChips.addView(chipView);
+                updatePityStatusBadge.run();
+                return;
+            }
+
+            boolean isFive = (rarityId == R.id.btn_rare_5);
+            List<CatalogItem> filtered = new ArrayList<>();
+            List<CatalogItem> priorityList = new ArrayList<>();
+            List<CatalogItem> others = new ArrayList<>();
+
+            List<String> priorityNames = isFive ? featuredFives : featuredFours;
+
+            for (CatalogItem item : catalogItems) {
+                if (isFive && item.isFiveStar()) {
+                    boolean isFeatured = priorityNames.contains(item.getName())
+                            || priorityNames.contains(item.getNameRu())
+                            || priorityNames.contains(item.getNameEn());
+                    if (isFeatured) {
+                        priorityList.add(item);
+                    } else if (item.isStandard()) {
+                        others.add(item);
+                    }
+                } else if (!isFive && item.isFourStar()) {
+                    boolean isFeatured = priorityNames.contains(item.getName())
+                            || priorityNames.contains(item.getNameRu())
+                            || priorityNames.contains(item.getNameEn());
+                    if (isFeatured) {
+                        priorityList.add(item);
+                    } else {
+                        others.add(item);
+                    }
+                }
+            }
+            filtered.addAll(priorityList);
+            filtered.addAll(others);
+            if (filtered.isEmpty() && isFive) {
+                for (CatalogItem item : catalogItems) {
+                    if (item.isFiveStar()) {
+                        filtered.add(item);
+                    }
+                }
+            }
+
+            String targetName = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
+            final MaterialCardView[] selectedChipCard = new MaterialCardView[1];
+
+            for (CatalogItem item : filtered) {
+                View chipView = LayoutInflater.from(requireContext()).inflate(R.layout.item_drop_chip, llDropChips, false);
+                MaterialCardView cardChip = chipView.findViewById(R.id.card_chip);
+                TextView tvName = chipView.findViewById(R.id.tv_chip_name);
+                TextView tvLetter = chipView.findViewById(R.id.tv_chip_letter);
+                ImageView ivAvatar = chipView.findViewById(R.id.iv_chip_avatar);
+
+                String itemName = item.getName(requireContext());
+                tvName.setText(itemName);
+
+                ru.menshovanton.gachapoint.ui.common.AvatarImageLoader.loadAvatar(
+                        requireContext(),
+                        item.getIconUrl(),
+                        itemName,
+                        ivAvatar,
+                        tvLetter
+                );
+
+                boolean isSelected = (!targetName.isEmpty() && targetName.equalsIgnoreCase(itemName));
+                if (isSelected || (selectedChipCard[0] == null && targetName.isEmpty())) {
+                    selectedChipCard[0] = cardChip;
+                    cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_gold_bg)));
+                    cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), isFive ? R.color.rare_legendary : R.color.rare_epic)));
+                    editDropType.setText(itemName, false);
+                } else {
+                    cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_bg)));
+                    cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_stroke)));
+                }
+
+                cardChip.setOnClickListener(v -> {
+                    if (selectedChipCard[0] != null) {
+                        selectedChipCard[0].setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_bg)));
+                        selectedChipCard[0].setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_stroke)));
+                    }
+                    selectedChipCard[0] = cardChip;
+                    cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_gold_bg)));
+                    cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), isFive ? R.color.rare_legendary : R.color.rare_epic)));
+                    editDropType.setText(itemName, false);
+                    suppressAutoOutcomeChange[0] = false;
+                    HapticHelper.performClickHaptic(requireContext(), cardChip);
+                    updatePityStatusBadge.run();
+                });
+
+                llDropChips.addView(chipView);
+            }
+            updatePityStatusBadge.run();
+        };
+
+        if (cardAutoOutcome != null) {
+            cardAutoOutcome.setOnClickListener(v -> {
+                if (pityStatusContainer != null) {
+                    boolean isCurrentlyVisible = pityStatusContainer.getVisibility() == View.VISIBLE;
+                    pityStatusContainer.setVisibility(isCurrentlyVisible ? View.GONE : View.VISIBLE);
+                }
+            });
+        }
+
+        if (btnToggleCustomName != null) {
+            btnToggleCustomName.setOnClickListener(v -> {
+                if (tilDropName != null) {
+                    boolean isVis = tilDropName.getVisibility() == View.VISIBLE;
+                    tilDropName.setVisibility(isVis ? View.GONE : View.VISIBLE);
+                }
+            });
+        }
 
         if (isEditMode) {
             dialogTitle.setText(getString(R.string.edit_pull));
@@ -1010,13 +1186,8 @@ public class JournalView extends Fragment {
             }
         }
 
-        updateOutcomeVisibility.accept(false);
         editDate.setText(selectedDate[0].format(displayFormatter));
 
-        GameType currentGameType = viewModel.getCurrentGameType();
-        CatalogRepository catalogRepo = CatalogRepository.getInstance(requireContext());
-
-        List<CatalogItem> catalogItems = catalogRepo.getItemsForGame(currentGameType);
         CatalogAutoCompleteAdapter autoAdapter = new CatalogAutoCompleteAdapter(requireContext(), catalogItems);
         editDropType.setAdapter(autoAdapter);
         editDropType.setOnItemClickListener((parent, view1, position, id) -> {
@@ -1025,35 +1196,21 @@ public class JournalView extends Fragment {
                 editDropType.setText(selectedItem.getName(requireContext()), false);
                 if (selectedItem.isFiveStar()) {
                     toggleRarity.check(R.id.btn_rare_5);
-                    updateOutcomeVisibility.accept(true);
-                    if (selectedItem.isStandard()) {
-                        togglePityStatus.check(R.id.btn_pity_loss);
-                        android.widget.Toast.makeText(requireContext(), R.string.journal_standard_loss_hint, android.widget.Toast.LENGTH_SHORT).show();
-                    } else {
-                        Boolean guaranteed = viewModel.getIsGuaranteedLiveData().getValue();
-                        if (Boolean.TRUE.equals(guaranteed)) {
-                            togglePityStatus.check(R.id.btn_pity_guaranteed);
-                        } else {
-                            togglePityStatus.check(R.id.btn_pity_win);
-                        }
-                    }
                 } else if (selectedItem.isFourStar()) {
                     toggleRarity.check(R.id.btn_rare_4);
-                    updateOutcomeVisibility.accept(true);
                 }
+                suppressAutoOutcomeChange[0] = false;
+                updatePityStatusBadge.run();
                 HapticHelper.performClickHaptic(requireContext(), editDropType);
             }
         });
 
+        // Initialize drop chips for initial rarity
+        populateChips.accept(toggleRarity.getCheckedButtonId());
+
         toggleRarity.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
-                updateOutcomeVisibility.accept(true);
-                String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
-                if (TextUtils.isEmpty(currentText)) {
-                    if (checkedId == R.id.btn_rare_3) {
-                        editDropType.setText(getString(R.string.default_pull_content), false);
-                    }
-                }
+                populateChips.accept(checkedId);
             }
         });
 
@@ -1074,6 +1231,7 @@ public class JournalView extends Fragment {
                         .atZone(ZoneId.of("UTC"))
                         .toLocalDate();
                 editDate.setText(selectedDate[0].format(displayFormatter));
+                populateChips.accept(toggleRarity.getCheckedButtonId());
             });
 
             datePicker.show(getParentFragmentManager(), "DATE_PICKER");
@@ -1110,11 +1268,11 @@ public class JournalView extends Fragment {
 
             String dropRare;
             if (checkedToggleId == R.id.btn_rare_5) {
-                dropRare = getString(R.string.five_star);
+                dropRare = ru.menshovanton.gachapoint.domain.enums.Rarity.LEGENDARY.getDisplayRank(currentGameType, requireContext());
             } else if (checkedToggleId == R.id.btn_rare_4) {
-                dropRare = getString(R.string.four_star);
+                dropRare = ru.menshovanton.gachapoint.domain.enums.Rarity.EPIC.getDisplayRank(currentGameType, requireContext());
             } else {
-                dropRare = getString(R.string.three_star);
+                dropRare = ru.menshovanton.gachapoint.domain.enums.Rarity.COMMON.getDisplayRank(currentGameType, requireContext());
             }
 
             PityStatus selectedPityStatus = getSelectedPityStatus(checkedToggleId, bannerHas5050, togglePityStatus);

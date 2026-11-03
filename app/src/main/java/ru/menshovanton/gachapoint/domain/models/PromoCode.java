@@ -136,7 +136,30 @@ public class PromoCode {
         return clean.equals("GENSHINGIFT")
                 || clean.equals("STARRAILGIFT")
                 || clean.equals("ZENLESSGIFT")
-                || clean.equals("ZZZTVCM");
+                || clean.equals("ZZZTVCM")
+                || clean.equals("HONKAIGIFT")
+                || clean.equals("CHEERSCAPTAIN")
+                || clean.equals("CREATIONNYMPH")
+                || clean.equals("FAREWELL")
+                || clean.equals("IFYOUAREREADINGTHIS")
+                || clean.equals("OMEGA");
+    }
+
+    public boolean isNew() {
+        if (isExpired() || isRedeemed() || isPermanent()) {
+            return false;
+        }
+        if ("NEW".equalsIgnoreCase(status)) {
+            return true;
+        }
+        if (createdAt != null && !createdAt.trim().isEmpty()) {
+            try {
+                Instant created = Instant.parse(createdAt.trim());
+                long days = Duration.between(created, Instant.now()).toDays();
+                return days <= 7;
+            } catch (Exception ignored) {}
+        }
+        return false;
     }
 
     public boolean isExpired() {
@@ -148,6 +171,20 @@ public class PromoCode {
         }
         if (!isActive || "EXPIRED".equalsIgnoreCase(status)) {
             return true;
+        }
+
+        // Hard invariant: Livestream codes expire within 28 hours of broadcast/creation,
+        // regardless of any erroneous future date in expiresAt.
+        if (isStream() || "STREAM".equalsIgnoreCase(status)) {
+            if (createdAt != null && !createdAt.trim().isEmpty()) {
+                try {
+                    Instant created = Instant.parse(createdAt.trim());
+                    long hours = Duration.between(created, Instant.now()).toHours();
+                    if (hours >= 28) {
+                        return true;
+                    }
+                } catch (Exception ignored) {}
+            }
         }
 
         if (expiresAt != null && !expiresAt.trim().isEmpty()) {
@@ -163,13 +200,6 @@ public class PromoCode {
         }
 
         if (isStream() || "STREAM".equalsIgnoreCase(status)) {
-            if (createdAt != null && !createdAt.trim().isEmpty()) {
-                try {
-                    Instant created = Instant.parse(createdAt.trim());
-                    long hours = Duration.between(created, Instant.now()).toHours();
-                    return hours >= 20;
-                } catch (Exception ignored) {}
-            }
             return true;
         }
 

@@ -3,6 +3,8 @@ package ru.menshovanton.gachapoint.domain.enums;
 import android.content.Context;
 
 import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import ru.menshovanton.gachapoint.R;
 
@@ -22,19 +24,13 @@ public enum RareType {
         return colorResId;
     }
 
-    public static RareType from(String rarity, Context context) {
-        if (rarity == null) {
-            return DEFAULT;
-        }
-        String clean = rarity.trim();
-        if (context.getString(R.string.four_star).equalsIgnoreCase(clean)
-                || "A".equalsIgnoreCase(clean) || "A-Rank".equalsIgnoreCase(clean) || "A-ранг".equalsIgnoreCase(clean)) {
-            return EPIC;
-        } else if (context.getString(R.string.five_star).equalsIgnoreCase(clean)
-                || "S".equalsIgnoreCase(clean) || "S-Rank".equalsIgnoreCase(clean) || "S-ранг".equalsIgnoreCase(clean)) {
-            return LEGENDARY;
-        } else {
-            return DEFAULT;
-        }
+    @NonNull
+    public static RareType from(@Nullable String rarity, @Nullable Context context) {
+        return Rarity.from(rarity).toRareType();
+    }
+
+    @NonNull
+    public static RareType from(@Nullable String rarity, @Nullable GameType gameType, @Nullable Context context) {
+        return Rarity.from(rarity, gameType).toRareType();
     }
 }

@@ -285,7 +285,7 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
             String letter = !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase() : "•";
             holder.tvAvatarLetter.setText(letter);
 
-            RareType rare = RareType.from(pull.getDropRare(), context);
+            RareType rare = RareType.from(pull.getDropRare(), currentGameType, context);
             if (rare == RareType.LEGENDARY) {
                 holder.cardAvatar.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.badge_gold_bg)));
                 holder.cardAvatar.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.rare_legendary)));
@@ -300,23 +300,18 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
                 holder.tvAvatarLetter.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
             }
 
-            if (holder.ivPullAvatar != null) {
-                ru.menshovanton.gachapoint.domain.models.CatalogItem catalogItem =
-                        ru.menshovanton.gachapoint.data.repository.CatalogRepository.getInstance(context)
-                                .findItemByName(currentGameType, name);
-                if (catalogItem != null && catalogItem.getIconUrl() != null && !catalogItem.getIconUrl().isEmpty()) {
-                    holder.ivPullAvatar.setVisibility(View.VISIBLE);
-                    holder.tvAvatarLetter.setVisibility(View.GONE);
-                    com.bumptech.glide.Glide.with(context)
-                            .load(catalogItem.getIconUrl())
-                            .circleCrop()
-                            .into(holder.ivPullAvatar);
-                } else {
-                    holder.ivPullAvatar.setImageDrawable(null);
-                    holder.ivPullAvatar.setVisibility(View.GONE);
-                    holder.tvAvatarLetter.setVisibility(View.VISIBLE);
-                }
-            }
+            ru.menshovanton.gachapoint.domain.models.CatalogItem catalogItem =
+                    ru.menshovanton.gachapoint.data.repository.CatalogRepository.getInstance(context)
+                            .findItemByName(currentGameType, name);
+            String iconUrl = (catalogItem != null) ? catalogItem.getIconUrl() : null;
+
+            ru.menshovanton.gachapoint.ui.common.AvatarImageLoader.loadAvatar(
+                    context,
+                    iconUrl,
+                    name,
+                    holder.ivPullAvatar,
+                    holder.tvAvatarLetter
+            );
         }
 
         String rawDate = pull.getDateTime();
@@ -377,7 +372,7 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
     }
 
     private void applySelectionAndStyling(@NonNull PullsViewHolder holder, Pull pull, Context context) {
-        RareType rareType = RareType.from(pull.getDropRare(), context);
+        RareType rareType = RareType.from(pull.getDropRare(), currentGameType, context);
         boolean isSelected = isSelectionMode && selectedPullIds.contains(pull.getId());
 
         if (isSelectionMode) {

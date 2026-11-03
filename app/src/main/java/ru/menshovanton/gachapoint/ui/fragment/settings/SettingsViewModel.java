@@ -11,11 +11,19 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.File;
+import java.util.Locale;
+
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.db.DatabaseExporter;
 import ru.menshovanton.gachapoint.data.db.DatabaseImporter;
+import ru.menshovanton.gachapoint.data.local.AppLogger;
+import ru.menshovanton.gachapoint.data.local.JsonDataLoader;
 import ru.menshovanton.gachapoint.data.local.Preferences;
+import ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository;
+import ru.menshovanton.gachapoint.data.repository.CatalogRepository;
+import ru.menshovanton.gachapoint.data.repository.PromocodeRepository;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 import ru.menshovanton.gachapoint.worker.NotificationScheduler;
 
@@ -37,11 +45,13 @@ public class SettingsViewModel extends AndroidViewModel {
     private final SingleLiveEvent<Void> restartAppEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<String> importErrorEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Integer> toastMessageEvent = new SingleLiveEvent<>();
+    private final MutableLiveData<String> cacheSizeText = new MutableLiveData<>();
 
     public SettingsViewModel(@NonNull Application application) {
         super(application);
         this.preferences = new Preferences(application);
         loadSettings();
+        calculateCacheSize();
     }
 
     public LiveData<Integer> getSelectedTheme() {
@@ -90,6 +100,10 @@ public class SettingsViewModel extends AndroidViewModel {
         return toastMessageEvent;
     }
 
+    public LiveData<String> getCacheSizeText() {
+        return cacheSizeText;
+    }
+
     public void loadSettings() {
         notificationsEnabled.setValue(preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS));
         alarmHour.setValue(preferences.getIntPreference(Preferences.ALARM_HOURS));
@@ -113,68 +127,63 @@ public class SettingsViewModel extends AndroidViewModel {
                 mode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
                 break;
         }
-
-        if (preferences.getIntPreference(Preferences.APP_THEME) != mode) {
-            preferences.saveIntPreference(Preferences.APP_THEME, mode);
-            selectedTheme.setValue(mode);
-            AppCompatDelegate.setDefaultNightMode(mode);
-        }
+        preferences.saveIntPreference(Preferences.APP_THEME, mode);
+        selectedTheme.setValue(mode);
+        AppCompatDelegate.setDefaultNightMode(mode);
     }
 
     public void onLanguageSelected(int position) {
-        String langCode;
+        String langTag;
         switch (position) {
             case 1:
-                langCode = "en";
+                langTag = "en";
                 break;
             case 2:
-                langCode = "ru";
+                langTag = "ru";
                 break;
             case 0:
             default:
-                langCode = "sys";
+                langTag = "sys";
                 break;
         }
 
-        String currentLang = preferences.getStringPreference(Preferences.APP_LANGUAGE, "sys");
-        if (!currentLang.equals(langCode)) {
-            preferences.saveStringPreference(Preferences.APP_LANGUAGE, langCode);
-            selectedLanguage.setValue(langCode);
+        preferences.saveStringPreference(Preferences.APP_LANGUAGE, langTag);
+        selectedLanguage.setValue(langTag);
 
-            if ("sys".equals(langCode)) {
-                AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList());
-            } else {
-                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langCode));
-            }
+        if ("sys".equals(langTag)) {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList());
+        } else {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langTag));
         }
     }
 
-    public void onVibrationModeChanged(boolean mode) {
-        preferences.saveBooleanPreference(Preferences.VIBRATION_MODE, mode);
-        vibrationMode.setValue(mode);
-    }
-
-    public void onNotificationsChanged(boolean allow) {
-        preferences.saveBooleanPreference(Preferences.ALLOW_NOTIFICATIONS, allow);
-        notificationsEnabled.setValue(allow);
-
+    public void onNotificationsChanged(boolean isEnabled) {
+        preferences.saveBooleanPreference(Preferences.ALLOW_NOTIFICATIONS, isEnabled);
+        notificationsEnabled.setValue(isEnabled);
         Context context = getApplication().getApplicationContext();
-        if (allow) {
+        if (isEnabled) {
             NotificationScheduler.scheduleDailyNotification(context, true);
         } else {
             NotificationScheduler.cancelDailyNotification(context);
         }
     }
 
-    public void onTimeSelected(int hour, int minute) {
+    public void onVibrationModeChanged(boolean isEnabled) {
+        preferences.saveBooleanPreference(Preferences.VIBRATION_MODE, isEnabled);
+        vibrationMode.setValue(isEnabled);
+    }
+
+    public void onAlarmTimeChanged(int hour, int minute) {
         preferences.saveIntPreference(Preferences.ALARM_HOURS, hour);
         preferences.saveIntPreference(Preferences.ALARM_MINUTES, minute);
-
         alarmHour.setValue(hour);
         alarmMinute.setValue(minute);
-
         Context context = getApplication().getApplicationContext();
         NotificationScheduler.scheduleDailyNotification(context, true);
+    }
+
+    public void onTimeSelected(int hour, int minute) {
+        onAlarmTimeChanged(hour, minute);
     }
 
     public void onBackToMenuClicked() {
@@ -211,6 +220,50 @@ public class SettingsViewModel extends AndroidViewModel {
             public void onError(Exception e) {
                 String error = e.getLocalizedMessage() != null ? e.getLocalizedMessage() : e.getMessage();
                 importErrorEvent.setValue(error);
+            }
+        });
+    }
+
+    public void calculateCacheSize() {
+        Context context = getApplication().getApplicationContext();
+        AppDatabase.getExecutor().execute(() -> {
+            long jsonBytes = JsonDataLoader.getJsonCacheSize(context);
+            long glideBytes = 0;
+            File glideDir = new File(context.getCacheDir(), "image_manager_disk_cache");
+            if (glideDir.exists() && glideDir.isDirectory()) {
+                File[] files = glideDir.listFiles();
+                if (files != null) {
+                    for (File f : files) {
+                        if (f.isFile()) glideBytes += f.length();
+                    }
+                }
+            }
+            long total = jsonBytes + glideBytes;
+            String text;
+            if (total < 1024) {
+                text = total + " B";
+            } else if (total < 1024 * 1024) {
+                text = String.format(Locale.getDefault(), "%.1f KB", total / 1024.0);
+            } else {
+                text = String.format(Locale.getDefault(), "%.1f MB", total / (1024.0 * 1024.0));
+            }
+            cacheSizeText.postValue(text);
+        });
+    }
+
+    public void clearAppCache() {
+        Context context = getApplication().getApplicationContext();
+        AppDatabase.getExecutor().execute(() -> {
+            try {
+                JsonDataLoader.clearAllCache(context);
+                com.bumptech.glide.Glide.get(context).clearDiskCache();
+                PromocodeRepository.getInstance(context).getPromoCodes(null, false);
+                BannerScheduleRepository.getInstance(context).reload(false);
+                CatalogRepository.getInstance(context).reload(false);
+                toastMessageEvent.postValue(R.string.settings_cache_cleared_toast);
+                calculateCacheSize();
+            } catch (Exception e) {
+                AppLogger.e("SettingsViewModel", "Error clearing cache", e);
             }
         });
     }

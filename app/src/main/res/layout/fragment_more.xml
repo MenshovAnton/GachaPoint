@@ -380,7 +380,7 @@
                             android:minHeight="40dp"
                             android:orientation="vertical"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/iv_promo_arrow"
+                            app:layout_constraintEnd_toStartOf="@+id/badge_new_promocodes"
                             app:layout_constraintStart_toEndOf="@+id/badge_promo"
                             app:layout_constraintTop_toTopOf="parent">
 
@@ -403,6 +403,34 @@
                                 android:textSize="12sp" />
 
                         </LinearLayout>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/badge_new_promocodes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:visibility="gone"
+                            app:cardBackgroundColor="@color/accent"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_promo_arrow"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:visibility="visible">
+
+                            <TextView
+                                android:id="@+id/tv_new_promo_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingHorizontal="7dp"
+                                android:paddingVertical="2dp"
+                                android:text="@string/promocode_new_badge"
+                                android:textColor="@color/white"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                        </com.google.android.material.card.MaterialCardView>
 
                         <ImageView
                             android:id="@+id/iv_promo_arrow"
@@ -465,7 +493,7 @@
                             android:minHeight="40dp"
                             android:orientation="vertical"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/iv_banners_arrow"
+                            app:layout_constraintEnd_toStartOf="@+id/badge_new_banners"
                             app:layout_constraintStart_toEndOf="@+id/badge_banners"
                             app:layout_constraintTop_toTopOf="parent">
 
@@ -488,6 +516,34 @@
                                 android:textSize="12sp" />
 
                         </LinearLayout>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/badge_new_banners"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:visibility="gone"
+                            app:cardBackgroundColor="@color/accent"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_banners_arrow"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:visibility="visible">
+
+                            <TextView
+                                android:id="@+id/tv_new_banners_badge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingHorizontal="7dp"
+                                android:paddingVertical="2dp"
+                                android:text="@string/promocode_new_badge"
+                                android:textColor="@color/white"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                        </com.google.android.material.card.MaterialCardView>
 
                         <ImageView
                             android:id="@+id/iv_banners_arrow"

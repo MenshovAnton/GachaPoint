@@ -88,6 +88,12 @@ public class BannersView extends Fragment {
         });
 
         observeViewModel();
+
+        ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository.getInstance(requireContext())
+                .markAllBannersAsViewed();
+        if (getActivity() instanceof ru.menshovanton.gachapoint.ui.main.MainActivityView) {
+            ((ru.menshovanton.gachapoint.ui.main.MainActivityView) getActivity()).updatePromocodesBadge();
+        }
     }
 
     private void setupGamePills() {

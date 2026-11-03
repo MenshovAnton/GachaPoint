@@ -118,6 +118,54 @@ public class MainActivityView extends AppCompatActivity {
         }
 
         NotificationScheduler.scheduleDailyNotification(this);
+        ru.menshovanton.gachapoint.data.local.JsonDataLoader.addDataUpdatedListener(dataUpdatedListener);
+        updatePromocodesBadge();
+    }
+
+    private final ru.menshovanton.gachapoint.data.local.JsonDataLoader.OnDataUpdatedListener dataUpdatedListener = cacheFileName -> {
+        if (ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_PROMOCODES.equals(cacheFileName)
+                || ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_BANNERS.equals(cacheFileName)) {
+            updatePromocodesBadge();
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        ru.menshovanton.gachapoint.data.local.JsonDataLoader.removeDataUpdatedListener(dataUpdatedListener);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updatePromocodesBadge();
+    }
+
+    public void updatePromocodesBadge() {
+        ru.menshovanton.gachapoint.data.db.AppDatabase.getExecutor().execute(() -> {
+            ru.menshovanton.gachapoint.data.repository.PromocodeRepository promoRepo =
+                    ru.menshovanton.gachapoint.data.repository.PromocodeRepository.getInstance(this);
+            ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository bannerRepo =
+                    ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository.getInstance(this);
+            int unviewedCodes = promoRepo.getUnviewedPromoCodesCount();
+            int unviewedBanners = bannerRepo.getUnviewedBannersCount();
+            int totalUnviewed = unviewedCodes + unviewedBanners;
+
+            ru.menshovanton.gachapoint.data.db.AppDatabase.postToMain(() -> {
+                BottomNavigationView navigation = findViewById(R.id.bnv_main);
+                if (navigation != null) {
+                    if (totalUnviewed > 0) {
+                        com.google.android.material.badge.BadgeDrawable badge = navigation.getOrCreateBadge(R.id.nav_menu);
+                        badge.setVisible(true);
+                        badge.setNumber(totalUnviewed);
+                        badge.setBackgroundColor(androidx.core.content.ContextCompat.getColor(this, R.color.missed));
+                        badge.setBadgeTextColor(android.graphics.Color.WHITE);
+                    } else {
+                        navigation.removeBadge(R.id.nav_menu);
+                    }
+                }
+            });
+        });
     }
 
     @Override

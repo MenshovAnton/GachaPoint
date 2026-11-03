@@ -51,7 +51,7 @@
                     android:id="@+id/tv_banner_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="@font/genshin_font"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
                     android:textSize="11sp"
@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/genshin_font"
             android:textColor="@color/checked"
             android:textSize="12sp"
             tools:text="Осталось дней: 5" />
@@ -76,6 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:fontFamily="@font/genshin_font"
             android:textColor="@color/text_secondary"
             android:textSize="11sp"
             tools:text="14.10.2026 — 03.11.2026" />
@@ -90,7 +91,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/genshin_font"
             android:text="@string/banners_five_star_characters"
             android:textColor="@color/rare_legendary"
             android:textSize="12sp" />
@@ -100,17 +101,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:fontFamily="sans-serif-bold"
+            android:fontFamily="@font/genshin_font"
             android:textColor="@color/text"
             android:textSize="14sp"
             tools:text="Скирк, Эскофье" />
+
+        <LinearLayout
+            android:id="@+id/ll_five_stars_avatars"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal" />
 
         <!-- 4★ Персонажи баннера -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/genshin_font"
             android:text="@string/banners_four_star_characters"
             android:textColor="@color/rare_epic"
             android:textSize="12sp" />
@@ -120,10 +128,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@font/genshin_font"
             android:textColor="@color/text_secondary"
             android:textSize="13sp"
             tools:text="Мика, Кандакия, Далия" />
+
+        <LinearLayout
+            android:id="@+id/ll_four_stars_avatars"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal" />
 
     </LinearLayout>
 

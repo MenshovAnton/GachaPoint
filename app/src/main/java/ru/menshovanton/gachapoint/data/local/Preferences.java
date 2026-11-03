@@ -285,4 +285,57 @@ public class Preferences {
         if (game == null) return;
         settings.edit().putInt(PREFIX_PIGGY_SPENT_DAILIES + game.name(), Math.max(0, spent)).apply();
     }
+
+    public static final String KEY_VIEWED_PROMOCODES = "viewed_promocodes_set";
+    public static final String KEY_VIEWED_BANNERS = "viewed_banners_set";
+
+    public java.util.Set<String> getViewedPromocodes() {
+        return settings.getStringSet(KEY_VIEWED_PROMOCODES, java.util.Collections.emptySet());
+    }
+
+    public void markPromocodesAsViewed(java.util.Collection<String> codeIds) {
+        if (codeIds == null || codeIds.isEmpty()) return;
+        java.util.Set<String> current = new java.util.HashSet<>(getViewedPromocodes());
+        current.addAll(codeIds);
+        settings.edit().putStringSet(KEY_VIEWED_PROMOCODES, current).apply();
+    }
+
+    public java.util.Set<String> getViewedBanners() {
+        return settings.getStringSet(KEY_VIEWED_BANNERS, java.util.Collections.emptySet());
+    }
+
+    public void markBannersAsViewed(java.util.Collection<String> bannerIds) {
+        if (bannerIds == null || bannerIds.isEmpty()) return;
+        java.util.Set<String> current = new java.util.HashSet<>(getViewedBanners());
+        current.addAll(bannerIds);
+        settings.edit().putStringSet(KEY_VIEWED_BANNERS, current).apply();
+    }
+
+    private static final String PREF_BANNER_ANNOUNCED = "banner_notified_announced_";
+    private static final String PREF_BANNER_UPCOMING = "banner_notified_upcoming_";
+    private static final String PREF_BANNER_ACTIVE = "banner_notified_active_";
+
+    public boolean isBannerNotifiedAnnounced(String bannerId) {
+        return settings.getBoolean(PREF_BANNER_ANNOUNCED + bannerId, false);
+    }
+
+    public void setBannerNotifiedAnnounced(String bannerId) {
+        settings.edit().putBoolean(PREF_BANNER_ANNOUNCED + bannerId, true).apply();
+    }
+
+    public boolean isBannerNotifiedUpcoming(String bannerId) {
+        return settings.getBoolean(PREF_BANNER_UPCOMING + bannerId, false);
+    }
+
+    public void setBannerNotifiedUpcoming(String bannerId) {
+        settings.edit().putBoolean(PREF_BANNER_UPCOMING + bannerId, true).apply();
+    }
+
+    public boolean isBannerNotifiedActive(String bannerId) {
+        return settings.getBoolean(PREF_BANNER_ACTIVE + bannerId, false);
+    }
+
+    public void setBannerNotifiedActive(String bannerId) {
+        settings.edit().putBoolean(PREF_BANNER_ACTIVE + bannerId, true).apply();
+    }
 }

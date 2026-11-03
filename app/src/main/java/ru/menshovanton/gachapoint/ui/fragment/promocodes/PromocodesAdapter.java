@@ -182,7 +182,7 @@ public class PromocodesAdapter extends RecyclerView.Adapter<PromocodesAdapter.Pr
             holder.tvStatusBadge.setTextColor(ContextCompat.getColor(context, R.color.rare_legendary));
             holder.cardStatusBadge.setCardBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.badge_gold_bg)));
             holder.cardStatusBadge.setVisibility(View.VISIBLE);
-        } else if ("NEW".equalsIgnoreCase(status)) {
+        } else if ("NEW".equalsIgnoreCase(status) || code.isNew()) {
             holder.tvStatusBadge.setText(R.string.promocode_status_new);
             holder.tvStatusBadge.setTextColor(ContextCompat.getColor(context, R.color.checked));
             holder.cardStatusBadge.setCardBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.badge_green_bg)));

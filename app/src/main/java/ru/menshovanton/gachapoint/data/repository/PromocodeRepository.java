@@ -12,8 +12,10 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.db.dao.PromocodeDao;
@@ -21,6 +23,7 @@ import ru.menshovanton.gachapoint.data.db.entities.PromocodeStatusEntity;
 import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.data.local.DataSyncConfig;
 import ru.menshovanton.gachapoint.data.local.JsonDataLoader;
+import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.PromoCode;
 
@@ -167,6 +170,68 @@ public class PromocodeRepository {
         });
     }
 
+    public int getUnviewedPromoCodesCount() {
+        Preferences prefs = new Preferences(context);
+        Set<String> viewed = prefs.getViewedPromocodes();
+
+        String json = JsonDataLoader.loadJsonData(
+                context,
+                DataSyncConfig.PROMOCODES_REMOTE_URL,
+                DataSyncConfig.CACHE_PROMOCODES,
+                DataSyncConfig.ASSET_PROMOCODES,
+                false
+        );
+
+        List<PromoCode> allCodes = parsePromoCodes(json, -1);
+        int unviewedCount = 0;
+
+        try {
+            List<PromocodeStatusEntity> statuses = promocodeDao.getAllStatusesSync();
+            Map<String, PromocodeStatusEntity> statusMap = new HashMap<>();
+            for (PromocodeStatusEntity s : statuses) {
+                statusMap.put(s.codeId, s);
+            }
+
+            for (PromoCode code : allCodes) {
+                if (code.isActive() && !code.isPermanent()) {
+                    PromocodeStatusEntity st = statusMap.get(code.getId());
+                    boolean isRedeemed = st != null && st.isRedeemed;
+                    boolean isExpiredByUser = st != null && st.isExpiredByUser;
+                    if (!isRedeemed && !isExpiredByUser && !viewed.contains(code.getId()) && !viewed.contains(code.getCode())) {
+                        unviewedCount++;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            AppLogger.e("PromocodeRepository", "Error calculating unviewed promocodes count", e);
+        }
+
+        return unviewedCount;
+    }
+
+    public void markAllPromocodesAsViewed() {
+        AppDatabase.getExecutor().execute(() -> {
+            try {
+                String json = JsonDataLoader.loadJsonData(
+                        context,
+                        DataSyncConfig.PROMOCODES_REMOTE_URL,
+                        DataSyncConfig.CACHE_PROMOCODES,
+                        DataSyncConfig.ASSET_PROMOCODES,
+                        false
+                );
+                List<PromoCode> allCodes = parsePromoCodes(json, -1);
+                Set<String> ids = new HashSet<>();
+                for (PromoCode code : allCodes) {
+                    ids.add(code.getId());
+                    ids.add(code.getCode());
+                }
+                new Preferences(context).markPromocodesAsViewed(ids);
+            } catch (Exception e) {
+                AppLogger.e("PromocodeRepository", "Error marking all promocodes as viewed", e);
+            }
+        });
+    }
+
     @NonNull
     private List<PromoCode> parsePromoCodes(String json, int targetGameType) {
         if (json == null || json.trim().isEmpty()) {
@@ -194,9 +259,9 @@ public class PromocodeRepository {
                     }
                     String code = DataSyncConfig.sanitizeCode(rawCode);
 
-                    String rewards = obj.has("rewards_description") ? obj.get("rewards_description").getAsString() : "";
-                    String rewardsRu = obj.has("rewards_description_ru") ? obj.get("rewards_description_ru").getAsString() : rewards;
-                    String rewardsEn = obj.has("rewards_description_en") ? obj.get("rewards_description_en").getAsString() : rewards;
+                    String rewardsRu = obj.has("rewards_description_ru") ? obj.get("rewards_description_ru").getAsString() : "";
+                    String rewardsEn = obj.has("rewards_description_en") ? obj.get("rewards_description_en").getAsString() : "";
+                    String rewards = !rewardsRu.isEmpty() ? rewardsRu : rewardsEn;
                     String status = obj.has("status") ? obj.get("status").getAsString() : "NEW";
                     String expiresAt = obj.has("expires_at") && !obj.get("expires_at").isJsonNull()
                             ? obj.get("expires_at").getAsString() : null;
