@@ -220,9 +220,9 @@
     <string name="banner_type_hi3_astralop">Поставка AstralOP / Ассистента</string>
     <string name="banner_type_spec">Специальный</string>
     <string name="pity_status_none">Нет</string>
-    <string name="pity_status_win">Выигрыш 50/50</string>
-    <string name="pity_status_loss">Проигрыш 50/50</string>
-    <string name="pity_status_guaranteed">Гарант 100%</string>
+    <string name="pity_status_win">Выигрыш</string>
+    <string name="pity_status_loss">Проигрыш</string>
+    <string name="pity_status_guaranteed">Гарант</string>
     <string name="pity_5star_title">Гарант 5★</string>
     <string name="pity_4star_title">Гарант 4★</string>
     <string name="pity_s_rank_title">Гарант S-ранга</string>
@@ -421,7 +421,21 @@
     <string name="journal_outcome_auto_loss">Исход: Авто (Проигрыш 50/50)</string>
     <string name="journal_outcome_auto_guaranteed">Исход: Авто (Гарант 100%)</string>
     <string name="journal_select_drop_chip">Выберите персонажа или предмет</string>
-    <string name="journal_custom_name">Другое название…</string>
+    <string name="journal_custom_name">Изменить имя</string>
+    <string name="journal_pull_details_title">Детали крутки</string>
+    <string name="edit">Изменить</string>
+    <string name="action_duplicate">Копия</string>
+    <string name="journal_duplicate_success">Крутка продублирована</string>
+    <string name="journal_date_prev_pull">Дата из предыдущей крутки</string>
+    <string name="journal_pick_banner_date">Выбрать дату по баннеру</string>
+    <string name="journal_banners_dialog_title">Выбор баннера</string>
+    <string name="journal_catalog_matched">В каталоге: %1$s</string>
+    <string name="journal_custom_name_hint">Пользовательское имя (нет в каталоге)</string>
+    <string name="journal_chips_featured">Баннер</string>
+    <string name="journal_chips_standard">Стандарт</string>
+    <string name="journal_chips_trash">Обычный 3★</string>
+    <string name="banner_phase_format">Фаза %d</string>
+    <string name="patch_format">Патч %s</string>
 
     <!-- Cache Management -->
     <string name="settings_cache_title">Кеш данных и баннеров</string>

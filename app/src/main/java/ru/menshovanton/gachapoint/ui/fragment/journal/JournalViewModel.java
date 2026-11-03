@@ -257,4 +257,37 @@ public class JournalViewModel extends AndroidViewModel {
     public void deleteWishesBatch(List<Integer> ids) {
         databaseRepository.deletePullsBatch(ids, () -> refreshData(false));
     }
+
+    @Nullable
+    public LocalDate getLatestPullDate() {
+        List<Pull> current = wishesLiveData.getValue();
+        if (current != null && !current.isEmpty()) {
+            for (Pull p : current) {
+                if (p.getDateTime() != null && !p.getDateTime().isEmpty()) {
+                    try {
+                        return LocalDate.parse(p.getDateTime());
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public void duplicatePull(@NonNull Pull pull) {
+        String rare = pull.getDropRare() != null ? pull.getDropRare() : getApplication().getString(R.string.three_star);
+        boolean isResetPity = (RareType.from(rare, getApplication()) == RareType.LEGENDARY);
+        String bannerType = pull.getBannerType() != null ? pull.getBannerType() : getCurrentBannerType();
+        databaseRepository.addPulls(
+                pull.getDateTime() != null ? pull.getDateTime() : LocalDate.now().toString(),
+                pull.getDropType() != null ? pull.getDropType() : getApplication().getString(R.string.default_pull_content),
+                rare,
+                1,
+                currentGameType,
+                bannerType,
+                isResetPity,
+                pull.getPityStatus() != null ? pull.getPityStatus() : PityStatus.NONE,
+                () -> refreshData(false)
+        );
+    }
 }

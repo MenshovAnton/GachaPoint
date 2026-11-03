@@ -6,7 +6,14 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.graphics.Color;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.widget.Toast;
+import ru.menshovanton.gachapoint.domain.enums.RareType;
+import ru.menshovanton.gachapoint.domain.enums.Rarity;
+import ru.menshovanton.gachapoint.ui.common.AvatarImageLoader;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +56,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository;
 import ru.menshovanton.gachapoint.data.repository.CatalogRepository;
+import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.models.BannerScheduleItem;
 import ru.menshovanton.gachapoint.domain.models.CatalogItem;
 import ru.menshovanton.gachapoint.ui.common.HapticHelper;
@@ -60,6 +68,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -351,7 +360,7 @@ public class JournalView extends Fragment {
         recyclerView.setLayoutAnimation(animationController);
 
         pullsAdapter = new PullsAdapter();
-        pullsAdapter.setOnItemClickListener(pull -> showWishDialog(pull, null, false));
+        pullsAdapter.setOnItemClickListener(this::showPullDetailsDialog);
         pullsAdapter.setOnItemLongClickListener(pull -> {
             triggerHapticFeedback();
             pullsAdapter.startSelection(pull);
@@ -865,6 +874,161 @@ public class JournalView extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
+    private void showPullDetailsDialog(@NonNull Pull pull) {
+        BottomSheetDialog dialog = new BottomSheetDialog(requireContext(), R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_pull_details, null);
+        dialog.setContentView(view);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        }
+
+        dialog.setOnShowListener(d -> {
+            BottomSheetDialog bsd = (BottomSheetDialog) d;
+            android.widget.FrameLayout bottomSheet = bsd.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                BottomSheetBehavior<android.widget.FrameLayout> behavior = BottomSheetBehavior.from(bottomSheet);
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                behavior.setSkipCollapsed(true);
+            }
+        });
+
+        GameType currentGameType = viewModel.getCurrentGameType();
+        Context context = requireContext();
+
+        MaterialCardView cardAvatar = view.findViewById(R.id.card_details_avatar);
+        ImageView ivAvatar = view.findViewById(R.id.iv_details_avatar);
+        TextView tvLetter = view.findViewById(R.id.tv_details_avatar_letter);
+        TextView tvName = view.findViewById(R.id.tv_details_item_name);
+        MaterialCardView cardRarity = view.findViewById(R.id.card_details_rarity_badge);
+        TextView tvRarity = view.findViewById(R.id.tv_details_rarity);
+        MaterialCardView cardPity = view.findViewById(R.id.card_details_pity_badge);
+        TextView tvPity = view.findViewById(R.id.tv_details_pity);
+        MaterialCardView cardOutcome = view.findViewById(R.id.card_details_outcome);
+        TextView tvOutcome = view.findViewById(R.id.tv_details_outcome);
+        TextView tvBanner = view.findViewById(R.id.tv_details_banner_title);
+        TextView tvDate = view.findViewById(R.id.tv_details_date);
+
+        MaterialButton btnEdit = view.findViewById(R.id.btn_details_edit);
+        MaterialButton btnDuplicate = view.findViewById(R.id.btn_details_duplicate);
+        ImageButton btnDelete = view.findViewById(R.id.btn_details_delete);
+        ImageButton btnClose = view.findViewById(R.id.btn_details_close);
+
+        String name = pull.getDropType() != null ? pull.getDropType().trim() : "";
+        tvName.setText(name);
+
+        RareType rareType = RareType.from(pull.getDropRare(), currentGameType, context);
+        if (rareType == RareType.LEGENDARY) {
+            tvRarity.setText(Rarity.LEGENDARY.getDisplayRank(currentGameType, context));
+            tvRarity.setTextColor(ContextCompat.getColor(context, R.color.rare_legendary));
+            cardRarity.setCardBackgroundColor(ContextCompat.getColor(context, R.color.badge_gold_bg));
+            cardAvatar.setCardBackgroundColor(ContextCompat.getColor(context, R.color.badge_gold_bg));
+            cardAvatar.setStrokeColor(ContextCompat.getColor(context, R.color.rare_legendary));
+            tvLetter.setTextColor(ContextCompat.getColor(context, R.color.rare_legendary));
+            tvPity.setText(String.format(getString(R.string.pity_pull_at), pull.getPityNumber()));
+        } else if (rareType == RareType.EPIC) {
+            tvRarity.setText(Rarity.EPIC.getDisplayRank(currentGameType, context));
+            tvRarity.setTextColor(ContextCompat.getColor(context, R.color.rare_epic));
+            cardRarity.setCardBackgroundColor(ContextCompat.getColor(context, R.color.badge_purple_bg));
+            cardAvatar.setCardBackgroundColor(ContextCompat.getColor(context, R.color.badge_purple_bg));
+            cardAvatar.setStrokeColor(ContextCompat.getColor(context, R.color.rare_epic));
+            tvLetter.setTextColor(ContextCompat.getColor(context, R.color.rare_epic));
+            tvPity.setText(String.format(getString(R.string.pity_pull_at), pull.getPity4StarNumber()));
+        } else {
+            tvRarity.setText(Rarity.COMMON.getDisplayRank(currentGameType, context));
+            tvRarity.setTextColor(ContextCompat.getColor(context, R.color.check));
+            cardRarity.setCardBackgroundColor(ContextCompat.getColor(context, R.color.pull_pity_badge_bg));
+            cardAvatar.setCardBackgroundColor(ContextCompat.getColor(context, R.color.pull_pity_badge_bg));
+            cardAvatar.setStrokeColor(ContextCompat.getColor(context, R.color.pull_row_stroke));
+            tvLetter.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
+            tvPity.setText(String.format(getString(R.string.pity_pull_at), pull.getPityNumber()));
+        }
+
+        String letter = !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase() : "•";
+        tvLetter.setText(letter);
+        CatalogItem catalogItem = CatalogRepository.getInstance(context).findItemByName(currentGameType, name);
+        String iconUrl = (catalogItem != null) ? catalogItem.getIconUrl() : null;
+        AvatarImageLoader.loadAvatar(context, iconUrl, name, ivAvatar, tvLetter);
+
+        PityStatus pityStatus = pull.getPityStatus();
+        if (rareType == RareType.LEGENDARY && pityStatus != null && pityStatus != PityStatus.NONE) {
+            cardOutcome.setVisibility(View.VISIBLE);
+            tvOutcome.setText(pityStatus.getLabelResId());
+            if (pityStatus == PityStatus.WIN_50_50) {
+                cardOutcome.setCardBackgroundColor(ContextCompat.getColor(context, R.color.badge_green_bg));
+                cardOutcome.setStrokeColor(ContextCompat.getColor(context, R.color.checked));
+                tvOutcome.setTextColor(ContextCompat.getColor(context, R.color.checked));
+            } else if (pityStatus == PityStatus.LOSS_50_50) {
+                cardOutcome.setCardBackgroundColor(ContextCompat.getColor(context, R.color.badge_purple_bg));
+                cardOutcome.setStrokeColor(ContextCompat.getColor(context, R.color.missed));
+                tvOutcome.setTextColor(ContextCompat.getColor(context, R.color.missed));
+            } else {
+                cardOutcome.setCardBackgroundColor(ContextCompat.getColor(context, R.color.pull_row_selected_bg));
+                cardOutcome.setStrokeColor(ContextCompat.getColor(context, R.color.check));
+                tvOutcome.setTextColor(ContextCompat.getColor(context, R.color.check));
+            }
+        } else {
+            cardOutcome.setVisibility(View.GONE);
+        }
+
+        DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.getDefault());
+        DateTimeFormatter dbFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        if (pull.getDateTime() != null) {
+            try {
+                LocalDate date = LocalDate.parse(pull.getDateTime(), dbFormatter);
+                tvDate.setText(date.format(displayFormatter));
+            } catch (Exception e) {
+                tvDate.setText(pull.getDateTime());
+            }
+        } else {
+            tvDate.setText("");
+        }
+
+        String bannerLabel = currentGameType.getBannerLabel(context, pull.getBannerType());
+        String patch = BannerScheduleRepository.getInstance(context).getPatchForDate(currentGameType, pull.getDateTime());
+        if (patch != null && !patch.isEmpty()) {
+            tvBanner.setText(bannerLabel + " • " + patch);
+        } else {
+            tvBanner.setText(bannerLabel);
+        }
+
+        btnEdit.setOnClickListener(v -> {
+            dialog.dismiss();
+            showWishDialog(pull, null, false);
+        });
+
+        btnDuplicate.setOnClickListener(v -> {
+            viewModel.duplicatePull(pull);
+            dialog.dismiss();
+            Toast.makeText(context, R.string.journal_duplicate_success, Toast.LENGTH_SHORT).show();
+            HapticHelper.performClickHaptic(context, btnDuplicate);
+        });
+
+        btnDelete.setOnClickListener(v -> {
+            Context contextThemeWrapper = new ContextThemeWrapper(context, R.style.Dialog_GachaPoint_AlertDialog);
+            androidx.appcompat.app.AlertDialog confirmDialog = new MaterialAlertDialogBuilder(contextThemeWrapper, R.style.Dialog_GachaPoint_AlertDialog)
+                    .setTitle(R.string.warning)
+                    .setMessage(R.string.delete_confirm_message)
+                    .setPositiveButton(R.string.delete, (d, w) -> {
+                        dialog.dismiss();
+                        viewModel.deleteWish(pull.getId());
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .create();
+            confirmDialog.setOnShowListener(cd -> {
+                Button btnPositive = confirmDialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE);
+                if (btnPositive != null) {
+                    btnPositive.setTextColor(ContextCompat.getColor(context, R.color.missed));
+                }
+            });
+            confirmDialog.show();
+        });
+
+        btnClose.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
+    @SuppressLint("SetTextI18n")
     private void showWishDialog(@Nullable Pull wishToEdit, @Nullable String defaultRarity, boolean isBatch) {
         BottomSheetDialog dialog = new BottomSheetDialog(requireContext(), R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
         @SuppressLint("InflateParams") View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_pull_record, null);
@@ -895,22 +1059,34 @@ public class JournalView extends Fragment {
         if (btnRare5 != null) btnRare5.setText(ru.menshovanton.gachapoint.domain.enums.Rarity.LEGENDARY.getDisplayRank(currentGameType, requireContext()));
         if (btnRare4 != null) btnRare4.setText(ru.menshovanton.gachapoint.domain.enums.Rarity.EPIC.getDisplayRank(currentGameType, requireContext()));
         if (btnRare3 != null) btnRare3.setText(ru.menshovanton.gachapoint.domain.enums.Rarity.COMMON.getDisplayRank(currentGameType, requireContext()));
-        View pityStatusContainer = dialogView.findViewById(R.id.ll_pity_status_container);
+
+        View llPityStatusSection = dialogView.findViewById(R.id.ll_pity_status_section);
         MaterialButtonToggleGroup togglePityStatus = dialogView.findViewById(R.id.toggle_pity_status);
+        MaterialButton btnPityWin = dialogView.findViewById(R.id.btn_pity_win);
+        MaterialButton btnPityLoss = dialogView.findViewById(R.id.btn_pity_loss);
+        MaterialButton btnPityGuaranteed = dialogView.findViewById(R.id.btn_pity_guaranteed);
+
+        View llCustomInputContainer = dialogView.findViewById(R.id.ll_custom_input_container);
+        View llCatalogMatchInfo = dialogView.findViewById(R.id.ll_catalog_match_info);
+        ImageView ivMatchAvatar = dialogView.findViewById(R.id.iv_match_avatar);
+        TextView tvMatchLetter = dialogView.findViewById(R.id.tv_match_letter);
+        TextView tvMatchInfo = dialogView.findViewById(R.id.tv_match_info);
+
         MaterialAutoCompleteTextView editDropType = dialogView.findViewById(R.id.tiet_drop_name_edit);
         TextInputEditText editDate = dialogView.findViewById(R.id.tiet_edit_date);
+        MaterialButton btnCopyPrevDate = dialogView.findViewById(R.id.btn_copy_prev_date);
+        MaterialButton btnPickBannerDate = dialogView.findViewById(R.id.btn_pick_banner_date);
         MaterialButton btnSave = dialogView.findViewById(R.id.btn_save_pull);
-
         LinearLayout llDropChips = dialogView.findViewById(R.id.ll_drop_chips);
-        MaterialCardView cardAutoOutcome = dialogView.findViewById(R.id.card_auto_outcome);
-        TextView tvAutoOutcome = dialogView.findViewById(R.id.tv_auto_outcome);
-        TextView btnToggleCustomName = dialogView.findViewById(R.id.btn_toggle_custom_name);
-        View tilDropName = dialogView.findViewById(R.id.til_drop_name);
+        View btnToggleCustomName = dialogView.findViewById(R.id.btn_toggle_custom_name);
+        ImageView ivCustomNameChevron = dialogView.findViewById(R.id.iv_custom_name_chevron);
 
         DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.getDefault());
         DateTimeFormatter dbFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
         final LocalDate[] selectedDate = new LocalDate[1];
+        final BannerScheduleItem[] selectedBannerSchedule = new BannerScheduleItem[1];
+        final boolean[] isSelectingFromChip = new boolean[]{false};
         boolean isEditMode = (wishToEdit != null);
         if (isEditMode) {
             try {
@@ -925,30 +1101,51 @@ public class JournalView extends Fragment {
 
         BannerInfo bannerInfo = viewModel.getCurrentBannerInfo();
         boolean bannerHas5050 = bannerInfo != null && bannerInfo.hasFiftyFifty();
+        String currentBannerType = (wishToEdit != null && wishToEdit.getBannerType() != null)
+                ? wishToEdit.getBannerType()
+                : viewModel.getCurrentBannerType();
+        boolean isCharacterBanner = BannerType.EVENT.getDbKey().equals(currentBannerType);
+        boolean isWeaponBanner = BannerType.WEAPON.getDbKey().equals(currentBannerType);
+        boolean isStandardBanner = BannerType.STANDARD.getDbKey().equals(currentBannerType)
+                || BannerType.BEGINNER.getDbKey().equals(currentBannerType);
 
         CatalogRepository catalogRepo = CatalogRepository.getInstance(requireContext());
         List<CatalogItem> catalogItems = catalogRepo.getItemsForGame(currentGameType);
 
         java.util.function.Function<LocalDate, BannerScheduleItem> resolveBannerForDate = date -> {
+            if (selectedBannerSchedule[0] != null) {
+                try {
+                    LocalDate start = LocalDate.parse(selectedBannerSchedule[0].getStartDate(), dbFormatter);
+                    LocalDate end = LocalDate.parse(selectedBannerSchedule[0].getEndDate(), dbFormatter);
+                    if (!date.isBefore(start) && !date.isAfter(end)) {
+                        return selectedBannerSchedule[0];
+                    }
+                } catch (Exception ignored) {}
+            }
             BannerScheduleRepository bannerRepo = BannerScheduleRepository.getInstance(requireContext());
             BannerScheduleItem b = bannerRepo.getBannerForDate(currentGameType, date);
             return b != null ? b : bannerRepo.getCurrentBanner(currentGameType);
         };
 
-        java.lang.Runnable updatePityStatusBadge = () -> {
+        java.lang.Runnable updateOutcomeVisuals = () -> {
+            updateOutcomeButtonsVisuals(togglePityStatus, btnPityWin, btnPityLoss, btnPityGuaranteed);
+        };
+
+        java.lang.Runnable updateOutcomeSection = () -> {
             if (!bannerHas5050 || toggleRarity.getCheckedButtonId() != R.id.btn_rare_5) {
-                if (cardAutoOutcome != null) cardAutoOutcome.setVisibility(View.GONE);
-                if (pityStatusContainer != null) pityStatusContainer.setVisibility(View.GONE);
+                if (llPityStatusSection != null) llPityStatusSection.setVisibility(View.GONE);
                 return;
             }
+            if (llPityStatusSection != null) llPityStatusSection.setVisibility(View.VISIBLE);
 
             BannerScheduleItem activeBanner = resolveBannerForDate.apply(selectedDate[0]);
-            List<String> featuredFives = activeBanner != null ? activeBanner.getFeaturedFiveStars(requireContext()) : Collections.emptyList();
+            List<String> featuredFives = (activeBanner != null && !isStandardBanner) ? activeBanner.getFeaturedFiveStars(requireContext()) : Collections.emptyList();
 
             String currentName = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
             boolean isFeatured = false;
             for (String feat : featuredFives) {
-                if (feat != null && feat.trim().equalsIgnoreCase(currentName)) {
+                if (feat != null && (feat.trim().equalsIgnoreCase(currentName)
+                        || CatalogRepository.cleanKey(feat).equals(CatalogRepository.cleanKey(currentName)))) {
                     isFeatured = true;
                     break;
                 }
@@ -956,118 +1153,214 @@ public class JournalView extends Fragment {
             boolean isStd = catalogRepo.isStandardFiveStar(currentGameType, currentName);
 
             if (suppressAutoOutcomeChange[0]) {
-                if (wishToEdit != null && wishToEdit.getPityStatus() != null) {
-                    PityStatus st = wishToEdit.getPityStatus();
-                    if (st == PityStatus.LOSS_50_50) {
-                        tvAutoOutcome.setText(R.string.journal_outcome_auto_loss);
-                        cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_purple_bg)));
-                        cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.rare_epic)));
-                        tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.rare_epic));
-                    } else if (st == PityStatus.GUARANTEED) {
-                        tvAutoOutcome.setText(R.string.journal_outcome_auto_guaranteed);
-                        cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_green_bg)));
-                        cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.checked)));
-                        tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.checked));
-                    } else {
-                        tvAutoOutcome.setText(R.string.journal_outcome_auto_win);
-                        cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_gold_bg)));
-                        cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.rare_legendary)));
-                        tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.rare_legendary));
-                    }
-                }
-                cardAutoOutcome.setVisibility(View.VISIBLE);
+                updateOutcomeVisuals.run();
                 return;
             }
 
             if (isStd || (!featuredFives.isEmpty() && !isFeatured)) {
                 togglePityStatus.check(R.id.btn_pity_loss);
-                tvAutoOutcome.setText(R.string.journal_outcome_auto_loss);
-                cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_purple_bg)));
-                cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.rare_epic)));
-                tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.rare_epic));
             } else {
                 Boolean guaranteed = viewModel.getIsGuaranteedLiveData().getValue();
                 if (Boolean.TRUE.equals(guaranteed)) {
                     togglePityStatus.check(R.id.btn_pity_guaranteed);
-                    tvAutoOutcome.setText(R.string.journal_outcome_auto_guaranteed);
-                    cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_green_bg)));
-                    cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.checked)));
-                    tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.checked));
                 } else {
                     togglePityStatus.check(R.id.btn_pity_win);
-                    tvAutoOutcome.setText(R.string.journal_outcome_auto_win);
-                    cardAutoOutcome.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_gold_bg)));
-                    cardAutoOutcome.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.rare_legendary)));
-                    tvAutoOutcome.setTextColor(ContextCompat.getColor(requireContext(), R.color.rare_legendary));
                 }
             }
-            cardAutoOutcome.setVisibility(View.VISIBLE);
+            updateOutcomeVisuals.run();
+        };
+
+        if (togglePityStatus != null) {
+            togglePityStatus.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+                if (isChecked) {
+                    suppressAutoOutcomeChange[0] = true;
+                    updateOutcomeVisuals.run();
+                }
+            });
+        }
+
+        java.lang.Runnable updateCatalogMatch = () -> {
+            String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
+            if (currentText.isEmpty() || llCatalogMatchInfo == null) {
+                if (llCatalogMatchInfo != null) llCatalogMatchInfo.setVisibility(View.GONE);
+                return;
+            }
+            CatalogItem matched = catalogRepo.findItemByName(currentGameType, currentText);
+            if (matched != null) {
+                llCatalogMatchInfo.setVisibility(View.VISIBLE);
+                String rRank = matched.isFiveStar() ? getString(R.string.five_star) : (matched.isFourStar() ? getString(R.string.four_star) : getString(R.string.three_star));
+                tvMatchInfo.setText(String.format(getString(R.string.journal_catalog_matched), matched.getName(requireContext()) + " (" + rRank + ")"));
+                tvMatchInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.check));
+                String letter = !matched.getName(requireContext()).isEmpty() ? String.valueOf(matched.getName(requireContext()).charAt(0)).toUpperCase() : "•";
+                tvMatchLetter.setText(letter);
+                AvatarImageLoader.loadAvatar(requireContext(), matched.getIconUrl(), matched.getName(requireContext()), ivMatchAvatar, tvMatchLetter);
+            } else {
+                llCatalogMatchInfo.setVisibility(View.VISIBLE);
+                tvMatchInfo.setText(R.string.journal_custom_name_hint);
+                tvMatchInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
+                if (ivMatchAvatar != null) ivMatchAvatar.setVisibility(View.GONE);
+                if (tvMatchLetter != null) {
+                    tvMatchLetter.setVisibility(View.VISIBLE);
+                    tvMatchLetter.setText("?");
+                }
+            }
         };
 
         java.util.function.Consumer<Integer> populateChips = rarityId -> {
             if (llDropChips == null) return;
             llDropChips.removeAllViews();
 
-            BannerScheduleItem activeBanner = resolveBannerForDate.apply(selectedDate[0]);
-            List<String> featuredFives = activeBanner != null ? activeBanner.getFeaturedFiveStars(requireContext()) : Collections.emptyList();
-            List<String> featuredFours = activeBanner != null ? activeBanner.getFeaturedFourStars(requireContext()) : Collections.emptyList();
+            String query = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
+            String queryClean = CatalogRepository.cleanKey(query);
+            boolean isQuerySearch = !queryClean.isEmpty() && editDropType.hasFocus() && !isSelectingFromChip[0];
 
             if (rarityId == R.id.btn_rare_3) {
-                View chipView = LayoutInflater.from(requireContext()).inflate(R.layout.item_drop_chip, llDropChips, false);
-                MaterialCardView cardChip = chipView.findViewById(R.id.card_chip);
-                TextView tvName = chipView.findViewById(R.id.tv_chip_name);
-                TextView tvLetter = chipView.findViewById(R.id.tv_chip_letter);
-                tvName.setText(R.string.default_pull_content);
-                tvLetter.setText(ru.menshovanton.gachapoint.domain.enums.Rarity.COMMON.getDisplayRank(currentGameType, requireContext()));
+                List<String> trashPresets = getTrashDropPresets(currentGameType);
+                final MaterialCardView[] selectedChipCard = new MaterialCardView[1];
 
-                cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_gold_bg)));
-                cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.check)));
-                editDropType.setText(getString(R.string.default_pull_content), false);
-                llDropChips.addView(chipView);
-                updatePityStatusBadge.run();
+                for (String trashName : trashPresets) {
+                    if (isQuerySearch) {
+                        String cleanName = CatalogRepository.cleanKey(trashName);
+                        if (!cleanName.contains(queryClean)) {
+                            continue;
+                        }
+                    }
+
+                    View chipView = LayoutInflater.from(requireContext()).inflate(R.layout.item_drop_chip, llDropChips, false);
+                    MaterialCardView cardChip = chipView.findViewById(R.id.card_chip);
+                    TextView tvName = chipView.findViewById(R.id.tv_chip_name);
+                    TextView tvLetter = chipView.findViewById(R.id.tv_chip_letter);
+                    ImageView ivAvatar = chipView.findViewById(R.id.iv_chip_avatar);
+                    if (ivAvatar != null) ivAvatar.setVisibility(View.GONE);
+
+                    tvName.setText(trashName);
+                    tvLetter.setText(ru.menshovanton.gachapoint.domain.enums.Rarity.COMMON.getDisplayRank(currentGameType, requireContext()));
+
+                    boolean isSelected = (!query.isEmpty() && query.equalsIgnoreCase(trashName));
+                    if (isSelected || (selectedChipCard[0] == null && query.isEmpty())) {
+                        selectedChipCard[0] = cardChip;
+                        cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_blue_bg)));
+                        cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.check)));
+                        if (query.isEmpty()) {
+                            isSelectingFromChip[0] = true;
+                            editDropType.setText(trashName, false);
+                            isSelectingFromChip[0] = false;
+                        }
+                    } else {
+                        cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_bg)));
+                        cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_stroke)));
+                    }
+
+                    cardChip.setOnClickListener(v -> {
+                        if (selectedChipCard[0] != null) {
+                            selectedChipCard[0].setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_bg)));
+                            selectedChipCard[0].setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_stroke)));
+                        }
+                        selectedChipCard[0] = cardChip;
+                        cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_blue_bg)));
+                        cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.check)));
+                        isSelectingFromChip[0] = true;
+                        editDropType.setText(trashName, false);
+                        isSelectingFromChip[0] = false;
+                        HapticHelper.performClickHaptic(requireContext(), cardChip);
+                        updateOutcomeSection.run();
+                        updateCatalogMatch.run();
+                    });
+
+                    llDropChips.addView(chipView);
+                }
+                updateOutcomeSection.run();
+                updateCatalogMatch.run();
                 return;
             }
+
+            BannerScheduleItem activeBanner = resolveBannerForDate.apply(selectedDate[0]);
+            List<String> featuredFives = (activeBanner != null && !isStandardBanner) ? activeBanner.getFeaturedFiveStars(requireContext()) : Collections.emptyList();
+            List<String> featuredFours = (activeBanner != null && !isStandardBanner) ? activeBanner.getFeaturedFourStars(requireContext()) : Collections.emptyList();
 
             boolean isFive = (rarityId == R.id.btn_rare_5);
             List<CatalogItem> filtered = new ArrayList<>();
             List<CatalogItem> priorityList = new ArrayList<>();
             List<CatalogItem> others = new ArrayList<>();
+            Set<String> addedNames = new HashSet<>();
 
-            List<String> priorityNames = isFive ? featuredFives : featuredFours;
-
-            for (CatalogItem item : catalogItems) {
-                if (isFive && item.isFiveStar()) {
-                    boolean isFeatured = priorityNames.contains(item.getName())
-                            || priorityNames.contains(item.getNameRu())
-                            || priorityNames.contains(item.getNameEn());
-                    if (isFeatured) {
-                        priorityList.add(item);
-                    } else if (item.isStandard()) {
-                        others.add(item);
+            if (isFive) {
+                if (isQuerySearch) {
+                    for (CatalogItem item : catalogItems) {
+                        if (item.isFiveStar()) {
+                            if (isCharacterBanner && !item.getType().equalsIgnoreCase("CHARACTER")) continue;
+                            if (isWeaponBanner && !item.getType().equalsIgnoreCase("WEAPON")) continue;
+                            if (matchesCatalogQuery(item, queryClean)) {
+                                if (isItemFeatured(item, featuredFives)) {
+                                    priorityList.add(item);
+                                } else {
+                                    others.add(item);
+                                }
+                            }
+                        }
                     }
-                } else if (!isFive && item.isFourStar()) {
-                    boolean isFeatured = priorityNames.contains(item.getName())
-                            || priorityNames.contains(item.getNameRu())
-                            || priorityNames.contains(item.getNameEn());
-                    if (isFeatured) {
-                        priorityList.add(item);
-                    } else {
-                        others.add(item);
+                } else {
+                    for (String featName : featuredFives) {
+                        CatalogItem featItem = catalogRepo.findItemByName(currentGameType, featName);
+                        if (featItem != null && featItem.isFiveStar() && addedNames.add(featItem.getName())) {
+                            priorityList.add(featItem);
+                        }
+                    }
+                    for (CatalogItem item : catalogItems) {
+                        if (item.isFiveStar() && item.isStandard()) {
+                            if (isCharacterBanner && !item.getType().equalsIgnoreCase("CHARACTER")) continue;
+                            if (isWeaponBanner && !item.getType().equalsIgnoreCase("WEAPON")) continue;
+                            if (addedNames.add(item.getName())) {
+                                others.add(item);
+                            }
+                        }
+                    }
+                    if (isStandardBanner) {
+                        for (CatalogItem item : catalogItems) {
+                            if (item.isFiveStar() && item.isStandard() && item.getType().equalsIgnoreCase("WEAPON")) {
+                                if (addedNames.add(item.getName())) {
+                                    others.add(item);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (isQuerySearch) {
+                    for (CatalogItem item : catalogItems) {
+                        if (item.isFourStar()) {
+                            if (matchesCatalogQuery(item, queryClean)) {
+                                if (isItemFeatured(item, featuredFours)) {
+                                    priorityList.add(item);
+                                } else {
+                                    others.add(item);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    for (String fourName : featuredFours) {
+                        CatalogItem fourItem = catalogRepo.findItemByName(currentGameType, fourName);
+                        if (fourItem != null && fourItem.isFourStar() && addedNames.add(fourItem.getName())) {
+                            priorityList.add(fourItem);
+                        }
+                    }
+                    if (priorityList.isEmpty() || isStandardBanner) {
+                        for (CatalogItem item : catalogItems) {
+                            if (item.isFourStar() && item.isStandard() && addedNames.add(item.getName())) {
+                                others.add(item);
+                            }
+                        }
                     }
                 }
             }
+
             filtered.addAll(priorityList);
             filtered.addAll(others);
-            if (filtered.isEmpty() && isFive) {
-                for (CatalogItem item : catalogItems) {
-                    if (item.isFiveStar()) {
-                        filtered.add(item);
-                    }
-                }
-            }
 
-            String targetName = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
             final MaterialCardView[] selectedChipCard = new MaterialCardView[1];
+            int selectedBgColor = ContextCompat.getColor(requireContext(), isFive ? R.color.badge_gold_bg : R.color.badge_purple_bg);
+            int selectedStrokeColor = ContextCompat.getColor(requireContext(), isFive ? R.color.rare_legendary : R.color.rare_epic);
 
             for (CatalogItem item : filtered) {
                 View chipView = LayoutInflater.from(requireContext()).inflate(R.layout.item_drop_chip, llDropChips, false);
@@ -1079,7 +1372,7 @@ public class JournalView extends Fragment {
                 String itemName = item.getName(requireContext());
                 tvName.setText(itemName);
 
-                ru.menshovanton.gachapoint.ui.common.AvatarImageLoader.loadAvatar(
+                AvatarImageLoader.loadAvatar(
                         requireContext(),
                         item.getIconUrl(),
                         itemName,
@@ -1087,12 +1380,19 @@ public class JournalView extends Fragment {
                         tvLetter
                 );
 
-                boolean isSelected = (!targetName.isEmpty() && targetName.equalsIgnoreCase(itemName));
-                if (isSelected || (selectedChipCard[0] == null && targetName.isEmpty())) {
+                boolean isSelected = (!query.isEmpty() && (query.equalsIgnoreCase(itemName)
+                        || query.equalsIgnoreCase(item.getName())
+                        || query.equalsIgnoreCase(item.getNameRu())
+                        || query.equalsIgnoreCase(item.getNameEn())));
+                if (isSelected || (selectedChipCard[0] == null && query.isEmpty())) {
                     selectedChipCard[0] = cardChip;
-                    cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_gold_bg)));
-                    cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), isFive ? R.color.rare_legendary : R.color.rare_epic)));
-                    editDropType.setText(itemName, false);
+                    cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(selectedBgColor));
+                    cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(selectedStrokeColor));
+                    if (query.isEmpty()) {
+                        isSelectingFromChip[0] = true;
+                        editDropType.setText(itemName, false);
+                        isSelectingFromChip[0] = false;
+                    }
                 } else {
                     cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_bg)));
                     cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_stroke)));
@@ -1104,42 +1404,62 @@ public class JournalView extends Fragment {
                         selectedChipCard[0].setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_stroke)));
                     }
                     selectedChipCard[0] = cardChip;
-                    cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_gold_bg)));
-                    cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), isFive ? R.color.rare_legendary : R.color.rare_epic)));
+                    cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(selectedBgColor));
+                    cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(selectedStrokeColor));
+                    isSelectingFromChip[0] = true;
                     editDropType.setText(itemName, false);
+                    isSelectingFromChip[0] = false;
                     suppressAutoOutcomeChange[0] = false;
                     HapticHelper.performClickHaptic(requireContext(), cardChip);
-                    updatePityStatusBadge.run();
+                    updateOutcomeSection.run();
+                    updateCatalogMatch.run();
                 });
 
                 llDropChips.addView(chipView);
             }
-            updatePityStatusBadge.run();
+            updateOutcomeSection.run();
+            updateCatalogMatch.run();
         };
-
-        if (cardAutoOutcome != null) {
-            cardAutoOutcome.setOnClickListener(v -> {
-                if (pityStatusContainer != null) {
-                    boolean isCurrentlyVisible = pityStatusContainer.getVisibility() == View.VISIBLE;
-                    pityStatusContainer.setVisibility(isCurrentlyVisible ? View.GONE : View.VISIBLE);
-                }
-            });
-        }
 
         if (btnToggleCustomName != null) {
             btnToggleCustomName.setOnClickListener(v -> {
-                if (tilDropName != null) {
-                    boolean isVis = tilDropName.getVisibility() == View.VISIBLE;
-                    tilDropName.setVisibility(isVis ? View.GONE : View.VISIBLE);
+                if (llCustomInputContainer != null) {
+                    boolean isVis = llCustomInputContainer.getVisibility() == View.VISIBLE;
+                    llCustomInputContainer.setVisibility(isVis ? View.GONE : View.VISIBLE);
+                    if (ivCustomNameChevron != null) {
+                        ivCustomNameChevron.animate().rotation(isVis ? 0f : 180f).setDuration(200).start();
+                    }
+                    if (!isVis) {
+                        editDropType.requestFocus();
+                    }
                 }
             });
         }
+
+        editDropType.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void afterTextChanged(Editable s) {
+                updateCatalogMatch.run();
+                if (!isSelectingFromChip[0]) {
+                    populateChips.accept(toggleRarity.getCheckedButtonId());
+                }
+            }
+        });
 
         if (isEditMode) {
             dialogTitle.setText(getString(R.string.edit_pull));
             btnDelete.setVisibility(View.VISIBLE);
             btnSave.setText(getString(R.string.save));
+            isSelectingFromChip[0] = true;
             editDropType.setText(wishToEdit.getDropType());
+            isSelectingFromChip[0] = false;
+            if (llCustomInputContainer != null) {
+                llCustomInputContainer.setVisibility(View.VISIBLE);
+            }
+            if (ivCustomNameChevron != null) {
+                ivCustomNameChevron.setRotation(180f);
+            }
 
             try {
                 selectedDate[0] = LocalDate.parse(wishToEdit.getDateTime(), dbFormatter);
@@ -1184,6 +1504,9 @@ public class JournalView extends Fragment {
             } else {
                 togglePityStatus.check(R.id.btn_pity_win);
             }
+            if (ivCustomNameChevron != null) {
+                ivCustomNameChevron.setRotation(0f);
+            }
         }
 
         editDate.setText(selectedDate[0].format(displayFormatter));
@@ -1200,12 +1523,12 @@ public class JournalView extends Fragment {
                     toggleRarity.check(R.id.btn_rare_4);
                 }
                 suppressAutoOutcomeChange[0] = false;
-                updatePityStatusBadge.run();
+                updateOutcomeSection.run();
+                updateCatalogMatch.run();
                 HapticHelper.performClickHaptic(requireContext(), editDropType);
             }
         });
 
-        // Initialize drop chips for initial rarity
         populateChips.accept(toggleRarity.getCheckedButtonId());
 
         toggleRarity.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
@@ -1236,6 +1559,26 @@ public class JournalView extends Fragment {
 
             datePicker.show(getParentFragmentManager(), "DATE_PICKER");
         });
+
+        if (btnCopyPrevDate != null) {
+            btnCopyPrevDate.setOnClickListener(v -> {
+                LocalDate prevDate = viewModel.getLatestPullDate();
+                if (prevDate != null) {
+                    selectedDate[0] = prevDate;
+                    editDate.setText(selectedDate[0].format(displayFormatter));
+                    populateChips.accept(toggleRarity.getCheckedButtonId());
+                    HapticHelper.performClickHaptic(requireContext(), btnCopyPrevDate);
+                } else {
+                    Toast.makeText(requireContext(), R.string.empty_pulls_list, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        if (btnPickBannerDate != null) {
+            btnPickBannerDate.setOnClickListener(v -> {
+                showBannerDatePickerDialog(currentGameType, selectedDate, selectedBannerSchedule, editDate, displayFormatter, populateChips, toggleRarity);
+            });
+        }
 
         btnClose.setOnClickListener(v -> dialog.dismiss());
 
@@ -1289,6 +1632,178 @@ public class JournalView extends Fragment {
         });
 
         dialog.show();
+    }
+
+    private void updateOutcomeButtonsVisuals(MaterialButtonToggleGroup togglePityStatus,
+                                             MaterialButton btnWin,
+                                             MaterialButton btnLoss,
+                                             MaterialButton btnGuaranteed) {
+        if (togglePityStatus == null || getContext() == null) return;
+        int checkedId = togglePityStatus.getCheckedButtonId();
+        Context ctx = requireContext();
+
+        if (btnWin != null) {
+            if (checkedId == R.id.btn_pity_win) {
+                btnWin.setBackgroundColor(ContextCompat.getColor(ctx, R.color.checked));
+                btnWin.setTextColor(Color.WHITE);
+            } else {
+                btnWin.setBackgroundColor(Color.TRANSPARENT);
+                btnWin.setTextColor(ContextCompat.getColor(ctx, R.color.text));
+            }
+        }
+
+        if (btnLoss != null) {
+            if (checkedId == R.id.btn_pity_loss) {
+                btnLoss.setBackgroundColor(ContextCompat.getColor(ctx, R.color.missed));
+                btnLoss.setTextColor(Color.WHITE);
+            } else {
+                btnLoss.setBackgroundColor(Color.TRANSPARENT);
+                btnLoss.setTextColor(ContextCompat.getColor(ctx, R.color.text));
+            }
+        }
+
+        if (btnGuaranteed != null) {
+            if (checkedId == R.id.btn_pity_guaranteed) {
+                btnGuaranteed.setBackgroundColor(ContextCompat.getColor(ctx, R.color.check));
+                btnGuaranteed.setTextColor(Color.WHITE);
+            } else {
+                btnGuaranteed.setBackgroundColor(Color.TRANSPARENT);
+                btnGuaranteed.setTextColor(ContextCompat.getColor(ctx, R.color.text));
+            }
+        }
+    }
+
+    private void showBannerDatePickerDialog(GameType gameType,
+                                            LocalDate[] selectedDate,
+                                            BannerScheduleItem[] selectedBannerSchedule,
+                                            TextInputEditText editDate,
+                                            DateTimeFormatter displayFormatter,
+                                            java.util.function.Consumer<Integer> populateChips,
+                                            MaterialButtonToggleGroup toggleRarity) {
+        BannerScheduleRepository bannerRepo = BannerScheduleRepository.getInstance(requireContext());
+        List<BannerScheduleItem> banners = bannerRepo.getBanners(gameType);
+        if (banners == null || banners.isEmpty()) {
+            Toast.makeText(requireContext(), R.string.empty_pulls_list, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        BottomSheetDialog dialog = new BottomSheetDialog(requireContext(), R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
+        View sheetView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_banner_picker, null);
+        dialog.setContentView(sheetView);
+
+        RecyclerView rvBanners = sheetView.findViewById(R.id.rv_banner_picker);
+        ImageButton btnClose = sheetView.findViewById(R.id.btn_picker_close);
+        if (btnClose != null) btnClose.setOnClickListener(v -> dialog.dismiss());
+
+        DateTimeFormatter dbFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+
+        BannerPickerAdapter adapter = new BannerPickerAdapter(gameType, chosen -> {
+            selectedBannerSchedule[0] = chosen;
+            try {
+                LocalDate start = LocalDate.parse(chosen.getStartDate(), dbFormatter);
+                LocalDate end = LocalDate.parse(chosen.getEndDate(), dbFormatter);
+                LocalDate now = LocalDate.now();
+                if (!now.isBefore(start) && !now.isAfter(end)) {
+                    selectedDate[0] = now;
+                } else {
+                    selectedDate[0] = start;
+                }
+            } catch (Exception e) {
+                selectedDate[0] = LocalDate.now();
+            }
+            editDate.setText(selectedDate[0].format(displayFormatter));
+            populateChips.accept(toggleRarity.getCheckedButtonId());
+            dialog.dismiss();
+        });
+        adapter.setItems(banners);
+        rvBanners.setAdapter(adapter);
+
+        dialog.show();
+    }
+
+    private boolean isItemFeatured(CatalogItem item, List<String> featuredNames) {
+        if (item == null || featuredNames == null || featuredNames.isEmpty()) return false;
+        for (String feat : featuredNames) {
+            if (feat == null) continue;
+            String cleanFeat = CatalogRepository.cleanKey(feat);
+            if (cleanFeat.isEmpty()) continue;
+            if (cleanFeat.equals(CatalogRepository.cleanKey(item.getName()))
+                    || cleanFeat.equals(CatalogRepository.cleanKey(item.getNameRu()))
+                    || cleanFeat.equals(CatalogRepository.cleanKey(item.getNameEn()))) {
+                return true;
+            }
+            for (String alias : item.getAliases()) {
+                if (cleanFeat.equals(CatalogRepository.cleanKey(alias))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean matchesCatalogQuery(CatalogItem item, String queryClean) {
+        if (item == null || queryClean == null || queryClean.isEmpty()) return true;
+        if (CatalogRepository.cleanKey(item.getName()).contains(queryClean)
+                || CatalogRepository.cleanKey(item.getNameRu()).contains(queryClean)
+                || CatalogRepository.cleanKey(item.getNameEn()).contains(queryClean)) {
+            return true;
+        }
+        for (String alias : item.getAliases()) {
+            if (CatalogRepository.cleanKey(alias).contains(queryClean)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<String> getTrashDropPresets(GameType gameType) {
+        List<String> list = new ArrayList<>();
+        list.add(getString(R.string.default_pull_content));
+        boolean isRu = "ru".equalsIgnoreCase(Locale.getDefault().getLanguage());
+        if (gameType == GameType.GENSHIN) {
+            if (isRu) {
+                list.add("Дубина переговоров");
+                list.add("Черная кисть");
+                list.add("Предвестник зари");
+                list.add("Меч небесного всадника");
+                list.add("Эпос о драконоборцах");
+                list.add("Белая кисть");
+            } else {
+                list.add("Debate Club");
+                list.add("Black Tassel");
+                list.add("Harbinger of Dawn");
+                list.add("Skyrider Sword");
+                list.add("Thrilling Tales");
+                list.add("White Tassel");
+            }
+        } else if (gameType == GameType.HSR) {
+            if (isRu) {
+                list.add("Стрела");
+                list.add("Рог изобилия");
+                list.add("Хор");
+                list.add("Скрытая тень");
+                list.add("Кукурузный початок");
+            } else {
+                list.add("Arrows");
+                list.add("Cornucopia");
+                list.add("Chorus");
+                list.add("Hidden Shadow");
+                list.add("Passkey");
+            }
+        } else if (gameType == GameType.ZZZ) {
+            if (isRu) {
+                list.add("Ревербератор");
+                list.add("Магнитная буря");
+                list.add("Лунная фаза");
+                list.add("Орбита");
+            } else {
+                list.add("Reverberator");
+                list.add("Magnetic Storm");
+                list.add("Lunar Phase");
+                list.add("Orbit");
+            }
+        }
+        return list;
     }
 
     @NonNull

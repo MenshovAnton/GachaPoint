@@ -65,7 +65,7 @@ public class CatalogRepository {
         return s.trim().toLowerCase(Locale.ROOT).replace('ё', 'е');
     }
 
-    private static String cleanKey(@Nullable String s) {
+    public static String cleanKey(@Nullable String s) {
         if (s == null) return "";
         return s.trim()
                 .toLowerCase(Locale.ROOT)

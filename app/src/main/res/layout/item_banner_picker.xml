@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_banner_picker_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="5dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/pull_row_bg"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/pull_row_stroke"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_picker_patch_phase"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/genshin_font"
+                app:fontFamily="@font/genshin_font"
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="Патч 5.0 • Фаза 1" />
+
+            <TextView
+                android:id="@+id/tv_picker_dates"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/genshin_font"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                tools:text="28.08.2024 — 17.09.2024" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_picker_five_stars_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                app:cardBackgroundColor="@color/badge_gold_bg"
+                app:cardCornerRadius="11dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <TextView
+                    android:id="@+id/tv_picker_five_star_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/genshin_font"
+                    android:gravity="center"
+                    android:paddingHorizontal="8dp"
+                    android:textColor="@color/rare_legendary"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    tools:text="5★" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_picker_five_stars"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/genshin_font"
+                android:textColor="@color/rare_legendary"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="Муалани, Каэдэхара Кадзуха" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_picker_four_stars_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                app:cardBackgroundColor="@color/badge_purple_bg"
+                app:cardCornerRadius="11dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <TextView
+                    android:id="@+id/tv_picker_four_star_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/genshin_font"
+                    android:gravity="center"
+                    android:paddingHorizontal="8dp"
+                    android:textColor="@color/rare_epic"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    tools:text="4★" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_picker_four_stars"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/genshin_font"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                tools:text="Качина, Беннет, Синь Янь" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

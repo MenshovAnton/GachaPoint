@@ -73,12 +73,19 @@
         <item name="android:textColorHighlight">@color/check_30</item>
     </style>
     <style name="DatePicker.GachaPoint.MaterialCalendar" parent="ThemeOverlay.Material3.MaterialCalendar">
-        <item name="colorSurfaceContainerHigh">@color/background_night</item>
+        <item name="colorSurfaceContainerHigh">@color/pull_row_bg</item>
+        <item name="colorSurface">@color/pull_row_bg</item>
         <item name="colorPrimary">@color/check</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorOnSurface">@color/white</item>
-        <item name="colorOnSurfaceVariant">@color/light_grey</item>
+        <item name="colorOnSurface">@color/text</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
         <item name="android:textColorHighlight">@color/check_30</item>
+        <item name="fontFamily">@font/genshin_font</item>
+        <item name="android:fontFamily">@font/genshin_font</item>
+        <item name="shapeAppearanceCornerExtraLarge">@style/ShapeAppearance.GachaPoint.CalendarDialog</item>
+    </style>
+    <style name="ShapeAppearance.GachaPoint.CalendarDialog" parent="ShapeAppearance.Material3.Corner.ExtraLarge">
+        <item name="cornerSize">24dp</item>
     </style>
     <style name="DropDown.GachaPoint.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">

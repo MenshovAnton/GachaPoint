@@ -140,10 +140,11 @@
                 android:id="@+id/ll_date_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:gravity="end"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/cb_select"
+                app:layout_constraintEnd_toStartOf="@+id/iv_drag_handle"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -161,35 +162,20 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:fontFamily="@font/genshin_font"
+                    app:fontFamily="@font/genshin_font"
                     android:textColor="@color/check"
                     android:textSize="10sp"
                     android:visibility="gone"
-                    tools:text="v5.0"
+                    tools:text="Патч 5.0"
                     tools:visibility="visible" />
             </LinearLayout>
 
-            <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/cb_select"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:padding="0dp"
-                android:clickable="false"
-                android:focusable="false"
-                android:visibility="gone"
-                app:buttonTint="@color/check"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/iv_drag_handle"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible" />
 
             <ImageView
                 android:id="@+id/iv_drag_handle"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginStart="6dp"
+                android:layout_marginStart="14dp"
                 android:contentDescription="@null"
                 android:padding="2dp"
                 android:src="@drawable/icon_menu"

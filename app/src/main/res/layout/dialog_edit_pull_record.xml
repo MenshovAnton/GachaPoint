@@ -130,8 +130,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:scrollbars="none"
-            android:clipToPadding="false">
+            android:clipToPadding="false"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:id="@+id/ll_drop_chips"
@@ -141,61 +141,18 @@
                 android:orientation="horizontal" />
         </HorizontalScrollView>
 
-        <!-- Hybrid Outcome Indicator Badge -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_auto_outcome"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_marginTop="10dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/badge_gold_bg"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/rare_legendary"
-            app:strokeWidth="1dp"
-            tools:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="10dp">
-
-                <TextView
-                    android:id="@+id/tv_auto_outcome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/genshin_font"
-                    android:textColor="@color/rare_legendary"
-                    android:textSize="12sp"
-                    tools:text="Исход: Авто (Проигрыш 50/50)" />
-
-                <ImageView
-                    android:id="@+id/iv_outcome_chevron"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginStart="6dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/icon_down_arrow"
-                    app:tint="@color/rare_legendary" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Power user override container for outcome -->
+        <!-- Outcome Section (50/50, Loss, Guaranteed) with semantic styling -->
         <LinearLayout
-            android:id="@+id/ll_pity_status_container"
+            android:id="@+id/ll_pity_status_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipChildren="true"
+            android:layout_marginTop="12dp"
             android:orientation="vertical"
-            android:paddingTop="10dp"
             android:visibility="gone"
             tools:visibility="visible">
 
             <TextView
+                android:id="@+id/tv_pity_status_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
@@ -207,7 +164,7 @@
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/toggle_pity_status"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="44dp"
                 app:selectionRequired="true"
                 app:singleSelection="true">
 
@@ -217,13 +174,16 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:ellipsize="end"
                     android:fontFamily="@font/genshin_font"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:paddingHorizontal="2dp"
+                    android:maxLines="1"
+                    android:paddingHorizontal="6dp"
                     android:paddingVertical="0dp"
                     android:text="@string/pity_status_win"
-                    android:textSize="11sp" />
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_pity_loss"
@@ -231,13 +191,16 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:ellipsize="end"
                     android:fontFamily="@font/genshin_font"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:paddingHorizontal="2dp"
+                    android:maxLines="1"
+                    android:paddingHorizontal="6dp"
                     android:paddingVertical="0dp"
                     android:text="@string/pity_status_loss"
-                    android:textSize="11sp" />
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_pity_guaranteed"
@@ -245,85 +208,224 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:ellipsize="end"
                     android:fontFamily="@font/genshin_font"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:paddingHorizontal="2dp"
+                    android:maxLines="1"
+                    android:paddingHorizontal="6dp"
                     android:paddingVertical="0dp"
                     android:text="@string/pity_status_guaranteed"
-                    android:textSize="11sp" />
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
         </LinearLayout>
 
-        <TextView
+        <!-- Custom Name Input Toggle -->
+        <LinearLayout
             android:id="@+id/btn_toggle_custom_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="@font/genshin_font"
-            android:text="@string/journal_custom_name"
-            android:textColor="@color/check"
-            android:textSize="12sp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_drop_name"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="@string/hint_input_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:minHeight="40dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="6dp">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/icon_edit"
+                app:tint="@color/check" />
+
+            <TextView
+                android:id="@+id/tv_toggle_custom_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/genshin_font"
+                android:text="@string/journal_custom_name"
+                android:textColor="@color/check"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/iv_custom_name_chevron"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/icon_chevron_down"
+                app:tint="@color/check" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_custom_input_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:visibility="gone"
-            app:boxCornerRadiusBottomEnd="14dp"
-            app:boxCornerRadiusBottomStart="14dp"
-            app:boxCornerRadiusTopEnd="14dp"
-            app:boxCornerRadiusTopStart="14dp"
             tools:visibility="visible">
 
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/tiet_drop_name_edit"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_drop_name"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:gravity="center_vertical"
-                android:importantForAutofill="no"
-                android:inputType="textCapWords|textNoSuggestions"
-                android:maxLines="1"
-                android:paddingHorizontal="16dp"
-                android:textColor="@color/text"
-                android:textSize="15sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/hint_input_content"
+                app:boxCornerRadiusBottomEnd="14dp"
+                app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp"
+                app:boxCornerRadiusTopStart="14dp"
+                app:startIconDrawable="@drawable/icon_edit"
+                app:startIconTint="@color/check">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_date"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/tiet_drop_name_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:gravity="center_vertical"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapWords|textNoSuggestions"
+                    android:maxLines="1"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="@color/text"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_catalog_match_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="4dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_match_avatar"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    app:cardCornerRadius="11dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/pull_row_stroke"
+                    app:strokeWidth="1dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/tv_match_letter"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/genshin_font"
+                            android:gravity="center"
+                            android:textColor="@color/text"
+                            android:textSize="10sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_match_avatar"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@null"
+                            android:scaleType="centerCrop" />
+                    </FrameLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/tv_match_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/genshin_font"
+                    android:textColor="@color/check"
+                    android:textSize="11sp"
+                    tools:text="В каталоге: Муалани (5★)" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Date Row with Copy Previous Date and Pick by Banner -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="@string/date"
-            app:boxCornerRadiusBottomEnd="14dp"
-            app:boxCornerRadiusBottomStart="14dp"
-            app:boxCornerRadiusTopEnd="14dp"
-            app:boxCornerRadiusTopStart="14dp"
-            app:startIconDrawable="@drawable/icon_calendar"
-            app:startIconTint="@color/check">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/tiet_edit_date"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_date"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/date"
+                app:boxCornerRadiusBottomEnd="14dp"
+                app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp"
+                app:boxCornerRadiusTopStart="14dp"
+                app:startIconDrawable="@drawable/icon_calendar"
+                app:startIconTint="@color/check">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiet_edit_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:gravity="center_vertical"
+                    android:importantForAutofill="no"
+                    android:inputType="none"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="@color/text"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_copy_prev_date"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="52dp"
                 android:layout_height="56dp"
-                android:clickable="true"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:gravity="center_vertical"
-                android:importantForAutofill="no"
-                android:inputType="none"
-                android:paddingHorizontal="16dp"
-                android:textColor="@color/text"
-                android:textSize="15sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/journal_date_prev_pull"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/icon_arrow_up"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="22dp"
+                app:iconTint="@color/check" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_pick_banner_date"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="52dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="6dp"
+                android:contentDescription="@string/journal_pick_banner_date"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/icon_star"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="22dp"
+                app:iconTint="@color/check" />
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save_pull"

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -280,38 +279,45 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
         holder.dropRare.setText(pull.getDropRare());
         holder.dropType.setText(pull.getDropType());
 
-        if (holder.cardAvatar != null && holder.tvAvatarLetter != null) {
-            String name = pull.getDropType() != null ? pull.getDropType().trim() : "";
-            String letter = !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase() : "•";
-            holder.tvAvatarLetter.setText(letter);
+        RareType rare = RareType.from(pull.getDropRare(), currentGameType, context);
+        if (holder.cardAvatar != null) {
+            if (rare == RareType.LEGENDARY || rare == RareType.EPIC) {
+                holder.cardAvatar.setVisibility(View.VISIBLE);
+                String name = pull.getDropType() != null ? pull.getDropType().trim() : "";
+                String letter = !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase() : "•";
+                if (holder.tvAvatarLetter != null) {
+                    holder.tvAvatarLetter.setText(letter);
+                }
 
-            RareType rare = RareType.from(pull.getDropRare(), currentGameType, context);
-            if (rare == RareType.LEGENDARY) {
-                holder.cardAvatar.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.badge_gold_bg)));
-                holder.cardAvatar.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.rare_legendary)));
-                holder.tvAvatarLetter.setTextColor(ContextCompat.getColor(context, R.color.rare_legendary));
-            } else if (rare == RareType.EPIC) {
-                holder.cardAvatar.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.badge_purple_bg)));
-                holder.cardAvatar.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.rare_epic)));
-                holder.tvAvatarLetter.setTextColor(ContextCompat.getColor(context, R.color.rare_epic));
+                if (rare == RareType.LEGENDARY) {
+                    holder.cardAvatar.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.badge_gold_bg)));
+                    holder.cardAvatar.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.rare_legendary)));
+                    if (holder.tvAvatarLetter != null) {
+                        holder.tvAvatarLetter.setTextColor(ContextCompat.getColor(context, R.color.rare_legendary));
+                    }
+                } else {
+                    holder.cardAvatar.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.badge_purple_bg)));
+                    holder.cardAvatar.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.rare_epic)));
+                    if (holder.tvAvatarLetter != null) {
+                        holder.tvAvatarLetter.setTextColor(ContextCompat.getColor(context, R.color.rare_epic));
+                    }
+                }
+
+                ru.menshovanton.gachapoint.domain.models.CatalogItem catalogItem =
+                        ru.menshovanton.gachapoint.data.repository.CatalogRepository.getInstance(context)
+                                .findItemByName(currentGameType, name);
+                String iconUrl = (catalogItem != null) ? catalogItem.getIconUrl() : null;
+
+                ru.menshovanton.gachapoint.ui.common.AvatarImageLoader.loadAvatar(
+                        context,
+                        iconUrl,
+                        name,
+                        holder.ivPullAvatar,
+                        holder.tvAvatarLetter
+                );
             } else {
-                holder.cardAvatar.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.pull_pity_badge_bg)));
-                holder.cardAvatar.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.pull_row_stroke)));
-                holder.tvAvatarLetter.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
+                holder.cardAvatar.setVisibility(View.GONE);
             }
-
-            ru.menshovanton.gachapoint.domain.models.CatalogItem catalogItem =
-                    ru.menshovanton.gachapoint.data.repository.CatalogRepository.getInstance(context)
-                            .findItemByName(currentGameType, name);
-            String iconUrl = (catalogItem != null) ? catalogItem.getIconUrl() : null;
-
-            ru.menshovanton.gachapoint.ui.common.AvatarImageLoader.loadAvatar(
-                    context,
-                    iconUrl,
-                    name,
-                    holder.ivPullAvatar,
-                    holder.tvAvatarLetter
-            );
         }
 
         String rawDate = pull.getDateTime();
@@ -376,18 +382,15 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
         boolean isSelected = isSelectionMode && selectedPullIds.contains(pull.getId());
 
         if (isSelectionMode) {
-            holder.cbSelect.setVisibility(View.VISIBLE);
-            holder.cbSelect.setChecked(isSelected);
             holder.ivDragHandle.setVisibility(View.VISIBLE);
         } else {
-            holder.cbSelect.setVisibility(View.GONE);
             holder.ivDragHandle.setVisibility(View.GONE);
         }
 
         if (isSelected) {
             holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.pull_row_selected_bg));
             holder.cardView.setStrokeColor(ContextCompat.getColor(context, R.color.pull_row_selected_stroke));
-            holder.cardView.setStrokeWidth((int) (1.5f * context.getResources().getDisplayMetrics().density));
+            holder.cardView.setStrokeWidth((int) (2f * context.getResources().getDisplayMetrics().density));
         } else {
             holder.cardView.setStrokeWidth((int) (context.getResources().getDisplayMetrics().density));
         }
@@ -457,7 +460,6 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
         TextView tvOutcome;
         TextView date;
         TextView tvPullPatch;
-        MaterialCheckBox cbSelect;
         ImageView ivDragHandle;
 
         public PullsViewHolder(@NonNull View itemView) {
@@ -473,7 +475,6 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
             tvOutcome = itemView.findViewById(R.id.tv_pull_outcome);
             date = itemView.findViewById(R.id.date);
             tvPullPatch = itemView.findViewById(R.id.tv_pull_patch);
-            cbSelect = itemView.findViewById(R.id.cb_select);
             ivDragHandle = itemView.findViewById(R.id.iv_drag_handle);
         }
     }

@@ -228,8 +228,8 @@
     <string name="banner_type_hi3_astralop">AstralOP / ELF Supply</string>
     <string name="banner_type_spec">Special</string>
     <string name="pity_status_none">None</string>
-    <string name="pity_status_win">Won 50/50</string>
-    <string name="pity_status_loss">Lost 50/50</string>
+    <string name="pity_status_win">Win</string>
+    <string name="pity_status_loss">Loss</string>
     <string name="pity_status_guaranteed">Guaranteed</string>
     <string name="pity_5star_title">5★ Guarantee</string>
     <string name="pity_4star_title">4★ Guarantee</string>
@@ -443,7 +443,21 @@
     <string name="journal_outcome_auto_loss">Outcome: Auto (Lost 50/50)</string>
     <string name="journal_outcome_auto_guaranteed">Outcome: Auto (Guaranteed)</string>
     <string name="journal_select_drop_chip">Select character or item</string>
-    <string name="journal_custom_name">Custom name / other…</string>
+    <string name="journal_custom_name">Edit name</string>
+    <string name="journal_pull_details_title">Pull details</string>
+    <string name="edit">Edit</string>
+    <string name="action_duplicate">Duplicate</string>
+    <string name="journal_duplicate_success">Pull duplicated</string>
+    <string name="journal_date_prev_pull">Date from previous pull</string>
+    <string name="journal_pick_banner_date">Select date by banner</string>
+    <string name="journal_banners_dialog_title">Select banner</string>
+    <string name="journal_catalog_matched">In catalog: %1$s</string>
+    <string name="journal_custom_name_hint">Custom name (not in catalog)</string>
+    <string name="journal_chips_featured">Banner</string>
+    <string name="journal_chips_standard">Standard</string>
+    <string name="journal_chips_trash">Common 3★</string>
+    <string name="banner_phase_format">Phase %d</string>
+    <string name="patch_format">Patch %s</string>
 
     <!-- Cache Management -->
     <string name="settings_cache_title">Cache &amp; Offline Data</string>

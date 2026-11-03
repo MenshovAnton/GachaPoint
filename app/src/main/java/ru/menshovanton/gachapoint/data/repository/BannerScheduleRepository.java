@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.data.local.DataSyncConfig;
 import ru.menshovanton.gachapoint.data.local.JsonDataLoader;
@@ -188,7 +189,7 @@ public class BannerScheduleRepository {
                 LocalDate start = LocalDate.parse(patch.getStartDate(), DateTimeFormatter.ISO_LOCAL_DATE);
                 LocalDate end = LocalDate.parse(patch.getEndDate(), DateTimeFormatter.ISO_LOCAL_DATE);
                 if (!date.isBefore(start) && !date.isAfter(end)) {
-                    return "v" + patch.getVersion();
+                    return context.getString(R.string.patch_format, patch.getVersion());
                 }
             }
         } catch (Exception ignored) {}
