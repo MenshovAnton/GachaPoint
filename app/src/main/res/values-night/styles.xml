@@ -102,9 +102,9 @@
         <item name="endIconTint">@color/check</item>
     </style>
     <style name="ThemeOverlay.GachaPoint.DropdownMenu" parent="ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox">
-        <item name="colorSurfaceContainerHigh">@color/sheet_card_background</item>
-        <item name="colorSurfaceContainer">@color/sheet_card_background</item>
-        <item name="colorSurface">@color/sheet_card_background</item>
+        <item name="colorSurfaceContainerHigh">@color/dark_grey</item>
+        <item name="colorSurfaceContainer">@color/dark_grey</item>
+        <item name="colorSurface">@color/dark_grey</item>
         <item name="colorOnSurface">@color/white</item>
         <item name="colorOnSurfaceVariant">@color/check</item>
         <item name="colorPrimary">@color/check</item>

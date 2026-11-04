@@ -506,8 +506,8 @@
     <string name="about_telegram_title">Telegram Channel</string>
     <string name="about_telegram_desc">Project news and discussion</string>
     <string name="about_donation_title">Support the Project</string>
-    <string name="about_donation_desc">DonationAlerts • Help development</string>
-    <string name="a11y_btn_donation">Support the project on DonationAlerts</string>
+    <string name="about_donation_desc">Boosty • Help development</string>
+    <string name="a11y_btn_donation">Support the project on Boosty</string>
     <string name="about_developer_desc">MenshovAnton • Project author</string>
 
     <!-- Feedback Screen -->

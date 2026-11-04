@@ -57,7 +57,7 @@ public class InfoView extends Fragment {
             rowTelegram.setOnClickListener(v -> openUrl("https://t.me/GachaPoint_official"));
         }
         if (rowDonation != null) {
-            rowDonation.setOnClickListener(v -> openUrl("https://www.donationalerts.com/r/gahapoint"));
+            rowDonation.setOnClickListener(v -> openUrl("https://boosty.to/menshovanton/donate"));
         }
         if (rowDeveloper != null) {
             rowDeveloper.setOnClickListener(v -> openUrl("https://github.com/MenshovAnton"));

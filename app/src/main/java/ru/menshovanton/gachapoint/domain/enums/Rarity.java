@@ -92,9 +92,9 @@ public enum Rarity {
 
         String clean = raw.trim().toUpperCase(java.util.Locale.ROOT);
 
-        if (clean.contains("5") || clean.startsWith("S") || clean.equals("LEGENDARY") || clean.contains("S-RANK") || clean.contains("S-РАНГ")) {
+        if (clean.contains("5") || clean.startsWith("S") || clean.startsWith("С") || clean.equals("LEGENDARY") || clean.contains("S-RANK") || clean.contains("S-РАНГ")) {
             return LEGENDARY;
-        } else if (clean.contains("4") || clean.startsWith("A") || clean.equals("EPIC") || clean.contains("A-RANK") || clean.contains("A-РАНГ")) {
+        } else if (clean.contains("4") || clean.startsWith("A") || clean.startsWith("А") || clean.equals("EPIC") || clean.contains("A-RANK") || clean.contains("A-РАНГ")) {
             return EPIC;
         } else {
             return COMMON;

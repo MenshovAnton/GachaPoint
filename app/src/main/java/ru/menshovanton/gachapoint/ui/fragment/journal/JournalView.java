@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.graphics.Color;
 import android.text.Editable;
@@ -206,7 +207,7 @@ public class JournalView extends Fragment {
             btnEmptyAddOne.setOnClickListener(v -> viewModel.saveOneWish());
         }
         if (btnEmptyAddTen != null) {
-            btnEmptyAddTen.setOnClickListener(v -> showWishDialog(null, getString(R.string.five_star), true));
+            btnEmptyAddTen.setOnClickListener(v -> showWishDialog(null, getString(R.string.four_star), true));
         }
 
         if (appbarLayout != null && emptyView != null) {
@@ -858,7 +859,7 @@ public class JournalView extends Fragment {
 
             @Override
             public void onAddTenAttempts() {
-                showWishDialog(null, getString(R.string.five_star), true);
+                showWishDialog(null, getString(R.string.four_star), true);
             }
 
             @Override
@@ -950,8 +951,15 @@ public class JournalView extends Fragment {
         String iconUrl = (catalogItem != null) ? catalogItem.getIconUrl() : null;
         AvatarImageLoader.loadAvatar(context, iconUrl, name, ivAvatar, tvLetter);
 
+        BannerInfo bannerInfo = currentGameType.getBannerInfo(pull.getBannerType());
+        boolean bannerHas5050 = bannerInfo != null && bannerInfo.hasFiftyFifty();
         PityStatus pityStatus = pull.getPityStatus();
-        if (rareType == RareType.LEGENDARY && pityStatus != null && pityStatus != PityStatus.NONE) {
+        if (rareType == RareType.LEGENDARY && bannerHas5050) {
+            if (pityStatus == null || pityStatus == PityStatus.NONE) {
+                CatalogRepository catalogRepo = CatalogRepository.getInstance(context);
+                boolean isStd = catalogRepo.isStandardFiveStar(currentGameType, name);
+                pityStatus = isStd ? PityStatus.LOSS_50_50 : PityStatus.WIN_50_50;
+            }
             cardOutcome.setVisibility(View.VISIBLE);
             tvOutcome.setText(pityStatus.getLabelResId());
             if (pityStatus == PityStatus.WIN_50_50) {
@@ -959,11 +967,11 @@ public class JournalView extends Fragment {
                 cardOutcome.setStrokeColor(ContextCompat.getColor(context, R.color.checked));
                 tvOutcome.setTextColor(ContextCompat.getColor(context, R.color.checked));
             } else if (pityStatus == PityStatus.LOSS_50_50) {
-                cardOutcome.setCardBackgroundColor(ContextCompat.getColor(context, R.color.badge_purple_bg));
+                cardOutcome.setCardBackgroundColor(ContextCompat.getColor(context, R.color.badge_red_bg));
                 cardOutcome.setStrokeColor(ContextCompat.getColor(context, R.color.missed));
                 tvOutcome.setTextColor(ContextCompat.getColor(context, R.color.missed));
             } else {
-                cardOutcome.setCardBackgroundColor(ContextCompat.getColor(context, R.color.pull_row_selected_bg));
+                cardOutcome.setCardBackgroundColor(ContextCompat.getColor(context, R.color.badge_blue_bg));
                 cardOutcome.setStrokeColor(ContextCompat.getColor(context, R.color.check));
                 tvOutcome.setTextColor(ContextCompat.getColor(context, R.color.check));
             }
@@ -1073,6 +1081,10 @@ public class JournalView extends Fragment {
         TextView tvMatchInfo = dialogView.findViewById(R.id.tv_match_info);
 
         MaterialAutoCompleteTextView editDropType = dialogView.findViewById(R.id.tiet_drop_name_edit);
+        if (editDropType != null) {
+            int dropDownHeight = (int) (200 * getResources().getDisplayMetrics().density);
+            editDropType.setDropDownHeight(dropDownHeight);
+        }
         TextInputEditText editDate = dialogView.findViewById(R.id.tiet_edit_date);
         MaterialButton btnCopyPrevDate = dialogView.findViewById(R.id.btn_copy_prev_date);
         MaterialButton btnPickBannerDate = dialogView.findViewById(R.id.btn_pick_banner_date);
@@ -1127,6 +1139,8 @@ public class JournalView extends Fragment {
             return b != null ? b : bannerRepo.getCurrentBanner(currentGameType);
         };
 
+            final boolean[] isProgrammaticOutcomeCheck = new boolean[]{false};
+
         java.lang.Runnable updateOutcomeVisuals = () -> {
             updateOutcomeButtonsVisuals(togglePityStatus, btnPityWin, btnPityLoss, btnPityGuaranteed);
         };
@@ -1138,42 +1152,56 @@ public class JournalView extends Fragment {
             }
             if (llPityStatusSection != null) llPityStatusSection.setVisibility(View.VISIBLE);
 
-            BannerScheduleItem activeBanner = resolveBannerForDate.apply(selectedDate[0]);
-            List<String> featuredFives = (activeBanner != null && !isStandardBanner) ? activeBanner.getFeaturedFiveStars(requireContext()) : Collections.emptyList();
-
-            String currentName = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
-            boolean isFeatured = false;
-            for (String feat : featuredFives) {
-                if (feat != null && (feat.trim().equalsIgnoreCase(currentName)
-                        || CatalogRepository.cleanKey(feat).equals(CatalogRepository.cleanKey(currentName)))) {
-                    isFeatured = true;
-                    break;
-                }
-            }
-            boolean isStd = catalogRepo.isStandardFiveStar(currentGameType, currentName);
-
             if (suppressAutoOutcomeChange[0]) {
                 updateOutcomeVisuals.run();
                 return;
             }
 
-            if (isStd || (!featuredFives.isEmpty() && !isFeatured)) {
-                togglePityStatus.check(R.id.btn_pity_loss);
-            } else {
-                Boolean guaranteed = viewModel.getIsGuaranteedLiveData().getValue();
-                if (Boolean.TRUE.equals(guaranteed)) {
-                    togglePityStatus.check(R.id.btn_pity_guaranteed);
+            String currentName = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
+            CatalogItem item = catalogRepo.findItemByName(currentGameType, currentName);
+            Boolean isGuaranteed = viewModel.getIsGuaranteedLiveData().getValue();
+            boolean expectsGuaranteed = Boolean.TRUE.equals(isGuaranteed);
+
+            isProgrammaticOutcomeCheck[0] = true;
+            if (item != null && item.isFiveStar()) {
+                if (item.isStandard()) {
+                    togglePityStatus.check(R.id.btn_pity_loss);
                 } else {
-                    togglePityStatus.check(R.id.btn_pity_win);
+                    togglePityStatus.check(expectsGuaranteed ? R.id.btn_pity_guaranteed : R.id.btn_pity_win);
+                }
+            } else {
+                BannerScheduleItem activeBanner = resolveBannerForDate.apply(selectedDate[0]);
+                List<String> featuredFives = (activeBanner != null && !isStandardBanner) ? activeBanner.getFeaturedFiveStars(requireContext()) : Collections.emptyList();
+                boolean isFeatured = false;
+                for (String feat : featuredFives) {
+                    if (feat != null && (feat.trim().equalsIgnoreCase(currentName)
+                            || CatalogRepository.cleanKey(feat).equals(CatalogRepository.cleanKey(currentName)))) {
+                        isFeatured = true;
+                        break;
+                    }
+                }
+                boolean isStd = catalogRepo.isStandardFiveStar(currentGameType, currentName);
+
+                if (isStd) {
+                    togglePityStatus.check(R.id.btn_pity_loss);
+                } else if (isFeatured) {
+                    togglePityStatus.check(expectsGuaranteed ? R.id.btn_pity_guaranteed : R.id.btn_pity_win);
+                } else if (!featuredFives.isEmpty() && !currentName.isEmpty()) {
+                    togglePityStatus.check(R.id.btn_pity_loss);
+                } else {
+                    togglePityStatus.check(expectsGuaranteed ? R.id.btn_pity_guaranteed : R.id.btn_pity_win);
                 }
             }
+            isProgrammaticOutcomeCheck[0] = false;
             updateOutcomeVisuals.run();
         };
 
         if (togglePityStatus != null) {
             togglePityStatus.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
                 if (isChecked) {
-                    suppressAutoOutcomeChange[0] = true;
+                    if (!isProgrammaticOutcomeCheck[0]) {
+                        suppressAutoOutcomeChange[0] = true;
+                    }
                     updateOutcomeVisuals.run();
                 }
             });
@@ -1211,21 +1239,11 @@ public class JournalView extends Fragment {
             llDropChips.removeAllViews();
 
             String query = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
-            String queryClean = CatalogRepository.cleanKey(query);
-            boolean isQuerySearch = !queryClean.isEmpty() && editDropType.hasFocus() && !isSelectingFromChip[0];
 
             if (rarityId == R.id.btn_rare_3) {
                 List<String> trashPresets = getTrashDropPresets(currentGameType);
-                final MaterialCardView[] selectedChipCard = new MaterialCardView[1];
 
                 for (String trashName : trashPresets) {
-                    if (isQuerySearch) {
-                        String cleanName = CatalogRepository.cleanKey(trashName);
-                        if (!cleanName.contains(queryClean)) {
-                            continue;
-                        }
-                    }
-
                     View chipView = LayoutInflater.from(requireContext()).inflate(R.layout.item_drop_chip, llDropChips, false);
                     MaterialCardView cardChip = chipView.findViewById(R.id.card_chip);
                     TextView tvName = chipView.findViewById(R.id.tv_chip_name);
@@ -1237,31 +1255,19 @@ public class JournalView extends Fragment {
                     tvLetter.setText(ru.menshovanton.gachapoint.domain.enums.Rarity.COMMON.getDisplayRank(currentGameType, requireContext()));
 
                     boolean isSelected = (!query.isEmpty() && query.equalsIgnoreCase(trashName));
-                    if (isSelected || (selectedChipCard[0] == null && query.isEmpty())) {
-                        selectedChipCard[0] = cardChip;
+                    if (isSelected) {
                         cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_blue_bg)));
                         cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.check)));
-                        if (query.isEmpty()) {
-                            isSelectingFromChip[0] = true;
-                            editDropType.setText(trashName, false);
-                            isSelectingFromChip[0] = false;
-                        }
                     } else {
                         cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_bg)));
                         cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_stroke)));
                     }
 
                     cardChip.setOnClickListener(v -> {
-                        if (selectedChipCard[0] != null) {
-                            selectedChipCard[0].setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_bg)));
-                            selectedChipCard[0].setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_stroke)));
-                        }
-                        selectedChipCard[0] = cardChip;
-                        cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.badge_blue_bg)));
-                        cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.check)));
                         isSelectingFromChip[0] = true;
                         editDropType.setText(trashName, false);
                         isSelectingFromChip[0] = false;
+                        updateChipSelectionState(llDropChips, trashName, rarityId);
                         HapticHelper.performClickHaptic(requireContext(), cardChip);
                         updateOutcomeSection.run();
                         updateCatalogMatch.run();
@@ -1285,71 +1291,41 @@ public class JournalView extends Fragment {
             Set<String> addedNames = new HashSet<>();
 
             if (isFive) {
-                if (isQuerySearch) {
-                    for (CatalogItem item : catalogItems) {
-                        if (item.isFiveStar()) {
-                            if (isCharacterBanner && !item.getType().equalsIgnoreCase("CHARACTER")) continue;
-                            if (isWeaponBanner && !item.getType().equalsIgnoreCase("WEAPON")) continue;
-                            if (matchesCatalogQuery(item, queryClean)) {
-                                if (isItemFeatured(item, featuredFives)) {
-                                    priorityList.add(item);
-                                } else {
-                                    others.add(item);
-                                }
-                            }
+                for (String featName : featuredFives) {
+                    CatalogItem featItem = catalogRepo.findItemByName(currentGameType, featName);
+                    if (featItem != null && featItem.isFiveStar() && addedNames.add(featItem.getName())) {
+                        priorityList.add(featItem);
+                    }
+                }
+                for (CatalogItem item : catalogItems) {
+                    if (item.isFiveStar() && item.isStandard()) {
+                        if (isCharacterBanner && !item.getType().equalsIgnoreCase("CHARACTER")) continue;
+                        if (isWeaponBanner && !item.getType().equalsIgnoreCase("WEAPON")) continue;
+                        if (addedNames.add(item.getName())) {
+                            others.add(item);
                         }
                     }
-                } else {
-                    for (String featName : featuredFives) {
-                        CatalogItem featItem = catalogRepo.findItemByName(currentGameType, featName);
-                        if (featItem != null && featItem.isFiveStar() && addedNames.add(featItem.getName())) {
-                            priorityList.add(featItem);
-                        }
-                    }
+                }
+                if (isStandardBanner) {
                     for (CatalogItem item : catalogItems) {
-                        if (item.isFiveStar() && item.isStandard()) {
-                            if (isCharacterBanner && !item.getType().equalsIgnoreCase("CHARACTER")) continue;
-                            if (isWeaponBanner && !item.getType().equalsIgnoreCase("WEAPON")) continue;
+                        if (item.isFiveStar() && item.isStandard() && item.getType().equalsIgnoreCase("WEAPON")) {
                             if (addedNames.add(item.getName())) {
                                 others.add(item);
                             }
                         }
                     }
-                    if (isStandardBanner) {
-                        for (CatalogItem item : catalogItems) {
-                            if (item.isFiveStar() && item.isStandard() && item.getType().equalsIgnoreCase("WEAPON")) {
-                                if (addedNames.add(item.getName())) {
-                                    others.add(item);
-                                }
-                            }
-                        }
-                    }
                 }
             } else {
-                if (isQuerySearch) {
+                for (String fourName : featuredFours) {
+                    CatalogItem fourItem = catalogRepo.findItemByName(currentGameType, fourName);
+                    if (fourItem != null && fourItem.isFourStar() && addedNames.add(fourItem.getName())) {
+                        priorityList.add(fourItem);
+                    }
+                }
+                if (priorityList.isEmpty() || isStandardBanner) {
                     for (CatalogItem item : catalogItems) {
-                        if (item.isFourStar()) {
-                            if (matchesCatalogQuery(item, queryClean)) {
-                                if (isItemFeatured(item, featuredFours)) {
-                                    priorityList.add(item);
-                                } else {
-                                    others.add(item);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    for (String fourName : featuredFours) {
-                        CatalogItem fourItem = catalogRepo.findItemByName(currentGameType, fourName);
-                        if (fourItem != null && fourItem.isFourStar() && addedNames.add(fourItem.getName())) {
-                            priorityList.add(fourItem);
-                        }
-                    }
-                    if (priorityList.isEmpty() || isStandardBanner) {
-                        for (CatalogItem item : catalogItems) {
-                            if (item.isFourStar() && item.isStandard() && addedNames.add(item.getName())) {
-                                others.add(item);
-                            }
+                        if (item.isFourStar() && item.isStandard() && addedNames.add(item.getName())) {
+                            others.add(item);
                         }
                     }
                 }
@@ -1358,7 +1334,6 @@ public class JournalView extends Fragment {
             filtered.addAll(priorityList);
             filtered.addAll(others);
 
-            final MaterialCardView[] selectedChipCard = new MaterialCardView[1];
             int selectedBgColor = ContextCompat.getColor(requireContext(), isFive ? R.color.badge_gold_bg : R.color.badge_purple_bg);
             int selectedStrokeColor = ContextCompat.getColor(requireContext(), isFive ? R.color.rare_legendary : R.color.rare_epic);
 
@@ -1384,31 +1359,19 @@ public class JournalView extends Fragment {
                         || query.equalsIgnoreCase(item.getName())
                         || query.equalsIgnoreCase(item.getNameRu())
                         || query.equalsIgnoreCase(item.getNameEn())));
-                if (isSelected || (selectedChipCard[0] == null && query.isEmpty())) {
-                    selectedChipCard[0] = cardChip;
+                if (isSelected) {
                     cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(selectedBgColor));
                     cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(selectedStrokeColor));
-                    if (query.isEmpty()) {
-                        isSelectingFromChip[0] = true;
-                        editDropType.setText(itemName, false);
-                        isSelectingFromChip[0] = false;
-                    }
                 } else {
                     cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_bg)));
                     cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_stroke)));
                 }
 
                 cardChip.setOnClickListener(v -> {
-                    if (selectedChipCard[0] != null) {
-                        selectedChipCard[0].setCardBackgroundColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_bg)));
-                        selectedChipCard[0].setStrokeColor(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.pull_row_stroke)));
-                    }
-                    selectedChipCard[0] = cardChip;
-                    cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(selectedBgColor));
-                    cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(selectedStrokeColor));
                     isSelectingFromChip[0] = true;
                     editDropType.setText(itemName, false);
                     isSelectingFromChip[0] = false;
+                    updateChipSelectionState(llDropChips, itemName, rarityId);
                     suppressAutoOutcomeChange[0] = false;
                     HapticHelper.performClickHaptic(requireContext(), cardChip);
                     updateOutcomeSection.run();
@@ -1425,12 +1388,29 @@ public class JournalView extends Fragment {
             btnToggleCustomName.setOnClickListener(v -> {
                 if (llCustomInputContainer != null) {
                     boolean isVis = llCustomInputContainer.getVisibility() == View.VISIBLE;
+
+                    android.widget.FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                    ViewGroup transitionParent = bottomSheet != null ? bottomSheet : (dialogView instanceof ViewGroup ? (ViewGroup) dialogView : null);
+                    if (transitionParent != null) {
+                        androidx.transition.TransitionSet set = new androidx.transition.TransitionSet();
+                        set.addTransition(new androidx.transition.ChangeBounds());
+                        set.addTransition(new androidx.transition.Fade());
+                        set.setDuration(260);
+                        set.setInterpolator(new androidx.interpolator.view.animation.FastOutSlowInInterpolator());
+                        androidx.transition.TransitionManager.beginDelayedTransition(transitionParent, set);
+                    }
+
                     llCustomInputContainer.setVisibility(isVis ? View.GONE : View.VISIBLE);
                     if (ivCustomNameChevron != null) {
-                        ivCustomNameChevron.animate().rotation(isVis ? 0f : 180f).setDuration(200).start();
+                        ivCustomNameChevron.animate().rotation(isVis ? 0f : 180f).setDuration(260).start();
                     }
                     if (!isVis) {
                         editDropType.requestFocus();
+                        dialogView.postDelayed(() -> {
+                            if (dialogView instanceof androidx.core.widget.NestedScrollView) {
+                                ((androidx.core.widget.NestedScrollView) dialogView).smoothScrollTo(0, llCustomInputContainer.getTop());
+                            }
+                        }, 80);
                     }
                 }
             });
@@ -1442,7 +1422,8 @@ public class JournalView extends Fragment {
             @Override public void afterTextChanged(Editable s) {
                 updateCatalogMatch.run();
                 if (!isSelectingFromChip[0]) {
-                    populateChips.accept(toggleRarity.getCheckedButtonId());
+                    updateChipSelectionState(llDropChips, s != null ? s.toString().trim() : "", toggleRarity.getCheckedButtonId());
+                    updateOutcomeSection.run();
                 }
             }
         });
@@ -1467,16 +1448,21 @@ public class JournalView extends Fragment {
                 selectedDate[0] = LocalDate.now();
             }
 
-            String rarity = wishToEdit.getDropRare();
-            if (getString(R.string.four_star).equalsIgnoreCase(rarity)) {
-                toggleRarity.check(R.id.btn_rare_4);
-            } else if (getString(R.string.five_star).equalsIgnoreCase(rarity)) {
+            RareType editRareType = RareType.from(wishToEdit.getDropRare(), currentGameType, requireContext());
+            if (editRareType == RareType.LEGENDARY) {
                 toggleRarity.check(R.id.btn_rare_5);
+            } else if (editRareType == RareType.EPIC) {
+                toggleRarity.check(R.id.btn_rare_4);
             } else {
                 toggleRarity.check(R.id.btn_rare_3);
             }
 
             PityStatus currentStatus = wishToEdit.getPityStatus();
+            if (currentStatus == null || currentStatus == PityStatus.NONE) {
+                boolean isStd = catalogRepo.isStandardFiveStar(currentGameType, wishToEdit.getDropType());
+                currentStatus = isStd ? PityStatus.LOSS_50_50 : PityStatus.WIN_50_50;
+            }
+            isProgrammaticOutcomeCheck[0] = true;
             if (currentStatus == PityStatus.LOSS_50_50) {
                 togglePityStatus.check(R.id.btn_pity_loss);
             } else if (currentStatus == PityStatus.GUARANTEED) {
@@ -1484,6 +1470,8 @@ public class JournalView extends Fragment {
             } else {
                 togglePityStatus.check(R.id.btn_pity_win);
             }
+            isProgrammaticOutcomeCheck[0] = false;
+            updateOutcomeVisuals.run();
         } else {
             dialogTitle.setText(getString(R.string.add_pull));
             btnDelete.setVisibility(View.GONE);
@@ -1499,11 +1487,14 @@ public class JournalView extends Fragment {
             }
 
             Boolean isCurrentGuaranteed = viewModel.getIsGuaranteedLiveData().getValue();
+            isProgrammaticOutcomeCheck[0] = true;
             if (Boolean.TRUE.equals(isCurrentGuaranteed)) {
                 togglePityStatus.check(R.id.btn_pity_guaranteed);
             } else {
                 togglePityStatus.check(R.id.btn_pity_win);
             }
+            isProgrammaticOutcomeCheck[0] = false;
+            updateOutcomeVisuals.run();
             if (ivCustomNameChevron != null) {
                 ivCustomNameChevron.setRotation(0f);
             }
@@ -1516,13 +1507,17 @@ public class JournalView extends Fragment {
         editDropType.setOnItemClickListener((parent, view1, position, id) -> {
             CatalogItem selectedItem = autoAdapter.getItem(position);
             if (selectedItem != null) {
+                isSelectingFromChip[0] = true;
                 editDropType.setText(selectedItem.getName(requireContext()), false);
+                isSelectingFromChip[0] = false;
+                suppressAutoOutcomeChange[0] = false;
                 if (selectedItem.isFiveStar()) {
                     toggleRarity.check(R.id.btn_rare_5);
                 } else if (selectedItem.isFourStar()) {
                     toggleRarity.check(R.id.btn_rare_4);
+                } else {
+                    toggleRarity.check(R.id.btn_rare_3);
                 }
-                suppressAutoOutcomeChange[0] = false;
                 updateOutcomeSection.run();
                 updateCatalogMatch.run();
                 HapticHelper.performClickHaptic(requireContext(), editDropType);
@@ -1530,6 +1525,11 @@ public class JournalView extends Fragment {
         });
 
         populateChips.accept(toggleRarity.getCheckedButtonId());
+        if (!isEditMode && editDropType.getText().toString().trim().isEmpty()) {
+            if (llDropChips != null && llDropChips.getChildCount() > 0) {
+                llDropChips.getChildAt(0).performClick();
+            }
+        }
 
         toggleRarity.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
@@ -1642,34 +1642,21 @@ public class JournalView extends Fragment {
         int checkedId = togglePityStatus.getCheckedButtonId();
         Context ctx = requireContext();
 
-        if (btnWin != null) {
-            if (checkedId == R.id.btn_pity_win) {
-                btnWin.setBackgroundColor(ContextCompat.getColor(ctx, R.color.checked));
-                btnWin.setTextColor(Color.WHITE);
-            } else {
-                btnWin.setBackgroundColor(Color.TRANSPARENT);
-                btnWin.setTextColor(ContextCompat.getColor(ctx, R.color.text));
-            }
-        }
+        applyOutcomeButtonStyle(btnWin, checkedId == R.id.btn_pity_win, ContextCompat.getColor(ctx, R.color.checked), ctx);
+        applyOutcomeButtonStyle(btnLoss, checkedId == R.id.btn_pity_loss, ContextCompat.getColor(ctx, R.color.missed), ctx);
+        applyOutcomeButtonStyle(btnGuaranteed, checkedId == R.id.btn_pity_guaranteed, ContextCompat.getColor(ctx, R.color.check), ctx);
+    }
 
-        if (btnLoss != null) {
-            if (checkedId == R.id.btn_pity_loss) {
-                btnLoss.setBackgroundColor(ContextCompat.getColor(ctx, R.color.missed));
-                btnLoss.setTextColor(Color.WHITE);
-            } else {
-                btnLoss.setBackgroundColor(Color.TRANSPARENT);
-                btnLoss.setTextColor(ContextCompat.getColor(ctx, R.color.text));
-            }
-        }
-
-        if (btnGuaranteed != null) {
-            if (checkedId == R.id.btn_pity_guaranteed) {
-                btnGuaranteed.setBackgroundColor(ContextCompat.getColor(ctx, R.color.check));
-                btnGuaranteed.setTextColor(Color.WHITE);
-            } else {
-                btnGuaranteed.setBackgroundColor(Color.TRANSPARENT);
-                btnGuaranteed.setTextColor(ContextCompat.getColor(ctx, R.color.text));
-            }
+    private void applyOutcomeButtonStyle(MaterialButton button, boolean isChecked, int activeColor, Context ctx) {
+        if (button == null) return;
+        if (isChecked) {
+            button.setBackgroundTintList(ColorStateList.valueOf(activeColor));
+            button.setStrokeColor(ColorStateList.valueOf(activeColor));
+            button.setTextColor(Color.WHITE);
+        } else {
+            button.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+            button.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(ctx, R.color.pull_row_stroke)));
+            button.setTextColor(ContextCompat.getColor(ctx, R.color.text));
         }
     }
 
@@ -1719,6 +1706,25 @@ public class JournalView extends Fragment {
         rvBanners.setAdapter(adapter);
 
         dialog.show();
+    }
+
+    private void updateChipSelectionState(LinearLayout llDropChips, String currentText, int rarityId) {
+        if (llDropChips == null || getContext() == null) return;
+        boolean isFive = (rarityId == R.id.btn_rare_5);
+        int selectedBgColor = ContextCompat.getColor(requireContext(), isFive ? R.color.badge_gold_bg : (rarityId == R.id.btn_rare_4 ? R.color.badge_purple_bg : R.color.badge_blue_bg));
+        int selectedStrokeColor = ContextCompat.getColor(requireContext(), isFive ? R.color.rare_legendary : (rarityId == R.id.btn_rare_4 ? R.color.rare_epic : R.color.check));
+        int normalBgColor = ContextCompat.getColor(requireContext(), R.color.pull_row_bg);
+        int normalStrokeColor = ContextCompat.getColor(requireContext(), R.color.pull_row_stroke);
+
+        for (int i = 0; i < llDropChips.getChildCount(); i++) {
+            View chipView = llDropChips.getChildAt(i);
+            MaterialCardView cardChip = chipView.findViewById(R.id.card_chip);
+            TextView tvName = chipView.findViewById(R.id.tv_chip_name);
+            if (cardChip == null || tvName == null) continue;
+            boolean isSelected = !currentText.isEmpty() && currentText.equalsIgnoreCase(tvName.getText().toString().trim());
+            cardChip.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(isSelected ? selectedBgColor : normalBgColor));
+            cardChip.setStrokeColor(android.content.res.ColorStateList.valueOf(isSelected ? selectedStrokeColor : normalStrokeColor));
+        }
     }
 
     private boolean isItemFeatured(CatalogItem item, List<String> featuredNames) {
@@ -1808,18 +1814,17 @@ public class JournalView extends Fragment {
 
     @NonNull
     private static PityStatus getSelectedPityStatus(int checkedToggleId, boolean bannerHas5050, MaterialButtonToggleGroup togglePityStatus) {
-        PityStatus selectedPityStatus = PityStatus.NONE;
-        if (checkedToggleId == R.id.btn_rare_5 && bannerHas5050 && togglePityStatus != null) {
-            int statusCheckedId = togglePityStatus.getCheckedButtonId();
-            if (statusCheckedId == R.id.btn_pity_loss) {
-                selectedPityStatus = PityStatus.LOSS_50_50;
-            } else if (statusCheckedId == R.id.btn_pity_guaranteed) {
-                selectedPityStatus = PityStatus.GUARANTEED;
-            } else {
-                selectedPityStatus = PityStatus.WIN_50_50;
-            }
+        if (checkedToggleId != R.id.btn_rare_5 || !bannerHas5050 || togglePityStatus == null) {
+            return PityStatus.NONE;
         }
-        return selectedPityStatus;
+        int statusCheckedId = togglePityStatus.getCheckedButtonId();
+        if (statusCheckedId == R.id.btn_pity_loss) {
+            return PityStatus.LOSS_50_50;
+        } else if (statusCheckedId == R.id.btn_pity_guaranteed) {
+            return PityStatus.GUARANTEED;
+        } else {
+            return PityStatus.WIN_50_50;
+        }
     }
 
     private void centerPositionInstantly(int position) {

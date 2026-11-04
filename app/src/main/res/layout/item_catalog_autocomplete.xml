@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:paddingHorizontal="14dp"
-    android:paddingVertical="10dp">
+    android:paddingVertical="8dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_item_avatar"
@@ -14,28 +14,33 @@
         android:layout_height="36dp"
         app:cardCornerRadius="18dp"
         app:cardElevation="0dp"
-        app:strokeWidth="1.5dp"
         app:strokeColor="@color/rare_legendary"
+        app:strokeWidth="1.5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_item_avatar"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_item_rarity"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            tools:text="5★" />
+            <TextView
+                android:id="@+id/tv_item_rarity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/genshin_font"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="5★" />
+
+            <ImageView
+                android:id="@+id/iv_item_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop" />
+        </FrameLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
@@ -45,7 +50,7 @@
         android:layout_marginEnd="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_item_pool_badge"
+        app:layout_constraintEnd_toStartOf="@+id/card_item_pool_badge"
         app:layout_constraintStart_toEndOf="@+id/card_item_avatar"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -53,7 +58,7 @@
             android:id="@+id/tv_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/genshin_font"
             android:textColor="@color/text"
             android:textSize="14sp"
             tools:text="Муалани" />
@@ -62,21 +67,34 @@
             android:id="@+id/tv_item_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/genshin_font"
             android:textColor="@color/text_secondary"
             android:textSize="11sp"
             tools:text="Персонаж" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_item_pool_badge"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_item_pool_badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:textColor="@color/text_secondary"
-        android:textSize="11sp"
+        app:cardBackgroundColor="@color/pull_row_bg"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Ивент" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_item_pool_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/genshin_font"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="10sp"
+            tools:text="Ивент" />
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

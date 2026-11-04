@@ -482,8 +482,8 @@
     <string name="about_telegram_title">Telegram-канал</string>
     <string name="about_telegram_desc">Новости и обсуждение проекта</string>
     <string name="about_donation_title">Поддержать проект</string>
-    <string name="about_donation_desc">DonationAlerts • Помощь в развитии</string>
-    <string name="a11y_btn_donation">Поддержать проект на DonationAlerts</string>
+    <string name="about_donation_desc">Boosty • Помощь в развитии</string>
+    <string name="a11y_btn_donation">Поддержать проект на Boosty</string>
     <string name="about_developer_desc">MenshovAnton • Автор проекта</string>
 
     <!-- Feedback Screen -->

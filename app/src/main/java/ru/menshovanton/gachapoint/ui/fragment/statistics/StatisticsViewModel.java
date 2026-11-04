@@ -131,6 +131,15 @@ public class StatisticsViewModel extends AndroidViewModel {
                     runningPity = 0;
 
                     PityStatus status = pull.getPityStatus();
+                    if (status == null || status == PityStatus.NONE) {
+                        ru.menshovanton.gachapoint.data.repository.CatalogRepository catalogRepo =
+                                ru.menshovanton.gachapoint.data.repository.CatalogRepository.getInstance(getApplication());
+                        ru.menshovanton.gachapoint.domain.models.CatalogItem item =
+                                catalogRepo.findItemByName(gameType, pull.getDropType());
+                        boolean isStd = (item != null && item.isStandard())
+                                || catalogRepo.isStandardFiveStar(gameType, pull.getDropType());
+                        status = isStd ? PityStatus.LOSS_50_50 : PityStatus.WIN_50_50;
+                    }
                     if (status == PityStatus.WIN_50_50) {
                         win5050++;
                     } else if (status == PityStatus.LOSS_50_50) {

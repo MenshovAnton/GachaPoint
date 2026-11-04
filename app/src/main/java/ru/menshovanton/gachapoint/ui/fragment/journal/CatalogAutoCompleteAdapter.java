@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
@@ -24,6 +23,7 @@ import java.util.Locale;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.models.CatalogItem;
+import ru.menshovanton.gachapoint.ui.common.AvatarImageLoader;
 
 public class CatalogAutoCompleteAdapter extends ArrayAdapter<CatalogItem> {
 
@@ -65,6 +65,7 @@ public class CatalogAutoCompleteAdapter extends ArrayAdapter<CatalogItem> {
         TextView tvRarity = convertView.findViewById(R.id.tv_item_rarity);
         MaterialCardView cardAvatar = convertView.findViewById(R.id.card_item_avatar);
         ImageView ivAvatar = convertView.findViewById(R.id.iv_item_avatar);
+        MaterialCardView cardPool = convertView.findViewById(R.id.card_item_pool_badge);
         TextView tvPool = convertView.findViewById(R.id.tv_item_pool_badge);
 
         String displayName = item.getName(getContext());
@@ -88,27 +89,30 @@ public class CatalogAutoCompleteAdapter extends ArrayAdapter<CatalogItem> {
             }
         }
 
-        if (ivAvatar != null) {
-            if (item.getIconUrl() != null && !item.getIconUrl().isEmpty()) {
-                ivAvatar.setVisibility(View.VISIBLE);
-                tvRarity.setVisibility(View.GONE);
-                Glide.with(getContext())
-                        .load(item.getIconUrl())
-                        .circleCrop()
-                        .into(ivAvatar);
-            } else {
-                ivAvatar.setImageDrawable(null);
-                ivAvatar.setVisibility(View.GONE);
-                tvRarity.setVisibility(View.VISIBLE);
-            }
-        }
+        AvatarImageLoader.loadAvatar(
+                getContext(),
+                item.getIconUrl(),
+                displayName,
+                ivAvatar,
+                tvRarity
+        );
 
-        if (item.isFiveStar()) {
-            boolean isRu = getContext().getString(R.string.genshin).contains("Геншин") || "ru".equals(Locale.getDefault().getLanguage());
-            tvPool.setText(item.isStandard() ? (isRu ? "Стандарт" : "Standard") : (isRu ? "Ивент" : "Event"));
-            tvPool.setVisibility(View.VISIBLE);
-        } else {
-            tvPool.setVisibility(View.GONE);
+        if (cardPool != null && tvPool != null) {
+            boolean isRu = "ru".equalsIgnoreCase(Locale.getDefault().getLanguage());
+            if (item.isFiveStar()) {
+                cardPool.setVisibility(View.VISIBLE);
+                if (item.isStandard()) {
+                    cardPool.setCardBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.badge_blue_bg)));
+                    tvPool.setTextColor(ContextCompat.getColor(getContext(), R.color.check));
+                    tvPool.setText(isRu ? "Стандарт" : "Standard");
+                } else {
+                    cardPool.setCardBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.badge_gold_bg)));
+                    tvPool.setTextColor(ContextCompat.getColor(getContext(), R.color.rare_legendary));
+                    tvPool.setText(isRu ? "Ивент" : "Event");
+                }
+            } else {
+                cardPool.setVisibility(View.GONE);
+            }
         }
 
         return convertView;
@@ -126,14 +130,34 @@ public class CatalogAutoCompleteAdapter extends ArrayAdapter<CatalogItem> {
                     results.count = allItems.size();
                 } else {
                     String query = constraint.toString().toLowerCase(Locale.ROOT).trim();
-                    List<CatalogItem> match = new ArrayList<>();
+                    List<CatalogItem> exactMatches = new ArrayList<>();
+                    List<CatalogItem> startsWithMatches = new ArrayList<>();
+                    List<CatalogItem> containsMatches = new ArrayList<>();
+
                     for (CatalogItem it : allItems) {
-                        if (it.getName().toLowerCase(Locale.ROOT).contains(query)
-                                || it.getNameRu().toLowerCase(Locale.ROOT).contains(query)
-                                || it.getNameEn().toLowerCase(Locale.ROOT).contains(query)) {
-                            match.add(it);
+                        String name = it.getName() != null ? it.getName().toLowerCase(Locale.ROOT) : "";
+                        String nameRu = it.getNameRu() != null ? it.getNameRu().toLowerCase(Locale.ROOT) : "";
+                        String nameEn = it.getNameEn() != null ? it.getNameEn().toLowerCase(Locale.ROOT) : "";
+
+                        if (name.equals(query) || nameRu.equals(query) || nameEn.equals(query)) {
+                            exactMatches.add(it);
+                        } else if (name.startsWith(query) || nameRu.startsWith(query) || nameEn.startsWith(query)) {
+                            startsWithMatches.add(it);
+                        } else if (name.contains(query) || nameRu.contains(query) || nameEn.contains(query)) {
+                            containsMatches.add(it);
+                        } else if (it.getAliases() != null) {
+                            for (String alias : it.getAliases()) {
+                                if (alias != null && alias.toLowerCase(Locale.ROOT).contains(query)) {
+                                    containsMatches.add(it);
+                                    break;
+                                }
+                            }
                         }
                     }
+                    List<CatalogItem> match = new ArrayList<>();
+                    match.addAll(exactMatches);
+                    match.addAll(startsWithMatches);
+                    match.addAll(containsMatches);
                     results.values = match;
                     results.count = match.size();
                 }

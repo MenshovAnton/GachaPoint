@@ -138,6 +138,21 @@ public class JournalViewModel extends AndroidViewModel {
 
                 if (bannerHas5050) {
                     PityStatus status = pull.getPityStatus();
+                    if (status == null || status == PityStatus.NONE) {
+                        ru.menshovanton.gachapoint.data.repository.CatalogRepository catalogRepo =
+                                ru.menshovanton.gachapoint.data.repository.CatalogRepository.getInstance(getApplication());
+                        ru.menshovanton.gachapoint.domain.models.CatalogItem item =
+                                catalogRepo.findItemByName(currentGameType, pull.getDropType());
+                        boolean isStd = (item != null && item.isStandard())
+                                || catalogRepo.isStandardFiveStar(currentGameType, pull.getDropType());
+                        if (isStd) {
+                            status = PityStatus.LOSS_50_50;
+                        } else {
+                            status = guaranteed ? PityStatus.GUARANTEED : PityStatus.WIN_50_50;
+                        }
+                        pull.setPityStatus(status);
+                    }
+
                     if (status == PityStatus.LOSS_50_50) {
                         guaranteed = true;
                     } else if (status == PityStatus.WIN_50_50 || status == PityStatus.GUARANTEED) {
@@ -195,13 +210,16 @@ public class JournalViewModel extends AndroidViewModel {
         boolean isResetPity = (RareType.from(dropRare, getApplication()) == RareType.LEGENDARY);
 
         if (wishToEdit != null) {
+            String bannerType = (wishToEdit.getBannerType() != null)
+                    ? wishToEdit.getBannerType()
+                    : getCurrentBannerType();
             databaseRepository.updatePull(
                     wishToEdit.getId(),
                     dateForDb,
                     finalDropType,
                     dropRare,
                     currentGameType,
-                    getCurrentBannerType(),
+                    bannerType,
                     isResetPity,
                     pityStatus,
                     () -> refreshData(false)

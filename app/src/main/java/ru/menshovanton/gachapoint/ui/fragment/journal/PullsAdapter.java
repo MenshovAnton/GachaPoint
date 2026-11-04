@@ -127,12 +127,6 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
                         && Objects.equals(oldItem.getDropType(), newItem.getDropType())
                         && Objects.equals(oldItem.getDateTime(), newItem.getDateTime());
             }
-
-            @NonNull
-            @Override
-            public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-                return "PAYLOAD_PITY";
-            }
         });
 
         items.clear();
@@ -262,12 +256,17 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
 
     @Override
     public void onBindViewHolder(@NonNull PullsViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if (!payloads.isEmpty()) {
-            Pull pull = getItem(position);
-            applySelectionAndStyling(holder, pull, holder.itemView.getContext());
-        } else {
-            super.onBindViewHolder(holder, position, payloads);
+        if (!payloads.isEmpty() && payloads.contains("PAYLOAD_SELECTION") && payloads.size() == 1) {
+            int pos = holder.getBindingAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION) {
+                Pull pull = getItem(pos);
+                if (pull != null) {
+                    applySelectionAndStyling(holder, pull, holder.itemView.getContext());
+                    return;
+                }
+            }
         }
+        onBindViewHolder(holder, position);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -358,19 +357,27 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
         });
 
         holder.cardView.setOnClickListener(v -> {
+            int pos = holder.getBindingAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION) return;
+            Pull currentPull = getItem(pos);
+            if (currentPull == null) return;
             if (isSelectionMode) {
-                toggleSelection(pull.getId());
+                toggleSelection(currentPull.getId());
             } else if (listener != null) {
-                listener.onItemClick(pull);
+                listener.onItemClick(currentPull);
             }
         });
 
         holder.cardView.setOnLongClickListener(v -> {
+            int pos = holder.getBindingAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION) return false;
+            Pull currentPull = getItem(pos);
+            if (currentPull == null) return false;
             if (!isSelectionMode && longClickListener != null) {
-                longClickListener.onItemLongClick(pull);
+                longClickListener.onItemLongClick(currentPull);
                 return true;
             } else if (isSelectionMode) {
-                toggleSelection(pull.getId());
+                toggleSelection(currentPull.getId());
                 return true;
             }
             return false;
