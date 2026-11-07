@@ -80,7 +80,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_widget_quick_actions"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
@@ -114,7 +114,7 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/btn_quick_daily"
-                            style="@style/Widget.GachaPoint.BottomSheetCard"
+                            style="@style/Widget.GachaPoint.Card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -172,7 +172,7 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/btn_quick_sub"
-                            style="@style/Widget.GachaPoint.BottomSheetCard"
+                            style="@style/Widget.GachaPoint.Card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -238,7 +238,7 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/btn_quick_savings"
-                            style="@style/Widget.GachaPoint.BottomSheetCard"
+                            style="@style/Widget.GachaPoint.Card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -278,7 +278,7 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/btn_quick_journal"
-                            style="@style/Widget.GachaPoint.BottomSheetCard"
+                            style="@style/Widget.GachaPoint.Card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -324,7 +324,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_widget_savings"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
@@ -473,7 +473,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_widget_statistics"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
@@ -728,7 +728,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_widget_pity"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
@@ -889,7 +889,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_customize_widgets"
-            style="@style/Widget.GachaPoint.MaterialCardView"
+            style="@style/Widget.GachaPoint.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/card_margin_horizontal"

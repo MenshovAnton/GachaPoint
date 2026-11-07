@@ -695,4 +695,54 @@
     <string name="help_faq_privacy_title">Offline Storage &amp; Data Security</string>
     <string name="help_faq_privacy_summary">Local database without servers or account linking</string>
     <string name="help_faq_privacy_detail">• GachaPoint works completely offline with no network connections or telemetry.\n\n• No game accounts or credentials are required. All records stay solely on your phone.\n\n• Remember to periodically export a backup in Settings to safeguard your history.</string>
+
+    <!-- URLs -->
+    <string name="github_url" translatable="false">https://github.com/MenshovAnton/GachaPoint</string>
+    <string name="tiktok_url" translatable="false">https://www.tiktok.com/@gachapoint_official</string>
+    <string name="boosty_url" translatable="false">https://boosty.to/menshovanton/donate</string>
+    <string name="telegram_url" translatable="false">https://t.me/GachaPoint_official</string>
+
+    <!-- Express Onboarding -->
+    <string name="onboarding_welcome_title">Your Gacha Companion</string>
+    <string name="onboarding_welcome_desc">Save pulls for your dream characters, grab stream promo codes, and plan banners with zero hassle.</string>
+    <string name="onboarding_welcome_badge">No sign-up • 100% Private</string>
+    <string name="onboarding_community_title">Join the Community</string>
+    <string name="onboarding_community_desc">News, discussions, videos, and project source code</string>
+    <string name="onboarding_community_telegram">Telegram</string>
+    <string name="onboarding_community_telegram_desc">News &amp; chat</string>
+    <string name="onboarding_community_tiktok">TikTok</string>
+    <string name="onboarding_community_tiktok_desc">Videos &amp; guides</string>
+    <string name="onboarding_community_github">GitHub</string>
+    <string name="onboarding_community_github_desc">Project source code</string>
+    <string name="onboarding_community_boosty">Boosty</string>
+    <string name="onboarding_community_boosty_desc">Support project</string>
+
+    <string name="onboarding_games_title">What do you play?</string>
+    <string name="onboarding_games_desc">Select your games — we\'ll hide everything else to keep the app clean and cozy.</string>
+    <string name="onboarding_games_primary_hint">Tap the star to choose your primary game on launch.</string>
+    <string name="onboarding_games_error_select">Please select at least one game</string>
+
+    <string name="onboarding_notif_title">Never Miss Rewards</string>
+    <string name="onboarding_notif_desc">Get reminded about dailies and catch expiring stream promo codes before they expire.</string>
+    <string name="onboarding_notif_enable_label">Daily reminders</string>
+    <string name="onboarding_notif_enable_desc">For dailies, subscriptions &amp; promo codes</string>
+    <string name="onboarding_notif_time_title">Reminder time</string>
+    <string name="onboarding_notif_tap_to_change">Tap to change exact time</string>
+    <string name="onboarding_notif_quick_presets">Quick presets</string>
+    <string name="onboarding_notif_period_morning">Morning</string>
+    <string name="onboarding_notif_period_noon">Noon</string>
+    <string name="onboarding_notif_period_evening">Evening</string>
+    <string name="onboarding_notif_period_night">Night</string>
+    <string name="onboarding_notif_time_morning">09:00</string>
+    <string name="onboarding_notif_time_noon">12:00</string>
+    <string name="onboarding_notif_time_evening">19:00</string>
+    <string name="onboarding_notif_time_night">21:00</string>
+    <string name="onboarding_notif_time_custom">Custom</string>
+
+    <string name="onboarding_btn_start">Get Started</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_skip">Skip</string>
+    <string name="onboarding_btn_finish">Let\'s Go!</string>
+    <string name="settings_onboarding_title">Express Onboarding</string>
+    <string name="settings_onboarding_desc">Re-run the initial app setup</string>
 </resources>

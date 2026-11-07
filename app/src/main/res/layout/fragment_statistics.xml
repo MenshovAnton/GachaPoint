@@ -172,7 +172,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_pulls_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
@@ -409,7 +409,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_luck_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
@@ -520,7 +520,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_banners_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
@@ -562,7 +562,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_subs_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
@@ -747,7 +747,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_savings_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
@@ -908,7 +908,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_total_wealth_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"

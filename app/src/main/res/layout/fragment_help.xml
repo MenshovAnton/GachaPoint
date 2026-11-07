@@ -85,7 +85,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_pulls"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -173,7 +173,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_widgets"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -261,7 +261,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_calendar"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -349,7 +349,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_backup"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -466,7 +466,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_pity"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -554,7 +554,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_5050"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -642,7 +642,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_weapon"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -730,7 +730,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_radiance"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -819,7 +819,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_hi3"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -939,7 +939,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_savings"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -1027,7 +1027,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_stats"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -1115,7 +1115,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_help_privacy"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"

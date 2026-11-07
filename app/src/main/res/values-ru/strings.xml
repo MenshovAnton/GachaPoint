@@ -657,4 +657,48 @@
     <string name="help_faq_privacy_title">Автономность и безопасность данных</string>
     <string name="help_faq_privacy_summary">Локальное хранение без серверов и аккаунтов</string>
     <string name="help_faq_privacy_detail">• GachaPoint работает полностью автономно без подключения к сторонним серверам.\n\n• В приложении нет учетных записей, авторизаций через игровые аккаунты и сбора личных данных. База данных хранится исключительно на вашем телефоне.\n\n• Регулярно делайте резервную копию в Настройках, чтобы сохранить прогресс при смене или сбросе устройства.</string>
+
+    <!-- Express Onboarding -->
+    <string name="onboarding_welcome_title">Твой компаньон по гачам</string>
+    <string name="onboarding_welcome_desc">Копи крутки на любимых персонажей, забирай промокоды со стримов и планируй баннеры без лишней суеты.</string>
+    <string name="onboarding_welcome_badge">Без регистраций • 100% приватно</string>
+    <string name="onboarding_community_title">Присоединяйся к сообществу</string>
+    <string name="onboarding_community_desc">Новости, обсуждения, видео и открытый исходный код</string>
+    <string name="onboarding_community_telegram">Telegram</string>
+    <string name="onboarding_community_telegram_desc">Новости и чат</string>
+    <string name="onboarding_community_tiktok">TikTok</string>
+    <string name="onboarding_community_tiktok_desc">Видео и гайды</string>
+    <string name="onboarding_community_github">GitHub</string>
+    <string name="onboarding_community_github_desc">Исходный код проекта</string>
+    <string name="onboarding_community_boosty">Boosty</string>
+    <string name="onboarding_community_boosty_desc">Поддержать автора</string>
+
+    <string name="onboarding_games_title">Во что ты играешь?</string>
+    <string name="onboarding_games_desc">Выбери свои игры — мы скроем всё лишнее, чтобы интерфейс оставался чистым и удобным.</string>
+    <string name="onboarding_games_primary_hint">Нажми на звездочку, чтобы выбрать основную игру при входе.</string>
+    <string name="onboarding_games_error_select">Выберите хотя бы одну игру</string>
+
+    <string name="onboarding_notif_title">Не упускай награды</string>
+    <string name="onboarding_notif_desc">Напомним забрать дейлики и пришлём горящие промокоды до того, как они сгорят.</string>
+    <string name="onboarding_notif_enable_label">Ежедневные напоминания</string>
+    <string name="onboarding_notif_enable_desc">О дейликах, подписках и промокодах</string>
+    <string name="onboarding_notif_time_title">Время напоминания</string>
+    <string name="onboarding_notif_tap_to_change">Нажмите, чтобы настроить вручную</string>
+    <string name="onboarding_notif_quick_presets">Быстрый выбор</string>
+    <string name="onboarding_notif_period_morning">Утро</string>
+    <string name="onboarding_notif_period_noon">День</string>
+    <string name="onboarding_notif_period_evening">Вечер</string>
+    <string name="onboarding_notif_period_night">Ночь</string>
+    <string name="onboarding_notif_time_morning">09:00</string>
+    <string name="onboarding_notif_time_noon">12:00</string>
+    <string name="onboarding_notif_time_evening">19:00</string>
+    <string name="onboarding_notif_time_night">21:00</string>
+    <string name="onboarding_notif_time_custom">Своё время</string>
+
+    <string name="onboarding_btn_start">Настроить под себя</string>
+    <string name="onboarding_btn_next">Далее</string>
+    <string name="onboarding_btn_skip">Пропустить</string>
+    <string name="onboarding_btn_finish">Поехали!</string>
+    <string name="settings_onboarding_title">Экспресс-онбординг</string>
+    <string name="settings_onboarding_desc">Пройти первоначальную настройку заново</string>
 </resources>

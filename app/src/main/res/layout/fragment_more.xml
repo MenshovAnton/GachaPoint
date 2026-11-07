@@ -51,7 +51,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_tools_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/card_margin_horizontal"
@@ -578,7 +578,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_app_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/card_margin_horizontal"

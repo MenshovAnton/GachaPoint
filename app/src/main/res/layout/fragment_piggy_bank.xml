@@ -144,7 +144,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_goal_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
@@ -400,7 +400,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_actions_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
@@ -638,7 +638,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_calc_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"

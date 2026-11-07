@@ -116,7 +116,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_mode_sub"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="6dp"
@@ -175,7 +175,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_mode_dailies"
-                    style="@style/Widget.GachaPoint.MaterialCardView"
+                    style="@style/Widget.GachaPoint.Card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
@@ -453,7 +453,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_stats_card"
-                style="@style/Widget.GachaPoint.MaterialCardView"
+                style="@style/Widget.GachaPoint.Card"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"

@@ -39,7 +39,7 @@
         android:textStyle="bold" />
 
     <com.google.android.material.card.MaterialCardView
-        style="@style/Widget.GachaPoint.BottomSheetCard"
+        style="@style/Widget.GachaPoint.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -211,7 +211,7 @@
         android:textStyle="bold" />
 
     <com.google.android.material.card.MaterialCardView
-        style="@style/Widget.GachaPoint.BottomSheetCard"
+        style="@style/Widget.GachaPoint.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

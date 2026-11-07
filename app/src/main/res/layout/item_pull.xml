@@ -8,16 +8,12 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_pull"
+        style="@style/Widget.GachaPoint.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        app:cardBackgroundColor="@color/pull_row_bg"
         app:cardCornerRadius="12dp"
-        app:cardElevation="0dp"
-        app:strokeColor="@color/pull_row_stroke"
-        app:strokeWidth="1dp"
-        app:rippleColor="@color/check_30"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

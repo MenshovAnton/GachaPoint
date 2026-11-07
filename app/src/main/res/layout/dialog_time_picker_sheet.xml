@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -19,51 +20,69 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
         android:fontFamily="@font/genshin_font"
         android:text="@string/time_picker_title"
         android:textColor="@color/text"
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.GachaPoint.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginTop="16dp">
 
-        <NumberPicker
-            android:id="@+id/np_hours"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:descendantFocusability="blocksDescendants"
-            android:theme="@style/ThemeOverlay.GachaPoint.NumberPicker" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="12dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:fontFamily="@font/genshin_font"
-            android:text="@string/time"
-            android:textSize="32sp"
-            android:textStyle="bold" />
+            <NumberPicker
+                android:id="@+id/np_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants"
+                android:selectionDividerHeight="0dp"
+                android:theme="@style/ThemeOverlay.GachaPoint.NumberPicker" />
 
-        <NumberPicker
-            android:id="@+id/np_minutes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:descendantFocusability="blocksDescendants"
-            android:theme="@style/ThemeOverlay.GachaPoint.NumberPicker" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:text=":"
+                android:textColor="@color/check"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
-    </LinearLayout>
+            <NumberPicker
+                android:id="@+id/np_minutes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants"
+                android:selectionDividerHeight="0dp"
+                android:theme="@style/ThemeOverlay.GachaPoint.NumberPicker" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_save_time"
         style="@style/Button.GachaPoint.Tonal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/action_button_height"
-        android:layout_marginTop="24dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-medium"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         android:text="@string/time_picker_save"
-        android:textSize="16sp" />
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:backgroundTint="@color/accent"
+        app:cornerRadius="14dp" />
 
 </LinearLayout>

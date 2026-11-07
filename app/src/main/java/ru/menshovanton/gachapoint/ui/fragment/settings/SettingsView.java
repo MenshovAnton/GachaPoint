@@ -7,12 +7,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import ru.menshovanton.gachapoint.ui.common.NoFilterArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,7 @@ public class SettingsView extends Fragment {
     private View rowNotificationChannels;
     private View dividerNotificationChannels;
     private View rowHomeWidgets;
+    private View rowOnboarding;
     private View rowConfigureGames;
     private View rowDefaultGame;
     private Chip chipDefaultGame;
@@ -106,6 +109,7 @@ public class SettingsView extends Fragment {
         rowNotificationChannels = view.findViewById(R.id.row_notification_channels);
         dividerNotificationChannels = view.findViewById(R.id.divider_notification_channels);
         rowHomeWidgets = view.findViewById(R.id.row_home_widgets);
+        rowOnboarding = view.findViewById(R.id.row_onboarding);
         rowConfigureGames = view.findViewById(R.id.row_configure_games);
         rowDefaultGame = view.findViewById(R.id.row_default_game);
         chipDefaultGame = view.findViewById(R.id.chip_default_game);
@@ -160,6 +164,7 @@ public class SettingsView extends Fragment {
         rowNotificationChannels = null;
         dividerNotificationChannels = null;
         rowHomeWidgets = null;
+        rowOnboarding = null;
         rowConfigureGames = null;
         rowDefaultGame = null;
         chipDefaultGame = null;
@@ -218,6 +223,11 @@ public class SettingsView extends Fragment {
         if (rowHomeWidgets != null) {
             rowHomeWidgets.setOnClickListener(v ->
                     HomeWidgetsSheetDialog.show(requireContext(), null));
+        }
+
+        if (rowOnboarding != null) {
+            rowOnboarding.setOnClickListener(v ->
+                    startActivity(new Intent(requireContext(), ru.menshovanton.gachapoint.ui.onboarding.OnboardingActivity.class)));
         }
 
         View.OnClickListener openGamesConfigListener = v ->
@@ -447,12 +457,32 @@ public class SettingsView extends Fragment {
         npHours.setValue(currentHour != null ? currentHour : 12);
         npMinutes.setValue(currentMinute != null ? currentMinute : 0);
 
+        setupNumberPicker(npHours);
+        setupNumberPicker(npMinutes);
+
         btnSave.setOnClickListener(v -> {
             viewModel.onTimeSelected(npHours.getValue(), npMinutes.getValue());
             bottomSheetDialog.dismiss();
         });
 
         bottomSheetDialog.show();
+    }
+
+    private void setupNumberPicker(android.widget.NumberPicker np) {
+        if (getContext() == null) return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            np.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 24, getResources().getDisplayMetrics()));
+            np.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text));
+            np.setSelectionDividerHeight(0);
+        } else {
+            for (int i = 0; i < np.getChildCount(); i++) {
+                View child = np.getChildAt(i);
+                if (child instanceof EditText) {
+                    ((EditText) child).setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                    ((EditText) child).setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text));
+                }
+            }
+        }
     }
 
     private void updateDefaultGameDisplay() {

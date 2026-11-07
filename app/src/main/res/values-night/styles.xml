@@ -59,8 +59,15 @@
         <item name="colorOnSurface">@color/white</item>
         <item name="bottomSheetStyle">@style/Widget.GachaPoint.BottomSheet.Modal</item>
     </style>
+    <style name="ShapeAppearance.GachaPoint.BottomSheet" parent="ShapeAppearance.Material3.Corner.ExtraLarge">
+        <item name="cornerSizeTopLeft">28dp</item>
+        <item name="cornerSizeTopRight">28dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
     <style name="Widget.GachaPoint.BottomSheet.Modal" parent="Widget.Material3.BottomSheet.Modal">
         <item name="android:maxWidth">@dimen/bottom_sheet_max_width</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.GachaPoint.BottomSheet</item>
     </style>
     <style name="ThemeOverlay.GachaPoint.NumberPicker" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="colorControlNormal">@color/check</item>
@@ -121,9 +128,13 @@
     <style name="ShapeAppearance.GachaPoint.RoundedPopup" parent="ShapeAppearance.Material3.Corner.Medium">
         <item name="cornerSize">16dp</item>
     </style>
-    <style name="Widget.GachaPoint.MaterialCardView" parent="Widget.Material3.CardView.Filled">
-        <item name="cardBackgroundColor">@color/nav_bar_background_night</item>
-        <item name="strokeWidth">0dp</item>
+    <style name="Widget.GachaPoint.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/card_bg</item>
+        <item name="strokeColor">@color/card_stroke</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardElevation">0dp</item>
+        <item name="rippleColor">@color/check_30</item>
     </style>
     <style name="Switch.GachaPoint.MaterialSwitch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
         <item name="thumbTint">@color/switch_thumb_selector</item>
@@ -196,12 +207,6 @@
         <item name="android:textStyle">bold</item>
         <item name="fontFamily">@font/genshin_font</item>
         <item name="android:fontFamily">@font/genshin_font</item>
-    </style>
-    <style name="Widget.GachaPoint.BottomSheetCard" parent="Widget.Material3.CardView.Filled">
-        <item name="cardBackgroundColor">@color/sheet_card_background</item>
-        <item name="cardCornerRadius">18dp</item>
-        <item name="strokeWidth">0dp</item>
-        <item name="cardElevation">0dp</item>
     </style>
     <style name="Widget.GachaPoint.FAB" parent="Widget.Material3.FloatingActionButton.Primary">
         <item name="backgroundTint">@color/accent</item>

@@ -338,4 +338,21 @@ public class Preferences {
     public void setBannerNotifiedActive(String bannerId) {
         settings.edit().putBoolean(PREF_BANNER_ACTIVE + bannerId, true).apply();
     }
+
+    public static final String ONBOARDING_COMPLETED = "onboarding_completed";
+
+    public boolean isOnboardingCompleted() {
+        if (!settings.contains(ONBOARDING_COMPLETED)) {
+            if (settings.contains(ENABLED_GAMES)) {
+                saveBooleanPreference(ONBOARDING_COMPLETED, true);
+                return true;
+            }
+            return false;
+        }
+        return getBooleanPreference(ONBOARDING_COMPLETED, false);
+    }
+
+    public void setOnboardingCompleted(boolean completed) {
+        saveBooleanPreference(ONBOARDING_COMPLETED, completed);
+    }
 }

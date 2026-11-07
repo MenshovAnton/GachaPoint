@@ -51,7 +51,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_banner_dashboard"
-            style="@style/Widget.GachaPoint.MaterialCardView"
+            style="@style/Widget.GachaPoint.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/card_margin_horizontal"

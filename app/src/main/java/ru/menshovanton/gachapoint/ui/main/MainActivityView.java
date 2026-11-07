@@ -64,6 +64,13 @@ public class MainActivityView extends AppCompatActivity {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langCode));
         }
 
+        if (!preferences.isOnboardingCompleted()) {
+            Intent intent = new Intent(this, ru.menshovanton.gachapoint.ui.onboarding.OnboardingActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         super.onCreate(savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
