@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class StatisticsView extends Fragment {
     private TextView tvEmptyStatsTitle;
     private TextView tvEmptyStatsDesc;
     private MaterialButton btnEmptyStatsGoJournal;
-    private ImageButton btnShare;
+    private FloatingActionButton fabShare;
     private boolean isFirstLoad = true;
     private TextView tvTotalPullsCount;
     private TextView tvTotalCurrencySpent;
@@ -137,7 +138,7 @@ public class StatisticsView extends Fragment {
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
         ImageButton btnBack = view.findViewById(R.id.btn_back);
-        btnShare = view.findViewById(R.id.btn_share);
+        fabShare = view.findViewById(R.id.fab_share);
         svStatistics = view.findViewById(R.id.sv_statistics);
 
         groupStatisticsContent = view.findViewById(R.id.group_statistics_content);
@@ -190,8 +191,8 @@ public class StatisticsView extends Fragment {
             btnBack.setOnClickListener(v -> NavHostFragment.findNavController(this).navigateUp());
         }
 
-        if (btnShare != null) {
-            btnShare.setOnClickListener(v -> {
+        if (fabShare != null) {
+            fabShare.setOnClickListener(v -> {
                 StatisticsShareSheetDialog sheet = StatisticsShareSheetDialog.newInstance();
                 sheet.setListener(new StatisticsShareSheetDialog.OnOptionSelectedListener() {
                     @Override
@@ -361,7 +362,7 @@ public class StatisticsView extends Fragment {
         if (isEmpty) {
             if (llStatisticsEmpty != null) llStatisticsEmpty.setVisibility(View.VISIBLE);
             if (groupStatisticsContent != null) groupStatisticsContent.setVisibility(View.GONE);
-            if (btnShare != null) btnShare.setVisibility(View.GONE);
+            if (fabShare != null) fabShare.setVisibility(View.GONE);
             if (svStatistics != null) {
                 svStatistics.setNestedScrollingEnabled(false);
                 svStatistics.scrollTo(0, 0);
@@ -377,7 +378,7 @@ public class StatisticsView extends Fragment {
         } else {
             if (llStatisticsEmpty != null) llStatisticsEmpty.setVisibility(View.GONE);
             if (groupStatisticsContent != null) groupStatisticsContent.setVisibility(View.VISIBLE);
-            if (btnShare != null) btnShare.setVisibility(View.VISIBLE);
+            if (fabShare != null) fabShare.setVisibility(View.VISIBLE);
             if (svStatistics != null) {
                 svStatistics.setNestedScrollingEnabled(true);
             }
@@ -541,7 +542,7 @@ public class StatisticsView extends Fragment {
         tvEmptyStatsTitle = null;
         tvEmptyStatsDesc = null;
         btnEmptyStatsGoJournal = null;
-        btnShare = null;
+        fabShare = null;
         isFirstLoad = true;
         tvTotalPullsCount = null;
         tvTotalCurrencySpent = null;

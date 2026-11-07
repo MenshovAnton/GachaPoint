@@ -644,7 +644,7 @@
 
     <string name="help_mech_hi3_title">Механики Honkai Impact 3rd</string>
     <string name="help_mech_hi3_summary">Без 50/50, гарант 90 на валькирию и 60 на оружие</string>
-    <string name="help_mech_hi3_detail">• Поставка боекостюма (Battlesuit Supply): Гарант валькирии S-ранга — 90 поставок (софт-гарант с ~75-й). Механика 50/50 ОТСУТСТВУЕТ — при выпадении S-ранга вы со 100% вероятностью получаете целевую валькирию баннера!\n\n• Поставка снаряжения (Equipment Supply): Жесткий гарант на сигнатурное оружие — 60 поставок (софт с ~45-й), каждые 10 поставок гарантирована 4★ экипировка.\n\n• Стоимость снабжения: 1 поставка стоит 280 кристаллов (10 поставок = 2800 кристаллов).\n\n• Месячная карта дает 60 кристаллов в день (30 дней), а ежедневные задания (Duty) приносят 40 кристаллов в день (на 150 очков Duty).</string>
+    <string name="help_mech_hi3_detail" formatted="false">• Поставка боекостюма (Battlesuit Supply): Гарант валькирии S-ранга — 90 поставок (софт-гарант с ~75-й). Механика 50/50 ОТСУТСТВУЕТ — при выпадении S-ранга вы со 100% вероятностью получаете целевую валькирию баннера!\n\n• Поставка снаряжения (Equipment Supply): Жесткий гарант на сигнатурное оружие — 60 поставок (софт с ~45-й), каждые 10 поставок гарантирована 4★ экипировка.\n\n• Стоимость снабжения: 1 поставка стоит 280 кристаллов (10 поставок = 2800 кристаллов).\n\n• Месячная карта дает 60 кристаллов в день (30 дней), а ежедневные задания (Duty) приносят 40 кристаллов в день (на 150 очков Duty).</string>
 
     <string name="help_faq_savings_title">Формула накоплений в Копилке</string>
     <string name="help_faq_savings_summary">Баланс из трех источников и пресеты гарантов (1x, 2x, 6x)</string>
@@ -699,6 +699,11 @@
     <string name="onboarding_btn_next">Далее</string>
     <string name="onboarding_btn_skip">Пропустить</string>
     <string name="onboarding_btn_finish">Поехали!</string>
+    <string name="onboarding_btn_loading">Подготовка…</string>
     <string name="settings_onboarding_title">Экспресс-онбординг</string>
     <string name="settings_onboarding_desc">Пройти первоначальную настройку заново</string>
+    <string name="sync_status_offline">Нет подключения к сети. Показаны сохранённые данные.</string>
+    <string name="sync_status_error">Не удалось получить обновления. Показаны сохранённые данные.</string>
+    <string name="sync_status_success">Данные успешно обновлены.</string>
+    <string name="sync_status_up_to_date">Данные уже актуальны.</string>
 </resources>

@@ -16,7 +16,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +34,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -59,7 +59,7 @@ public class PiggyBankView extends Fragment {
     private RecyclerView rvGameTypes;
     private PillsAdapter pillsAdapter;
 
-    private ProgressBar progressBar;
+    private LinearProgressIndicator progressBar;
     private TextView savedWishesCounter;
     private MaterialCardView cardRemainderGems;
     private ImageView ivRemainderGemIcon;
@@ -559,9 +559,15 @@ public class PiggyBankView extends Fragment {
 
             int pullCost = gameType != null ? gameType.getPullCost() : 160;
             int targetGems = target * pullCost;
+            int newMax = targetGems > 0 ? targetGems : target;
+            int targetProgress = targetGems > 0 ? totalGems : progress;
 
-            progressBar.setMax(targetGems > 0 ? targetGems : target);
-            progressBar.setProgress(targetGems > 0 ? totalGems : progress, true);
+            if (progressBar != null) {
+                if (progressBar.getMax() != newMax) {
+                    progressBar.setMax(newMax);
+                }
+                NumberCountAnimator.animateProgress(progressBar, targetProgress);
+            }
 
             NumberCountAnimator.animateFraction(savedWishesCounter, progress, target);
 

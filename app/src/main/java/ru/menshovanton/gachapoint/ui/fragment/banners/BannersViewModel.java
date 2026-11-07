@@ -63,7 +63,7 @@ public class BannersViewModel extends AndroidViewModel {
     public void loadData(boolean forceRemote) {
         isLoading.setValue(true);
         GameType game = selectedGameType.getValue();
-        AppDatabase.getExecutor().execute(() -> {
+        ru.menshovanton.gachapoint.data.local.NetworkExecutor.execute(() -> {
             if (forceRemote) {
                 bannerRepo.reload(true);
                 catalogRepo.reload(true);

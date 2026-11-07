@@ -254,7 +254,7 @@ public class PromocodeRepository {
 
                     String id = obj.has("id") ? obj.get("id").getAsString() : "";
                     String rawCode = obj.has("code") ? obj.get("code").getAsString() : "";
-                    if (!DataSyncConfig.isValidCode(rawCode)) {
+                    if (DataSyncConfig.isValidCode(rawCode)) {
                         continue;
                     }
                     String code = DataSyncConfig.sanitizeCode(rawCode);

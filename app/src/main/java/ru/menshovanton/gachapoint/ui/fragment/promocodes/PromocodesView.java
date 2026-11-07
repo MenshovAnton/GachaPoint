@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Arrays;
 
@@ -42,7 +43,33 @@ public class PromocodesView extends Fragment {
     private Chip chipRedeemed;
     private RecyclerView rvPromocodes;
     private View emptyStateView;
-    private ImageButton btnRefresh;
+    private FloatingActionButton fabRefresh;
+    private android.animation.ObjectAnimator refreshAnimator;
+    private boolean isManualRefresh = false;
+
+    private final ru.menshovanton.gachapoint.data.local.JsonDataLoader.OnDataSyncResultListener syncResultListener = (cacheFileName, status) -> {
+        if (!ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_PROMOCODES.equals(cacheFileName)) return;
+        if (!isManualRefresh) return;
+        isManualRefresh = false;
+        if (getActivity() == null) return;
+        getActivity().runOnUiThread(() -> {
+            if (getContext() == null) return;
+            switch (status) {
+                case OFFLINE:
+                    Toast.makeText(getContext(), R.string.sync_status_offline, Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR:
+                    Toast.makeText(getContext(), R.string.sync_status_error, Toast.LENGTH_SHORT).show();
+                    break;
+                case SUCCESS:
+                    Toast.makeText(getContext(), R.string.sync_status_success, Toast.LENGTH_SHORT).show();
+                    break;
+                case NOT_MODIFIED:
+                    Toast.makeText(getContext(), R.string.sync_status_up_to_date, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        });
+    };
 
     private static final GameType[] SUPPORTED_GAMES = {
             GameType.GENSHIN,
@@ -72,7 +99,7 @@ public class PromocodesView extends Fragment {
         chipRedeemed = root.findViewById(R.id.chip_redeemed);
         rvPromocodes = root.findViewById(R.id.rv_promocodes);
         emptyStateView = root.findViewById(R.id.ll_empty_state);
-        btnRefresh = root.findViewById(R.id.btn_refresh);
+        fabRefresh = root.findViewById(R.id.fab_refresh);
 
         ImageButton btnBack = root.findViewById(R.id.btn_back);
         if (btnBack != null) {
@@ -104,9 +131,11 @@ public class PromocodesView extends Fragment {
 
         setupSwipeToRedeem();
 
-        btnRefresh.setOnClickListener(v -> {
+        ru.menshovanton.gachapoint.data.local.JsonDataLoader.addSyncResultListener(syncResultListener);
+
+        fabRefresh.setOnClickListener(v -> {
             HapticHelper.performClickHaptic(requireContext(), v);
-            btnRefresh.animate().rotationBy(360f).setDuration(400).start();
+            isManualRefresh = true;
             viewModel.loadPromocodes(true);
         });
 
@@ -248,12 +277,55 @@ public class PromocodesView extends Fragment {
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
             if (Boolean.TRUE.equals(loading)) {
-                btnRefresh.setEnabled(false);
-                btnRefresh.setAlpha(0.6f);
+                if (fabRefresh != null) {
+                    fabRefresh.setEnabled(false);
+                    if (refreshAnimator == null) {
+                        refreshAnimator = android.animation.ObjectAnimator.ofFloat(fabRefresh, View.ROTATION, 0f, 360f);
+                        refreshAnimator.setDuration(700);
+                        refreshAnimator.setRepeatCount(android.animation.ValueAnimator.INFINITE);
+                        refreshAnimator.setInterpolator(new android.view.animation.LinearInterpolator());
+                    }
+                    if (!refreshAnimator.isStarted()) {
+                        refreshAnimator.start();
+                    }
+                }
             } else {
-                btnRefresh.setEnabled(true);
-                btnRefresh.setAlpha(1.0f);
+                if (refreshAnimator != null) {
+                    refreshAnimator.cancel();
+                }
+                if (fabRefresh != null) {
+                    fabRefresh.setEnabled(true);
+                    fabRefresh.setRotation(0f);
+                }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        ru.menshovanton.gachapoint.data.local.JsonDataLoader.removeSyncResultListener(syncResultListener);
+        if (refreshAnimator != null) {
+            refreshAnimator.cancel();
+            refreshAnimator = null;
+        }
+        super.onDestroyView();
+        if (rvPromocodes != null) {
+            rvPromocodes.setAdapter(null);
+            rvPromocodes = null;
+        }
+        if (rvGameTypes != null) {
+            rvGameTypes.setAdapter(null);
+            rvGameTypes = null;
+        }
+        adapter = null;
+        chipGroupStatus = null;
+        chipActive = null;
+        chipStream = null;
+        chipPermanent = null;
+        chipExpired = null;
+        chipAll = null;
+        chipRedeemed = null;
+        emptyStateView = null;
+        fabRefresh = null;
     }
 }

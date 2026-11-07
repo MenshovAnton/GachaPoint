@@ -132,7 +132,7 @@ public class PromoCode {
         if ("PERMANENT".equalsIgnoreCase(status)) {
             return true;
         }
-        String clean = code.trim().toUpperCase();
+        String clean = code.trim().toUpperCase(java.util.Locale.ROOT);
         return clean.equals("GENSHINGIFT")
                 || clean.equals("STARRAILGIFT")
                 || clean.equals("ZENLESSGIFT")
@@ -199,11 +199,7 @@ public class PromoCode {
             }
         }
 
-        if (isStream() || "STREAM".equalsIgnoreCase(status)) {
-            return true;
-        }
-
-        return false;
+        return isStream() || "STREAM".equalsIgnoreCase(status);
     }
 
     public long getRemainingHours() {

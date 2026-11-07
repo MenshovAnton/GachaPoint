@@ -1,10 +1,12 @@
 package ru.menshovanton.gachapoint.ui.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 
@@ -18,11 +20,18 @@ public final class ChromeCustomTabsHelper {
     public static void openUrl(@NonNull Context context, @NonNull String url) {
         Uri uri = Uri.parse(url);
         try {
-            CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
-                    .setShowTitle(true)
+            CustomTabColorSchemeParams colorSchemeParams = new CustomTabColorSchemeParams.Builder()
                     .setToolbarColor(ContextCompat.getColor(context, R.color.accent))
                     .build();
 
+            CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                    .setShowTitle(true)
+                    .setDefaultColorSchemeParams(colorSchemeParams)
+                    .build();
+
+            if (!(context instanceof Activity)) {
+                customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
             customTabsIntent.intent.putExtra(Intent.EXTRA_REFERRER, Uri.parse("android-app://" + context.getPackageName()));
             customTabsIntent.launchUrl(context, uri);
         } catch (Throwable t) {

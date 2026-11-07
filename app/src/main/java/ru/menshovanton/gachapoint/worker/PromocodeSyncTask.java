@@ -17,7 +17,6 @@ import androidx.core.app.NotificationManagerCompat;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
-import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.data.repository.PromocodeRepository;
@@ -33,23 +32,21 @@ public final class PromocodeSyncTask {
     private PromocodeSyncTask() {}
 
     public static void createNotificationChannel(@NonNull Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (nm != null) {
-                NotificationChannel channel = new NotificationChannel(
-                        CHANNEL_PROMOCODES,
-                        context.getString(R.string.promocodes_notification_channel_name),
-                        NotificationManager.IMPORTANCE_HIGH
-                );
-                channel.setDescription(context.getString(R.string.promocodes_notification_channel_desc));
-                channel.enableVibration(true);
-                nm.createNotificationChannel(channel);
-            }
+        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (nm != null) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_PROMOCODES,
+                    context.getString(R.string.promocodes_notification_channel_name),
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription(context.getString(R.string.promocodes_notification_channel_desc));
+            channel.enableVibration(true);
+            nm.createNotificationChannel(channel);
         }
     }
 
     public static void checkStreamPromocodesAsync(@NonNull Context context) {
-        AppDatabase.getExecutor().execute(() -> {
+        ru.menshovanton.gachapoint.data.local.NetworkExecutor.execute(() -> {
             try {
                 Preferences prefs = new Preferences(context);
                 boolean notificationsAllowed = prefs.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS, true);

@@ -64,14 +64,14 @@ public class MainActivityView extends AppCompatActivity {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langCode));
         }
 
+        super.onCreate(savedInstanceState);
+
         if (!preferences.isOnboardingCompleted()) {
             Intent intent = new Intent(this, ru.menshovanton.gachapoint.ui.onboarding.OnboardingActivity.class);
             startActivity(intent);
             finish();
             return;
         }
-
-        super.onCreate(savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
         splashScreen.setKeepOnScreenCondition(() -> !Boolean.TRUE.equals(viewModel.isDbReady().getValue()));
@@ -149,7 +149,7 @@ public class MainActivityView extends AppCompatActivity {
     }
 
     public void updatePromocodesBadge() {
-        ru.menshovanton.gachapoint.data.db.AppDatabase.getExecutor().execute(() -> {
+        ru.menshovanton.gachapoint.data.local.NetworkExecutor.execute(() -> {
             ru.menshovanton.gachapoint.data.repository.PromocodeRepository promoRepo =
                     ru.menshovanton.gachapoint.data.repository.PromocodeRepository.getInstance(this);
             ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository bannerRepo =

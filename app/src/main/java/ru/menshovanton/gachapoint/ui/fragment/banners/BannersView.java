@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Arrays;
 
@@ -31,7 +32,33 @@ public class BannersView extends Fragment {
     private RecyclerView rvGameTypes;
     private MaterialButtonToggleGroup toggleBannerMode;
     private RecyclerView rvContent;
-    private ImageButton btnRefresh;
+    private FloatingActionButton fabRefresh;
+    private android.animation.ObjectAnimator refreshAnimator;
+    private boolean isManualRefresh = false;
+
+    private final ru.menshovanton.gachapoint.data.local.JsonDataLoader.OnDataSyncResultListener syncResultListener = (cacheFileName, status) -> {
+        if (!ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_BANNERS.equals(cacheFileName)) return;
+        if (!isManualRefresh) return;
+        isManualRefresh = false;
+        if (getActivity() == null) return;
+        getActivity().runOnUiThread(() -> {
+            if (getContext() == null) return;
+            switch (status) {
+                case OFFLINE:
+                    android.widget.Toast.makeText(getContext(), R.string.sync_status_offline, android.widget.Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR:
+                    android.widget.Toast.makeText(getContext(), R.string.sync_status_error, android.widget.Toast.LENGTH_SHORT).show();
+                    break;
+                case SUCCESS:
+                    android.widget.Toast.makeText(getContext(), R.string.sync_status_success, android.widget.Toast.LENGTH_SHORT).show();
+                    break;
+                case NOT_MODIFIED:
+                    android.widget.Toast.makeText(getContext(), R.string.sync_status_up_to_date, android.widget.Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        });
+    };
 
     private static final GameType[] SUPPORTED_GAMES = {
             GameType.GENSHIN,
@@ -54,7 +81,7 @@ public class BannersView extends Fragment {
         rvGameTypes = root.findViewById(R.id.rv_game_types);
         toggleBannerMode = root.findViewById(R.id.toggle_banner_mode);
         rvContent = root.findViewById(R.id.rv_banners_content);
-        btnRefresh = root.findViewById(R.id.btn_refresh);
+        fabRefresh = root.findViewById(R.id.fab_refresh);
 
         ImageButton btnBack = root.findViewById(R.id.btn_back);
         if (btnBack != null) {
@@ -81,9 +108,11 @@ public class BannersView extends Fragment {
 
         setupModeToggle();
 
-        btnRefresh.setOnClickListener(v -> {
+        ru.menshovanton.gachapoint.data.local.JsonDataLoader.addSyncResultListener(syncResultListener);
+
+        fabRefresh.setOnClickListener(v -> {
             HapticHelper.performClickHaptic(requireContext(), v);
-            btnRefresh.animate().rotationBy(360f).setDuration(400).start();
+            isManualRefresh = true;
             viewModel.loadData(true);
         });
 
@@ -139,12 +168,49 @@ public class BannersView extends Fragment {
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
             if (Boolean.TRUE.equals(loading)) {
-                btnRefresh.setEnabled(false);
-                btnRefresh.setAlpha(0.6f);
+                if (fabRefresh != null) {
+                    fabRefresh.setEnabled(false);
+                    if (refreshAnimator == null) {
+                        refreshAnimator = android.animation.ObjectAnimator.ofFloat(fabRefresh, View.ROTATION, 0f, 360f);
+                        refreshAnimator.setDuration(700);
+                        refreshAnimator.setRepeatCount(android.animation.ValueAnimator.INFINITE);
+                        refreshAnimator.setInterpolator(new android.view.animation.LinearInterpolator());
+                    }
+                    if (!refreshAnimator.isStarted()) {
+                        refreshAnimator.start();
+                    }
+                }
             } else {
-                btnRefresh.setEnabled(true);
-                btnRefresh.setAlpha(1.0f);
+                if (refreshAnimator != null) {
+                    refreshAnimator.cancel();
+                }
+                if (fabRefresh != null) {
+                    fabRefresh.setEnabled(true);
+                    fabRefresh.setRotation(0f);
+                }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        ru.menshovanton.gachapoint.data.local.JsonDataLoader.removeSyncResultListener(syncResultListener);
+        if (refreshAnimator != null) {
+            refreshAnimator.cancel();
+            refreshAnimator = null;
+        }
+        super.onDestroyView();
+        if (rvContent != null) {
+            rvContent.setAdapter(null);
+            rvContent = null;
+        }
+        if (rvGameTypes != null) {
+            rvGameTypes.setAdapter(null);
+            rvGameTypes = null;
+        }
+        scheduleAdapter = null;
+        rerunAdapter = null;
+        toggleBannerMode = null;
+        fabRefresh = null;
     }
 }

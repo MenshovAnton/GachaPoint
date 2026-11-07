@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
@@ -71,7 +70,6 @@ public class PromocodesViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         ru.menshovanton.gachapoint.data.local.JsonDataLoader.removeDataUpdatedListener(dataUpdatedListener);
-        super.onCleared();
     }
 
     public LiveData<GameType> getSelectedGameType() { return selectedGameType; }
@@ -97,7 +95,7 @@ public class PromocodesViewModel extends AndroidViewModel {
     public void loadPromocodes(boolean forceRemote) {
         isLoading.setValue(true);
         GameType game = selectedGameType.getValue();
-        AppDatabase.getExecutor().execute(() -> {
+        ru.menshovanton.gachapoint.data.local.NetworkExecutor.execute(() -> {
             List<PromoCode> list = repository.getPromoCodes(game, forceRemote);
             AppDatabase.postToMain(() -> {
                 rawCodes = list != null ? list : Collections.emptyList();

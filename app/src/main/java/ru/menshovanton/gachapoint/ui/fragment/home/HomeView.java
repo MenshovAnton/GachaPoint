@@ -538,8 +538,11 @@ public class HomeView extends Fragment {
         int curTarget = lastTarget;
 
         if (pbSaveProgress != null && tvSavedCounter != null) {
-            pbSaveProgress.setMax(curTarget > 0 ? curTarget : 1);
-            pbSaveProgress.setProgress(curProgress, false);
+            int newMax = curTarget > 0 ? curTarget : 1;
+            if (pbSaveProgress.getMax() != newMax) {
+                pbSaveProgress.setMax(newMax);
+            }
+            NumberCountAnimator.animateProgress(pbSaveProgress, curProgress);
             NumberCountAnimator.animateFraction(tvSavedCounter, curProgress, curTarget);
         }
 
@@ -584,8 +587,12 @@ public class HomeView extends Fragment {
         boolean isGuar = (guaranteed != null && guaranteed);
 
         NumberCountAnimator.animateFraction(tvPity5StarCounter, p, m);
-        pbPityProgress.setMax(m);
-        pbPityProgress.setProgress(p, false);
+        if (pbPityProgress != null) {
+            if (pbPityProgress.getMax() != m) {
+                pbPityProgress.setMax(m);
+            }
+            NumberCountAnimator.animateProgress(pbPityProgress, p);
+        }
 
         int until = Math.max(0, m - p);
         if (tvPityUntil5Star != null) {
@@ -627,8 +634,6 @@ public class HomeView extends Fragment {
             int labelRes = (banner != null) ? banner.getLabelResId() : R.string.home_pity_event;
             tvPityBannerName.setText(labelRes);
         }
-
-        updatePiggyProgress(null, null, null);
     }
 
     private void triggerVibration() {

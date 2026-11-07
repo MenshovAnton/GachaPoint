@@ -16,7 +16,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="88dp">
 
             <ImageButton
                 android:id="@+id/btn_back"
@@ -38,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="@dimen/screen_padding_top"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="@dimen/screen_padding_horizontal"
                 android:fontFamily="@font/genshin_font"
                 android:includeFontPadding="false"
                 android:maxLines="1"
@@ -50,24 +51,9 @@
                 app:autoSizeMinTextSize="18sp"
                 app:autoSizeStepGranularity="1sp"
                 app:autoSizeTextType="uniform"
-                app:layout_constraintEnd_toStartOf="@+id/btn_share"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btn_back"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/btn_share"
-                android:layout_width="@dimen/min_touch_target_size"
-                android:layout_height="@dimen/min_touch_target_size"
-                android:layout_marginEnd="@dimen/screen_padding_horizontal"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/a11y_btn_share"
-                android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/icon_share"
-                app:tint="@color/check"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_statistics_header"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_statistics_header" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_game_types"
@@ -855,7 +841,8 @@
                                 android:textColor="@color/text"
                                 android:textSize="13sp"
                                 android:textStyle="bold"
-                                tools:text="20 кр." />
+                                tools:text="20 кр."
+                                tools:ignore="TooManyViews" />
 
                         </LinearLayout>
 
@@ -962,5 +949,18 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="@string/a11y_btn_share"
+        android:src="@drawable/icon_share"
+        app:backgroundTint="@color/check"
+        app:tint="@color/white"
+        app:elevation="4dp" />
 
 </FrameLayout>

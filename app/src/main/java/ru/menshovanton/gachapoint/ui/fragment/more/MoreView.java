@@ -154,7 +154,7 @@ public class MoreView extends Fragment {
 
     private void updatePromocodesBadge() {
         if (getContext() == null || badgeNewPromocodes == null) return;
-        ru.menshovanton.gachapoint.data.db.AppDatabase.getExecutor().execute(() -> {
+        ru.menshovanton.gachapoint.data.local.NetworkExecutor.execute(() -> {
             ru.menshovanton.gachapoint.data.repository.PromocodeRepository repo =
                     ru.menshovanton.gachapoint.data.repository.PromocodeRepository.getInstance(requireContext());
             int unviewed = repo.getUnviewedPromoCodesCount();
@@ -168,7 +168,7 @@ public class MoreView extends Fragment {
 
     private void updateBannersBadge() {
         if (getContext() == null || badgeNewBanners == null) return;
-        ru.menshovanton.gachapoint.data.db.AppDatabase.getExecutor().execute(() -> {
+        ru.menshovanton.gachapoint.data.local.NetworkExecutor.execute(() -> {
             ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository repo =
                     ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository.getInstance(requireContext());
             int unviewed = repo.getUnviewedBannersCount();

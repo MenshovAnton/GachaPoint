@@ -2,6 +2,8 @@ package ru.menshovanton.gachapoint.data.local;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,8 +11,6 @@ import androidx.annotation.Nullable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import ru.menshovanton.gachapoint.data.db.AppDatabase;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,17 +21,36 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class JsonDataLoader {
 
     private static final String PREFS_NAME = "json_data_cache_prefs";
-    private static final int TIMEOUT_MS = 10000;
+    private static final int TIMEOUT_MS = 8000;
+    private static final long BACKGROUND_CHECK_COOLDOWN_MS = 15 * 60 * 1000L;
+
+    public enum SyncStatus {
+        SUCCESS,
+        NOT_MODIFIED,
+        OFFLINE,
+        ERROR
+    }
 
     public interface OnDataUpdatedListener {
         void onDataUpdated(@NonNull String cacheFileName);
     }
 
-    private static final java.util.List<OnDataUpdatedListener> listeners = new java.util.concurrent.CopyOnWriteArrayList<>();
+    public interface OnDataSyncResultListener {
+        void onSyncResult(@NonNull String cacheFileName, @NonNull SyncStatus status);
+    }
+
+    private static final List<OnDataUpdatedListener> listeners = new CopyOnWriteArrayList<>();
+    private static final List<OnDataSyncResultListener> syncResultListeners = new CopyOnWriteArrayList<>();
+    private static final Set<String> IN_FLIGHT = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public static void addDataUpdatedListener(@NonNull OnDataUpdatedListener listener) {
         if (!listeners.contains(listener)) {
@@ -41,6 +60,16 @@ public final class JsonDataLoader {
 
     public static void removeDataUpdatedListener(@NonNull OnDataUpdatedListener listener) {
         listeners.remove(listener);
+    }
+
+    public static void addSyncResultListener(@NonNull OnDataSyncResultListener listener) {
+        if (!syncResultListeners.contains(listener)) {
+            syncResultListeners.add(listener);
+        }
+    }
+
+    public static void removeSyncResultListener(@NonNull OnDataSyncResultListener listener) {
+        syncResultListeners.remove(listener);
     }
 
     private static void notifyDataUpdated(@NonNull String cacheFileName) {
@@ -53,7 +82,33 @@ public final class JsonDataLoader {
         }
     }
 
+    private static void notifySyncResult(@NonNull String cacheFileName, @NonNull SyncStatus status) {
+        for (OnDataSyncResultListener l : syncResultListeners) {
+            try {
+                l.onSyncResult(cacheFileName, status);
+            } catch (Exception e) {
+                AppLogger.e("JsonDataLoader", "Error in OnDataSyncResultListener", e);
+            }
+        }
+    }
+
     private JsonDataLoader() {}
+
+    public static boolean isNetworkAvailable(@NonNull Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) return false;
+        android.net.Network activeNet = cm.getActiveNetwork();
+        if (activeNet == null) return false;
+        NetworkCapabilities caps = cm.getNetworkCapabilities(activeNet);
+        return caps != null && (
+                caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        && caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED));
+    }
+
+    public static long getLastSuccessfulUpdateTime(@NonNull Context context, @NonNull String cacheFileName) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return prefs.getLong("last_success_" + cacheFileName, 0L);
+    }
 
     @NonNull
     public static String loadJsonData(
@@ -76,18 +131,28 @@ public final class JsonDataLoader {
             boolean forceRemote
     ) {
         String cachedJson = readFromDiskCache(context, cacheFileName);
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
         if (!forceRemote && isValidJson(cachedJson, cacheFileName)) {
-            AppDatabase.getExecutor().execute(() -> fetchRemoteWithFallback(context, primaryRemoteUrl, fallbackRemoteUrl, cacheFileName));
+            long lastCheck = prefs.getLong("last_check_" + cacheFileName, 0L);
+            long now = System.currentTimeMillis();
+            if (now - lastCheck > BACKGROUND_CHECK_COOLDOWN_MS) {
+                triggerBackgroundFetch(context, primaryRemoteUrl, fallbackRemoteUrl, cacheFileName);
+            }
             return cachedJson;
         }
 
-        String remoteJson = fetchRemoteWithFallback(context, primaryRemoteUrl, fallbackRemoteUrl, cacheFileName);
-        if (isValidJson(remoteJson, cacheFileName)) {
-            return remoteJson;
+        if (forceRemote) {
+            String remoteJson = fetchRemoteWithFallback(context, primaryRemoteUrl, fallbackRemoteUrl, cacheFileName);
+            if (isValidJson(remoteJson, cacheFileName)) {
+                return remoteJson;
+            }
         }
 
         if (isValidJson(cachedJson, cacheFileName)) {
+            if (forceRemote) {
+                notifySyncResult(cacheFileName, isNetworkAvailable(context) ? SyncStatus.ERROR : SyncStatus.OFFLINE);
+            }
             return cachedJson;
         }
 
@@ -98,6 +163,25 @@ public final class JsonDataLoader {
         }
 
         return "{}";
+    }
+
+    private static void triggerBackgroundFetch(
+            @NonNull Context context,
+            @NonNull String primaryRemoteUrl,
+            @Nullable String fallbackRemoteUrl,
+            @NonNull String cacheFileName
+    ) {
+        if (!IN_FLIGHT.add(cacheFileName)) {
+            return;
+        }
+
+        NetworkExecutor.execute(() -> {
+            try {
+                fetchRemoteWithFallback(context, primaryRemoteUrl, fallbackRemoteUrl, cacheFileName);
+            } finally {
+                IN_FLIGHT.remove(cacheFileName);
+            }
+        });
     }
 
     public static boolean isValidJson(@Nullable String json, @NonNull String cacheFileName) {
@@ -113,9 +197,9 @@ public final class JsonDataLoader {
             if (cacheFileName.contains("promocode")) {
                 return obj.has("codes") && obj.get("codes").isJsonArray();
             } else if (cacheFileName.contains("banner")) {
-                return obj.has("games") && obj.get("games").isJsonArray() && obj.getAsJsonArray("games").size() > 0;
+                return obj.has("games") && obj.get("games").isJsonArray() && !obj.getAsJsonArray("games").isEmpty();
             } else if (cacheFileName.contains("catalog")) {
-                return obj.has("games") && obj.get("games").isJsonArray() && obj.getAsJsonArray("games").size() > 0;
+                return obj.has("games") && obj.get("games").isJsonArray() && !obj.getAsJsonArray("games").isEmpty();
             }
             return true;
         } catch (Exception e) {
@@ -139,13 +223,19 @@ public final class JsonDataLoader {
             @Nullable String fallbackUrl,
             @NonNull String cacheFileName
     ) {
-        // 1. Try primary URL (Edge CDN)
+        if (!isNetworkAvailable(context)) {
+            notifySyncResult(cacheFileName, SyncStatus.OFFLINE);
+            return null;
+        }
+
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        prefs.edit().putLong("last_check_" + cacheFileName, System.currentTimeMillis()).apply();
+
         String result = fetchSingleUrlWithEtag(context, primaryUrl, cacheFileName);
         if (isValidJson(result, cacheFileName)) {
             return result;
         }
 
-        // 2. If primary failed and fallback is provided, try fallback URL (e.g. raw GitHub)
         if (fallbackUrl != null && !fallbackUrl.trim().isEmpty() && !fallbackUrl.equals(primaryUrl)) {
             AppLogger.d("JsonDataLoader", "Primary URL failed for " + cacheFileName + ", attempting fallback: " + fallbackUrl);
             String fallbackResult = fetchSingleUrlWithEtag(context, fallbackUrl, cacheFileName);
@@ -185,9 +275,10 @@ public final class JsonDataLoader {
                 AppLogger.d("JsonDataLoader", "HTTP 304 Not Modified for: " + cacheFileName);
                 String cached = readFromDiskCache(context, cacheFileName);
                 if (isValidJson(cached, cacheFileName)) {
+                    prefs.edit().putLong("last_success_" + cacheFileName, System.currentTimeMillis()).apply();
+                    notifySyncResult(cacheFileName, SyncStatus.NOT_MODIFIED);
                     return cached;
                 }
-                // If 304 returned but local cache is corrupt, invalidate ETag and retry
                 prefs.edit().remove("etag_" + cacheFileName).apply();
             }
 
@@ -197,6 +288,7 @@ public final class JsonDataLoader {
                     String lower = contentType.toLowerCase(java.util.Locale.ROOT);
                     if (lower.contains("text/html")) {
                         AppLogger.w("JsonDataLoader", "Received HTML instead of JSON for " + cacheFileName + " from " + remoteUrl);
+                        notifySyncResult(cacheFileName, SyncStatus.ERROR);
                         return null;
                     }
                 }
@@ -207,21 +299,29 @@ public final class JsonDataLoader {
                 if (isValidJson(content, cacheFileName)) {
                     boolean saved = writeToDiskCacheSafely(context, cacheFileName, content);
                     if (saved) {
+                        SharedPreferences.Editor editor = prefs.edit();
                         if (newEtag != null && !newEtag.isEmpty()) {
-                            prefs.edit().putString("etag_" + cacheFileName, newEtag).apply();
+                            editor.putString("etag_" + cacheFileName, newEtag);
                         }
+                        editor.putLong("last_success_" + cacheFileName, System.currentTimeMillis());
+                        editor.apply();
+
                         AppLogger.d("JsonDataLoader", "Successfully downloaded and cached: " + cacheFileName);
                         notifyDataUpdated(cacheFileName);
+                        notifySyncResult(cacheFileName, SyncStatus.SUCCESS);
                         return content;
                     }
                 } else {
-                    AppLogger.w("JsonDataLoader", "Remote response for " + cacheFileName + " failed JSON validation, keeping existing cache.");
+                    AppLogger.w("JsonDataLoader", "Remote response for " + cacheFileName + " failed validation.");
+                    notifySyncResult(cacheFileName, SyncStatus.ERROR);
                 }
             } else {
-                AppLogger.d("JsonDataLoader", "Non-OK HTTP code " + responseCode + " for " + cacheFileName + " from " + remoteUrl);
+                AppLogger.d("JsonDataLoader", "Non-OK HTTP code " + responseCode + " for " + cacheFileName);
+                notifySyncResult(cacheFileName, SyncStatus.ERROR);
             }
         } catch (Exception e) {
-            AppLogger.d("JsonDataLoader", "Network fetch failed for " + cacheFileName + " (" + remoteUrl + "): " + e.getMessage());
+            AppLogger.d("JsonDataLoader", "Network fetch failed for " + cacheFileName + ": " + e.getMessage());
+            notifySyncResult(cacheFileName, isNetworkAvailable(context) ? SyncStatus.ERROR : SyncStatus.OFFLINE);
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -268,7 +368,6 @@ public final class JsonDataLoader {
                 fos.getFD().sync();
             }
 
-            // Verify temporary file is readable and non-corrupt before replacing target
             if (tmpFile.exists() && tmpFile.length() > 0) {
                 if (targetFile.exists()) {
                     targetFile.delete();

@@ -2,14 +2,12 @@ package ru.menshovanton.gachapoint.ui.fragment.journal;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.graphics.Color;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.Toast;
 import ru.menshovanton.gachapoint.domain.enums.RareType;
@@ -52,7 +50,6 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 
-import com.bumptech.glide.Glide;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository;
@@ -945,7 +942,7 @@ public class JournalView extends Fragment {
             tvPity.setText(String.format(getString(R.string.pity_pull_at), pull.getPityNumber()));
         }
 
-        String letter = !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase() : "•";
+        String letter = !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase(java.util.Locale.ROOT) : "•";
         tvLetter.setText(letter);
         CatalogItem catalogItem = CatalogRepository.getInstance(context).findItemByName(currentGameType, name);
         String iconUrl = (catalogItem != null) ? catalogItem.getIconUrl() : null;
@@ -1141,9 +1138,8 @@ public class JournalView extends Fragment {
 
             final boolean[] isProgrammaticOutcomeCheck = new boolean[]{false};
 
-        java.lang.Runnable updateOutcomeVisuals = () -> {
-            updateOutcomeButtonsVisuals(togglePityStatus, btnPityWin, btnPityLoss, btnPityGuaranteed);
-        };
+        java.lang.Runnable updateOutcomeVisuals = () ->
+                updateOutcomeButtonsVisuals(togglePityStatus, btnPityWin, btnPityLoss, btnPityGuaranteed);
 
         java.lang.Runnable updateOutcomeSection = () -> {
             if (!bannerHas5050 || toggleRarity.getCheckedButtonId() != R.id.btn_rare_5) {
@@ -1157,6 +1153,7 @@ public class JournalView extends Fragment {
                 return;
             }
 
+            assert editDropType != null;
             String currentName = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
             CatalogItem item = catalogRepo.findItemByName(currentGameType, currentName);
             Boolean isGuaranteed = viewModel.getIsGuaranteedLiveData().getValue();
@@ -1208,22 +1205,22 @@ public class JournalView extends Fragment {
         }
 
         java.lang.Runnable updateCatalogMatch = () -> {
+            assert editDropType != null;
             String currentText = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
             if (currentText.isEmpty() || llCatalogMatchInfo == null) {
                 if (llCatalogMatchInfo != null) llCatalogMatchInfo.setVisibility(View.GONE);
                 return;
             }
             CatalogItem matched = catalogRepo.findItemByName(currentGameType, currentText);
+            llCatalogMatchInfo.setVisibility(View.VISIBLE);
             if (matched != null) {
-                llCatalogMatchInfo.setVisibility(View.VISIBLE);
                 String rRank = matched.isFiveStar() ? getString(R.string.five_star) : (matched.isFourStar() ? getString(R.string.four_star) : getString(R.string.three_star));
                 tvMatchInfo.setText(String.format(getString(R.string.journal_catalog_matched), matched.getName(requireContext()) + " (" + rRank + ")"));
                 tvMatchInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.check));
-                String letter = !matched.getName(requireContext()).isEmpty() ? String.valueOf(matched.getName(requireContext()).charAt(0)).toUpperCase() : "•";
+                String letter = !matched.getName(requireContext()).isEmpty() ? String.valueOf(matched.getName(requireContext()).charAt(0)).toUpperCase(java.util.Locale.ROOT) : "•";
                 tvMatchLetter.setText(letter);
                 AvatarImageLoader.loadAvatar(requireContext(), matched.getIconUrl(), matched.getName(requireContext()), ivMatchAvatar, tvMatchLetter);
             } else {
-                llCatalogMatchInfo.setVisibility(View.VISIBLE);
                 tvMatchInfo.setText(R.string.journal_custom_name_hint);
                 tvMatchInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
                 if (ivMatchAvatar != null) ivMatchAvatar.setVisibility(View.GONE);
@@ -1238,6 +1235,7 @@ public class JournalView extends Fragment {
             if (llDropChips == null) return;
             llDropChips.removeAllViews();
 
+            assert editDropType != null;
             String query = editDropType.getText() != null ? editDropType.getText().toString().trim() : "";
 
             if (rarityId == R.id.btn_rare_3) {
@@ -1405,6 +1403,7 @@ public class JournalView extends Fragment {
                         ivCustomNameChevron.animate().rotation(isVis ? 0f : 180f).setDuration(260).start();
                     }
                     if (!isVis) {
+                        assert editDropType != null;
                         editDropType.requestFocus();
                         dialogView.postDelayed(() -> {
                             if (dialogView instanceof androidx.core.widget.NestedScrollView) {
@@ -1416,6 +1415,7 @@ public class JournalView extends Fragment {
             });
         }
 
+        assert editDropType != null;
         editDropType.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -1463,6 +1463,7 @@ public class JournalView extends Fragment {
                 currentStatus = isStd ? PityStatus.LOSS_50_50 : PityStatus.WIN_50_50;
             }
             isProgrammaticOutcomeCheck[0] = true;
+            assert togglePityStatus != null;
             if (currentStatus == PityStatus.LOSS_50_50) {
                 togglePityStatus.check(R.id.btn_pity_loss);
             } else if (currentStatus == PityStatus.GUARANTEED) {
@@ -1488,6 +1489,7 @@ public class JournalView extends Fragment {
 
             Boolean isCurrentGuaranteed = viewModel.getIsGuaranteedLiveData().getValue();
             isProgrammaticOutcomeCheck[0] = true;
+            assert togglePityStatus != null;
             if (Boolean.TRUE.equals(isCurrentGuaranteed)) {
                 togglePityStatus.check(R.id.btn_pity_guaranteed);
             } else {
@@ -1568,9 +1570,7 @@ public class JournalView extends Fragment {
                     editDate.setText(selectedDate[0].format(displayFormatter));
                     populateChips.accept(toggleRarity.getCheckedButtonId());
                     HapticHelper.performClickHaptic(requireContext(), btnCopyPrevDate);
-                } else {
-                    Toast.makeText(requireContext(), R.string.empty_pulls_list, Toast.LENGTH_SHORT).show();
-                }
+                } else Toast.makeText(requireContext(), R.string.empty_pulls_list, Toast.LENGTH_SHORT).show();
             });
         }
 
@@ -1660,6 +1660,7 @@ public class JournalView extends Fragment {
         }
     }
 
+    @SuppressLint("InflateParams")
     private void showBannerDatePickerDialog(GameType gameType,
                                             LocalDate[] selectedDate,
                                             BannerScheduleItem[] selectedBannerSchedule,
@@ -1669,7 +1670,7 @@ public class JournalView extends Fragment {
                                             MaterialButtonToggleGroup toggleRarity) {
         BannerScheduleRepository bannerRepo = BannerScheduleRepository.getInstance(requireContext());
         List<BannerScheduleItem> banners = bannerRepo.getBanners(gameType);
-        if (banners == null || banners.isEmpty()) {
+        if (banners.isEmpty()) {
             Toast.makeText(requireContext(), R.string.empty_pulls_list, Toast.LENGTH_SHORT).show();
             return;
         }

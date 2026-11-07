@@ -47,6 +47,7 @@
         <item name="materialTimePickerTheme">@style/ThemeOverlay.GachaPoint.TimePicker</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.GachaPoint.BottomSheetDialog</item>
         <item name="materialAlertDialogTheme">@style/Dialog.GachaPoint.AlertDialog</item>
+        <item name="alertDialogTheme">@style/Dialog.GachaPoint.AlertDialog</item>
         <item name="materialCalendarTheme">@style/DatePicker.GachaPoint.MaterialCalendar</item>
         <item name="linearProgressIndicatorStyle">@style/Widget.GachaPoint.LinearProgressIndicator</item>
         <item name="circularProgressIndicatorStyle">@style/Widget.GachaPoint.CircularProgressIndicator</item>

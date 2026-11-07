@@ -199,22 +199,20 @@ public class SettingsView extends Fragment {
             rowSelectTime.setOnClickListener(timeClickListener);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (rowNotificationChannels != null) {
-                rowNotificationChannels.setVisibility(View.VISIBLE);
-                rowNotificationChannels.setOnClickListener(v -> {
-                    try {
-                        Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-                        intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().getPackageName());
-                        startActivity(intent);
-                    } catch (Exception e) {
-                        AppLogger.e("SettingsView", "Could not open system notification settings", e);
-                    }
-                });
-            }
-            if (dividerNotificationChannels != null) {
-                dividerNotificationChannels.setVisibility(View.VISIBLE);
-            }
+        if (rowNotificationChannels != null) {
+            rowNotificationChannels.setVisibility(View.VISIBLE);
+            rowNotificationChannels.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().getPackageName());
+                    startActivity(intent);
+                } catch (Exception e) {
+                    AppLogger.e("SettingsView", "Could not open system notification settings", e);
+                }
+            });
+        }
+        if (dividerNotificationChannels != null) {
+            dividerNotificationChannels.setVisibility(View.VISIBLE);
         } else {
             if (rowNotificationChannels != null) rowNotificationChannels.setVisibility(View.GONE);
             if (dividerNotificationChannels != null) dividerNotificationChannels.setVisibility(View.GONE);
@@ -226,8 +224,11 @@ public class SettingsView extends Fragment {
         }
 
         if (rowOnboarding != null) {
-            rowOnboarding.setOnClickListener(v ->
-                    startActivity(new Intent(requireContext(), ru.menshovanton.gachapoint.ui.onboarding.OnboardingActivity.class)));
+            rowOnboarding.setOnClickListener(v -> {
+                Intent intent = new Intent(requireContext(), ru.menshovanton.gachapoint.ui.onboarding.OnboardingActivity.class);
+                intent.putExtra(ru.menshovanton.gachapoint.ui.onboarding.OnboardingActivity.EXTRA_FROM_SETTINGS, true);
+                startActivity(intent);
+            });
         }
 
         View.OnClickListener openGamesConfigListener = v ->
@@ -297,6 +298,7 @@ public class SettingsView extends Fragment {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void observeViewModel() {
         viewModel.getSelectedTheme().observe(getViewLifecycleOwner(), mode -> {
             if (mode == null) return;
@@ -359,7 +361,7 @@ public class SettingsView extends Fragment {
                 if (timeChip != null) {
                     timeChip.setEnabled(enabled);
                 }
-                if (rowNotificationChannels != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (rowNotificationChannels != null) {
                     rowNotificationChannels.setEnabled(enabled);
                     rowNotificationChannels.setAlpha(enabled ? 1.0f : 0.4f);
                 }

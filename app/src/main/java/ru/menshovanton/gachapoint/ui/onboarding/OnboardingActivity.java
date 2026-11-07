@@ -56,6 +56,8 @@ import ru.menshovanton.gachapoint.worker.NotificationScheduler;
 
 public class OnboardingActivity extends AppCompatActivity {
 
+    public static final String EXTRA_FROM_SETTINGS = "extra_from_settings";
+
     private ViewPager2 viewPager;
     private ImageButton btnBack;
     private MaterialButton btnSkip;
@@ -63,6 +65,9 @@ public class OnboardingActivity extends AppCompatActivity {
     private View dot0;
     private View dot1;
     private View dot2;
+
+    private boolean isFromSettings;
+    private volatile boolean isDbWarm = false;
 
     private final List<GameType> enabledGames = new ArrayList<>(Arrays.asList(GameType.values()));
     private GameType defaultGame = GameType.GENSHIN;
@@ -75,6 +80,26 @@ public class OnboardingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        isFromSettings = getIntent().getBooleanExtra(EXTRA_FROM_SETTINGS, false);
+        if (!isFromSettings) {
+            ru.menshovanton.gachapoint.data.db.AppDatabase.getExecutor().execute(() -> {
+                try {
+                    ru.menshovanton.gachapoint.data.db.AppDatabase db =
+                            ru.menshovanton.gachapoint.data.db.AppDatabase.getInstance(getApplicationContext());
+                    db.getOpenHelper().getWritableDatabase();
+                    ru.menshovanton.gachapoint.calendar.Calendar calendar =
+                            new ru.menshovanton.gachapoint.calendar.Calendar(getApplicationContext());
+                    calendar.ensureYearInitialized(java.time.LocalDate.now().getYear(), null);
+                } catch (Throwable t) {
+                    ru.menshovanton.gachapoint.data.local.AppLogger.e("OnboardingActivity", "DB warm-up error", t);
+                } finally {
+                    isDbWarm = true;
+                }
+            });
+        } else {
+            isDbWarm = true;
+        }
+
         Preferences preferences = new Preferences(this);
         int themeMode = preferences.getIntPreference(Preferences.APP_THEME);
         AppCompatDelegate.setDefaultNightMode(themeMode);
@@ -227,6 +252,23 @@ public class OnboardingActivity extends AppCompatActivity {
 
         preferences.setOnboardingCompleted(true);
 
+        if (isFromSettings) {
+            finish();
+            return;
+        }
+
+        if (!isDbWarm) {
+            btnNext.setEnabled(false);
+            btnNext.setText(R.string.onboarding_btn_loading);
+            ru.menshovanton.gachapoint.data.db.AppDatabase.getExecutor().execute(() -> {
+                ru.menshovanton.gachapoint.data.db.AppDatabase.postToMain(this::launchMainActivity);
+            });
+        } else {
+            launchMainActivity();
+        }
+    }
+
+    private void launchMainActivity() {
         Intent intent = new Intent(this, MainActivityView.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -493,18 +535,18 @@ public class OnboardingActivity extends AppCompatActivity {
                 showCustomTimePicker();
             });
 
-            mcvPreset09.setOnClickListener(v -> setPresetTime(9, 0, v));
-            mcvPreset12.setOnClickListener(v -> setPresetTime(12, 0, v));
-            mcvPreset19.setOnClickListener(v -> setPresetTime(19, 0, v));
-            mcvPreset21.setOnClickListener(v -> setPresetTime(21, 0, v));
+            mcvPreset09.setOnClickListener(v -> setPresetTime(9, v));
+            mcvPreset12.setOnClickListener(v -> setPresetTime(12, v));
+            mcvPreset19.setOnClickListener(v -> setPresetTime(19, v));
+            mcvPreset21.setOnClickListener(v -> setPresetTime(21, v));
 
             updateTimeDisplay();
         }
 
-        private void setPresetTime(int h, int m, View v) {
+        private void setPresetTime(int h, View v) {
             HapticHelper.performClickHaptic(itemView.getContext(), v);
             alarmHour = h;
-            alarmMinute = m;
+            alarmMinute = 0;
             updateTimeDisplay();
         }
 

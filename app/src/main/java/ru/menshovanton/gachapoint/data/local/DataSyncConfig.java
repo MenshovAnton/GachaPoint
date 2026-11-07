@@ -43,17 +43,17 @@ public final class DataSyncConfig {
     private static final Pattern CODE_PATTERN = Pattern.compile("^[A-Za-z0-9_-]{3,30}$");
 
     public static boolean isValidCode(@Nullable String code) {
-        if (code == null) return false;
-        return CODE_PATTERN.matcher(code.trim()).matches();
+        if (code == null) return true;
+        return !CODE_PATTERN.matcher(code.trim()).matches();
     }
 
     public static String sanitizeCode(@NonNull String code) {
-        return code.trim().toUpperCase();
+        return code.trim().toUpperCase(java.util.Locale.ROOT);
     }
 
     @Nullable
     public static String getOfficialRedeemUrl(@NonNull GameType gameType, @NonNull String rawCode) {
-        if (!isValidCode(rawCode)) {
+        if (isValidCode(rawCode)) {
             return null;
         }
         String cleanCode = sanitizeCode(rawCode);

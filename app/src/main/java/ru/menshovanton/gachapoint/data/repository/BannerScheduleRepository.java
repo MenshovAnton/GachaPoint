@@ -93,7 +93,6 @@ public class BannerScheduleRepository {
 
         DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
 
-        // 1. Look for a banner whose start_date <= date <= end_date
         for (BannerScheduleItem banner : banners) {
             try {
                 LocalDate start = LocalDate.parse(banner.getStartDate(), fmt);
@@ -104,12 +103,10 @@ public class BannerScheduleRepository {
             } catch (Exception ignored) {}
         }
 
-        // 2. If date is today, return current
         if (date.equals(LocalDate.now())) {
             return getCurrentBanner(gameType);
         }
 
-        // 3. Fallback: closest banner to that date
         BannerScheduleItem closest = null;
         long minDiff = Long.MAX_VALUE;
         for (BannerScheduleItem banner : banners) {

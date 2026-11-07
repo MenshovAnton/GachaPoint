@@ -33,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="16dp"
             android:fontFamily="@font/genshin_font"
             android:includeFontPadding="false"
             android:maxLines="1"
@@ -46,23 +46,9 @@
             app:autoSizeStepGranularity="1sp"
             app:autoSizeTextType="uniform"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_refresh"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btn_back"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/btn_refresh"
-            android:layout_width="@dimen/min_touch_target_size"
-            android:layout_height="@dimen/min_touch_target_size"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/a11y_btn_refresh"
-            android:padding="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_refresh"
-            app:tint="@color/check"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Горизонтальные плашки выбора игры (Pills) -->
@@ -132,5 +118,19 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggle_banner_mode" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="@string/a11y_btn_refresh"
+        android:src="@drawable/ic_refresh"
+        app:backgroundTint="@color/check"
+        app:tint="@color/white"
+        app:elevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

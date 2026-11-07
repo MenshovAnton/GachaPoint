@@ -103,7 +103,6 @@ public class StatisticsViewModel extends AndroidViewModel {
         Map<String, Integer> bannerCounts = new HashMap<>();
         Map<String, Integer> currentPities = new HashMap<>();
 
-        // Initialize banner maps
         for (BannerInfo banner : gameType.getBanners()) {
             bannerCounts.put(banner.getDbKey(), 0);
             currentPities.put(banner.getDbKey(), 0);

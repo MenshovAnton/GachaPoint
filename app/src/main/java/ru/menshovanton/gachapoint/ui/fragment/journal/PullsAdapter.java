@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -45,6 +46,7 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
     private final List<Pull> items = new ArrayList<>();
     private ru.menshovanton.gachapoint.domain.enums.GameType currentGameType = ru.menshovanton.gachapoint.domain.enums.GameType.GENSHIN;
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setCurrentGameType(ru.menshovanton.gachapoint.domain.enums.GameType gameType) {
         if (gameType != null && this.currentGameType != gameType) {
             this.currentGameType = gameType;
@@ -283,7 +285,7 @@ public class PullsAdapter extends RecyclerView.Adapter<PullsAdapter.PullsViewHol
             if (rare == RareType.LEGENDARY || rare == RareType.EPIC) {
                 holder.cardAvatar.setVisibility(View.VISIBLE);
                 String name = pull.getDropType() != null ? pull.getDropType().trim() : "";
-                String letter = !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase() : "•";
+                String letter = !name.isEmpty() ? String.valueOf(name.charAt(0)).toUpperCase(Locale.ROOT) : "•";
                 if (holder.tvAvatarLetter != null) {
                     holder.tvAvatarLetter.setText(letter);
                 }

@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +18,7 @@ import ru.menshovanton.gachapoint.R;
 
 public final class NumberCountAnimator {
 
-    private static final Interpolator INERTIA_INTERPOLATOR = new PathInterpolator(0.20f, 0.05f, 0.12f, 1.0f);
+    private static final Interpolator NATURAL_INTERPOLATOR = new PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f);
 
     private NumberCountAnimator() {}
 
@@ -45,8 +46,72 @@ public final class NumberCountAnimator {
         AnimationState(int targetValue, Formatter formatter) {
             this.targetValue = targetValue;
             this.formatter = formatter;
-            this.currentValue = 0;
+            this.currentValue = targetValue;
         }
+    }
+
+    public static void setImmediate(@Nullable TextView textView, int value, @NonNull Formatter formatter) {
+        if (textView == null) return;
+        AnimationState state = (AnimationState) textView.getTag(R.id.tag_number_animator);
+        if (state != null && state.animator != null && state.animator.isRunning()) {
+            state.animator.cancel();
+        }
+        if (state == null) {
+            state = new AnimationState(value, formatter);
+            textView.setTag(R.id.tag_number_animator, state);
+        } else {
+            state.targetValue = value;
+            state.currentValue = value;
+            state.formatter = formatter;
+        }
+        textView.setText(formatter.format(value));
+    }
+
+    public static void setImmediate(@Nullable TextView textView, int value) {
+        setImmediate(textView, value, String::valueOf);
+    }
+
+    public static void setImmediateFraction(@Nullable TextView textView, int currentVal, int maxVal) {
+        if (textView == null) return;
+        setImmediate(textView, currentVal, val -> textView.getContext().getString(R.string.fraction_format, val, maxVal));
+    }
+
+    public static void setImmediatePercent(@Nullable TextView textView, int targetPercent) {
+        if (textView == null) return;
+        setImmediate(textView, targetPercent, val -> textView.getContext().getString(R.string.percent_format, val));
+    }
+
+    public static void setImmediateFormatted(@Nullable TextView textView, long targetValue) {
+        if (textView == null) return;
+        NumberFormat nf = NumberFormat.getIntegerInstance();
+        setImmediate(textView, (int) targetValue, nf::format);
+    }
+
+    public static void animateProgress(@Nullable ProgressBar progressBar, int targetProgress) {
+        if (progressBar == null) return;
+        ValueAnimator existing = (ValueAnimator) progressBar.getTag(R.id.tag_progress_animator);
+        int currentProgress = progressBar.getProgress();
+        if (existing != null && existing.isRunning()) {
+            currentProgress = (int) existing.getAnimatedValue();
+            existing.cancel();
+        }
+        if (currentProgress == targetProgress) {
+            progressBar.setProgress(targetProgress);
+            return;
+        }
+        long duration = calculateDuration(currentProgress, targetProgress);
+        ValueAnimator animator = ValueAnimator.ofInt(currentProgress, targetProgress);
+        animator.setDuration(duration);
+        animator.setInterpolator(NATURAL_INTERPOLATOR);
+        animator.addUpdateListener(anim -> {
+            if (!progressBar.isAttachedToWindow()) {
+                anim.cancel();
+                return;
+            }
+            progressBar.setProgress((int) anim.getAnimatedValue());
+        });
+        progressBar.setTag(R.id.tag_progress_animator, animator);
+        animator.start();
     }
 
     public static void animate(@Nullable TextView textView, int targetValue) {
@@ -77,17 +142,13 @@ public final class NumberCountAnimator {
     private static long calculateDuration(int start, int target) {
         int delta = Math.abs(target - start);
         if (delta <= 1) {
-            return 360L;
-        } else if (delta <= 5) {
-            return 450L;
-        } else if (delta <= 20) {
-            return 560L;
+            return 180L;
+        } else if (delta <= 10) {
+            return 260L;
         } else if (delta <= 100) {
-            return 700L;
-        } else if (delta <= 1000) {
-            return 850L;
+            return 320L;
         } else {
-            return 950L;
+            return 380L;
         }
     }
 
@@ -110,7 +171,7 @@ public final class NumberCountAnimator {
 
             AnimationState state = (AnimationState) textView.getTag(R.id.tag_number_animator);
             if (state == null) {
-                textView.setText(formatter.format(0));
+                textView.setText(formatter.format(targetValue));
             }
             return;
         }
@@ -132,9 +193,9 @@ public final class NumberCountAnimator {
             return;
         }
 
-
         if (state == null) {
             state = new AnimationState(targetValue, formatter);
+            state.currentValue = 0;
             textView.setTag(R.id.tag_number_animator, state);
             if (targetValue == 0) {
                 textView.setText(formatter.format(0));
@@ -142,7 +203,7 @@ public final class NumberCountAnimator {
             }
             startAnimator(textView, state, 0, targetValue);
         } else {
-            if (state.targetValue == targetValue) {
+            if (state.targetValue == targetValue && state.currentValue == targetValue) {
                 textView.setText(formatter.format(targetValue));
                 state.formatter = formatter;
                 return;
@@ -166,7 +227,7 @@ public final class NumberCountAnimator {
 
         ValueAnimator animator = ValueAnimator.ofInt(startValue, targetValue);
         animator.setDuration(duration);
-        animator.setInterpolator(INERTIA_INTERPOLATOR);
+        animator.setInterpolator(NATURAL_INTERPOLATOR);
 
         animator.addUpdateListener(animation -> {
             if (!textView.isAttachedToWindow()) {

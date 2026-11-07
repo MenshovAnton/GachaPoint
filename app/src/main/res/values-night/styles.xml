@@ -74,10 +74,47 @@
         <item name="android:textColorPrimary">@color/white</item>
     </style>
     <style name="Dialog.GachaPoint.AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="colorSurfaceContainerHigh">@color/background_night</item>
+        <item name="colorSurfaceContainerHigh">@color/card_bg</item>
+        <item name="colorSurface">@color/card_bg</item>
         <item name="colorPrimary">@color/check</item>
-        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnSurface">@color/text</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
         <item name="android:textColorHighlight">@color/check_30</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.GachaPoint.Dialog</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/TextAppearance.GachaPoint.Dialog.Title</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/TextAppearance.GachaPoint.Dialog.Body</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.GachaPoint.Dialog.Button.Positive</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.GachaPoint.Dialog.Button.Negative</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.GachaPoint.Dialog.Button.Negative</item>
+    </style>
+
+    <style name="ShapeAppearance.GachaPoint.Dialog" parent="ShapeAppearance.Material3.Corner.ExtraLarge">
+        <item name="cornerSize">24dp</item>
+    </style>
+
+    <style name="TextAppearance.GachaPoint.Dialog.Title" parent="MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:fontFamily">@font/genshin_font</item>
+        <item name="fontFamily">@font/genshin_font</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text</item>
+    </style>
+
+    <style name="TextAppearance.GachaPoint.Dialog.Body" parent="MaterialAlertDialog.Material3.Body.Text">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">3dp</item>
+    </style>
+
+    <style name="Widget.GachaPoint.Dialog.Button.Positive" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/check</item>
+        <item name="rippleColor">@color/check_30</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.GachaPoint.Dialog.Button.Negative" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="rippleColor">@color/check_30</item>
     </style>
     <style name="DatePicker.GachaPoint.MaterialCalendar" parent="ThemeOverlay.Material3.MaterialCalendar">
         <item name="colorSurfaceContainerHigh">@color/pull_row_bg</item>

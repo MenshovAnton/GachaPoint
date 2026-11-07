@@ -41,7 +41,7 @@ public final class AvatarImageLoader {
         }
 
         String cleanName = displayName.trim();
-        String letter = !cleanName.isEmpty() ? String.valueOf(cleanName.charAt(0)).toUpperCase() : "•";
+        String letter = !cleanName.isEmpty() ? String.valueOf(cleanName.charAt(0)).toUpperCase(java.util.Locale.ROOT) : "•";
 
         if (tvLetter != null) {
             tvLetter.setText(letter);
@@ -67,13 +67,11 @@ public final class AvatarImageLoader {
             return;
         }
 
-        // Initially show letter badge while image is downloading or caching
         if (tvLetter != null) {
             tvLetter.setVisibility(View.VISIBLE);
         }
         ivAvatar.setVisibility(View.INVISIBLE);
 
-        // Directly load URL with persistent disk caching
         String targetUrl = iconUrl.trim();
 
         Glide.with(context)
@@ -82,12 +80,12 @@ public final class AvatarImageLoader {
                 .format(com.bumptech.glide.load.DecodeFormat.PREFER_ARGB_8888)
                 .override(256, 256)
                 .circleCrop()
-                .listener(new RequestListener<Drawable>() {
+                .listener(new RequestListener<>() {
                     @Override
                     public boolean onLoadFailed(
                             @Nullable GlideException e,
                             Object model,
-                            Target<Drawable> target,
+                            @NonNull Target<Drawable> target,
                             boolean isFirstResource
                     ) {
                         ivAvatar.setImageDrawable(null);
@@ -100,10 +98,10 @@ public final class AvatarImageLoader {
 
                     @Override
                     public boolean onResourceReady(
-                            Drawable resource,
-                            Object model,
+                            @NonNull Drawable resource,
+                            @NonNull Object model,
                             Target<Drawable> target,
-                            DataSource dataSource,
+                            @NonNull DataSource dataSource,
                             boolean isFirstResource
                     ) {
                         ivAvatar.setVisibility(View.VISIBLE);

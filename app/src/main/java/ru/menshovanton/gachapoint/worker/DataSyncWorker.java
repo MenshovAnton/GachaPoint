@@ -1,6 +1,7 @@
 package ru.menshovanton.gachapoint.worker;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -88,13 +89,8 @@ public class DataSyncWorker extends Worker {
 
         try {
             createChannels(context);
-
-            // 1. Check Promocodes: Stream & Burning (<24h)
             checkPromocodes(context, prefs);
-
-            // 2. Check Banners: Announced, Upcoming (24h before), Active
             checkBanners(context, prefs);
-
             return Result.success();
         } catch (Exception e) {
             AppLogger.e("DataSyncWorker", "Error during background sync work", e);
@@ -106,18 +102,16 @@ public class DataSyncWorker extends Worker {
         DailyNotificationWorker.createNotificationChannels(context);
         PromocodeSyncTask.createNotificationChannel(context);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (nm != null) {
-                NotificationChannel bannerChannel = new NotificationChannel(
-                        CHANNEL_BANNERS,
-                        context.getString(R.string.channel_banners_name),
-                        NotificationManager.IMPORTANCE_DEFAULT
-                );
-                bannerChannel.setDescription(context.getString(R.string.channel_banners_desc));
-                bannerChannel.enableVibration(true);
-                nm.createNotificationChannel(bannerChannel);
-            }
+        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (nm != null) {
+            NotificationChannel bannerChannel = new NotificationChannel(
+                    CHANNEL_BANNERS,
+                    context.getString(R.string.channel_banners_name),
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            bannerChannel.setDescription(context.getString(R.string.channel_banners_desc));
+            bannerChannel.enableVibration(true);
+            nm.createNotificationChannel(bannerChannel);
         }
     }
 
@@ -176,7 +170,6 @@ public class DataSyncWorker extends Worker {
 
         for (GameType game : prefs.getEnabledGames()) {
             List<BannerScheduleItem> banners = bannerRepo.getBanners(game);
-            if (banners == null) continue;
 
             for (BannerScheduleItem banner : banners) {
                 String bannerId = banner.getId();
@@ -192,7 +185,6 @@ public class DataSyncWorker extends Worker {
                 String gameTitle = context.getString(game.getDisplayNameResId());
                 String heroes = String.join(", ", banner.getFeaturedFiveStars(context));
 
-                // 1. Анонс (Announced)
                 if ("ANNOUNCED".equalsIgnoreCase(banner.getStatus()) && today.isBefore(start)) {
                     if (!prefs.isBannerNotifiedAnnounced(bannerId)) {
                         if (hasNotificationPermission(context)) {
@@ -204,7 +196,6 @@ public class DataSyncWorker extends Worker {
                     }
                 }
 
-                // 2. Скоро (Завтра старт)
                 long daysUntil = ChronoUnit.DAYS.between(today, start);
                 if (daysUntil == 1) {
                     if (!prefs.isBannerNotifiedUpcoming(bannerId)) {
@@ -217,7 +208,6 @@ public class DataSyncWorker extends Worker {
                     }
                 }
 
-                // 3. Доступность (Уже доступен)
                 boolean isLive = !today.isBefore(start) && !today.isAfter(end);
                 if (isLive && "CURRENT".equalsIgnoreCase(banner.getStatus())) {
                     if (!prefs.isBannerNotifiedActive(bannerId)) {
@@ -233,6 +223,7 @@ public class DataSyncWorker extends Worker {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private void showCodeNotification(Context context, PromoCode code, boolean isStream) {
         GameType game = GameType.fromId(code.getGameType());
         String gameTitle = game != null ? context.getString(game.getDisplayNameResId()) : "";
@@ -267,9 +258,12 @@ public class DataSyncWorker extends Worker {
                 .setContentIntent(pi)
                 .setGroup(NOTIFICATION_GROUP_PROMOS);
 
-        NotificationManagerCompat.from(context).notify(code.getId().hashCode(), builder.build());
+        if (hasNotificationPermission(context)) {
+            NotificationManagerCompat.from(context).notify(code.getId().hashCode(), builder.build());
+        }
     }
 
+    @SuppressLint("MissingPermission")
     private void showBannerNotification(Context context, BannerScheduleItem banner, String title, String text, int notifId) {
         Intent intent = new Intent(context, MainActivityView.class);
         intent.putExtra("navigate_to", "banners");
@@ -293,7 +287,9 @@ public class DataSyncWorker extends Worker {
                 .setContentIntent(pi)
                 .setGroup(NOTIFICATION_GROUP_BANNERS);
 
-        NotificationManagerCompat.from(context).notify(notifId, builder.build());
+        if (hasNotificationPermission(context)) {
+            NotificationManagerCompat.from(context).notify(notifId, builder.build());
+        }
     }
 
     private boolean hasNotificationPermission(Context context) {

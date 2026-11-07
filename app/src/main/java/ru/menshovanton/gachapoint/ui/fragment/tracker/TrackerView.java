@@ -360,6 +360,7 @@ public class TrackerView extends Fragment {
         isFirstRender = true;
         cellViewsPool.clear();
         if (calendarGrid != null) {
+            calendarGrid.animate().cancel();
             calendarGrid.removeCallbacks(null);
             calendarGrid = null;
         }
