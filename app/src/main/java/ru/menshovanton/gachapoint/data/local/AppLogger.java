@@ -15,8 +15,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,8 +27,9 @@ public final class AppLogger {
     private static final long MAX_FILE_SIZE_BYTES = 512 * 1024; // 512 KB
     private static final long TRIM_TARGET_BYTES = 256 * 1024;   // 256 KB
 
-    private static final SimpleDateFormat DATE_FORMAT =
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+    private static final java.time.format.DateTimeFormatter DATE_FORMATTER =
+            java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS", Locale.US)
+                    .withZone(java.time.ZoneId.systemDefault());
     private static final ExecutorService LOG_EXECUTOR = Executors.newSingleThreadExecutor();
 
     private static volatile Context appContext;
@@ -104,7 +103,7 @@ public final class AppLogger {
 
                 checkAndRotateLogFile();
 
-                String time = DATE_FORMAT.format(new Date());
+                String time = DATE_FORMATTER.format(java.time.Instant.now());
                 StringBuilder sb = new StringBuilder();
                 sb.append("[").append(time).append("] [").append(level).append("] [")
                         .append(tag != null ? tag : "App").append("] ")
@@ -179,7 +178,7 @@ public final class AppLogger {
                 "Session Started: %s\n" +
                 "=================================\n\n",
                 Build.MANUFACTURER, Build.MODEL, Build.VERSION.RELEASE, Build.VERSION.SDK_INT,
-                version, DATE_FORMAT.format(new Date()));
+                version, DATE_FORMATTER.format(java.time.Instant.now()));
 
         try (FileOutputStream fos = new FileOutputStream(logFile, false)) {
             fos.write(header.getBytes(StandardCharsets.UTF_8));

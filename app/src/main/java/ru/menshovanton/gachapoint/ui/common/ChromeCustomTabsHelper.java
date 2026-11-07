@@ -18,7 +18,13 @@ public final class ChromeCustomTabsHelper {
     private ChromeCustomTabsHelper() {}
 
     public static void openUrl(@NonNull Context context, @NonNull String url) {
-        Uri uri = Uri.parse(url);
+        if (url.trim().isEmpty()) return;
+        Uri uri = Uri.parse(url.trim());
+        String scheme = uri.getScheme();
+        if (scheme == null || (!scheme.equalsIgnoreCase("http") && !scheme.equalsIgnoreCase("https"))) {
+            AppLogger.w("ChromeCustomTabsHelper", "Blocked navigation to invalid or unsupported scheme: " + url);
+            return;
+        }
         try {
             CustomTabColorSchemeParams colorSchemeParams = new CustomTabColorSchemeParams.Builder()
                     .setToolbarColor(ContextCompat.getColor(context, R.color.accent))

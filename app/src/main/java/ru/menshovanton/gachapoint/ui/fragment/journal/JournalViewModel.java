@@ -38,6 +38,7 @@ public class JournalViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> isLoadingLiveData = new MutableLiveData<>(false);
 
     private GameType currentGameType = GameType.GENSHIN;
+    private long loadGeneration = 0;
 
     public JournalViewModel(@NonNull Application application) {
         super(application);
@@ -99,7 +100,15 @@ public class JournalViewModel extends AndroidViewModel {
         if (showLoading) {
             isLoadingLiveData.setValue(true);
         }
-        databaseRepository.getPullsByBanner(currentGameType, getCurrentBannerType(), rawWishes -> {
+        loadGeneration++;
+        final long currentGen = loadGeneration;
+        final GameType expectedGame = currentGameType;
+        final String expectedBanner = getCurrentBannerType();
+
+        databaseRepository.getPullsByBanner(expectedGame, expectedBanner, rawWishes -> {
+            if (currentGen != loadGeneration || expectedGame != currentGameType || !expectedBanner.equals(getCurrentBannerType())) {
+                return;
+            }
             List<Pull> processedList = processWishesAndCalculatePity(rawWishes);
             if (showLoading) {
                 isLoadingLiveData.setValue(false);

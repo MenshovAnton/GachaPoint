@@ -646,12 +646,16 @@ public class JournalView extends Fragment {
         Integer current5 = viewModel.getPity5StarLiveData().getValue();
         int val5 = current5 != null ? current5 : 0;
         NumberCountAnimator.animateFraction(tvPity5StarCounter, val5, max5);
-        progressPity5Star.setProgressCompat(Math.min(val5, max5), true);
+        if (progressPity5Star != null) {
+            NumberCountAnimator.animateProgress(progressPity5Star, Math.min(val5, max5), max5);
+        }
 
         Integer current4 = viewModel.getPity4StarLiveData().getValue();
         int val4 = current4 != null ? current4 : 0;
         NumberCountAnimator.animateFraction(tvPity4StarCounter, val4, max4);
-        progressPity4Star.setProgressCompat(Math.min(val4, max4), true);
+        if (progressPity4Star != null) {
+            NumberCountAnimator.animateProgress(progressPity4Star, Math.min(val4, max4), max4);
+        }
 
         boolean has5050 = bannerInfo != null && bannerInfo.hasFiftyFifty();
         if (has5050) {

@@ -95,10 +95,6 @@ public class HomeView extends Fragment {
     private LinearProgressIndicator pbPityProgress;
     private TextView tvPityUntil5Star;
 
-    private Integer lastProgress = null;
-    private Integer lastTarget = null;
-    private Integer lastGems = null;
-
     public HomeView() {}
 
     public static HomeView newInstance() {
@@ -349,8 +345,6 @@ public class HomeView extends Fragment {
                 currentType,
                 (selected, position) -> {
                     if (mainActivityView != null) mainActivityView.setSubType(selected);
-                    lastProgress = null;
-                    lastTarget = null;
                     viewModel.setGameType(selected);
                     smoothScrollToCenter(position);
                 },
@@ -415,9 +409,8 @@ public class HomeView extends Fragment {
 
         viewModel.getGameTypeLiveData().observe(getViewLifecycleOwner(), this::updateGameTheme);
 
-        viewModel.getPiggyProgressLiveData().observe(getViewLifecycleOwner(), progress -> updatePiggyProgress(progress, null, null));
-        viewModel.getPiggyTargetLiveData().observe(getViewLifecycleOwner(), target -> updatePiggyProgress(null, target, null));
-        viewModel.getPiggyGemsLiveData().observe(getViewLifecycleOwner(), gems -> updatePiggyProgress(null, null, gems));
+        viewModel.getSavingsStateLiveData().observe(getViewLifecycleOwner(), this::updatePiggyProgress);
+        viewModel.getPityStateLiveData().observe(getViewLifecycleOwner(), this::updatePityUi);
 
         viewModel.getStatisticLiveData().observe(getViewLifecycleOwner(), this::updateStatisticsUi);
         viewModel.getDailiesMonthProgressLiveData().observe(getViewLifecycleOwner(), this::updateDailiesMonthUi);
@@ -425,10 +418,6 @@ public class HomeView extends Fragment {
 
         viewModel.getIsDailyDoneTodayLiveData().observe(getViewLifecycleOwner(), this::updateDailyStatusUi);
         viewModel.getIsSubClaimedTodayLiveData().observe(getViewLifecycleOwner(), isClaimed -> updateSubClaimStatusUi());
-
-        viewModel.getPity5StarLiveData().observe(getViewLifecycleOwner(), pity -> updatePityUi());
-        viewModel.getMaxPityLiveData().observe(getViewLifecycleOwner(), max -> updatePityUi());
-        viewModel.getIsGuaranteedLiveData().observe(getViewLifecycleOwner(), guaranteed -> updatePityUi());
 
         viewModel.getWidgetsConfigLiveData().observe(getViewLifecycleOwner(), this::applyWidgetsConfig);
     }
@@ -441,6 +430,31 @@ public class HomeView extends Fragment {
         widgetMap.put(HomeWidgetItem.Type.SAVINGS, mcvSavings);
         widgetMap.put(HomeWidgetItem.Type.STATISTICS, mcvStatistics);
         widgetMap.put(HomeWidgetItem.Type.PITY, mcvPity);
+
+        boolean needsRebuild = false;
+        int visibleCount = 0;
+        for (HomeWidgetItem item : config) {
+            if (item.isVisible) visibleCount++;
+        }
+        if (llWidgetsContainer.getChildCount() != visibleCount) {
+            needsRebuild = true;
+        } else {
+            int index = 0;
+            for (HomeWidgetItem item : config) {
+                if (item.isVisible) {
+                    View expectedView = widgetMap.get(item.type);
+                    if (llWidgetsContainer.getChildAt(index) != expectedView) {
+                        needsRebuild = true;
+                        break;
+                    }
+                    index++;
+                }
+            }
+        }
+
+        if (!needsRebuild) {
+            return;
+        }
 
         llWidgetsContainer.removeAllViews();
 
@@ -525,36 +539,35 @@ public class HomeView extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void updatePiggyProgress(@Nullable Integer progress, @Nullable Integer target, @Nullable Integer gems) {
-        if (target != null) lastTarget = target;
-        if (progress != null) lastProgress = progress;
-        if (gems != null) lastGems = gems;
+    private void updatePiggyProgress(@Nullable HomeViewModel.HomeSavingsState state) {
+        if (state == null) return;
 
-        if (lastProgress == null || lastTarget == null) {
-            return;
-        }
-
-        int curProgress = lastProgress;
-        int curTarget = lastTarget;
+        int curProgress = state.progress;
+        int curTarget = state.target;
 
         if (pbSaveProgress != null && tvSavedCounter != null) {
-            int newMax = curTarget > 0 ? curTarget : 1;
-            if (pbSaveProgress.getMax() != newMax) {
-                pbSaveProgress.setMax(newMax);
+            if (curTarget <= 0) {
+                NumberCountAnimator.setProgressImmediate(pbSaveProgress, 0, 1);
+                NumberCountAnimator.setImmediateFraction(tvSavedCounter, 0, 0);
+            } else {
+                NumberCountAnimator.animateProgress(pbSaveProgress, curProgress, curTarget);
+                NumberCountAnimator.animateFraction(tvSavedCounter, curProgress, curTarget);
             }
-            NumberCountAnimator.animateProgress(pbSaveProgress, curProgress);
-            NumberCountAnimator.animateFraction(tvSavedCounter, curProgress, curTarget);
         }
 
         if (tvSavedPercent != null) {
-            int percent = curTarget > 0 ? (int) Math.min(100, Math.round((curProgress * 100.0) / curTarget)) : 0;
-            NumberCountAnimator.animatePercent(tvSavedPercent, percent);
+            if (curTarget <= 0) {
+                NumberCountAnimator.setImmediatePercent(tvSavedPercent, 0);
+            } else {
+                int percent = (int) Math.min(100, Math.round((curProgress * 100.0) / curTarget));
+                NumberCountAnimator.animatePercent(tvSavedPercent, percent);
+            }
         }
 
         if (tvSavingsCurrency != null) {
-            GameType currentGame = viewModel.getGameTypeLiveData().getValue();
+            GameType currentGame = viewModel != null ? viewModel.getGameTypeLiveData().getValue() : null;
             int pullCost = (currentGame != null) ? currentGame.getPullCost() : GameType.GENSHIN.getPullCost();
-            int effectiveGems = lastGems != null ? lastGems : (curProgress * pullCost);
+            int effectiveGems = state.totalGems > 0 ? state.totalGems : (curProgress * pullCost);
             NumberCountAnimator.animate(tvSavingsCurrency, effectiveGems, progressVal -> {
                 String formatted = NumberFormat.getIntegerInstance().format(progressVal);
                 return getString(R.string.savings_currency_approx_format, formatted, getString(R.string.home_savings_in_currency));
@@ -575,23 +588,16 @@ public class HomeView extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void updatePityUi() {
-        if (getContext() == null || tvPity5StarCounter == null || pbPityProgress == null) return;
+    private void updatePityUi(@Nullable HomeViewModel.HomePityState state) {
+        if (getContext() == null || tvPity5StarCounter == null || pbPityProgress == null || state == null) return;
 
-        Integer pity = viewModel.getPity5StarLiveData().getValue();
-        Integer max = viewModel.getMaxPityLiveData().getValue();
-        Boolean guaranteed = viewModel.getIsGuaranteedLiveData().getValue();
-
-        int p = (pity != null) ? pity : 0;
-        int m = (max != null && max > 0) ? max : 90;
-        boolean isGuar = (guaranteed != null && guaranteed);
+        int p = state.pity5Star;
+        int m = state.maxPity > 0 ? state.maxPity : 90;
+        boolean isGuar = state.isGuaranteed;
 
         NumberCountAnimator.animateFraction(tvPity5StarCounter, p, m);
         if (pbPityProgress != null) {
-            if (pbPityProgress.getMax() != m) {
-                pbPityProgress.setMax(m);
-            }
-            NumberCountAnimator.animateProgress(pbPityProgress, p);
+            NumberCountAnimator.animateProgress(pbPityProgress, p, m);
         }
 
         int until = Math.max(0, m - p);

@@ -535,7 +535,6 @@ public class PiggyBankView extends Fragment {
                 android.transition.TransitionManager.beginDelayedTransition((ViewGroup) getView(),
                         new android.transition.AutoTransition().setDuration(240));
             }
-            isFirstLoad = false;
 
             if (target <= 0) {
                 if (llPiggyBankEmpty != null) llPiggyBankEmpty.setVisibility(View.VISIBLE);
@@ -548,6 +547,7 @@ public class PiggyBankView extends Fragment {
                 if (tvEmptySavingsDesc != null && gameType != null) {
                     tvEmptySavingsDesc.setText(gameType.getEmptySavingsGoalDescResId());
                 }
+                isFirstLoad = false;
                 return;
             } else {
                 if (llPiggyBankEmpty != null) llPiggyBankEmpty.setVisibility(View.GONE);
@@ -563,10 +563,7 @@ public class PiggyBankView extends Fragment {
             int targetProgress = targetGems > 0 ? totalGems : progress;
 
             if (progressBar != null) {
-                if (progressBar.getMax() != newMax) {
-                    progressBar.setMax(newMax);
-                }
-                NumberCountAnimator.animateProgress(progressBar, targetProgress);
+                NumberCountAnimator.animateProgress(progressBar, targetProgress, newMax);
             }
 
             NumberCountAnimator.animateFraction(savedWishesCounter, progress, target);
@@ -584,6 +581,7 @@ public class PiggyBankView extends Fragment {
             NumberCountAnimator.animatePercent(tvPercent, percent);
 
             NumberCountAnimator.animateFormatted(tvCurrencyAmount, totalGems);
+            isFirstLoad = false;
         });
 
         viewModel.getGoalExceededEvent().observe(getViewLifecycleOwner(), unused ->

@@ -87,31 +87,143 @@ public final class NumberCountAnimator {
         setImmediate(textView, (int) targetValue, nf::format);
     }
 
-    public static void animateProgress(@Nullable ProgressBar progressBar, int targetProgress) {
-        if (progressBar == null) return;
-        ValueAnimator existing = (ValueAnimator) progressBar.getTag(R.id.tag_progress_animator);
-        int currentProgress = progressBar.getProgress();
-        if (existing != null && existing.isRunning()) {
-            currentProgress = (int) existing.getAnimatedValue();
-            existing.cancel();
+    private static final int PROGRESS_PRECISION = 1000;
+
+    private static class ProgressAnimationState {
+        ValueAnimator animator;
+        int targetProgress;
+        int currentProgress;
+
+        ProgressAnimationState(int currentProgress, int targetProgress) {
+            this.currentProgress = currentProgress;
+            this.targetProgress = targetProgress;
         }
-        if (currentProgress == targetProgress) {
-            progressBar.setProgress(targetProgress);
+    }
+
+    private static void ensurePrecisionMax(@NonNull ProgressBar progressBar) {
+        if (progressBar.getMax() != PROGRESS_PRECISION) {
+            if (progressBar instanceof com.google.android.material.progressindicator.LinearProgressIndicator) {
+                ((com.google.android.material.progressindicator.LinearProgressIndicator) progressBar).setProgressCompat(0, false);
+            } else {
+                progressBar.setProgress(0);
+            }
+            progressBar.setMax(PROGRESS_PRECISION);
+        }
+    }
+
+    public static void setProgressImmediate(@Nullable ProgressBar progressBar, int targetProgress, int max) {
+        if (progressBar == null) return;
+        ensurePrecisionMax(progressBar);
+
+        ProgressAnimationState state = (ProgressAnimationState) progressBar.getTag(R.id.tag_progress_animator);
+        if (state != null && state.animator != null && state.animator.isRunning()) {
+            state.animator.cancel();
+        }
+
+        float ratio = (max > 0) ? Math.max(0f, Math.min(1f, (float) targetProgress / max)) : 0f;
+        int scaled = Math.round(ratio * PROGRESS_PRECISION);
+
+        if (progressBar instanceof com.google.android.material.progressindicator.LinearProgressIndicator) {
+            ((com.google.android.material.progressindicator.LinearProgressIndicator) progressBar).setProgressCompat(scaled, false);
+        } else {
+            progressBar.setProgress(scaled);
+        }
+
+        if (state == null) {
+            state = new ProgressAnimationState(scaled, scaled);
+            progressBar.setTag(R.id.tag_progress_animator, state);
+        } else {
+            state.currentProgress = scaled;
+            state.targetProgress = scaled;
+        }
+    }
+
+    public static void setProgressImmediate(@Nullable ProgressBar progressBar, int targetProgress) {
+        if (progressBar == null) return;
+        setProgressImmediate(progressBar, targetProgress, progressBar.getMax());
+    }
+
+    public static void animateProgress(@Nullable ProgressBar progressBar, int targetProgress, int max) {
+        if (progressBar == null) return;
+        ensurePrecisionMax(progressBar);
+
+        float ratio = (max > 0) ? Math.max(0f, Math.min(1f, (float) targetProgress / max)) : 0f;
+        int scaledTarget = Math.round(ratio * PROGRESS_PRECISION);
+
+        if (progressBar.getTag(R.id.tag_progress_animator_listener) == null) {
+            android.view.View.OnAttachStateChangeListener listener = new android.view.View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(@NonNull android.view.View v) {}
+
+                @Override
+                public void onViewDetachedFromWindow(android.view.View v) {
+                    ProgressAnimationState s = (ProgressAnimationState) v.getTag(R.id.tag_progress_animator);
+                    if (s != null && s.animator != null && s.animator.isRunning()) {
+                        s.animator.cancel();
+                    }
+                }
+            };
+            progressBar.addOnAttachStateChangeListener(listener);
+            progressBar.setTag(R.id.tag_progress_animator_listener, listener);
+        }
+
+        ProgressAnimationState state = (ProgressAnimationState) progressBar.getTag(R.id.tag_progress_animator);
+
+        if (!progressBar.isAttachedToWindow()) {
+            if (progressBar instanceof com.google.android.material.progressindicator.LinearProgressIndicator) {
+                ((com.google.android.material.progressindicator.LinearProgressIndicator) progressBar).setProgressCompat(scaledTarget, false);
+            } else {
+                progressBar.setProgress(scaledTarget);
+            }
+            state = new ProgressAnimationState(scaledTarget, scaledTarget);
+            progressBar.setTag(R.id.tag_progress_animator, state);
             return;
         }
-        long duration = calculateDuration(currentProgress, targetProgress);
-        ValueAnimator animator = ValueAnimator.ofInt(currentProgress, targetProgress);
+
+        int startProgress;
+        if (state != null && state.animator != null && state.animator.isRunning()) {
+            startProgress = (int) state.animator.getAnimatedValue();
+            state.animator.cancel();
+            state.currentProgress = startProgress;
+            state.targetProgress = scaledTarget;
+        } else if (state != null) {
+            startProgress = state.currentProgress;
+            state.targetProgress = scaledTarget;
+        } else {
+            startProgress = progressBar.getProgress();
+            state = new ProgressAnimationState(startProgress, scaledTarget);
+            progressBar.setTag(R.id.tag_progress_animator, state);
+        }
+
+        if (startProgress == scaledTarget) {
+            return;
+        }
+
+        long duration = calculateDuration(startProgress, scaledTarget);
+        ValueAnimator animator = ValueAnimator.ofInt(startProgress, scaledTarget);
         animator.setDuration(duration);
         animator.setInterpolator(NATURAL_INTERPOLATOR);
+        ProgressAnimationState finalState = state;
         animator.addUpdateListener(anim -> {
             if (!progressBar.isAttachedToWindow()) {
                 anim.cancel();
                 return;
             }
-            progressBar.setProgress((int) anim.getAnimatedValue());
+            int val = (int) anim.getAnimatedValue();
+            finalState.currentProgress = val;
+            if (progressBar instanceof com.google.android.material.progressindicator.LinearProgressIndicator) {
+                ((com.google.android.material.progressindicator.LinearProgressIndicator) progressBar).setProgressCompat(val, false);
+            } else {
+                progressBar.setProgress(val);
+            }
         });
-        progressBar.setTag(R.id.tag_progress_animator, animator);
+        state.animator = animator;
         animator.start();
+    }
+
+    public static void animateProgress(@Nullable ProgressBar progressBar, int targetProgress) {
+        if (progressBar == null) return;
+        animateProgress(progressBar, targetProgress, progressBar.getMax());
     }
 
     public static void animate(@Nullable TextView textView, int targetValue) {

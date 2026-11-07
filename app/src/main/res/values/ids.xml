@@ -6,4 +6,5 @@
     <item name="tag_number_animator_value" type="id" />
     <item name="tag_number_animator_pending" type="id" />
     <item name="tag_progress_animator" type="id" />
+    <item name="tag_progress_animator_listener" type="id" />
 </resources>

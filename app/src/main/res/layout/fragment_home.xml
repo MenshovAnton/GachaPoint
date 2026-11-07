@@ -872,7 +872,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:max="90"
-                        android:progress="34" />
+                        android:progress="0" />
 
                     <TextView
                         android:id="@+id/tv_pity_until_5star"
