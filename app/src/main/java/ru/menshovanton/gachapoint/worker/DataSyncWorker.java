@@ -116,6 +116,9 @@ public class DataSyncWorker extends Worker {
     }
 
     private void checkPromocodes(Context context, Preferences prefs) {
+        if (!prefs.isNotifyPromocodesEnabled()) {
+            return;
+        }
         PromocodeRepository repo = PromocodeRepository.getInstance(context);
         List<PromoCode> unnotifiedStream = repo.getUnnotifiedStreamCodes();
 
@@ -162,6 +165,9 @@ public class DataSyncWorker extends Worker {
     }
 
     private void checkBanners(Context context, Preferences prefs) {
+        if (!prefs.isNotifyBannersEnabled()) {
+            return;
+        }
         BannerScheduleRepository bannerRepo = BannerScheduleRepository.getInstance(context);
         bannerRepo.reload(true);
 
@@ -184,10 +190,11 @@ public class DataSyncWorker extends Worker {
 
                 String gameTitle = context.getString(game.getDisplayNameResId());
                 String heroes = String.join(", ", banner.getFeaturedFiveStars(context));
+                long daysUntil = ChronoUnit.DAYS.between(today, start);
 
                 if ("ANNOUNCED".equalsIgnoreCase(banner.getStatus()) && today.isBefore(start)) {
                     if (!prefs.isBannerNotifiedAnnounced(bannerId)) {
-                        if (hasNotificationPermission(context)) {
+                        if (daysUntil <= 7 && hasNotificationPermission(context)) {
                             String title = context.getString(R.string.notification_banner_announced_title, gameTitle);
                             String text = "v" + banner.getVersion() + " (" + context.getString(R.string.three_star).replace("3", String.valueOf(banner.getPhase())) + "): " + heroes;
                             showBannerNotification(context, banner, title, text, bannerId.hashCode() + 1);
@@ -196,7 +203,6 @@ public class DataSyncWorker extends Worker {
                     }
                 }
 
-                long daysUntil = ChronoUnit.DAYS.between(today, start);
                 if (daysUntil == 1) {
                     if (!prefs.isBannerNotifiedUpcoming(bannerId)) {
                         if (hasNotificationPermission(context)) {
@@ -211,7 +217,7 @@ public class DataSyncWorker extends Worker {
                 boolean isLive = !today.isBefore(start) && !today.isAfter(end);
                 if (isLive && "CURRENT".equalsIgnoreCase(banner.getStatus())) {
                     if (!prefs.isBannerNotifiedActive(bannerId)) {
-                        if (hasNotificationPermission(context)) {
+                        if (today.isEqual(start) && hasNotificationPermission(context)) {
                             String title = context.getString(R.string.notification_banner_active_title, gameTitle);
                             String text = heroes + " — испытайте удачу!";
                             showBannerNotification(context, banner, title, text, bannerId.hashCode() + 3);
@@ -278,7 +284,7 @@ public class DataSyncWorker extends Worker {
         );
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_BANNERS)
-                .setSmallIcon(R.drawable.icon_star)
+                .setSmallIcon(R.drawable.icon_notification)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text))

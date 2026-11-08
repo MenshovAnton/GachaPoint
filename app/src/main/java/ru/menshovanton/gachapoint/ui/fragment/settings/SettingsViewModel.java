@@ -10,6 +10,7 @@ import androidx.core.os.LocaleListCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.io.File;
 import java.util.Locale;
@@ -18,6 +19,7 @@ import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.db.AppDatabase;
 import ru.menshovanton.gachapoint.data.db.DatabaseExporter;
 import ru.menshovanton.gachapoint.data.db.DatabaseImporter;
+import ru.menshovanton.gachapoint.data.db.MigrationHelper;
 import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.data.local.JsonDataLoader;
 import ru.menshovanton.gachapoint.data.local.Preferences;
@@ -36,6 +38,10 @@ public class SettingsViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> vibrationMode = new MutableLiveData<>();
 
     private final MutableLiveData<Boolean> notificationsEnabled = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> notifySubscriptions = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> notifyDailies = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> notifyPromocodes = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> notifyBanners = new MutableLiveData<>();
     private final MutableLiveData<Integer> alarmHour = new MutableLiveData<>();
     private final MutableLiveData<Integer> alarmMinute = new MutableLiveData<>();
 
@@ -68,6 +74,22 @@ public class SettingsViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> getNotificationsEnabled() {
         return notificationsEnabled;
+    }
+
+    public LiveData<Boolean> getNotifySubscriptions() {
+        return notifySubscriptions;
+    }
+
+    public LiveData<Boolean> getNotifyDailies() {
+        return notifyDailies;
+    }
+
+    public LiveData<Boolean> getNotifyPromocodes() {
+        return notifyPromocodes;
+    }
+
+    public LiveData<Boolean> getNotifyBanners() {
+        return notifyBanners;
     }
 
     public LiveData<Integer> getAlarmHour() {
@@ -106,6 +128,10 @@ public class SettingsViewModel extends AndroidViewModel {
 
     public void loadSettings() {
         notificationsEnabled.setValue(preferences.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS));
+        notifySubscriptions.setValue(preferences.isNotifySubscriptionsEnabled());
+        notifyDailies.setValue(preferences.isNotifyDailiesEnabled());
+        notifyPromocodes.setValue(preferences.isNotifyPromocodesEnabled());
+        notifyBanners.setValue(preferences.isNotifyBannersEnabled());
         alarmHour.setValue(preferences.getIntPreference(Preferences.ALARM_HOURS));
         alarmMinute.setValue(preferences.getIntPreference(Preferences.ALARM_MINUTES));
         selectedTheme.setValue(preferences.getIntPreference(Preferences.APP_THEME));
@@ -266,5 +292,68 @@ public class SettingsViewModel extends AndroidViewModel {
                 AppLogger.e("SettingsViewModel", "Error clearing cache", e);
             }
         });
+    }
+
+    public void onNotifySubscriptionsChanged(boolean isEnabled) {
+        preferences.setNotifySubscriptionsEnabled(isEnabled);
+        notifySubscriptions.setValue(isEnabled);
+    }
+
+    public void onNotifyDailiesChanged(boolean isEnabled) {
+        preferences.setNotifyDailiesEnabled(isEnabled);
+        notifyDailies.setValue(isEnabled);
+    }
+
+    public void onNotifyPromocodesChanged(boolean isEnabled) {
+        preferences.setNotifyPromocodesEnabled(isEnabled);
+        notifyPromocodes.setValue(isEnabled);
+    }
+
+    public void onNotifyBannersChanged(boolean isEnabled) {
+        preferences.setNotifyBannersEnabled(isEnabled);
+        notifyBanners.setValue(isEnabled);
+    }
+
+    public void resetAllData() {
+        Context context = getApplication().getApplicationContext();
+        AppDatabase.getExecutor().execute(() -> {
+            try {
+                AppDatabase db = AppDatabase.getInstance(context);
+                SupportSQLiteDatabase rawDb = getRawDb(db);
+
+                preferences.resetUserData();
+                MigrationHelper.syncGamesRaw(rawDb);
+                MigrationHelper.syncSavingsRaw(context, rawDb);
+                MigrationHelper.syncSubscriptionsRaw(rawDb);
+
+                ru.menshovanton.gachapoint.App app = getApplication();
+                if (app.getAppContainer() != null) {
+                    app.getAppContainer().reload(() -> {});
+                }
+
+                toastMessageEvent.postValue(R.string.settings_reset_success_toast);
+                AppDatabase.postToMain(restartAppEvent::call);
+            } catch (Exception e) {
+                AppLogger.e("SettingsViewModel", "Error resetting data", e);
+            }
+        });
+    }
+
+    @NonNull
+    private static SupportSQLiteDatabase getRawDb(AppDatabase db) {
+        SupportSQLiteDatabase rawDb = db.getOpenHelper().getWritableDatabase();
+        rawDb.beginTransaction();
+        try {
+            rawDb.execSQL("DELETE FROM `pulls`");
+            rawDb.execSQL("DELETE FROM `calendar`");
+            rawDb.execSQL("DELETE FROM `calendar_game_status`");
+            rawDb.execSQL("DELETE FROM `subscriptions`");
+            rawDb.execSQL("DELETE FROM `savings`");
+            rawDb.execSQL("DELETE FROM `promocode_statuses`");
+            rawDb.setTransactionSuccessful();
+        } finally {
+            rawDb.endTransaction();
+        }
+        return rawDb;
     }
 }

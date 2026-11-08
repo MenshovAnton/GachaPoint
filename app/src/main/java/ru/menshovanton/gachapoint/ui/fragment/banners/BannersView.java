@@ -14,7 +14,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Arrays;
 
@@ -32,29 +31,26 @@ public class BannersView extends Fragment {
     private RecyclerView rvGameTypes;
     private MaterialButtonToggleGroup toggleBannerMode;
     private RecyclerView rvContent;
-    private FloatingActionButton fabRefresh;
-    private android.animation.ObjectAnimator refreshAnimator;
-    private boolean isManualRefresh = false;
+    private androidx.swiperefreshlayout.widget.SwipeRefreshLayout srlBanners;
+    private View cardOfflineNotice;
+    private PillsAdapter pillsAdapter;
 
     private final ru.menshovanton.gachapoint.data.local.JsonDataLoader.OnDataSyncResultListener syncResultListener = (cacheFileName, status) -> {
         if (!ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_BANNERS.equals(cacheFileName)) return;
-        if (!isManualRefresh) return;
-        isManualRefresh = false;
         if (getActivity() == null) return;
         getActivity().runOnUiThread(() -> {
             if (getContext() == null) return;
+            if (srlBanners != null) {
+                srlBanners.setRefreshing(false);
+            }
             switch (status) {
                 case OFFLINE:
-                    android.widget.Toast.makeText(getContext(), R.string.sync_status_offline, android.widget.Toast.LENGTH_SHORT).show();
-                    break;
                 case ERROR:
-                    android.widget.Toast.makeText(getContext(), R.string.sync_status_error, android.widget.Toast.LENGTH_SHORT).show();
+                    if (cardOfflineNotice != null) cardOfflineNotice.setVisibility(View.VISIBLE);
                     break;
                 case SUCCESS:
-                    android.widget.Toast.makeText(getContext(), R.string.sync_status_success, android.widget.Toast.LENGTH_SHORT).show();
-                    break;
                 case NOT_MODIFIED:
-                    android.widget.Toast.makeText(getContext(), R.string.sync_status_up_to_date, android.widget.Toast.LENGTH_SHORT).show();
+                    if (cardOfflineNotice != null) cardOfflineNotice.setVisibility(View.GONE);
                     break;
             }
         });
@@ -81,7 +77,8 @@ public class BannersView extends Fragment {
         rvGameTypes = root.findViewById(R.id.rv_game_types);
         toggleBannerMode = root.findViewById(R.id.toggle_banner_mode);
         rvContent = root.findViewById(R.id.rv_banners_content);
-        fabRefresh = root.findViewById(R.id.fab_refresh);
+        srlBanners = root.findViewById(R.id.srl_banners);
+        cardOfflineNotice = root.findViewById(R.id.card_offline_notice);
 
         ImageButton btnBack = root.findViewById(R.id.btn_back);
         if (btnBack != null) {
@@ -110,35 +107,66 @@ public class BannersView extends Fragment {
 
         ru.menshovanton.gachapoint.data.local.JsonDataLoader.addSyncResultListener(syncResultListener);
 
-        fabRefresh.setOnClickListener(v -> {
-            HapticHelper.performClickHaptic(requireContext(), v);
-            isManualRefresh = true;
-            viewModel.loadData(true);
-        });
+        if (srlBanners != null) {
+            srlBanners.setColorSchemeResources(R.color.accent, R.color.check);
+            srlBanners.setProgressBackgroundColorSchemeResource(R.color.card_bg);
+            srlBanners.setOnRefreshListener(() -> viewModel.loadData(true));
+        }
 
         observeViewModel();
 
+        GameType current = viewModel.getSelectedGameType().getValue();
+        if (current == null) current = GameType.GENSHIN;
         ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository.getInstance(requireContext())
-                .markAllBannersAsViewed();
+                .markBannersAsViewed(current);
+        updateMainBadge();
+        updatePillsBadges();
+    }
+
+    private void updateMainBadge() {
         if (getActivity() instanceof ru.menshovanton.gachapoint.ui.main.MainActivityView) {
             ((ru.menshovanton.gachapoint.ui.main.MainActivityView) getActivity()).updatePromocodesBadge();
         }
+    }
+
+    private void updatePillsBadges() {
+        ru.menshovanton.gachapoint.data.local.NetworkExecutor.execute(() -> {
+            if (getContext() == null) return;
+            ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository repo =
+                    ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository.getInstance(requireContext());
+            java.util.Set<GameType> badgeGames = new java.util.HashSet<>();
+            for (GameType g : SUPPORTED_GAMES) {
+                if (repo.getUnviewedBannersCount(g) > 0) {
+                    badgeGames.add(g);
+                }
+            }
+            ru.menshovanton.gachapoint.data.db.AppDatabase.postToMain(() -> {
+                if (pillsAdapter != null) {
+                    pillsAdapter.setBadgeGames(badgeGames);
+                }
+            });
+        });
     }
 
     private void setupGamePills() {
         GameType current = viewModel.getSelectedGameType().getValue();
         if (current == null) current = GameType.GENSHIN;
 
-        PillsAdapter pillsAdapter = new PillsAdapter(
+        pillsAdapter = new PillsAdapter(
                 Arrays.asList(SUPPORTED_GAMES),
                 current,
                 (gameType, position) -> {
                     HapticHelper.performClickHaptic(requireContext(), null);
                     viewModel.selectGameType(gameType);
+                    ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository.getInstance(requireContext())
+                            .markBannersAsViewed(gameType);
+                    updateMainBadge();
+                    updatePillsBadges();
                 },
                 null
         );
         rvGameTypes.setAdapter(pillsAdapter);
+        updatePillsBadges();
     }
 
     private void setupModeToggle() {
@@ -167,27 +195,8 @@ public class BannersView extends Fragment {
                 rerunAdapter.submitList(reruns));
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
-            if (Boolean.TRUE.equals(loading)) {
-                if (fabRefresh != null) {
-                    fabRefresh.setEnabled(false);
-                    if (refreshAnimator == null) {
-                        refreshAnimator = android.animation.ObjectAnimator.ofFloat(fabRefresh, View.ROTATION, 0f, 360f);
-                        refreshAnimator.setDuration(700);
-                        refreshAnimator.setRepeatCount(android.animation.ValueAnimator.INFINITE);
-                        refreshAnimator.setInterpolator(new android.view.animation.LinearInterpolator());
-                    }
-                    if (!refreshAnimator.isStarted()) {
-                        refreshAnimator.start();
-                    }
-                }
-            } else {
-                if (refreshAnimator != null) {
-                    refreshAnimator.cancel();
-                }
-                if (fabRefresh != null) {
-                    fabRefresh.setEnabled(true);
-                    fabRefresh.setRotation(0f);
-                }
+            if (srlBanners != null) {
+                srlBanners.setRefreshing(Boolean.TRUE.equals(loading));
             }
         });
     }
@@ -195,11 +204,12 @@ public class BannersView extends Fragment {
     @Override
     public void onDestroyView() {
         ru.menshovanton.gachapoint.data.local.JsonDataLoader.removeSyncResultListener(syncResultListener);
-        if (refreshAnimator != null) {
-            refreshAnimator.cancel();
-            refreshAnimator = null;
-        }
         super.onDestroyView();
+        if (srlBanners != null) {
+            srlBanners.setOnRefreshListener(null);
+            srlBanners = null;
+        }
+        cardOfflineNotice = null;
         if (rvContent != null) {
             rvContent.setAdapter(null);
             rvContent = null;
@@ -208,9 +218,9 @@ public class BannersView extends Fragment {
             rvGameTypes.setAdapter(null);
             rvGameTypes = null;
         }
+        pillsAdapter = null;
         scheduleAdapter = null;
         rerunAdapter = null;
         toggleBannerMode = null;
-        fabRefresh = null;
     }
 }

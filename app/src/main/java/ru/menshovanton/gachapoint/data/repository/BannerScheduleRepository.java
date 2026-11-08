@@ -133,22 +133,56 @@ public class BannerScheduleRepository {
     }
 
     public synchronized int getUnviewedBannersCount() {
+        return getUnviewedBannersCount(null);
+    }
+
+    public synchronized int getUnviewedBannersCount(@Nullable GameType gameType) {
         ru.menshovanton.gachapoint.data.local.Preferences prefs =
                 new ru.menshovanton.gachapoint.data.local.Preferences(context);
         java.util.Set<String> viewed = prefs.getViewedBanners();
         int count = 0;
-        for (List<BannerScheduleItem> list : bannerCache.values()) {
-            if (list == null) continue;
-            for (BannerScheduleItem banner : list) {
-                String st = banner.getStatus();
-                if ("CURRENT".equalsIgnoreCase(st) || "ANNOUNCED".equalsIgnoreCase(st)) {
-                    if (!viewed.contains(banner.getId())) {
-                        count++;
+        if (gameType != null) {
+            List<BannerScheduleItem> list = bannerCache.get(gameType.getId());
+            if (list != null) {
+                for (BannerScheduleItem banner : list) {
+                    String st = banner.getStatus();
+                    if ("CURRENT".equalsIgnoreCase(st) || "ANNOUNCED".equalsIgnoreCase(st)) {
+                        if (!viewed.contains(banner.getId())) {
+                            count++;
+                        }
+                    }
+                }
+            }
+        } else {
+            for (List<BannerScheduleItem> list : bannerCache.values()) {
+                if (list == null) continue;
+                for (BannerScheduleItem banner : list) {
+                    String st = banner.getStatus();
+                    if ("CURRENT".equalsIgnoreCase(st) || "ANNOUNCED".equalsIgnoreCase(st)) {
+                        if (!viewed.contains(banner.getId())) {
+                            count++;
+                        }
                     }
                 }
             }
         }
         return count;
+    }
+
+    public synchronized void markBannersAsViewed(@NonNull GameType gameType) {
+        ru.menshovanton.gachapoint.data.local.Preferences prefs =
+                new ru.menshovanton.gachapoint.data.local.Preferences(context);
+        List<String> ids = new ArrayList<>();
+        List<BannerScheduleItem> list = bannerCache.get(gameType.getId());
+        if (list != null) {
+            for (BannerScheduleItem banner : list) {
+                String st = banner.getStatus();
+                if ("CURRENT".equalsIgnoreCase(st) || "ANNOUNCED".equalsIgnoreCase(st)) {
+                    ids.add(banner.getId());
+                }
+            }
+        }
+        prefs.markBannersAsViewed(ids);
     }
 
     public synchronized void markAllBannersAsViewed() {

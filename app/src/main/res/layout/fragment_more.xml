@@ -448,7 +448,8 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginStart="70dp"
+                        android:layout_marginEnd="16dp"
                         android:background="@color/divider_color" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -478,7 +479,7 @@
                                 android:layout_height="22dp"
                                 android:layout_gravity="center"
                                 android:importantForAccessibility="no"
-                                android:src="@drawable/icon_star"
+                                android:src="@drawable/icon_star_rounded"
                                 app:tint="@color/rare_legendary" />
 
                         </com.google.android.material.card.MaterialCardView>
@@ -923,6 +924,294 @@
 
                         <ImageView
                             android:id="@+id/ic_about_chevron"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/icon_right_arrow"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/text_secondary" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_community_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding_horizontal"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/genshin_font"
+                android:text="@string/menu_section_community"
+                android:textColor="@color/check"
+                android:textSize="@dimen/text_size_section_title"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mcv_app_card" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_community_card"
+                style="@style/Widget.GachaPoint.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
+                android:layout_marginEnd="@dimen/card_margin_horizontal"
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_community_header"
+                app:layout_constraintVertical_bias="0.0">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_community_telegram"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="14dp">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/badge_community_telegram"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            app:cardBackgroundColor="@color/badge_blue_bg"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_community_telegram"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_community_telegram"
+                            app:strokeWidth="0dp">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/icon_telegram"
+                                app:tint="@color/check" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:id="@+id/ll_text_community_telegram"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="10dp"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_community_telegram_arrow"
+                            app:layout_constraintStart_toEndOf="@+id/badge_community_telegram"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/tv_community_telegram_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/menu_telegram_title"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_community_telegram_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/menu_telegram_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/iv_community_telegram_arrow"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/icon_right_arrow"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/text_secondary" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="70dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/divider_color" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_community_tiktok"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="14dp">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/badge_community_tiktok"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            app:cardBackgroundColor="@color/card_background_light"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_community_tiktok"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_community_tiktok"
+                            app:strokeWidth="0dp">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/icon_tiktok"
+                                app:tint="@color/text" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:id="@+id/ll_text_community_tiktok"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="10dp"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_community_tiktok_arrow"
+                            app:layout_constraintStart_toEndOf="@+id/badge_community_tiktok"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/tv_community_tiktok_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/menu_tiktok_title"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_community_tiktok_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/menu_tiktok_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/iv_community_tiktok_arrow"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/icon_right_arrow"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/text_secondary" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="70dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/divider_color" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_community_boosty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="14dp">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/badge_community_boosty"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            app:cardBackgroundColor="@color/badge_gold_bg"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/ll_text_community_boosty"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/ll_text_community_boosty"
+                            app:strokeWidth="0dp">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/icon_heart"
+                                app:tint="@color/rare_legendary" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:id="@+id/ll_text_community_boosty"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:gravity="center_vertical"
+                            android:minHeight="40dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/badge_community_boosty"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/tv_community_boosty_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/menu_boosty_title"
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_community_boosty_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/menu_boosty_desc"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/iv_community_boosty_arrow"
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:importantForAccessibility="no"

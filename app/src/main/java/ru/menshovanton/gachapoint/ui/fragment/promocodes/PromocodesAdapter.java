@@ -42,11 +42,13 @@ public class PromocodesAdapter extends RecyclerView.Adapter<PromocodesAdapter.Pr
     }
 
     private final GameType gameType;
+    private final OnRedeemedListener onRedeemedListener;
     private final OnExpiredListener onExpiredListener;
     private final List<PromoCode> items = new ArrayList<>();
 
     public PromocodesAdapter(GameType gameType, OnRedeemedListener onRedeemedListener, OnExpiredListener onExpiredListener) {
         this.gameType = gameType;
+        this.onRedeemedListener = onRedeemedListener;
         this.onExpiredListener = onExpiredListener;
     }
 
@@ -125,9 +127,7 @@ public class PromocodesAdapter extends RecyclerView.Adapter<PromocodesAdapter.Pr
         if (holder.btnPromocodeOptions != null) {
             holder.btnPromocodeOptions.setOnClickListener(v -> {
                 HapticHelper.performClickHaptic(context, v);
-                if (onExpiredListener != null) {
-                    onExpiredListener.onToggleExpired(code);
-                }
+                showPromocodeActionsSheet(context, code, isRedeemed);
             });
         }
 
@@ -197,12 +197,70 @@ public class PromocodesAdapter extends RecyclerView.Adapter<PromocodesAdapter.Pr
         }
     }
 
+    private void showPromocodeActionsSheet(Context context, PromoCode code, boolean isRedeemed) {
+        com.google.android.material.bottomsheet.BottomSheetDialog sheetDialog =
+                new com.google.android.material.bottomsheet.BottomSheetDialog(context, R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
+        sheetDialog.setContentView(R.layout.dialog_promocode_actions_sheet);
+
+        TextView tvCode = sheetDialog.findViewById(R.id.tv_sheet_promocode);
+        TextView tvRewards = sheetDialog.findViewById(R.id.tv_sheet_rewards);
+        TextView tvRedeemedTitle = sheetDialog.findViewById(R.id.tv_sheet_redeemed_title);
+        ImageView ivRedeemedIcon = sheetDialog.findViewById(R.id.iv_sheet_redeemed_icon);
+        View rowRedeemed = sheetDialog.findViewById(R.id.row_toggle_redeemed);
+        View rowExpired = sheetDialog.findViewById(R.id.row_report_expired);
+        View rowShare = sheetDialog.findViewById(R.id.row_share_code);
+
+        if (tvCode != null) tvCode.setText(code.getCode());
+        if (tvRewards != null) tvRewards.setText(code.getRewardsDescription(context));
+        if (tvRedeemedTitle != null) {
+            tvRedeemedTitle.setText(isRedeemed ? R.string.promocode_menu_unredeemed : R.string.promocode_menu_redeemed);
+        }
+        if (ivRedeemedIcon != null) {
+            ivRedeemedIcon.setImageResource(isRedeemed ? R.drawable.icon_cross : R.drawable.icon_check);
+        }
+
+        if (rowRedeemed != null) {
+            rowRedeemed.setOnClickListener(v -> {
+                HapticHelper.performClickHaptic(context, v);
+                sheetDialog.dismiss();
+                if (onRedeemedListener != null) {
+                    onRedeemedListener.onRedeemed(code, !isRedeemed);
+                }
+            });
+        }
+
+        if (rowExpired != null) {
+            rowExpired.setOnClickListener(v -> {
+                HapticHelper.performClickHaptic(context, v);
+                sheetDialog.dismiss();
+                if (onExpiredListener != null) {
+                    onExpiredListener.onToggleExpired(code);
+                }
+            });
+        }
+
+        if (rowShare != null) {
+            rowShare.setOnClickListener(v -> {
+                HapticHelper.performClickHaptic(context, v);
+                sheetDialog.dismiss();
+                String gName = gameType != null ? context.getString(gameType.getDisplayNameResId()) : "";
+                String shareText = context.getString(R.string.promocode_share_template, gName, code.getCode(), code.getRewardsDescription(context));
+                android.content.Intent shareIntent = new android.content.Intent(android.content.Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
+                context.startActivity(android.content.Intent.createChooser(shareIntent, context.getString(R.string.promocode_menu_share)));
+            });
+        }
+
+        sheetDialog.show();
+    }
+
     @Override
     public int getItemCount() {
         return items.size();
     }
 
-    static class PromocodeViewHolder extends RecyclerView.ViewHolder {
+    public static class PromocodeViewHolder extends RecyclerView.ViewHolder {
         final MaterialCardView cardPromocode;
         final TextView tvCode;
         final MaterialCardView cardExpiredBadge;
@@ -215,7 +273,7 @@ public class PromocodesAdapter extends RecyclerView.Adapter<PromocodesAdapter.Pr
         final MaterialButton btnCopy;
         final MaterialButton btnActivate;
 
-        PromocodeViewHolder(@NonNull View itemView) {
+        public PromocodeViewHolder(@NonNull View itemView) {
             super(itemView);
             cardPromocode = itemView.findViewById(R.id.card_promocode);
             tvCode = itemView.findViewById(R.id.tv_code);

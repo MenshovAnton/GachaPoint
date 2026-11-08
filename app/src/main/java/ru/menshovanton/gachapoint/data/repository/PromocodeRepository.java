@@ -3,6 +3,7 @@ package ru.menshovanton.gachapoint.data.repository;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -171,6 +172,10 @@ public class PromocodeRepository {
     }
 
     public int getUnviewedPromoCodesCount() {
+        return getUnviewedPromoCodesCount(null);
+    }
+
+    public int getUnviewedPromoCodesCount(@Nullable GameType gameType) {
         Preferences prefs = new Preferences(context);
         Set<String> viewed = prefs.getViewedPromocodes();
 
@@ -182,7 +187,7 @@ public class PromocodeRepository {
                 false
         );
 
-        List<PromoCode> allCodes = parsePromoCodes(json, -1);
+        List<PromoCode> allCodes = parsePromoCodes(json, gameType != null ? gameType.getCode() : -1);
         int unviewedCount = 0;
 
         try {
@@ -193,6 +198,9 @@ public class PromocodeRepository {
             }
 
             for (PromoCode code : allCodes) {
+                if (gameType != null && code.getGameType() != gameType.getCode()) {
+                    continue;
+                }
                 if (code.isActive() && !code.isPermanent()) {
                     PromocodeStatusEntity st = statusMap.get(code.getId());
                     boolean isRedeemed = st != null && st.isRedeemed;
@@ -207,6 +215,31 @@ public class PromocodeRepository {
         }
 
         return unviewedCount;
+    }
+
+    public void markPromocodesAsViewed(@NonNull GameType gameType) {
+        AppDatabase.getExecutor().execute(() -> {
+            try {
+                String json = JsonDataLoader.loadJsonData(
+                        context,
+                        DataSyncConfig.PROMOCODES_REMOTE_URL,
+                        DataSyncConfig.CACHE_PROMOCODES,
+                        DataSyncConfig.ASSET_PROMOCODES,
+                        false
+                );
+                List<PromoCode> allCodes = parsePromoCodes(json, gameType.getCode());
+                Set<String> ids = new HashSet<>();
+                for (PromoCode code : allCodes) {
+                    if (code.getGameType() == gameType.getCode()) {
+                        ids.add(code.getId());
+                        ids.add(code.getCode());
+                    }
+                }
+                new Preferences(context).markPromocodesAsViewed(ids);
+            } catch (Exception e) {
+                AppLogger.e("PromocodeRepository", "Error marking game promocodes as viewed", e);
+            }
+        });
     }
 
     public void markAllPromocodesAsViewed() {

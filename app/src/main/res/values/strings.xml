@@ -387,6 +387,14 @@
     <!-- Menu Screen -->
     <string name="menu_section_tools">Tools &amp; Services</string>
     <string name="menu_section_app">Application</string>
+    <string name="menu_section_community">Community</string>
+    <string name="menu_telegram_title">Telegram Channel</string>
+    <string name="menu_telegram_desc">News &amp; leaks</string>
+    <string name="menu_tiktok_title">TikTok</string>
+    <string name="menu_tiktok_desc">Short videos, guides &amp; tips</string>
+    <string name="menu_boosty_title">Support Project</string>
+    <string name="menu_boosty_desc">Boosty • Help support app development</string>
+    <string name="menu_boosty_badge">Boosty</string>
     <string name="menu_help_title">Help &amp; FAQ</string>
     <string name="menu_help_desc">Feature guide, gacha mechanics &amp; FAQ</string>
     <string name="menu_savings_title">Savings &amp; Targets</string>
@@ -696,11 +704,30 @@
     <string name="help_faq_privacy_summary">Local database without servers or account linking</string>
     <string name="help_faq_privacy_detail">• GachaPoint works completely offline with no network connections or telemetry.\n\n• No game accounts or credentials are required. All records stay solely on your phone.\n\n• Remember to periodically export a backup in Settings to safeguard your history.</string>
 
+    <string name="help_feature_promocodes_title">Promo Codes &amp; Rewards</string>
+    <string name="help_feature_promocodes_summary">Auto-sync, stream codes, and quick copy</string>
+    <string name="help_feature_promocodes_detail">• GachaPoint automatically syncs active promo codes from the open community repository.\n\n• Stream codes: temporary codes announced during official version update livestreams are marked with a purple «Stream» badge and expire within ~28 hours.\n\n• Tap a promo code to copy it to clipboard, or tap the external link icon to jump directly to the official redemption site.\n\n• Three-dots menu: mark codes as redeemed or expired, or share them with friends.</string>
+
+    <string name="help_feature_banners_title">Banners &amp; Chronicle Schedule</string>
+    <string name="help_feature_banners_summary">Phases, countdown timers, and rerun analytics</string>
+    <string name="help_feature_banners_detail">• Schedule tab: displays active, upcoming, and completed event banners across all supported games with exact countdown timers.\n\n• Rerun Tracker: helps you calculate how many days have elapsed since a character\'s last banner to better predict upcoming reruns.\n\n• Tapping a banner card opens the list of 5★ and 4★ featured characters and weapons.</string>
+
+    <string name="help_faq_sources_title">Data Sources &amp; Fan Disclaimer</string>
+    <string name="help_faq_sources_summary">Public wikis, official community posts, and open repository</string>
+    <string name="help_faq_sources_detail">• Promo codes, banner schedules, and item catalog entries are aggregated automatically from publicly available resources: Fandom MediaWiki, HoYoWiki, and official HoYoverse community announcements.\n\n• All game assets, character names, and icons are copyright of COGNOSPHERE PTE. LTD. and miHoYo Co., Ltd.\n\n• GachaPoint is an independent, non-commercial fan application and is not affiliated with or endorsed by HoYoverse.</string>
+
     <!-- URLs -->
     <string name="github_url" translatable="false">https://github.com/MenshovAnton/GachaPoint</string>
+    <string name="data_repo_url" translatable="false">https://github.com/menshovanton/GachaPoint-Data</string>
     <string name="tiktok_url" translatable="false">https://www.tiktok.com/@gachapoint_official</string>
     <string name="boosty_url" translatable="false">https://boosty.to/menshovanton/donate</string>
     <string name="telegram_url" translatable="false">https://t.me/GachaPoint_official</string>
+
+    <!-- About Sources -->
+    <string name="about_sources_title">Data Sources &amp; Automation</string>
+    <string name="about_sources_desc">Promo codes, banner schedules, and item catalog entries are automatically synchronized via open CI/CD automation from public community sources (Fandom MediaWiki, HoYoWiki) and official HoYoverse announcements. No game credentials or private tokens are ever required.</string>
+    <string name="about_data_repo_title">GachaPoint Data</string>
+    <string name="about_data_repo_desc">Open data &amp; automation repository</string>
 
     <!-- Express Onboarding -->
     <string name="onboarding_welcome_title">Your Gacha Companion</string>
@@ -750,4 +777,27 @@
     <string name="sync_status_error">Failed to fetch updates. Displaying cached data.</string>
     <string name="sync_status_success">Data updated successfully.</string>
     <string name="sync_status_up_to_date">Data is already up to date.</string>
+    <string name="sync_offline_notice">No internet connection. Displaying saved cached data.</string>
+    <string name="promocode_menu_redeemed">Mark as redeemed</string>
+    <string name="promocode_menu_unredeemed">Mark as unredeemed</string>
+    <string name="promocode_menu_report_expired">Report as expired</string>
+    <string name="promocode_menu_share">Share promo code</string>
+    <string name="promocode_share_template">Promo code for %1$s: %2$s (%3$s)</string>
+    <string name="settings_notif_categories_title">Notification Categories</string>
+    <string name="settings_notif_subscriptions">Subscriptions</string>
+    <string name="settings_notif_subscriptions_desc">Reminders about active 30-day card bonuses</string>
+    <string name="settings_notif_dailies">Daily Quests</string>
+    <string name="settings_notif_dailies_desc">Daily quest completion reminders</string>
+    <string name="settings_notif_promocodes">Promo Codes</string>
+    <string name="settings_notif_promocodes_desc">Livestream &amp; expiring promo codes alerts</string>
+    <string name="settings_notif_banners">Banners &amp; Events</string>
+    <string name="settings_notif_banners_desc">Start &amp; announcement reminders for featured banners</string>
+    <string name="settings_reset_data_title">Reset Application Data</string>
+    <string name="settings_reset_data_desc">Clear pulls history, calendar, savings goals and settings</string>
+    <string name="settings_reset_dialog_title">Reset all data?</string>
+    <string name="settings_reset_dialog_message">All local data (gacha pulls, subscription tracking, savings, promo statuses) will be permanently deleted. This action cannot be undone.</string>
+    <string name="settings_reset_confirm_btn">Reset Everything</string>
+    <string name="settings_reset_success_toast">Application data has been reset.</string>
+    <string name="settings_notif_perm_disabled_title">Notifications are disabled in system</string>
+    <string name="settings_notif_perm_disabled_desc">Tap to allow notifications so you don\'t miss stream codes and daily reminders</string>
 </resources>

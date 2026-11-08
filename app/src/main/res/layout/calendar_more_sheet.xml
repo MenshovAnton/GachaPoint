@@ -187,13 +187,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="70dp"
-                android:layout_marginEnd="16dp"
-                android:background="@color/divider_color" />
-
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>

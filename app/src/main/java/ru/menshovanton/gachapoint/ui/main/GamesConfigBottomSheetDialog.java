@@ -68,6 +68,15 @@ public class GamesConfigBottomSheetDialog {
                     }
                 }
 
+                List<GameType> ordered = new ArrayList<>();
+                for (GameType g : GameType.values()) {
+                    if (enabledGames.contains(g)) {
+                        ordered.add(g);
+                    }
+                }
+                enabledGames.clear();
+                enabledGames.addAll(ordered);
+
                 preferences.setEnabledGames(enabledGames);
                 if (onSaveOrDismiss != null) {
                     onSaveOrDismiss.run();
@@ -162,11 +171,11 @@ public class GamesConfigBottomSheetDialog {
             holder.switchGameEnabled.setOnCheckedChangeListener(null);
             holder.switchGameEnabled.setChecked(isEnabled);
             holder.switchGameEnabled.setOnCheckedChangeListener((btn, isChecked) -> {
-                if (btn.isPressed()) {
-                    listener.onGameToggled(game, isChecked, holder.switchGameEnabled);
-                    notifyDataSetChanged();
-                }
+                listener.onGameToggled(game, isChecked, holder.switchGameEnabled);
+                notifyDataSetChanged();
             });
+
+            holder.itemView.setOnClickListener(v -> holder.switchGameEnabled.toggle());
 
             holder.tvDefaultBadge.setVisibility(isDefault ? View.VISIBLE : View.GONE);
 

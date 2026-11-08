@@ -365,6 +365,14 @@
     <!-- Menu Screen -->
     <string name="menu_section_tools">Инструменты и сервисы</string>
     <string name="menu_section_app">Приложение</string>
+    <string name="menu_section_community">Сообщество</string>
+    <string name="menu_telegram_title">Telegram-канал</string>
+    <string name="menu_telegram_desc">Новости и инсайды</string>
+    <string name="menu_tiktok_title">TikTok</string>
+    <string name="menu_tiktok_desc">Короткие видео, гайды и новости</string>
+    <string name="menu_boosty_title">Поддержать проект</string>
+    <string name="menu_boosty_desc">Boosty • Помощь в развитии приложения</string>
+    <string name="menu_boosty_badge">Boosty</string>
     <string name="menu_help_title">Справка</string>
     <string name="menu_help_desc">Гайд по приложению, механики гачи и FAQ</string>
     <string name="menu_savings_title">Накопления и цели</string>
@@ -658,6 +666,18 @@
     <string name="help_faq_privacy_summary">Локальное хранение без серверов и аккаунтов</string>
     <string name="help_faq_privacy_detail">• GachaPoint работает полностью автономно без подключения к сторонним серверам.\n\n• В приложении нет учетных записей, авторизаций через игровые аккаунты и сбора личных данных. База данных хранится исключительно на вашем телефоне.\n\n• Регулярно делайте резервную копию в Настройках, чтобы сохранить прогресс при смене или сбросе устройства.</string>
 
+    <string name="help_feature_promocodes_title">Промокоды и награды</string>
+    <string name="help_feature_promocodes_summary">Автосинхронизация, стрим-коды и быстрое копирование</string>
+    <string name="help_feature_promocodes_detail">• GachaPoint автоматически синхронизирует актуальные промокоды из открытого репозитория сообщества.\n\n• Стрим-коды: временные промокоды с официальных презентаций обновлений помечаются фиолетовым бейджем «Стрим» и сгорают примерно через 28 часов.\n\n• Нажатие на карточку кода копирует его в буфер обмена, а иконка со стрелкой ведет на официальный сайт активации с уже предзаполненным кодом.\n\n• Меню «три точки»: отмечайте активированные коды, жалуйтесь на устаревшие или делитесь кодами с друзьями.</string>
+
+    <string name="help_feature_banners_title">Расписание баннеров и Хроника</string>
+    <string name="help_feature_banners_summary">Фазы, таймеры до окончания и аналитика реранов</string>
+    <string name="help_feature_banners_detail">• Вкладка «Расписание»: показывает текущие, анонсированные и прошедшие баннеры молитв/прыжков с точными таймерами обратного отсчета.\n\n• Трекер реранов: помогает отслеживать, сколько дней прошло с последнего появления персонажа в баннере, и прогнозировать будущие молитвы.\n\n• Нажатие на карточку баннера показывает состав 5★ и 4★ персонажей и оружия.</string>
+
+    <string name="help_faq_sources_title">Источники данных и дисклеймер</string>
+    <string name="help_faq_sources_summary">Открытые вики, официальные анонсы и фанатский статус</string>
+    <string name="help_faq_sources_detail">• Информация о промокодах, расписании баннеров и предметах каталога автоматически собирается из открытых общедоступных источников: Fandom MediaWiki, HoYoWiki и официальных постов HoYoverse.\n\n• Все права на игровые ассеты, имена персонажей и изображения принадлежат COGNOSPHERE PTE. LTD. и miHoYo Co., Ltd.\n\n• GachaPoint — независимое некоммерческое фанатское приложение, не связанное с HoYoverse и не одобренное правообладателями.</string>
+
     <!-- Express Onboarding -->
     <string name="onboarding_welcome_title">Твой компаньон по гачам</string>
     <string name="onboarding_welcome_desc">Копи крутки на любимых персонажей, забирай промокоды со стримов и планируй баннеры без лишней суеты.</string>
@@ -706,4 +726,31 @@
     <string name="sync_status_error">Не удалось получить обновления. Показаны сохранённые данные.</string>
     <string name="sync_status_success">Данные успешно обновлены.</string>
     <string name="sync_status_up_to_date">Данные уже актуальны.</string>
+    <string name="sync_offline_notice">Нет подключения к сети. Отображаются сохранённые данные.</string>
+    <string name="promocode_menu_redeemed">Отметить как использованный</string>
+    <string name="promocode_menu_unredeemed">Снять отметку об использовании</string>
+    <string name="promocode_menu_report_expired">Сообщить о неработающем коде</string>
+    <string name="promocode_menu_share">Поделиться промокодом</string>
+    <string name="promocode_share_template">Промокод для %1$s: %2$s (%3$s)</string>
+    <string name="settings_notif_categories_title">Категории уведомлений</string>
+    <string name="settings_notif_subscriptions">Подписки</string>
+    <string name="settings_notif_subscriptions_desc">Напоминания о ежедневных бонусах активной 30-дневной карты</string>
+    <string name="settings_notif_dailies">Ежедневные задания</string>
+    <string name="settings_notif_dailies_desc">Напоминания о выполнении дейликов</string>
+    <string name="settings_notif_promocodes">Промокоды</string>
+    <string name="settings_notif_promocodes_desc">Стрим-коды и предупреждения об истекающих промокодах</string>
+    <string name="settings_notif_banners">Баннеры и события</string>
+    <string name="settings_notif_banners_desc">Уведомления о старте и анонсе молитв / прыжков</string>
+    <string name="settings_reset_data_title">Сброс данных приложения</string>
+    <string name="settings_reset_data_desc">Очистить историю круток, календарь, цели и настройки</string>
+    <string name="settings_reset_dialog_title">Сбросить все данные?</string>
+    <string name="settings_reset_dialog_message">Все локальные данные (крутки, календарь, накопления, статусы кодов) будут безвозвратно удалены. Это действие нельзя отменить.</string>
+    <string name="settings_reset_confirm_btn">Сбросить всё</string>
+    <string name="settings_reset_success_toast">Данные приложения сброшены.</string>
+    <string name="about_sources_title">Источники данных и автоматизация</string>
+    <string name="about_sources_desc">Промокоды, расписания баннеров и справочник предметов автоматически синхронизируются через открытый CI/CD пайплайн из публичных источников сообщества (Fandom MediaWiki, HoYoWiki) и официальных анонсов HoYoverse. Приложение никогда не запрашивает учетные данные и токены.</string>
+    <string name="about_data_repo_title">GachaPoint Data</string>
+    <string name="about_data_repo_desc">Открытый репозиторий данных и автоматизации</string>
+    <string name="settings_notif_perm_disabled_title">Уведомления отключены в системе</string>
+    <string name="settings_notif_perm_disabled_desc">Нажмите, чтобы включить их в настройках и не пропускать промокоды и дейлики</string>
 </resources>

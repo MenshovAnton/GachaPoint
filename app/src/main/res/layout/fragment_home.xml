@@ -833,7 +833,7 @@
                             android:layout_height="22dp"
                             android:layout_marginStart="6dp"
                             android:contentDescription="@null"
-                            android:src="@drawable/icon_star"
+                            android:src="@drawable/icon_star_rounded"
                             app:layout_constrainedWidth="true"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/tv_pity_guarantee_badge"

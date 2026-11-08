@@ -22,6 +22,7 @@ public class InfoView extends Fragment {
     private ImageButton back;
 
     private View rowGithub;
+    private View rowDataRepo;
     private View rowTelegram;
     private View rowDonation;
     private View rowDeveloper;
@@ -37,6 +38,7 @@ public class InfoView extends Fragment {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
         back = view.findViewById(R.id.btn_back);
         rowGithub = view.findViewById(R.id.row_github);
+        rowDataRepo = view.findViewById(R.id.row_data_repo);
         rowTelegram = view.findViewById(R.id.row_telegram);
         rowDonation = view.findViewById(R.id.row_donation);
         rowDeveloper = view.findViewById(R.id.row_developer);
@@ -52,6 +54,9 @@ public class InfoView extends Fragment {
         back.setOnClickListener(v -> viewModel.onBackToMenuClicked());
         if (rowGithub != null) {
             rowGithub.setOnClickListener(v -> openUrl("https://github.com/MenshovAnton/GachaPoint/"));
+        }
+        if (rowDataRepo != null) {
+            rowDataRepo.setOnClickListener(v -> openUrl("https://github.com/menshovanton/GachaPoint-Data"));
         }
         if (rowTelegram != null) {
             rowTelegram.setOnClickListener(v -> openUrl("https://t.me/GachaPoint_official"));
@@ -83,6 +88,7 @@ public class InfoView extends Fragment {
         super.onDestroyView();
         back = null;
         rowGithub = null;
+        rowDataRepo = null;
         rowTelegram = null;
         rowDonation = null;
         rowDeveloper = null;

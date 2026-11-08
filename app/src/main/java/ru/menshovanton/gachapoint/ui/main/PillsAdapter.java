@@ -1,5 +1,6 @@
 package ru.menshovanton.gachapoint.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,7 @@ public class PillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private final List<PillItem> displayItems = new ArrayList<>();
+    private final java.util.Set<GameType> gamesWithBadge = new java.util.HashSet<>();
     private GameType selectedGame;
     private final OnGamePillClickListener listener;
     private final OnSettingsClickListener settingsListener;
@@ -137,6 +139,7 @@ public class PillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             if (!payloads.isEmpty()) {
                 pillHolder.textView.setSelected(game == selectedGame);
+                pillHolder.viewBadge.setVisibility(gamesWithBadge.contains(game) ? View.VISIBLE : View.GONE);
                 return;
             }
 
@@ -144,6 +147,7 @@ public class PillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (game != null) {
                 pillHolder.textView.setText(context.getString(game.getNameResId()));
                 pillHolder.textView.setSelected(game == selectedGame);
+                pillHolder.viewBadge.setVisibility(gamesWithBadge.contains(game) ? View.VISIBLE : View.GONE);
             }
 
             holder.itemView.setOnClickListener(v -> {
@@ -280,12 +284,23 @@ public class PillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         diffResult.dispatchUpdatesTo(this);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void setBadgeGames(@androidx.annotation.Nullable java.util.Set<GameType> games) {
+        gamesWithBadge.clear();
+        if (games != null) {
+            gamesWithBadge.addAll(games);
+        }
+        notifyDataSetChanged();
+    }
+
     public static class PillViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
+        public View viewBadge;
 
         public PillViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.tv_pill);
+            viewBadge = itemView.findViewById(R.id.view_pill_badge);
         }
     }
 

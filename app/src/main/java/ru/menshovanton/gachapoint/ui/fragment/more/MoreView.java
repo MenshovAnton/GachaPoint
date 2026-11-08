@@ -31,6 +31,9 @@ public class MoreView extends Fragment {
     private View rowBanners;
     private View badgeNewPromocodes;
     private View badgeNewBanners;
+    private View rowCommunityTelegram;
+    private View rowCommunityTiktok;
+    private View rowCommunityBoosty;
 
     public MoreView() {}
 
@@ -60,9 +63,27 @@ public class MoreView extends Fragment {
         rowBanners = view.findViewById(R.id.row_banners);
         badgeNewPromocodes = view.findViewById(R.id.badge_new_promocodes);
         badgeNewBanners = view.findViewById(R.id.badge_new_banners);
+        rowCommunityTelegram = view.findViewById(R.id.row_community_telegram);
+        rowCommunityTiktok = view.findViewById(R.id.row_community_tiktok);
+        rowCommunityBoosty = view.findViewById(R.id.row_community_boosty);
 
         if (rowSavings != null) {
             rowSavings.setOnClickListener(v -> viewModel.onSavingsButtonClicked());
+        }
+        if (rowCommunityTelegram != null) {
+            rowCommunityTelegram.setOnClickListener(v ->
+                    ru.menshovanton.gachapoint.ui.common.ChromeCustomTabsHelper.openUrl(
+                            requireContext(), getString(R.string.telegram_url)));
+        }
+        if (rowCommunityTiktok != null) {
+            rowCommunityTiktok.setOnClickListener(v ->
+                    ru.menshovanton.gachapoint.ui.common.ChromeCustomTabsHelper.openUrl(
+                            requireContext(), getString(R.string.tiktok_url)));
+        }
+        if (rowCommunityBoosty != null) {
+            rowCommunityBoosty.setOnClickListener(v ->
+                    ru.menshovanton.gachapoint.ui.common.ChromeCustomTabsHelper.openUrl(
+                            requireContext(), getString(R.string.boosty_url)));
         }
 
         return view;
@@ -194,5 +215,8 @@ public class MoreView extends Fragment {
         rowBanners = null;
         badgeNewPromocodes = null;
         badgeNewBanners = null;
+        rowCommunityTelegram = null;
+        rowCommunityTiktok = null;
+        rowCommunityBoosty = null;
     }
 }

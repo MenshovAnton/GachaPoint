@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="28dp">
+
+    <View
+        android:layout_width="@dimen/sheet_drag_handle_width"
+        android:layout_height="@dimen/sheet_drag_handle_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/sheet_drag_handle_margin_bottom"
+        android:background="@drawable/sheet_drag_handle" />
+
+    <TextView
+        android:id="@+id/tv_sheet_promocode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/genshin_font"
+        android:maxLines="1"
+        android:textColor="@color/text"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="GENSHINGIFT" />
+
+    <TextView
+        android:id="@+id/tv_sheet_rewards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="14dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        tools:text="Primogems x60, Adventurer's Experience x5" />
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.GachaPoint.Card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/row_toggle_redeemed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="13dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/badge_sheet_redeemed"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    app:cardBackgroundColor="@color/badge_green_bg"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_sheet_redeemed_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_check"
+                        app:tint="@color/checked" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/tv_sheet_redeemed_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="14dp"
+                    android:textColor="@color/text"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_redeemed_chevron"
+                    app:layout_constraintStart_toEndOf="@+id/badge_sheet_redeemed"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@string/promocode_menu_redeemed" />
+
+                <ImageView
+                    android:id="@+id/iv_redeemed_chevron"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/icon_right_arrow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/text_secondary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="66dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/divider_color" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/row_report_expired"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="13dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/badge_sheet_expired"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    app:cardBackgroundColor="@color/badge_red_bg"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_about"
+                        app:tint="@color/missed" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/tv_sheet_expired_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="14dp"
+                    android:text="@string/promocode_menu_report_expired"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_expired_chevron"
+                    app:layout_constraintStart_toEndOf="@+id/badge_sheet_expired"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_expired_chevron"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/icon_right_arrow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/text_secondary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="66dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/divider_color" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/row_share_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="13dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/badge_sheet_share"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    app:cardBackgroundColor="@color/badge_blue_bg"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_share"
+                        app:tint="@color/check" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/tv_sheet_share_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="14dp"
+                    android:text="@string/promocode_menu_share"
+                    android:textColor="@color/text"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_share_chevron"
+                    app:layout_constraintStart_toEndOf="@+id/badge_sheet_share"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_share_chevron"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/icon_right_arrow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/text_secondary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

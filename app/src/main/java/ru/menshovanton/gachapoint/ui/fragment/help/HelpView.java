@@ -1,19 +1,21 @@
 package ru.menshovanton.gachapoint.ui.fragment.help;
 
 import android.os.Bundle;
-import android.transition.AutoTransition;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
 
@@ -21,7 +23,7 @@ public class HelpView extends Fragment {
 
     private HelpViewModel viewModel;
     private ImageButton back;
-    private ViewGroup containerLayout;
+    private RecyclerView rvHelpSections;
 
     public HelpView() {}
 
@@ -32,73 +34,8 @@ public class HelpView extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_help, container, false);
-
         back = view.findViewById(R.id.btn_back);
-        containerLayout = view.findViewById(R.id.layout_help_container);
-
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_pulls),
-                view.findViewById(R.id.content_help_pulls),
-                view.findViewById(R.id.iv_chevron_pulls)
-        );
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_widgets),
-                view.findViewById(R.id.content_help_widgets),
-                view.findViewById(R.id.iv_chevron_widgets)
-        );
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_calendar),
-                view.findViewById(R.id.content_help_calendar),
-                view.findViewById(R.id.iv_chevron_calendar)
-        );
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_backup),
-                view.findViewById(R.id.content_help_backup),
-                view.findViewById(R.id.iv_chevron_backup)
-        );
-
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_pity),
-                view.findViewById(R.id.content_help_pity),
-                view.findViewById(R.id.iv_chevron_pity)
-        );
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_5050),
-                view.findViewById(R.id.content_help_5050),
-                view.findViewById(R.id.iv_chevron_5050)
-        );
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_weapon),
-                view.findViewById(R.id.content_help_weapon),
-                view.findViewById(R.id.iv_chevron_weapon)
-        );
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_radiance),
-                view.findViewById(R.id.content_help_radiance),
-                view.findViewById(R.id.iv_chevron_radiance)
-        );
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_hi3),
-                view.findViewById(R.id.content_help_hi3),
-                view.findViewById(R.id.iv_chevron_hi3)
-        );
-
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_savings),
-                view.findViewById(R.id.content_help_savings),
-                view.findViewById(R.id.iv_chevron_savings)
-        );
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_stats),
-                view.findViewById(R.id.content_help_stats),
-                view.findViewById(R.id.iv_chevron_stats)
-        );
-        setupCollapsibleCard(
-                view.findViewById(R.id.header_help_privacy),
-                view.findViewById(R.id.content_help_privacy),
-                view.findViewById(R.id.iv_chevron_privacy)
-        );
-
+        rvHelpSections = view.findViewById(R.id.rv_help_sections);
         return view;
     }
 
@@ -112,7 +49,32 @@ public class HelpView extends Fragment {
             back.setOnClickListener(v -> viewModel.onBackToMenuClicked());
         }
 
+        setupRecyclerView();
         observeViewModel();
+    }
+
+    private void setupRecyclerView() {
+        if (rvHelpSections == null) return;
+
+        List<HelpSection> sections = new ArrayList<>();
+        sections.add(new HelpSection(R.string.help_feature_pulls_title, R.string.help_feature_pulls_detail, R.drawable.icon_journal));
+        sections.add(new HelpSection(R.string.help_mech_pity_title, R.string.help_mech_pity_detail, R.drawable.icon_calculator));
+        sections.add(new HelpSection(R.string.help_mech_5050_title, R.string.help_mech_5050_detail, R.drawable.icon_star_rounded));
+        sections.add(new HelpSection(R.string.help_mech_weapon_title, R.string.help_mech_weapon_detail, R.drawable.icon_star));
+        sections.add(new HelpSection(R.string.help_mech_radiance_title, R.string.help_mech_radiance_detail, R.drawable.icon_star_rounded));
+        sections.add(new HelpSection(R.string.help_mech_hi3_title, R.string.help_mech_hi3_detail, R.drawable.icon_star));
+        sections.add(new HelpSection(R.string.help_feature_calendar_title, R.string.help_feature_calendar_detail, R.drawable.icon_calendar));
+        sections.add(new HelpSection(R.string.help_faq_savings_title, R.string.help_faq_savings_detail, R.drawable.icon_piggy_bank));
+        sections.add(new HelpSection(R.string.help_feature_promocodes_title, R.string.help_feature_promocodes_detail, R.drawable.icon_promocode));
+        sections.add(new HelpSection(R.string.help_feature_banners_title, R.string.help_feature_banners_detail, R.drawable.icon_notification));
+        sections.add(new HelpSection(R.string.help_faq_stats_title, R.string.help_faq_stats_detail, R.drawable.icon_statistics));
+        sections.add(new HelpSection(R.string.help_feature_widgets_title, R.string.help_feature_widgets_detail, R.drawable.icon_home));
+        sections.add(new HelpSection(R.string.help_feature_backup_title, R.string.help_feature_backup_detail, R.drawable.icon_backup));
+        sections.add(new HelpSection(R.string.help_faq_privacy_title, R.string.help_faq_privacy_detail, R.drawable.icon_about));
+        sections.add(new HelpSection(R.string.help_faq_sources_title, R.string.help_faq_sources_detail, R.drawable.icon_help));
+
+        rvHelpSections.setLayoutManager(new LinearLayoutManager(requireContext()));
+        rvHelpSections.setAdapter(new HelpAdapter(sections));
     }
 
     private void observeViewModel() {
@@ -120,36 +82,13 @@ public class HelpView extends Fragment {
                 NavHostFragment.findNavController(this).popBackStack());
     }
 
-    private void setupCollapsibleCard(View header, View content, ImageView chevron) {
-        if (header == null || content == null) return;
-
-        header.setOnClickListener(v -> {
-            boolean isExpanded = content.getVisibility() == View.VISIBLE;
-
-            if (containerLayout != null) {
-                AutoTransition transition = new AutoTransition();
-                transition.setDuration(200);
-                TransitionManager.beginDelayedTransition(containerLayout, transition);
-            }
-
-            if (isExpanded) {
-                content.setVisibility(View.GONE);
-                if (chevron != null) {
-                    chevron.animate().rotation(0f).setDuration(200).start();
-                }
-            } else {
-                content.setVisibility(View.VISIBLE);
-                if (chevron != null) {
-                    chevron.animate().rotation(180f).setDuration(200).start();
-                }
-            }
-        });
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (rvHelpSections != null) {
+            rvHelpSections.setAdapter(null);
+            rvHelpSections = null;
+        }
         back = null;
-        containerLayout = null;
     }
 }

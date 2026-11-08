@@ -230,10 +230,9 @@ public class PiggyBankView extends Fragment {
                 viewModel.setGameType(monoGame);
                 updateGameAppearance(monoGame);
             }
-        } else {
-            if (pillsAdapter != null) {
-                pillsAdapter.updateData(enabled, mainActivityView.getSubType());
-            }
+        }
+        if (pillsAdapter != null) {
+            pillsAdapter.updateData(enabled, mainActivityView.getSubType());
         }
     }
 

@@ -959,7 +959,7 @@
         android:layout_marginBottom="20dp"
         android:contentDescription="@string/a11y_btn_share"
         android:src="@drawable/icon_share"
-        app:backgroundTint="@color/check"
+        app:backgroundTint="@color/accent"
         app:tint="@color/white"
         app:elevation="4dp" />
 

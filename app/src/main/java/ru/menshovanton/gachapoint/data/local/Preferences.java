@@ -66,11 +66,8 @@ public class Preferences {
         }
         if (list.isEmpty()) {
             list.addAll(Arrays.asList(GameType.values()));
-        } else if (!settings.getBoolean(KEY_HI3_DEFAULT_ADDED, false)) {
-            settings.edit().putBoolean(KEY_HI3_DEFAULT_ADDED, true).apply();
-            if (!list.contains(GameType.HI3)) {
-                list.add(GameType.HI3);
-                setEnabledGames(list);
+            if (!settings.getBoolean(KEY_HI3_DEFAULT_ADDED, false)) {
+                settings.edit().putBoolean(KEY_HI3_DEFAULT_ADDED, true).apply();
             }
         }
         return list;
@@ -85,7 +82,10 @@ public class Preferences {
             if (i > 0) sb.append(",");
             sb.append(games.get(i).getCode());
         }
-        settings.edit().putString(ENABLED_GAMES, sb.toString()).apply();
+        settings.edit()
+                .putString(ENABLED_GAMES, sb.toString())
+                .putBoolean(KEY_HI3_DEFAULT_ADDED, true)
+                .apply();
     }
 
     public boolean isGameEnabled(GameType gameType) {
@@ -339,6 +339,43 @@ public class Preferences {
         settings.edit().putBoolean(PREF_BANNER_ACTIVE + bannerId, true).apply();
     }
 
+    public static final String NOTIFY_SUBSCRIPTIONS = "notify_subscriptions";
+    public static final String NOTIFY_DAILIES = "notify_dailies";
+    public static final String NOTIFY_PROMOCODES = "notify_promocodes";
+    public static final String NOTIFY_BANNERS = "notify_banners";
+
+    public boolean isNotifySubscriptionsEnabled() {
+        return getBooleanPreference(NOTIFY_SUBSCRIPTIONS, true);
+    }
+
+    public void setNotifySubscriptionsEnabled(boolean enabled) {
+        saveBooleanPreference(NOTIFY_SUBSCRIPTIONS, enabled);
+    }
+
+    public boolean isNotifyDailiesEnabled() {
+        return getBooleanPreference(NOTIFY_DAILIES, true);
+    }
+
+    public void setNotifyDailiesEnabled(boolean enabled) {
+        saveBooleanPreference(NOTIFY_DAILIES, enabled);
+    }
+
+    public boolean isNotifyPromocodesEnabled() {
+        return getBooleanPreference(NOTIFY_PROMOCODES, true);
+    }
+
+    public void setNotifyPromocodesEnabled(boolean enabled) {
+        saveBooleanPreference(NOTIFY_PROMOCODES, enabled);
+    }
+
+    public boolean isNotifyBannersEnabled() {
+        return getBooleanPreference(NOTIFY_BANNERS, true);
+    }
+
+    public void setNotifyBannersEnabled(boolean enabled) {
+        saveBooleanPreference(NOTIFY_BANNERS, enabled);
+    }
+
     public static final String ONBOARDING_COMPLETED = "onboarding_completed";
 
     public boolean isOnboardingCompleted() {
@@ -354,5 +391,42 @@ public class Preferences {
 
     public void setOnboardingCompleted(boolean completed) {
         saveBooleanPreference(ONBOARDING_COMPLETED, completed);
+    }
+
+    public void resetUserData() {
+        int theme = getIntPreference(APP_THEME);
+        String lang = getStringPreference(APP_LANGUAGE, "sys");
+        boolean vibro = getBooleanPreference(VIBRATION_MODE, true);
+        boolean allowNotif = getBooleanPreference(ALLOW_NOTIFICATIONS, true);
+        int alarmH = getIntPreference(ALARM_HOURS);
+        int alarmM = getIntPreference(ALARM_MINUTES);
+        String enabledGames = getStringPreference(ENABLED_GAMES, "");
+        int defGame = getIntPreference(DEFAULT_GAME);
+        boolean notifSubs = isNotifySubscriptionsEnabled();
+        boolean notifDailies = isNotifyDailiesEnabled();
+        boolean notifPromos = isNotifyPromocodesEnabled();
+        boolean notifBanners = isNotifyBannersEnabled();
+        boolean onboardingDone = isOnboardingCompleted();
+
+        settings.edit().clear().apply();
+
+        saveIntPreference(APP_THEME, theme);
+        saveStringPreference(APP_LANGUAGE, lang);
+        saveBooleanPreference(VIBRATION_MODE, vibro);
+        saveBooleanPreference(ALLOW_NOTIFICATIONS, allowNotif);
+        saveIntPreference(ALARM_HOURS, alarmH);
+        saveIntPreference(ALARM_MINUTES, alarmM);
+        if (!enabledGames.isEmpty()) {
+            saveStringPreference(ENABLED_GAMES, enabledGames);
+        }
+        saveIntPreference(DEFAULT_GAME, defGame);
+        setNotifySubscriptionsEnabled(notifSubs);
+        setNotifyDailiesEnabled(notifDailies);
+        setNotifyPromocodesEnabled(notifPromos);
+        setNotifyBannersEnabled(notifBanners);
+        setOnboardingCompleted(onboardingDone);
+        saveBooleanPreference(KEY_LEGACY_DATA_SYNCED, true);
+        saveBooleanPreference(KEY_HI3_DEFAULT_ADDED, true);
+        saveBooleanPreference("savings_migrated_to_db", true);
     }
 }

@@ -124,6 +124,8 @@ public class JournalView extends Fragment {
 
     private PullsAdapter pullsAdapter;
     private String lastLoadedBannerKey = null;
+    private GameType lastLoadedGameType = null;
+    private boolean isPityUpdatePending = false;
     private boolean isFirstLaunch = true;
 
     public JournalView() {}
@@ -275,9 +277,10 @@ public class JournalView extends Fragment {
                 viewModel.setGameType(monoGame);
                 updateBannerSelector(monoGame);
             }
-        } else {
-            if (pillsAdapter != null) {
-                pillsAdapter.updateData(enabled, mainActivityView.getSubType());
+        }
+        if (pillsAdapter != null) {
+            pillsAdapter.updateData(enabled, mainActivityView.getSubType());
+            if (isMultiGame) {
                 int pos = pillsAdapter.getPositionForGame(mainActivityView.getSubType());
                 if (pos != -1) {
                     centerPositionInstantly(pos);
@@ -559,6 +562,9 @@ public class JournalView extends Fragment {
         tvLabel4Star = null;
         progressPity4Star = null;
         pullsAdapter = null;
+        lastLoadedBannerKey = null;
+        lastLoadedGameType = null;
+        isPityUpdatePending = false;
         super.onDestroyView();
     }
 
@@ -619,12 +625,20 @@ public class JournalView extends Fragment {
     }
 
     private void updateDashboardLimits() {
-        BannerInfo bannerInfo = viewModel.getCurrentBannerInfo();
-        if (bannerInfo != null) {
-            progressPity5Star.setMax(bannerInfo.getMaxPity5Star());
-            progressPity4Star.setMax(bannerInfo.getMaxPity4Star());
+        schedulePityUiUpdate();
+    }
+
+    private void schedulePityUiUpdate() {
+        if (isPityUpdatePending) return;
+        if (getView() == null) {
+            updatePityTexts();
+            return;
         }
-        updatePityTexts();
+        isPityUpdatePending = true;
+        getView().post(() -> {
+            isPityUpdatePending = false;
+            updatePityTexts();
+        });
     }
 
     @SuppressLint("SetTextI18n")
@@ -714,8 +728,11 @@ public class JournalView extends Fragment {
             if (pulls == null) return;
             boolean isEmpty = pulls.isEmpty();
             String currentBannerKey = viewModel.getCurrentBannerType();
+            GameType currentGameType = viewModel.getCurrentGameType();
             boolean bannerChanged = !Objects.equals(lastLoadedBannerKey, currentBannerKey);
+            boolean gameChanged = (lastLoadedGameType != null && lastLoadedGameType != currentGameType);
             lastLoadedBannerKey = currentBannerKey;
+            lastLoadedGameType = currentGameType;
             int previousSize = pullsAdapter.getItemCount();
 
             pullsAdapter.setCurrentGameType(viewModel.getCurrentGameType());
@@ -742,7 +759,7 @@ public class JournalView extends Fragment {
                     if (recyclerView.getVisibility() != View.VISIBLE) {
                         crossFadeViews(emptyView, recyclerView);
                         recyclerView.scheduleLayoutAnimation();
-                    } else if (bannerChanged) {
+                    } else if (bannerChanged || gameChanged) {
                         recyclerView.scheduleLayoutAnimation();
                     }
                 }
@@ -762,7 +779,7 @@ public class JournalView extends Fragment {
                     });
                 }
 
-                if (!isEmpty && (newList.size() > previousSize || bannerChanged)) {
+                if (!isEmpty && (newList.size() > previousSize || bannerChanged || gameChanged)) {
                     recyclerView.post(() -> {
                         LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
                         if (lm != null) {
@@ -773,9 +790,9 @@ public class JournalView extends Fragment {
             });
         });
 
-        viewModel.getPity5StarLiveData().observe(getViewLifecycleOwner(), pity5 -> updatePityTexts());
-        viewModel.getPity4StarLiveData().observe(getViewLifecycleOwner(), pity4 -> updatePityTexts());
-        viewModel.getIsGuaranteedLiveData().observe(getViewLifecycleOwner(), guaranteed -> updatePityTexts());
+        viewModel.getPity5StarLiveData().observe(getViewLifecycleOwner(), pity5 -> schedulePityUiUpdate());
+        viewModel.getPity4StarLiveData().observe(getViewLifecycleOwner(), pity4 -> schedulePityUiUpdate());
+        viewModel.getIsGuaranteedLiveData().observe(getViewLifecycleOwner(), guaranteed -> schedulePityUiUpdate());
 
         viewModel.getCurrentBannerTypeLiveData().observe(getViewLifecycleOwner(), bannerKey -> {
             String label = viewModel.getCurrentGameType().getBannerLabel(requireContext(), bannerKey);
@@ -1579,9 +1596,8 @@ public class JournalView extends Fragment {
         }
 
         if (btnPickBannerDate != null) {
-            btnPickBannerDate.setOnClickListener(v -> {
-                showBannerDatePickerDialog(currentGameType, selectedDate, selectedBannerSchedule, editDate, displayFormatter, populateChips, toggleRarity);
-            });
+            btnPickBannerDate.setOnClickListener(v ->
+                    showBannerDatePickerDialog(currentGameType, selectedDate, selectedBannerSchedule, editDate, displayFormatter, populateChips, toggleRarity));
         }
 
         btnClose.setOnClickListener(v -> dialog.dismiss());

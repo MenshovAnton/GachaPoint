@@ -185,11 +185,11 @@ public final class DailyNotificationWorker {
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-            if (!pendingSubGames.isEmpty()) {
+            if (!pendingSubGames.isEmpty() && preferences.isNotifySubscriptionsEnabled()) {
                 sendSubscriptionNotification(context, notificationManager, pendingSubGames);
             }
 
-            if (!pendingDailyGames.isEmpty()) {
+            if (!pendingDailyGames.isEmpty() && preferences.isNotifyDailiesEnabled()) {
                 sendDailyTasksNotification(context, notificationManager, pendingDailyGames);
             }
 

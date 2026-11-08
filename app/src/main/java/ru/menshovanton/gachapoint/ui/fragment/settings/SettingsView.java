@@ -48,6 +48,8 @@ public class SettingsView extends Fragment {
     private View rowSelectTime;
     private View rowNotificationChannels;
     private View dividerNotificationChannels;
+    private View cardNotifPermissionWarning;
+    private View dividerPermWarning;
     private View rowHomeWidgets;
     private View rowOnboarding;
     private View rowConfigureGames;
@@ -61,6 +63,11 @@ public class SettingsView extends Fragment {
     private ImageButton back;
 
     private MaterialSwitch notificationsSwitch;
+    private MaterialSwitch switchNotifSubs;
+    private MaterialSwitch switchNotifDailies;
+    private MaterialSwitch switchNotifPromos;
+    private MaterialSwitch switchNotifBanners;
+    private Button btnResetData;
 
     private MainActivityView mainActivityView;
     private SettingsViewModel viewModel;
@@ -104,10 +111,16 @@ public class SettingsView extends Fragment {
 
         mainActivityView = (MainActivityView) getActivity();
         notificationsSwitch = view.findViewById(R.id.sm_notification_switch);
+        switchNotifSubs = view.findViewById(R.id.switch_notif_subs);
+        switchNotifDailies = view.findViewById(R.id.switch_notif_dailies);
+        switchNotifPromos = view.findViewById(R.id.switch_notif_promos);
+        switchNotifBanners = view.findViewById(R.id.switch_notif_banners);
         timeChip = view.findViewById(R.id.btn_time_chip);
         rowSelectTime = view.findViewById(R.id.row_select_time);
         rowNotificationChannels = view.findViewById(R.id.row_notification_channels);
         dividerNotificationChannels = view.findViewById(R.id.divider_notification_channels);
+        cardNotifPermissionWarning = view.findViewById(R.id.card_notif_permission_warning);
+        dividerPermWarning = view.findViewById(R.id.divider_perm_warning);
         rowHomeWidgets = view.findViewById(R.id.row_home_widgets);
         rowOnboarding = view.findViewById(R.id.row_onboarding);
         rowConfigureGames = view.findViewById(R.id.row_configure_games);
@@ -116,6 +129,7 @@ public class SettingsView extends Fragment {
         dbImportButton = view.findViewById(R.id.btn_import_database);
         dbExportButton = view.findViewById(R.id.btn_export_database);
         btnClearCache = view.findViewById(R.id.btn_clear_cache);
+        btnResetData = view.findViewById(R.id.btn_reset_data);
         tvCacheDesc = view.findViewById(R.id.tv_cache_desc);
         back = view.findViewById(R.id.btn_back);
         themeSelector = view.findViewById(R.id.mac_theme_selector);
@@ -147,6 +161,23 @@ public class SettingsView extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        checkNotificationPermission();
+    }
+
+    private void checkNotificationPermission() {
+        if (getContext() == null) return;
+        boolean enabled = androidx.core.app.NotificationManagerCompat.from(requireContext()).areNotificationsEnabled();
+        if (cardNotifPermissionWarning != null) {
+            cardNotifPermissionWarning.setVisibility(enabled ? View.GONE : View.VISIBLE);
+        }
+        if (dividerPermWarning != null) {
+            dividerPermWarning.setVisibility(enabled ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         if (themeSelector != null) {
             themeSelector.dismissDropDown();
@@ -159,10 +190,16 @@ public class SettingsView extends Fragment {
             languageSelector = null;
         }
         notificationsSwitch = null;
+        switchNotifSubs = null;
+        switchNotifDailies = null;
+        switchNotifPromos = null;
+        switchNotifBanners = null;
         timeChip = null;
         rowSelectTime = null;
         rowNotificationChannels = null;
         dividerNotificationChannels = null;
+        cardNotifPermissionWarning = null;
+        dividerPermWarning = null;
         rowHomeWidgets = null;
         rowOnboarding = null;
         rowConfigureGames = null;
@@ -171,6 +208,7 @@ public class SettingsView extends Fragment {
         dbImportButton = null;
         dbExportButton = null;
         btnClearCache = null;
+        btnResetData = null;
         tvCacheDesc = null;
         back = null;
         vibrationSwitch = null;
@@ -191,12 +229,53 @@ public class SettingsView extends Fragment {
             }
         });
 
+        if (switchNotifSubs != null) {
+            switchNotifSubs.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (buttonView.isPressed()) {
+                    viewModel.onNotifySubscriptionsChanged(isChecked);
+                }
+            });
+        }
+        if (switchNotifDailies != null) {
+            switchNotifDailies.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (buttonView.isPressed()) {
+                    viewModel.onNotifyDailiesChanged(isChecked);
+                }
+            });
+        }
+        if (switchNotifPromos != null) {
+            switchNotifPromos.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (buttonView.isPressed()) {
+                    viewModel.onNotifyPromocodesChanged(isChecked);
+                }
+            });
+        }
+        if (switchNotifBanners != null) {
+            switchNotifBanners.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (buttonView.isPressed()) {
+                    viewModel.onNotifyBannersChanged(isChecked);
+                }
+            });
+        }
+
         View.OnClickListener timeClickListener = v -> showTimePicker();
         if (timeChip != null) {
             timeChip.setOnClickListener(timeClickListener);
         }
         if (rowSelectTime != null) {
             rowSelectTime.setOnClickListener(timeClickListener);
+        }
+
+        if (cardNotifPermissionWarning != null) {
+            cardNotifPermissionWarning.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().getPackageName());
+                    startActivity(intent);
+                } catch (Exception e) {
+                    AppLogger.e("SettingsView", "Could not open system notification settings", e);
+                }
+            });
         }
 
         if (rowNotificationChannels != null) {
@@ -254,6 +333,9 @@ public class SettingsView extends Fragment {
         dbImportButton.setOnClickListener(v -> viewModel.onImportDatabaseClicked());
         if (btnClearCache != null) {
             btnClearCache.setOnClickListener(v -> showClearCacheDialog());
+        }
+        if (btnResetData != null) {
+            btnResetData.setOnClickListener(v -> showResetDataDialog());
         }
         back.setOnClickListener(view -> viewModel.onBackToMenuClicked());
     }
@@ -368,6 +450,30 @@ public class SettingsView extends Fragment {
             }
         });
 
+        viewModel.getNotifySubscriptions().observe(getViewLifecycleOwner(), enabled -> {
+            if (enabled != null && switchNotifSubs != null) {
+                switchNotifSubs.setChecked(enabled);
+            }
+        });
+
+        viewModel.getNotifyDailies().observe(getViewLifecycleOwner(), enabled -> {
+            if (enabled != null && switchNotifDailies != null) {
+                switchNotifDailies.setChecked(enabled);
+            }
+        });
+
+        viewModel.getNotifyPromocodes().observe(getViewLifecycleOwner(), enabled -> {
+            if (enabled != null && switchNotifPromos != null) {
+                switchNotifPromos.setChecked(enabled);
+            }
+        });
+
+        viewModel.getNotifyBanners().observe(getViewLifecycleOwner(), enabled -> {
+            if (enabled != null && switchNotifBanners != null) {
+                switchNotifBanners.setChecked(enabled);
+            }
+        });
+
         viewModel.getAlarmHour().observe(getViewLifecycleOwner(), hour -> updateAlarmTimeDisplay());
 
         viewModel.getAlarmMinute().observe(getViewLifecycleOwner(), minute -> updateAlarmTimeDisplay());
@@ -416,6 +522,18 @@ public class SettingsView extends Fragment {
                 .setMessage(R.string.settings_cache_dialog_msg)
                 .setPositiveButton(R.string.settings_cache_clear_button, (dialog, which) -> {
                     viewModel.clearAppCache();
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    private void showResetDataDialog() {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog_GachaPoint_AlertDialog)
+                .setTitle(R.string.settings_reset_dialog_title)
+                .setMessage(R.string.settings_reset_dialog_message)
+                .setPositiveButton(R.string.settings_reset_confirm_btn, (dialog, which) -> {
+                    viewModel.resetAllData();
                     dialog.dismiss();
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())

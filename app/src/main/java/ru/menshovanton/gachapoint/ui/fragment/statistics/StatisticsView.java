@@ -288,10 +288,9 @@ public class StatisticsView extends Fragment {
                 isHistoryExpanded = false;
                 viewModel.setGameType(monoGame);
             }
-        } else {
-            if (pillsAdapter != null) {
-                pillsAdapter.updateData(enabled, mainActivityView.getSubType());
-            }
+        }
+        if (pillsAdapter != null) {
+            pillsAdapter.updateData(enabled, mainActivityView.getSubType());
         }
     }
 

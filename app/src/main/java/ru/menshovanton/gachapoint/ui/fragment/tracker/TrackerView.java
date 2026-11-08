@@ -695,9 +695,10 @@ public class TrackerView extends Fragment {
             if (viewModel != null && viewModel.getCurrentGameType() != monoGame) {
                 viewModel.setGameType(monoGame);
             }
-        } else {
-            if (pillsAdapter != null) {
-                pillsAdapter.updateData(enabled, mainActivityView.getSubType());
+        }
+        if (pillsAdapter != null) {
+            pillsAdapter.updateData(enabled, mainActivityView.getSubType());
+            if (isMultiGame) {
                 int pos = pillsAdapter.getPositionForGame(mainActivityView.getSubType());
                 if (pos != -1) {
                     centerPositionInstantly(pos);

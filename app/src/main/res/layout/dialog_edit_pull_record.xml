@@ -437,7 +437,7 @@
                 android:insetBottom="0dp"
                 android:padding="0dp"
                 app:cornerRadius="14dp"
-                app:icon="@drawable/icon_star"
+                app:icon="@drawable/icon_star_rounded"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
                 app:iconSize="22dp"
