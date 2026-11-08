@@ -67,6 +67,10 @@ public class SettingsView extends Fragment {
     private MaterialSwitch switchNotifDailies;
     private MaterialSwitch switchNotifPromos;
     private MaterialSwitch switchNotifBanners;
+    private View rowNotifSubs;
+    private View rowNotifDailies;
+    private View rowNotifPromos;
+    private View rowNotifBanners;
     private Button btnResetData;
 
     private MainActivityView mainActivityView;
@@ -115,6 +119,10 @@ public class SettingsView extends Fragment {
         switchNotifDailies = view.findViewById(R.id.switch_notif_dailies);
         switchNotifPromos = view.findViewById(R.id.switch_notif_promos);
         switchNotifBanners = view.findViewById(R.id.switch_notif_banners);
+        rowNotifSubs = view.findViewById(R.id.row_notif_subs);
+        rowNotifDailies = view.findViewById(R.id.row_notif_dailies);
+        rowNotifPromos = view.findViewById(R.id.row_notif_promos);
+        rowNotifBanners = view.findViewById(R.id.row_notif_banners);
         timeChip = view.findViewById(R.id.btn_time_chip);
         rowSelectTime = view.findViewById(R.id.row_select_time);
         rowNotificationChannels = view.findViewById(R.id.row_notification_channels);
@@ -163,17 +171,56 @@ public class SettingsView extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        checkNotificationPermission();
+        updateNotificationControlsState();
     }
 
-    private void checkNotificationPermission() {
+    private void updateNotificationControlsState() {
         if (getContext() == null) return;
-        boolean enabled = androidx.core.app.NotificationManagerCompat.from(requireContext()).areNotificationsEnabled();
+        boolean systemEnabled = androidx.core.app.NotificationManagerCompat.from(requireContext()).areNotificationsEnabled();
+        boolean appEnabled = Boolean.TRUE.equals(viewModel.getNotificationsEnabled().getValue());
+
         if (cardNotifPermissionWarning != null) {
-            cardNotifPermissionWarning.setVisibility(enabled ? View.GONE : View.VISIBLE);
+            cardNotifPermissionWarning.setVisibility(systemEnabled ? View.GONE : View.VISIBLE);
         }
         if (dividerPermWarning != null) {
-            dividerPermWarning.setVisibility(enabled ? View.GONE : View.VISIBLE);
+            dividerPermWarning.setVisibility(systemEnabled ? View.GONE : View.VISIBLE);
+        }
+
+        if (notificationsSwitch != null) {
+            notificationsSwitch.setEnabled(systemEnabled);
+            notificationsSwitch.setAlpha(systemEnabled ? 1.0f : 0.4f);
+        }
+
+        boolean controlsEnabled = systemEnabled && appEnabled;
+        float alpha = controlsEnabled ? 1.0f : 0.4f;
+
+        if (rowSelectTime != null) {
+            rowSelectTime.setEnabled(controlsEnabled);
+            rowSelectTime.setAlpha(alpha);
+        }
+        if (timeChip != null) {
+            timeChip.setEnabled(controlsEnabled);
+        }
+
+        View[] rows = {rowNotifSubs, rowNotifDailies, rowNotifPromos, rowNotifBanners};
+        MaterialSwitch[] switches = {
+                switchNotifSubs, switchNotifDailies, switchNotifPromos, switchNotifBanners
+        };
+        for (View r : rows) {
+            if (r != null) {
+                r.setEnabled(controlsEnabled);
+                r.setAlpha(alpha);
+            }
+        }
+        for (MaterialSwitch s : switches) {
+            if (s != null) {
+                s.setEnabled(controlsEnabled);
+            }
+        }
+
+        if (rowNotificationChannels != null) {
+            rowNotificationChannels.setEnabled(systemEnabled);
+            rowNotificationChannels.setAlpha(systemEnabled ? 1.0f : 0.4f);
         }
     }
 
@@ -194,6 +241,10 @@ public class SettingsView extends Fragment {
         switchNotifDailies = null;
         switchNotifPromos = null;
         switchNotifBanners = null;
+        rowNotifSubs = null;
+        rowNotifDailies = null;
+        rowNotifPromos = null;
+        rowNotifBanners = null;
         timeChip = null;
         rowSelectTime = null;
         rowNotificationChannels = null;
@@ -226,6 +277,7 @@ public class SettingsView extends Fragment {
         notificationsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (buttonView.isPressed()) {
                 viewModel.onNotificationsChanged(isChecked);
+                updateNotificationControlsState();
             }
         });
 
@@ -254,6 +306,39 @@ public class SettingsView extends Fragment {
             switchNotifBanners.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (buttonView.isPressed()) {
                     viewModel.onNotifyBannersChanged(isChecked);
+                }
+            });
+        }
+
+        if (rowNotifSubs != null) {
+            rowNotifSubs.setOnClickListener(v -> {
+                if (switchNotifSubs != null && switchNotifSubs.isEnabled()) {
+                    switchNotifSubs.toggle();
+                    viewModel.onNotifySubscriptionsChanged(switchNotifSubs.isChecked());
+                }
+            });
+        }
+        if (rowNotifDailies != null) {
+            rowNotifDailies.setOnClickListener(v -> {
+                if (switchNotifDailies != null && switchNotifDailies.isEnabled()) {
+                    switchNotifDailies.toggle();
+                    viewModel.onNotifyDailiesChanged(switchNotifDailies.isChecked());
+                }
+            });
+        }
+        if (rowNotifPromos != null) {
+            rowNotifPromos.setOnClickListener(v -> {
+                if (switchNotifPromos != null && switchNotifPromos.isEnabled()) {
+                    switchNotifPromos.toggle();
+                    viewModel.onNotifyPromocodesChanged(switchNotifPromos.isChecked());
+                }
+            });
+        }
+        if (rowNotifBanners != null) {
+            rowNotifBanners.setOnClickListener(v -> {
+                if (switchNotifBanners != null && switchNotifBanners.isEnabled()) {
+                    switchNotifBanners.toggle();
+                    viewModel.onNotifyBannersChanged(switchNotifBanners.isChecked());
                 }
             });
         }
@@ -436,17 +521,7 @@ public class SettingsView extends Fragment {
         viewModel.getNotificationsEnabled().observe(getViewLifecycleOwner(), enabled -> {
             if (enabled != null) {
                 notificationsSwitch.setChecked(enabled);
-                if (rowSelectTime != null) {
-                    rowSelectTime.setEnabled(enabled);
-                    rowSelectTime.setAlpha(enabled ? 1.0f : 0.4f);
-                }
-                if (timeChip != null) {
-                    timeChip.setEnabled(enabled);
-                }
-                if (rowNotificationChannels != null) {
-                    rowNotificationChannels.setEnabled(enabled);
-                    rowNotificationChannels.setAlpha(enabled ? 1.0f : 0.4f);
-                }
+                updateNotificationControlsState();
             }
         });
 

@@ -436,6 +436,7 @@
                         android:background="@color/divider_color" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_notif_subs"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="20dp"
@@ -487,6 +488,7 @@
                         android:background="@color/divider_color" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_notif_dailies"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="20dp"
@@ -538,6 +540,7 @@
                         android:background="@color/divider_color" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_notif_promos"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="20dp"
@@ -589,6 +592,7 @@
                         android:background="@color/divider_color" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/row_notif_banners"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="20dp"

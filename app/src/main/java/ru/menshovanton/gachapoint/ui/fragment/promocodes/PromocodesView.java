@@ -130,7 +130,7 @@ public class PromocodesView extends Fragment {
         ru.menshovanton.gachapoint.data.local.JsonDataLoader.addSyncResultListener(syncResultListener);
 
         if (srlPromocodes != null) {
-            srlPromocodes.setColorSchemeResources(R.color.accent, R.color.check);
+            srlPromocodes.setColorSchemeResources(R.color.check);
             srlPromocodes.setProgressBackgroundColorSchemeResource(R.color.card_bg);
             srlPromocodes.setOnRefreshListener(() -> viewModel.loadPromocodes(true));
         }

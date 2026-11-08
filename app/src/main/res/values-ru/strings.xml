@@ -672,7 +672,7 @@
 
     <string name="help_feature_banners_title">Расписание баннеров и Хроника</string>
     <string name="help_feature_banners_summary">Фазы, таймеры до окончания и аналитика реранов</string>
-    <string name="help_feature_banners_detail">• Вкладка «Расписание»: показывает текущие, анонсированные и прошедшие баннеры молитв/прыжков с точными таймерами обратного отсчета.\n\n• Трекер реранов: помогает отслеживать, сколько дней прошло с последнего появления персонажа в баннере, и прогнозировать будущие молитвы.\n\n• Нажатие на карточку баннера показывает состав 5★ и 4★ персонажей и оружия.</string>
+    <string name="help_feature_banners_detail">• Вкладка «Расписание»: показывает текущие, анонсированные и прошедшие баннеры с точными таймерами обратного отсчета.\n\n• Трекер реранов: помогает отслеживать, сколько дней прошло с последнего появления персонажа в баннере, и прогнозировать будущие молитвы.\n\n• Нажатие на карточку баннера показывает состав 5★ и 4★ персонажей и оружия.</string>
 
     <string name="help_faq_sources_title">Источники данных и дисклеймер</string>
     <string name="help_faq_sources_summary">Открытые вики, официальные анонсы и фанатский статус</string>
@@ -740,7 +740,7 @@
     <string name="settings_notif_promocodes">Промокоды</string>
     <string name="settings_notif_promocodes_desc">Стрим-коды и предупреждения об истекающих промокодах</string>
     <string name="settings_notif_banners">Баннеры и события</string>
-    <string name="settings_notif_banners_desc">Уведомления о старте и анонсе молитв / прыжков</string>
+    <string name="settings_notif_banners_desc">Уведомления о старте и анонсе баннеров</string>
     <string name="settings_reset_data_title">Сброс данных приложения</string>
     <string name="settings_reset_data_desc">Очистить историю круток, календарь, цели и настройки</string>
     <string name="settings_reset_dialog_title">Сбросить все данные?</string>

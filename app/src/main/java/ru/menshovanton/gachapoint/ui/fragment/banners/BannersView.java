@@ -108,7 +108,7 @@ public class BannersView extends Fragment {
         ru.menshovanton.gachapoint.data.local.JsonDataLoader.addSyncResultListener(syncResultListener);
 
         if (srlBanners != null) {
-            srlBanners.setColorSchemeResources(R.color.accent, R.color.check);
+            srlBanners.setColorSchemeResources(R.color.check);
             srlBanners.setProgressBackgroundColorSchemeResource(R.color.card_bg);
             srlBanners.setOnRefreshListener(() -> viewModel.loadData(true));
         }
