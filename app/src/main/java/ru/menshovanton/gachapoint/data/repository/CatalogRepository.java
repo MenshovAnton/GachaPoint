@@ -28,13 +28,11 @@ public class CatalogRepository {
     private static volatile CatalogRepository INSTANCE;
 
     private final Context context;
-    private final Gson gson;
     private final Map<Integer, List<CatalogItem>> catalogCache = new HashMap<>();
     private final Map<Integer, Map<String, CatalogItem>> lookupIndex = new HashMap<>();
 
     private CatalogRepository(Context context) {
         this.context = context.getApplicationContext();
-        this.gson = new Gson();
         loadCatalog(false);
     }
 
@@ -154,62 +152,70 @@ public class CatalogRepository {
         if (json.trim().isEmpty()) return;
 
         try {
-            JsonObject root = gson.fromJson(json, JsonObject.class);
-            if (root != null && root.has("games")) {
-                JsonArray games = root.getAsJsonArray("games");
-                for (JsonElement gElem : games) {
-                    if (!gElem.isJsonObject()) continue;
-                    JsonObject gObj = gElem.getAsJsonObject();
-                    int gameType = optInt(gObj, "game_type", 0);
+            parseJson(json, catalogCache, lookupIndex);
+        } catch (Exception e) {
+            AppLogger.e("CatalogRepository", "Failed to parse catalog JSON", e);
+        }
+    }
 
-                    List<CatalogItem> itemList = new ArrayList<>();
-                    Map<String, CatalogItem> gameLookup = new HashMap<>();
+    static void parseJson(
+            @NonNull String json,
+            @NonNull Map<Integer, List<CatalogItem>> catalogTarget,
+            @NonNull Map<Integer, Map<String, CatalogItem>> lookupTarget
+    ) {
+        Gson parser = new Gson();
+        JsonObject root = parser.fromJson(json, JsonObject.class);
+        if (root == null || !root.has("games")) return;
 
-                    if (gObj.has("items") && gObj.get("items").isJsonArray()) {
-                        JsonArray items = gObj.getAsJsonArray("items");
-                        for (JsonElement iElem : items) {
-                            if (!iElem.isJsonObject()) continue;
-                            JsonObject iObj = iElem.getAsJsonObject();
+        JsonArray games = root.getAsJsonArray("games");
+        for (JsonElement gElem : games) {
+            if (!gElem.isJsonObject()) continue;
+            JsonObject gObj = gElem.getAsJsonObject();
+            int gameType = optInt(gObj);
 
-                            String nameRu = optString(iObj, "name_ru", "");
-                            String nameEn = optString(iObj, "name_en", "");
-                            if (nameRu.isEmpty() && nameEn.isEmpty()) continue;
+            List<CatalogItem> itemList = new ArrayList<>();
+            Map<String, CatalogItem> gameLookup = new HashMap<>();
 
-                            String name = !nameRu.isEmpty() ? nameRu : nameEn;
-                            String iconUrl = DataSyncConfig.resolveRemotePath(optString(iObj, "icon_path", null));
-                            String rarity = optString(iObj, "rarity", "3★");
-                            String type = optString(iObj, "type", "CHARACTER");
-                            boolean isStandard = iObj.has("is_standard") && !iObj.get("is_standard").isJsonNull()
-                                    && iObj.get("is_standard").getAsBoolean();
+            if (gObj.has("items") && gObj.get("items").isJsonArray()) {
+                JsonArray items = gObj.getAsJsonArray("items");
+                for (JsonElement iElem : items) {
+                    if (!iElem.isJsonObject()) continue;
+                    JsonObject iObj = iElem.getAsJsonObject();
 
-                            List<String> aliases = new ArrayList<>();
-                            if (iObj.has("aliases") && iObj.get("aliases").isJsonArray()) {
-                                JsonArray aliasArr = iObj.getAsJsonArray("aliases");
-                                for (JsonElement aElem : aliasArr) {
-                                    if (aElem.isJsonPrimitive()) {
-                                        aliases.add(aElem.getAsString());
-                                    }
-                                }
-                            }
+                    String nameRu = optString(iObj, "name_ru", "");
+                    String nameEn = optString(iObj, "name_en", "");
+                    if (nameRu.isEmpty() && nameEn.isEmpty()) continue;
 
-                            CatalogItem catalogItem = new CatalogItem(name, nameRu, nameEn, aliases, rarity, type, isStandard, iconUrl);
-                            itemList.add(catalogItem);
+                    String name = !nameRu.isEmpty() ? nameRu : nameEn;
+                    String iconUrl = DataSyncConfig.resolveRemotePath(optString(iObj, "icon_path", null));
+                    String rarity = optString(iObj, "rarity", "3★");
+                    String type = optString(iObj, "type", "CHARACTER");
+                    boolean isStandard = iObj.has("is_standard") && !iObj.get("is_standard").isJsonNull()
+                            && iObj.get("is_standard").getAsBoolean();
 
-                            // Index for rapid O(1) resolution
-                            putCleanKey(gameLookup, name, catalogItem);
-                            putCleanKey(gameLookup, nameRu, catalogItem);
-                            putCleanKey(gameLookup, nameEn, catalogItem);
-                            for (String alias : aliases) {
-                                putCleanKey(gameLookup, alias, catalogItem);
+                    List<String> aliases = new ArrayList<>();
+                    if (iObj.has("aliases") && iObj.get("aliases").isJsonArray()) {
+                        JsonArray aliasArr = iObj.getAsJsonArray("aliases");
+                        for (JsonElement aElem : aliasArr) {
+                            if (aElem.isJsonPrimitive()) {
+                                aliases.add(aElem.getAsString());
                             }
                         }
                     }
-                    catalogCache.put(gameType, itemList);
-                    lookupIndex.put(gameType, gameLookup);
+
+                    CatalogItem catalogItem = new CatalogItem(name, nameRu, nameEn, aliases, rarity, type, isStandard, iconUrl);
+                    itemList.add(catalogItem);
+
+                    putCleanKey(gameLookup, name, catalogItem);
+                    putCleanKey(gameLookup, nameRu, catalogItem);
+                    putCleanKey(gameLookup, nameEn, catalogItem);
+                    for (String alias : aliases) {
+                        putCleanKey(gameLookup, alias, catalogItem);
+                    }
                 }
             }
-        } catch (Exception e) {
-            AppLogger.e("CatalogRepository", "Failed to parse catalog JSON", e);
+            catalogTarget.put(gameType, itemList);
+            lookupTarget.put(gameType, gameLookup);
         }
     }
 
@@ -229,12 +235,12 @@ public class CatalogRepository {
         }
     }
 
-    private static int optInt(@NonNull JsonObject obj, @NonNull String key, int defVal) {
-        if (!obj.has(key) || obj.get(key).isJsonNull()) return defVal;
+    private static int optInt(@NonNull JsonObject obj) {
+        if (!obj.has("game_type") || obj.get("game_type").isJsonNull()) return 0;
         try {
-            return obj.get(key).getAsInt();
+            return obj.get("game_type").getAsInt();
         } catch (Exception e) {
-            return defVal;
+            return 0;
         }
     }
 }

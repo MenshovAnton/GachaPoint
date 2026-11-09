@@ -34,12 +34,10 @@ public class PromocodeRepository {
 
     private final Context context;
     private final PromocodeDao promocodeDao;
-    private final Gson gson;
 
     private PromocodeRepository(Context context) {
         this.context = context.getApplicationContext();
         this.promocodeDao = AppDatabase.getInstance(context).promocodeDao();
-        this.gson = new Gson();
     }
 
     public static PromocodeRepository getInstance(Context context) {
@@ -267,54 +265,61 @@ public class PromocodeRepository {
 
     @NonNull
     private List<PromoCode> parsePromoCodes(String json, int targetGameType) {
+        try {
+            return parseJson(json, targetGameType);
+        } catch (Exception e) {
+            AppLogger.e("PromocodeRepository", "Failed to parse promocodes JSON", e);
+            return Collections.emptyList();
+        }
+    }
+
+    @NonNull
+    static List<PromoCode> parseJson(@Nullable String json, int targetGameType) {
         if (json == null || json.trim().isEmpty()) {
             return Collections.emptyList();
         }
 
         List<PromoCode> list = new ArrayList<>();
-        try {
-            JsonObject root = gson.fromJson(json, JsonObject.class);
-            if (root != null && root.has("codes")) {
-                JsonArray array = root.getAsJsonArray("codes");
-                for (JsonElement elem : array) {
-                    if (!elem.isJsonObject()) continue;
-                    JsonObject obj = elem.getAsJsonObject();
+        Gson parser = new Gson();
+        JsonObject root = parser.fromJson(json, JsonObject.class);
+        if (root != null && root.has("codes")) {
+            JsonArray array = root.getAsJsonArray("codes");
+            for (JsonElement elem : array) {
+                if (!elem.isJsonObject()) continue;
+                JsonObject obj = elem.getAsJsonObject();
 
-                    int gameType = obj.has("game_type") ? obj.get("game_type").getAsInt() : 0;
-                    if (targetGameType != -1 && gameType != targetGameType) {
-                        continue;
-                    }
-
-                    String id = obj.has("id") ? obj.get("id").getAsString() : "";
-                    String rawCode = obj.has("code") ? obj.get("code").getAsString() : "";
-                    if (DataSyncConfig.isValidCode(rawCode)) {
-                        continue;
-                    }
-                    String code = DataSyncConfig.sanitizeCode(rawCode);
-
-                    String rewardsRu = obj.has("rewards_description_ru") ? obj.get("rewards_description_ru").getAsString() : "";
-                    String rewardsEn = obj.has("rewards_description_en") ? obj.get("rewards_description_en").getAsString() : "";
-                    String rewards = !rewardsRu.isEmpty() ? rewardsRu : rewardsEn;
-                    String status = obj.has("status") ? obj.get("status").getAsString() : "NEW";
-                    String expiresAt = obj.has("expires_at") && !obj.get("expires_at").isJsonNull()
-                            ? obj.get("expires_at").getAsString() : null;
-                    String createdAt = obj.has("created_at") && !obj.get("created_at").isJsonNull()
-                            ? obj.get("created_at").getAsString() : null;
-                    boolean isStream = obj.has("is_stream") && obj.get("is_stream").getAsBoolean();
-                    boolean isActive = !obj.has("is_active") || obj.get("is_active").getAsBoolean();
-
-                    List<String> rewardTypes = new ArrayList<>();
-                    if (obj.has("reward_types") && obj.get("reward_types").isJsonArray()) {
-                        for (JsonElement t : obj.getAsJsonArray("reward_types")) {
-                            rewardTypes.add(t.getAsString());
-                        }
-                    }
-
-                    list.add(new PromoCode(id, gameType, code, rewards, rewardsRu, rewardsEn, rewardTypes, status, expiresAt, createdAt, isStream, isActive, false, false));
+                int gameType = obj.has("game_type") ? obj.get("game_type").getAsInt() : 0;
+                if (targetGameType != -1 && gameType != targetGameType) {
+                    continue;
                 }
+
+                String id = obj.has("id") ? obj.get("id").getAsString() : "";
+                String rawCode = obj.has("code") ? obj.get("code").getAsString() : "";
+                if (DataSyncConfig.isValidCode(rawCode)) {
+                    continue;
+                }
+                String code = DataSyncConfig.sanitizeCode(rawCode);
+
+                String rewardsRu = obj.has("rewards_description_ru") ? obj.get("rewards_description_ru").getAsString() : "";
+                String rewardsEn = obj.has("rewards_description_en") ? obj.get("rewards_description_en").getAsString() : "";
+                String rewards = !rewardsRu.isEmpty() ? rewardsRu : rewardsEn;
+                String status = obj.has("status") ? obj.get("status").getAsString() : "NEW";
+                String expiresAt = obj.has("expires_at") && !obj.get("expires_at").isJsonNull()
+                        ? obj.get("expires_at").getAsString() : null;
+                String createdAt = obj.has("created_at") && !obj.get("created_at").isJsonNull()
+                        ? obj.get("created_at").getAsString() : null;
+                boolean isStream = obj.has("is_stream") && obj.get("is_stream").getAsBoolean();
+                boolean isActive = !obj.has("is_active") || obj.get("is_active").getAsBoolean();
+
+                List<String> rewardTypes = new ArrayList<>();
+                if (obj.has("reward_types") && obj.get("reward_types").isJsonArray()) {
+                    for (JsonElement t : obj.getAsJsonArray("reward_types")) {
+                        rewardTypes.add(t.getAsString());
+                    }
+                }
+
+                list.add(new PromoCode(id, gameType, code, rewards, rewardsRu, rewardsEn, rewardTypes, status, expiresAt, createdAt, isStream, isActive, false, false));
             }
-        } catch (Exception e) {
-            AppLogger.e("PromocodeRepository", "Failed to parse promocodes JSON", e);
         }
         return list;
     }

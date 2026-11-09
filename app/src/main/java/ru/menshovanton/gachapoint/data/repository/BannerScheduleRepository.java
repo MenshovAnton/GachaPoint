@@ -32,13 +32,11 @@ public class BannerScheduleRepository {
     private static volatile BannerScheduleRepository INSTANCE;
 
     private final Context context;
-    private final Gson gson;
     private final Map<Integer, List<PatchInfo>> patchCache = new HashMap<>();
     private final Map<Integer, List<BannerScheduleItem>> bannerCache = new HashMap<>();
 
     private BannerScheduleRepository(Context context) {
         this.context = context.getApplicationContext();
-        this.gson = new Gson();
         loadSchedule(false);
     }
 
@@ -366,69 +364,78 @@ public class BannerScheduleRepository {
         if (json.trim().isEmpty()) return;
 
         try {
-            JsonObject root = gson.fromJson(json, JsonObject.class);
-            if (root != null && root.has("games")) {
-                JsonArray games = root.getAsJsonArray("games");
-                for (JsonElement gElem : games) {
-                    if (!gElem.isJsonObject()) continue;
-                    JsonObject gObj = gElem.getAsJsonObject();
-                    int gameType = optInt(gObj, "game_type", 0);
-
-                    List<PatchInfo> patchList = new ArrayList<>();
-                    if (gObj.has("patches") && gObj.get("patches").isJsonArray()) {
-                        for (JsonElement pElem : gObj.getAsJsonArray("patches")) {
-                            if (!pElem.isJsonObject()) continue;
-                            JsonObject pObj = pElem.getAsJsonObject();
-                            patchList.add(new PatchInfo(
-                                    optString(pObj, "version", ""),
-                                    optString(pObj, "title", ""),
-                                    optString(pObj, "start_date", ""),
-                                    optString(pObj, "end_date", "")
-                            ));
-                        }
-                    }
-                    patchCache.put(gameType, patchList);
-
-                    List<BannerScheduleItem> bannerList = new ArrayList<>();
-                    if (gObj.has("banners") && gObj.get("banners").isJsonArray()) {
-                        for (JsonElement bElem : gObj.getAsJsonArray("banners")) {
-                            if (!bElem.isJsonObject()) continue;
-                            JsonObject bObj = bElem.getAsJsonObject();
-
-                            List<String> fiveStarsRu = safeStringList(bObj, "featured_five_stars_ru");
-                            List<String> fiveStarsEn = safeStringList(bObj, "featured_five_stars_en");
-                            List<String> fiveStars = !fiveStarsRu.isEmpty() ? fiveStarsRu : fiveStarsEn;
-
-                            List<String> fourStarsRu = safeStringList(bObj, "featured_four_stars_ru");
-                            List<String> fourStarsEn = safeStringList(bObj, "featured_four_stars_en");
-                            List<String> fourStars = !fourStarsRu.isEmpty() ? fourStarsRu : fourStarsEn;
-
-                            String bannerImageUrl = bObj.has("banner_image_url") && !bObj.get("banner_image_url").isJsonNull()
-                                    ? optString(bObj, "banner_image_url", null) : null;
-
-                            bannerList.add(new BannerScheduleItem(
-                                    optString(bObj, "id", ""),
-                                    gameType,
-                                    optString(bObj, "version", ""),
-                                    optInt(bObj, "phase", 1),
-                                    optString(bObj, "start_date", ""),
-                                    optString(bObj, "end_date", ""),
-                                    optString(bObj, "status", "PAST"),
-                                    fiveStars,
-                                    fourStars,
-                                    fiveStarsRu,
-                                    fiveStarsEn,
-                                    fourStarsRu,
-                                    fourStarsEn,
-                                    bannerImageUrl
-                            ));
-                        }
-                    }
-                    bannerCache.put(gameType, bannerList);
-                }
-            }
+            parseScheduleJson(json, patchCache, bannerCache);
         } catch (Exception e) {
             AppLogger.e("BannerScheduleRepository", "Failed to parse banners schedule JSON", e);
+        }
+    }
+
+    static void parseScheduleJson(
+            @NonNull String json,
+            @NonNull Map<Integer, List<PatchInfo>> patchTarget,
+            @NonNull Map<Integer, List<BannerScheduleItem>> bannerTarget
+    ) {
+        Gson parser = new Gson();
+        JsonObject root = parser.fromJson(json, JsonObject.class);
+        if (root == null || !root.has("games")) return;
+
+        JsonArray games = root.getAsJsonArray("games");
+        for (JsonElement gElem : games) {
+            if (!gElem.isJsonObject()) continue;
+            JsonObject gObj = gElem.getAsJsonObject();
+            int gameType = optInt(gObj, "game_type", 0);
+
+            List<PatchInfo> patchList = new ArrayList<>();
+            if (gObj.has("patches") && gObj.get("patches").isJsonArray()) {
+                for (JsonElement pElem : gObj.getAsJsonArray("patches")) {
+                    if (!pElem.isJsonObject()) continue;
+                    JsonObject pObj = pElem.getAsJsonObject();
+                    patchList.add(new PatchInfo(
+                            optString(pObj, "version", ""),
+                            optString(pObj, "title", ""),
+                            optString(pObj, "start_date", ""),
+                            optString(pObj, "end_date", "")
+                    ));
+                }
+            }
+            patchTarget.put(gameType, patchList);
+
+            List<BannerScheduleItem> bannerList = new ArrayList<>();
+            if (gObj.has("banners") && gObj.get("banners").isJsonArray()) {
+                for (JsonElement bElem : gObj.getAsJsonArray("banners")) {
+                    if (!bElem.isJsonObject()) continue;
+                    JsonObject bObj = bElem.getAsJsonObject();
+
+                    List<String> fiveStarsRu = safeStringList(bObj, "featured_five_stars_ru");
+                    List<String> fiveStarsEn = safeStringList(bObj, "featured_five_stars_en");
+                    List<String> fiveStars = !fiveStarsRu.isEmpty() ? fiveStarsRu : fiveStarsEn;
+
+                    List<String> fourStarsRu = safeStringList(bObj, "featured_four_stars_ru");
+                    List<String> fourStarsEn = safeStringList(bObj, "featured_four_stars_en");
+                    List<String> fourStars = !fourStarsRu.isEmpty() ? fourStarsRu : fourStarsEn;
+
+                    String bannerImageUrl = bObj.has("banner_image_url") && !bObj.get("banner_image_url").isJsonNull()
+                            ? optString(bObj, "banner_image_url", null) : null;
+
+                    bannerList.add(new BannerScheduleItem(
+                            optString(bObj, "id", ""),
+                            gameType,
+                            optString(bObj, "version", ""),
+                            optInt(bObj, "phase", 1),
+                            optString(bObj, "start_date", ""),
+                            optString(bObj, "end_date", ""),
+                            optString(bObj, "status", "PAST"),
+                            fiveStars,
+                            fourStars,
+                            fiveStarsRu,
+                            fiveStarsEn,
+                            fourStarsRu,
+                            fourStarsEn,
+                            bannerImageUrl
+                    ));
+                }
+            }
+            bannerTarget.put(gameType, bannerList);
         }
     }
 

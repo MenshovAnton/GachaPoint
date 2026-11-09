@@ -1,7 +1,70 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-03T10:05:03Z",
+  "updated_at": "2026-11-09T12:37:47Z",
   "codes": [
+    {
+      "id": "scraped_0_cdof4x83h7x2",
+      "game_type": 0,
+      "code": "CDOF4X83H7X2",
+      "rewards_description_ru": "10 000 Моры, 10 Опыта искателя",
+      "rewards_description_en": "10 000 Mora, 10 Adventurer's Exp",
+      "reward_types": [
+        "MORA",
+        "EXP"
+      ],
+      "status": "ACTIVE",
+      "expires_at": null,
+      "created_at": "2026-11-04T12:00:00Z",
+      "is_stream": false,
+      "is_active": true,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
+    },
+    {
+      "id": "scraped_0_mijiq23v2437",
+      "game_type": 0,
+      "code": "MIJIQ23V2437",
+      "rewards_description_ru": "10 000 Моры, 10 Опыта искателя",
+      "rewards_description_en": "10 000 Mora, 10 Adventurer's Exp",
+      "reward_types": [
+        "MORA",
+        "EXP"
+      ],
+      "status": "ACTIVE",
+      "expires_at": null,
+      "created_at": "2026-11-04T12:00:00Z",
+      "is_stream": false,
+      "is_active": true,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
+    },
+    {
+      "id": "scraped_0_keepupwithmitya",
+      "game_type": 0,
+      "code": "KEEPUPWITHMITYA",
+      "rewards_description_ru": "Указания о «Милосердии» x3, Кристаллический гриб-зонтик x3, Энергетический обед x3",
+      "rewards_description_en": "Guide to Charity x3, Kristallfold x3, Energy-Replenishing Meal x3",
+      "reward_types": [
+        "TALENT_BOOK",
+        "MATERIAL",
+        "FOOD"
+      ],
+      "status": "ACTIVE",
+      "expires_at": "2026-11-15T16:00:00Z",
+      "created_at": "2026-11-04T04:00:00Z",
+      "is_stream": false,
+      "is_active": true,
+      "source_url": "https://genshin.hoyoverse.com/ru/news/detail/167189",
+      "verification_status": "verified",
+      "verified_at": "2026-11-09T00:00:00Z",
+      "expiry_confidence": "official"
+    },
     {
       "id": "scraped_0_pj2kebraysrm",
       "game_type": 0,
@@ -16,54 +79,12 @@
         "EXP"
       ],
       "created_at": "2026-10-23T12:00:00Z",
-      "expires_at": "2026-11-27T12:00:00Z"
-    },
-    {
-      "id": "genshin_oktcv81f9h8d",
-      "game_type": 0,
-      "code": "OKTCV81F9H8D",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "10 000 Моры, 10 Опыта искателя приключений, 5 Руды",
-      "rewards_description_en": "10,000 Mora, 10 Adventurer's Exp, 5 Fine Enhancement Ore",
-      "reward_types": [
-        "MORA",
-        "EXP"
-      ],
-      "created_at": "2026-10-14T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:47Z"
-    },
-    {
-      "id": "genshin_6ls3f3ls5k87",
-      "game_type": 0,
-      "code": "6LS3F3LS5K87",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "20 Камней Истока, 160 Репликационных геод",
-      "rewards_description_en": "20 Primogems, 160 Geodes of Replication",
-      "reward_types": [
-        "PRIMOGEM"
-      ],
-      "created_at": "2026-10-02T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:47Z"
-    },
-    {
-      "id": "genshin_datg5hg1pl89",
-      "game_type": 0,
-      "code": "DATG5HG1PL89",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "10 000 Моры, 10 Опыта искателя приключений",
-      "rewards_description_en": "10,000 Mora, 10 Adventurer's Experience",
-      "reward_types": [
-        "MORA",
-        "EXP"
-      ],
-      "created_at": "2026-10-02T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:47Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
     },
     {
       "id": "genshin_pnkz3wlnn8g6",
@@ -78,41 +99,12 @@
         "TALENT"
       ],
       "created_at": "2026-10-01T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:47Z"
-    },
-    {
-      "id": "genshin_operacollab",
-      "game_type": 0,
-      "code": "OPERACOLLAB",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "30 Камней Истока, 20 000 Моры, 2 Опыта героя",
-      "rewards_description_en": "30 Primogems, 20,000 Mora, 2 Hero's Wit",
-      "reward_types": [
-        "PRIMOGEM",
-        "MORA",
-        "EXP"
-      ],
-      "created_at": "2026-09-28T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:47Z"
-    },
-    {
-      "id": "genshin_epic2026",
-      "game_type": 0,
-      "code": "EPIC2026",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "40 Камней Истока, 20 000 Моры, 5 Опыта героя",
-      "rewards_description_en": "40 Primogems, 20,000 Mora, 5 Hero's Wit",
-      "reward_types": [
-        "PRIMOGEM",
-        "MORA",
-        "EXP"
-      ],
-      "created_at": "2026-09-23T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:47Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
     },
     {
       "id": "genshin_genshingift",
@@ -128,53 +120,9 @@
         "EXP"
       ],
       "created_at": "2020-09-28T00:00:00Z",
-      "expires_at": null
-    },
-    {
-      "id": "hsr_nsjr3b97zz5x",
-      "game_type": 1,
-      "code": "NSJR3B97ZZ5X",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "50 Звёздного нефрита, 10 000 Кредитов",
-      "rewards_description_en": "50 Stellar Jade, 10,000 Credits",
-      "reward_types": [
-        "JADE",
-        "CREDIT"
-      ],
-      "created_at": "2026-10-15T12:00:00Z",
-      "expires_at": "2026-11-20T23:59:59Z"
-    },
-    {
-      "id": "hsr_bestcoffeeever",
-      "game_type": 1,
-      "code": "BESTCOFFEEEVER",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "3 Путеводителя путешественника, 2 Особых кофе",
-      "rewards_description_en": "3 Traveler's Guides, 2 Special Coffee",
-      "reward_types": [
-        "EXP"
-      ],
-      "created_at": "2026-10-10T12:00:00Z",
-      "expires_at": "2026-11-15T23:59:59Z"
-    },
-    {
-      "id": "hsr_starrailfate2026",
-      "game_type": 1,
-      "code": "STARRAILFATE2026",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "3 Путеводителя путешественника, 2 Светящиеся палочки",
-      "rewards_description_en": "3 Traveler's Guides, 2 Glowsticks",
-      "reward_types": [
-        "EXP"
-      ],
-      "created_at": "2026-10-10T12:00:00Z",
-      "expires_at": "2026-11-15T23:59:59Z"
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "official"
     },
     {
       "id": "hsr_creationnymph",
@@ -189,7 +137,9 @@
         "JADE"
       ],
       "created_at": "2025-07-02T00:00:00Z",
-      "expires_at": null
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "official"
     },
     {
       "id": "hsr_farewell",
@@ -204,7 +154,9 @@
         "JADE"
       ],
       "created_at": "2025-04-10T00:00:00Z",
-      "expires_at": null
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "official"
     },
     {
       "id": "hsr_ifyouarereadingthis",
@@ -219,7 +171,9 @@
         "JADE"
       ],
       "created_at": "2025-01-16T00:00:00Z",
-      "expires_at": null
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "official"
     },
     {
       "id": "hsr_omega",
@@ -234,7 +188,9 @@
         "JADE"
       ],
       "created_at": "2025-11-07T00:00:00Z",
-      "expires_at": null
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "official"
     },
     {
       "id": "hsr_starrailgift",
@@ -250,7 +206,9 @@
         "CREDIT"
       ],
       "created_at": "2023-04-26T00:00:00Z",
-      "expires_at": null
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "official"
     },
     {
       "id": "zzz_hollowrun33",
@@ -266,7 +224,12 @@
         "DENNY"
       ],
       "created_at": "2026-10-25T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:48Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
     },
     {
       "id": "zzz_inkshift33",
@@ -282,7 +245,12 @@
         "DENNY"
       ],
       "created_at": "2026-10-25T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:48Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
     },
     {
       "id": "zzz_levelup33",
@@ -298,53 +266,36 @@
         "DENNY"
       ],
       "created_at": "2026-10-25T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:48Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
     },
     {
-      "id": "zzz_sunbringer",
+      "id": "verified_2_jrny2sky",
       "game_type": 2,
-      "code": "SUNBRINGER",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "30 Полихромов",
-      "rewards_description_en": "30 Polychromes",
+      "code": "JRNY2SKY",
+      "rewards_description_ru": "300 Полихромов, 30 000 Денни, 2 Журнала специалиста, 3 Источника питания",
+      "rewards_description_en": "300 Polychromes, 30,000 Dennies, 2 Investigator Logs, 3 W-Engine Power Supplies",
       "reward_types": [
-        "POLYCHROME"
-      ],
-      "created_at": "2026-10-23T12:00:00Z",
-      "expires_at": "2026-11-25T23:59:59Z"
-    },
-    {
-      "id": "zzz_zzz2year",
-      "game_type": 2,
-      "code": "ZZZ2YEAR",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "50 Полихромов",
-      "rewards_description_en": "50 Polychromes",
-      "reward_types": [
-        "POLYCHROME"
-      ],
-      "created_at": "2026-10-15T00:00:00Z",
-      "expires_at": "2026-11-30T23:59:59Z"
-    },
-    {
-      "id": "zzz_zzzgfn24",
-      "game_type": 2,
-      "code": "ZZZGFN24",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "20 000 Денни, 3 Журнала специалиста, 3 Источника питания",
-      "rewards_description_en": "20,000 Dennies, 3 Specialist Logs, 3 Power Supplies",
-      "reward_types": [
+        "POLYCHROME",
         "DENNY",
-        "EXP"
+        "EXP",
+        "MATERIAL"
       ],
-      "created_at": "2026-10-01T00:00:00Z",
-      "expires_at": "2026-11-30T23:59:59Z"
+      "status": "ACTIVE",
+      "expires_at": "2026-11-10T15:59:59Z",
+      "created_at": "2026-10-09T12:00:00Z",
+      "is_stream": false,
+      "is_active": true,
+      "source_url": "https://zenless.hoyoverse.com/en-us/news/detail/166644",
+      "source_id": "166644",
+      "source_type": "official",
+      "verification_status": "verified",
+      "verified_at": "2026-11-09T12:18:54Z",
+      "expiry_confidence": "official"
     },
     {
       "id": "zzz_zenlessgift",
@@ -360,22 +311,9 @@
         "EXP"
       ],
       "created_at": "2024-07-04T00:00:00Z",
-      "expires_at": null
-    },
-    {
-      "id": "zzz_zzztvcm",
-      "game_type": 2,
-      "code": "ZZZTVCM",
-      "status": "PERMANENT",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "50 Полихромов",
-      "rewards_description_en": "50 Polychromes",
-      "reward_types": [
-        "POLYCHROME"
-      ],
-      "created_at": "2024-07-04T00:00:00Z",
-      "expires_at": null
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "official"
     },
     {
       "id": "hi3_qpas261qc8",
@@ -390,7 +328,11 @@
         "ASTERITE"
       ],
       "created_at": "2026-10-31T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:49Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2116485335395824087",
+      "verified_at": "2026-11-09T12:17:33Z"
     },
     {
       "id": "hi3_specialtreats",
@@ -405,7 +347,11 @@
         "CRYSTAL"
       ],
       "created_at": "2026-10-31T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:49Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2116424936566727141",
+      "verified_at": "2026-11-09T12:17:33Z"
     },
     {
       "id": "hi3_ks58qwgr8w",
@@ -420,7 +366,11 @@
         "ASTERITE"
       ],
       "created_at": "2026-10-24T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:49Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2113948619799699693",
+      "verified_at": "2026-11-09T12:17:33Z"
     },
     {
       "id": "hi3_flavor1",
@@ -435,7 +385,11 @@
         "ASTERITE"
       ],
       "created_at": "2026-10-22T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:49Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2113487014691737953",
+      "verified_at": "2026-11-09T12:17:33Z"
     },
     {
       "id": "hi3_flavor2",
@@ -450,7 +404,11 @@
         "TICKET"
       ],
       "created_at": "2026-10-22T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:49Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2113487014691737953",
+      "verified_at": "2026-11-09T12:17:33Z"
     },
     {
       "id": "hi3_flavor3",
@@ -465,7 +423,11 @@
         "COIN"
       ],
       "created_at": "2026-10-22T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:49Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2113487014691737953",
+      "verified_at": "2026-11-09T12:17:33Z"
     },
     {
       "id": "hi3_flavor4",
@@ -480,22 +442,11 @@
         "ASTERITE"
       ],
       "created_at": "2026-10-22T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:49Z"
-    },
-    {
-      "id": "hi3_lbwy2yi5v4",
-      "game_type": 3,
-      "code": "LBWY2YI5V4",
-      "status": "ACTIVE",
-      "is_stream": false,
-      "is_active": true,
-      "rewards_description_ru": "30 Кристаллов",
-      "rewards_description_en": "30 Crystals",
-      "reward_types": [
-        "CRYSTAL"
-      ],
-      "created_at": "2026-10-15T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:49Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2113487014691737953",
+      "verified_at": "2026-11-09T12:17:33Z"
     },
     {
       "id": "hi3_ncu83wrbf2",
@@ -510,7 +461,11 @@
         "ASTERITE"
       ],
       "created_at": "2026-10-10T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:49Z"
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2111774290169278510",
+      "verified_at": "2026-11-09T12:17:33Z"
     },
     {
       "id": "hi3_honkaigift",
@@ -525,7 +480,9 @@
         "CRYSTAL"
       ],
       "created_at": "2021-01-01T00:00:00Z",
-      "expires_at": null
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "official"
     },
     {
       "id": "scraped_0_yuanshen",
@@ -541,7 +498,9 @@
         "EXP"
       ],
       "created_at": "2020-11-10T12:00:00Z",
-      "expires_at": "2026-11-26T06:32:47Z"
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "hsr_ahablessyou",
@@ -557,7 +516,9 @@
         "AETHER"
       ],
       "created_at": "2026-10-30T12:00:00Z",
-      "expires_at": "2026-11-01T23:59:59Z"
+      "expires_at": "2026-11-01T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "hsr_nevergonnagive",
@@ -573,7 +534,9 @@
         "CREDIT"
       ],
       "created_at": "2026-10-30T12:00:00Z",
-      "expires_at": "2026-11-01T23:59:59Z"
+      "expires_at": "2026-11-01T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "hsr_nevergonnamake",
@@ -589,7 +552,26 @@
         "EXP"
       ],
       "created_at": "2026-10-30T12:00:00Z",
-      "expires_at": "2026-11-01T23:59:59Z"
+      "expires_at": "2026-11-01T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
+    },
+    {
+      "id": "zzz_sunbringer",
+      "game_type": 2,
+      "code": "SUNBRINGER",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "30 Полихромов",
+      "rewards_description_en": "30 Polychromes",
+      "reward_types": [
+        "POLYCHROME"
+      ],
+      "created_at": "2026-10-23T12:00:00Z",
+      "expires_at": "2026-10-29T15:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "genshin_hourofruin",
@@ -605,7 +587,9 @@
         "ORE"
       ],
       "created_at": "2026-10-23T12:00:00Z",
-      "expires_at": "2026-10-26T16:00:00Z"
+      "expires_at": "2026-10-26T16:00:00Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "genshin_expertmitya",
@@ -621,7 +605,9 @@
         "EXP"
       ],
       "created_at": "2026-10-23T12:00:00Z",
-      "expires_at": "2026-10-26T16:00:00Z"
+      "expires_at": "2026-10-26T16:00:00Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "genshin_phototime",
@@ -637,7 +623,9 @@
         "MORA"
       ],
       "created_at": "2026-10-23T12:00:00Z",
-      "expires_at": "2026-10-26T16:00:00Z"
+      "expires_at": "2026-10-26T16:00:00Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "genshin_y6jymkv6jksl",
@@ -653,7 +641,9 @@
         "EXP"
       ],
       "created_at": "2026-09-13T12:00:00Z",
-      "expires_at": "2026-10-23T23:59:59Z"
+      "expires_at": "2026-10-23T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "genshin_vesnaonpatrol",
@@ -670,7 +660,9 @@
         "EXP"
       ],
       "created_at": "2026-09-23T12:00:00Z",
-      "expires_at": "2026-10-22T23:59:59Z"
+      "expires_at": "2026-10-22T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "zzz_zzzy2anniv",
@@ -685,7 +677,9 @@
         "POLYCHROME"
       ],
       "created_at": "2026-10-15T12:00:00Z",
-      "expires_at": "2026-10-16T16:00:00Z"
+      "expires_at": "2026-10-16T16:00:00Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "genshin_rnif6h9394k8",
@@ -701,7 +695,71 @@
         "EXP"
       ],
       "created_at": "2026-09-15T00:00:00Z",
-      "expires_at": "2026-10-15T23:59:59Z"
+      "expires_at": "2026-10-15T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
+    },
+    {
+      "id": "hsr_nsjr3b97zz5x",
+      "game_type": 1,
+      "code": "NSJR3B97ZZ5X",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "50 Звёздного нефрита, 10 000 Кредитов",
+      "rewards_description_en": "50 Stellar Jade, 10,000 Credits",
+      "reward_types": [
+        "JADE",
+        "CREDIT"
+      ],
+      "created_at": "2026-10-15T12:00:00Z",
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
+    },
+    {
+      "id": "zzz_zzz2year",
+      "game_type": 2,
+      "code": "ZZZ2YEAR",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "50 Полихромов",
+      "rewards_description_en": "50 Polychromes",
+      "reward_types": [
+        "POLYCHROME"
+      ],
+      "created_at": "2026-10-15T00:00:00Z",
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
+    },
+    {
+      "id": "genshin_oktcv81f9h8d",
+      "game_type": 0,
+      "code": "OKTCV81F9H8D",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "10 000 Моры, 10 Опыта искателя приключений, 5 Руды",
+      "rewards_description_en": "10,000 Mora, 10 Adventurer's Exp, 5 Fine Enhancement Ore",
+      "reward_types": [
+        "MORA",
+        "EXP"
+      ],
+      "created_at": "2026-10-14T12:00:00Z",
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
     },
     {
       "id": "hsr_ca395vk8ulcp",
@@ -717,7 +775,9 @@
         "CREDIT"
       ],
       "created_at": "2026-10-11T12:00:00Z",
-      "expires_at": "2026-10-12T16:00:00Z"
+      "expires_at": "2026-10-12T16:00:00Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "hsr_yt295d38dleb",
@@ -733,7 +793,9 @@
         "EXP"
       ],
       "created_at": "2026-10-11T12:00:00Z",
-      "expires_at": "2026-10-12T16:00:00Z"
+      "expires_at": "2026-10-12T16:00:00Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "hsr_eb395cj8v5xf",
@@ -749,7 +811,9 @@
         "AETHER"
       ],
       "created_at": "2026-10-11T12:00:00Z",
-      "expires_at": "2026-10-12T16:00:00Z"
+      "expires_at": "2026-10-12T16:00:00Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "genshin_yoal3v36xhs7",
@@ -765,7 +829,111 @@
         "EXP"
       ],
       "created_at": "2026-09-02T12:00:00Z",
-      "expires_at": "2026-10-10T23:59:59Z"
+      "expires_at": "2026-10-10T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
+    },
+    {
+      "id": "hsr_bestcoffeeever",
+      "game_type": 1,
+      "code": "BESTCOFFEEEVER",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "3 Путеводителя путешественника, 2 Особых кофе",
+      "rewards_description_en": "3 Traveler's Guides, 2 Special Coffee",
+      "reward_types": [
+        "EXP"
+      ],
+      "created_at": "2026-10-10T12:00:00Z",
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
+    },
+    {
+      "id": "hsr_starrailfate2026",
+      "game_type": 1,
+      "code": "STARRAILFATE2026",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "3 Путеводителя путешественника, 2 Светящиеся палочки",
+      "rewards_description_en": "3 Traveler's Guides, 2 Glowsticks",
+      "reward_types": [
+        "EXP"
+      ],
+      "created_at": "2026-10-10T12:00:00Z",
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
+    },
+    {
+      "id": "genshin_6ls3f3ls5k87",
+      "game_type": 0,
+      "code": "6LS3F3LS5K87",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "20 Камней Истока, 160 Репликационных геод",
+      "rewards_description_en": "20 Primogems, 160 Geodes of Replication",
+      "reward_types": [
+        "PRIMOGEM"
+      ],
+      "created_at": "2026-10-02T12:00:00Z",
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
+    },
+    {
+      "id": "genshin_datg5hg1pl89",
+      "game_type": 0,
+      "code": "DATG5HG1PL89",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "10 000 Моры, 10 Опыта искателя приключений",
+      "rewards_description_en": "10,000 Mora, 10 Adventurer's Experience",
+      "reward_types": [
+        "MORA",
+        "EXP"
+      ],
+      "created_at": "2026-10-02T12:00:00Z",
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
+    },
+    {
+      "id": "zzz_zzzgfn24",
+      "game_type": 2,
+      "code": "ZZZGFN24",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "20 000 Денни, 3 Журнала специалиста, 3 Источника питания",
+      "rewards_description_en": "20,000 Dennies, 3 Specialist Logs, 3 Power Supplies",
+      "reward_types": [
+        "DENNY",
+        "EXP"
+      ],
+      "created_at": "2026-10-01T00:00:00Z",
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
     },
     {
       "id": "genshin_balletcollab",
@@ -782,7 +950,9 @@
         "EXP"
       ],
       "created_at": "2026-08-16T12:00:00Z",
-      "expires_at": "2026-09-30T23:59:59Z"
+      "expires_at": "2026-09-30T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "genshin_dugodwkrhakdnj",
@@ -799,7 +969,53 @@
         "EXP"
       ],
       "created_at": "2026-08-31T12:00:00Z",
-      "expires_at": "2026-09-30T23:59:59Z"
+      "expires_at": "2026-09-30T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
+    },
+    {
+      "id": "genshin_operacollab",
+      "game_type": 0,
+      "code": "OPERACOLLAB",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "30 Камней Истока, 20 000 Моры, 2 Опыта героя",
+      "rewards_description_en": "30 Primogems, 20,000 Mora, 2 Hero's Wit",
+      "reward_types": [
+        "PRIMOGEM",
+        "MORA",
+        "EXP"
+      ],
+      "created_at": "2026-09-28T12:00:00Z",
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
+    },
+    {
+      "id": "genshin_epic2026",
+      "game_type": 0,
+      "code": "EPIC2026",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "40 Камней Истока, 20 000 Моры, 5 Опыта героя",
+      "rewards_description_en": "40 Primogems, 20,000 Mora, 5 Hero's Wit",
+      "reward_types": [
+        "PRIMOGEM",
+        "MORA",
+        "EXP"
+      ],
+      "created_at": "2026-09-23T12:00:00Z",
+      "expires_at": null,
+      "verification_status": "verified",
+      "expiry_confidence": "unknown",
+      "verified_at": "2026-11-09T12:37:47Z",
+      "source_type": "manual_in_game",
+      "checked_note": "Максимальное число использований"
     },
     {
       "id": "hsr_malsv2f247fp",
@@ -815,7 +1031,9 @@
         "AETHER"
       ],
       "created_at": "2026-09-20T12:00:00Z",
-      "expires_at": "2026-09-21T16:00:00Z"
+      "expires_at": "2026-09-21T16:00:00Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "hsr_7s4ad2x35ne3",
@@ -831,7 +1049,9 @@
         "EXP"
       ],
       "created_at": "2026-09-20T12:00:00Z",
-      "expires_at": "2026-09-21T16:00:00Z"
+      "expires_at": "2026-09-21T16:00:00Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "hsr_ka5sv3fjm7wx",
@@ -847,7 +1067,9 @@
         "CREDIT"
       ],
       "created_at": "2026-09-20T12:00:00Z",
-      "expires_at": "2026-09-21T16:00:00Z"
+      "expires_at": "2026-09-21T16:00:00Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "genshin_2bj64qrz7rt8",
@@ -863,7 +1085,9 @@
         "EXP"
       ],
       "created_at": "2026-07-31T12:00:00Z",
-      "expires_at": "2026-09-10T23:59:59Z"
+      "expires_at": "2026-09-10T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "genshin_genshinsummernight",
@@ -879,7 +1103,9 @@
         "MORA"
       ],
       "created_at": "2026-07-20T00:00:00Z",
-      "expires_at": "2026-08-31T23:59:59Z"
+      "expires_at": "2026-08-31T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "zzz_zenlesslaunch",
@@ -895,7 +1121,9 @@
         "DENNY"
       ],
       "created_at": "2024-07-04T00:00:00Z",
-      "expires_at": "2026-08-15T23:59:59Z"
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_1_yajq2tr6zy2p",
@@ -910,7 +1138,9 @@
         "JADE"
       ],
       "created_at": "2026-08-14T12:00:00Z",
-      "expires_at": "2026-08-15T23:59:59Z"
+      "expires_at": "2026-08-15T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "scraped_1_lsj9jarpzh33",
@@ -926,7 +1156,9 @@
         "EXP"
       ],
       "created_at": "2026-08-14T12:00:00Z",
-      "expires_at": "2026-08-15T23:59:59Z"
+      "expires_at": "2026-08-15T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "scraped_1_2tkrkar6yg2x",
@@ -942,7 +1174,9 @@
         "CREDIT"
       ],
       "created_at": "2026-08-14T12:00:00Z",
-      "expires_at": "2026-08-15T23:59:59Z"
+      "expires_at": "2026-08-15T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "zzz_catchaboo",
@@ -957,7 +1191,9 @@
         "POLYCHROME"
       ],
       "created_at": "2024-07-06T00:00:00Z",
-      "expires_at": "2026-08-14T23:59:59Z"
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_1_xtj9mv38dl3x",
@@ -972,7 +1208,9 @@
         "JADE"
       ],
       "created_at": "2026-07-03T12:00:00Z",
-      "expires_at": "2026-07-04T23:59:59Z"
+      "expires_at": "2026-07-04T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "scraped_1_ht3qmcj9u4jb",
@@ -988,7 +1226,9 @@
         "EXP"
       ],
       "created_at": "2026-07-03T12:00:00Z",
-      "expires_at": "2026-07-04T23:59:59Z"
+      "expires_at": "2026-07-04T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "scraped_1_wak84u29vlyp",
@@ -1004,7 +1244,9 @@
         "CREDIT"
       ],
       "created_at": "2026-07-03T12:00:00Z",
-      "expires_at": "2026-07-04T23:59:59Z"
+      "expires_at": "2026-07-04T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "genshin_fbjcmysalgp5",
@@ -1020,7 +1262,9 @@
         "EXP"
       ],
       "created_at": "2026-06-01T00:00:00Z",
-      "expires_at": "2026-06-30T23:59:59Z"
+      "expires_at": "2026-06-30T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
       "id": "hsr_silverwolflv999",
@@ -1035,7 +1279,27 @@
         "JADE"
       ],
       "created_at": "2026-04-22T00:00:00Z",
-      "expires_at": "2026-04-28T23:59:59Z"
+      "expires_at": "2026-04-28T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
+    },
+    {
+      "id": "scraped_3_cheerscaptain",
+      "game_type": 3,
+      "code": "CHEERSCAPTAIN",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "100 Кристаллов",
+      "rewards_description_en": "100 Crystals",
+      "reward_types": [
+        "CRYSTAL"
+      ],
+      "created_at": "2026-04-12T12:00:00Z",
+      "expires_at": null,
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2043524577326710912",
+      "verification_status": "verified",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_1_happy3rdanniv",
@@ -1050,55 +1314,26 @@
         "JADE"
       ],
       "created_at": "2026-04-10T12:00:00Z",
-      "expires_at": "2026-04-11T23:59:59Z"
+      "expires_at": "2026-04-11T23:59:59Z",
+      "verification_status": "legacy",
+      "expiry_confidence": "estimated"
     },
     {
-      "id": "scraped_1_shareandsaveit",
-      "game_type": 1,
-      "code": "SHAREANDSAVEIT",
-      "status": "EXPIRED",
-      "is_stream": true,
-      "is_active": false,
-      "rewards_description_ru": "100 Звёздного нефрита, 5 Путеводителей",
-      "rewards_description_en": "100 Stellar Jade, 5 Traveler's Guides",
-      "reward_types": [
-        "JADE",
-        "EXP"
-      ],
-      "created_at": "2026-04-10T12:00:00Z",
-      "expires_at": "2026-04-11T23:59:59Z"
-    },
-    {
-      "id": "scraped_1_heresthecode",
-      "game_type": 1,
-      "code": "HERESTHECODE",
-      "status": "EXPIRED",
-      "is_stream": true,
-      "is_active": false,
-      "rewards_description_ru": "100 Звёздного нефрита, 50 000 Кредитов",
-      "rewards_description_en": "100 Stellar Jade, 50 000 Credits",
-      "reward_types": [
-        "JADE",
-        "CREDIT"
-      ],
-      "created_at": "2026-04-10T12:00:00Z",
-      "expires_at": "2026-04-11T23:59:59Z"
-    },
-    {
-      "id": "scraped_1_xak9qj454sg7",
-      "game_type": 1,
-      "code": "XAK9QJ454SG7",
+      "id": "zzz_zzztvcm",
+      "game_type": 2,
+      "code": "ZZZTVCM",
       "status": "EXPIRED",
       "is_stream": false,
       "is_active": false,
-      "rewards_description_ru": "50 Звёздного нефрита, 10 000 Кредитов",
-      "rewards_description_en": "50 Stellar Jade, 10 000 Credits",
+      "rewards_description_ru": "50 Полихромов",
+      "rewards_description_en": "50 Polychromes",
       "reward_types": [
-        "JADE",
-        "CREDIT"
+        "POLYCHROME"
       ],
-      "created_at": "2026-02-13T12:00:00Z",
-      "expires_at": "2026-03-19T23:59:59Z"
+      "created_at": "2024-07-04T00:00:00Z",
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_godentropy",
@@ -1112,8 +1347,10 @@
       "reward_types": [
         "CRYSTAL"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_bv8fvtzx6k",
@@ -1127,8 +1364,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_qubp3ncyi3",
@@ -1142,8 +1381,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_tosenadina",
@@ -1157,8 +1398,10 @@
       "reward_types": [
         "CRYSTAL"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_zu1tnfwrx2",
@@ -1172,8 +1415,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_w1gpb7dgnh",
@@ -1187,8 +1432,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_g5mponnqut",
@@ -1202,8 +1449,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_mydelivery",
@@ -1217,8 +1466,10 @@
       "reward_types": [
         "CRYSTAL"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_chiefmedic",
@@ -1232,8 +1483,10 @@
       "reward_types": [
         "CRYSTAL"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_q9mpenxj6n",
@@ -1247,8 +1500,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_timealbum",
@@ -1262,8 +1517,10 @@
       "reward_types": [
         "CRYSTAL"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_m1xt0frzlc",
@@ -1277,8 +1534,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_5t8nupyuc2",
@@ -1292,8 +1551,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_39mtmfmmsp",
@@ -1307,8 +1568,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_youyunsgift",
@@ -1322,8 +1585,10 @@
       "reward_types": [
         "CRYSTAL"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_gt8penfn5i",
@@ -1337,8 +1602,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_79vnqp4wqv",
@@ -1352,8 +1619,10 @@
       "reward_types": [
         "CRYSTAL"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_1n6pu7w6fl",
@@ -1367,23 +1636,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
-    },
-    {
-      "id": "scraped_3_cheerscaptain",
-      "game_type": 3,
-      "code": "CHEERSCAPTAIN",
-      "status": "EXPIRED",
-      "is_stream": false,
-      "is_active": false,
-      "rewards_description_ru": "100 Кристаллов",
-      "rewards_description_en": "100 Crystals",
-      "reward_types": [
-        "CRYSTAL"
-      ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_3_6tztqfars7",
@@ -1397,8 +1653,10 @@
       "reward_types": [
         "ASTERITE"
       ],
-      "created_at": "2023-01-01T00:00:00Z",
-      "expires_at": "2023-01-31T23:59:59Z"
+      "created_at": null,
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
     }
   ]
 }

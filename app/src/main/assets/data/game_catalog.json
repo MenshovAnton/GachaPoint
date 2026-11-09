@@ -325,7 +325,7 @@
           "name_en": "Mika",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/mika.png",
           "aliases": []
         },
@@ -334,7 +334,7 @@
           "name_en": "Candace",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/candace.png",
           "aliases": []
         },
@@ -343,7 +343,7 @@
           "name_en": "Dahlia",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/dahlia.png",
           "aliases": []
         },
@@ -352,7 +352,7 @@
           "name_en": "Kachina",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/kachina.png",
           "aliases": []
         },
@@ -361,7 +361,7 @@
           "name_en": "Ororon",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/ororon.png",
           "aliases": []
         },
@@ -370,7 +370,7 @@
           "name_en": "Lan Yan",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/lan_yan.png",
           "aliases": []
         },
@@ -379,7 +379,7 @@
           "name_en": "Bennett",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/bennett.png",
           "aliases": []
         },
@@ -388,7 +388,7 @@
           "name_en": "Xiangling",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/xiangling.png",
           "aliases": []
         },
@@ -397,7 +397,7 @@
           "name_en": "Xingqiu",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/xingqiu.png",
           "aliases": []
         },
@@ -406,7 +406,7 @@
           "name_en": "Kuki Shinobu",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/kuki_shinobu.png",
           "aliases": [
             "Синобу",
@@ -675,7 +675,7 @@
           "name_en": "Fischl",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/fischl.png",
           "aliases": []
         },
@@ -684,7 +684,7 @@
           "name_en": "Sucrose",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/sucrose.png",
           "aliases": []
         },
@@ -980,7 +980,7 @@
           "name_en": "Diona",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/diona.png",
           "aliases": [
             "Диона",
@@ -992,7 +992,7 @@
           "name_en": "Beidou",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/beidou.png",
           "aliases": [
             "Бэй Доу",
@@ -1005,7 +1005,7 @@
           "name_en": "Ningguang",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/ningguang.png",
           "aliases": [
             "Нин Гуан",
@@ -1018,7 +1018,7 @@
           "name_en": "Xinyan",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/xinyan.png",
           "aliases": [
             "Синь Янь",
@@ -1031,7 +1031,7 @@
           "name_en": "Chongyun",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/chongyun.png",
           "aliases": [
             "Чун Юнь",
@@ -1044,7 +1044,7 @@
           "name_en": "Razor",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/razor.png",
           "aliases": [
             "Рэйзор",
@@ -1057,7 +1057,7 @@
           "name_en": "Rosaria",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/rosaria.png",
           "aliases": [
             "Розария",
@@ -1069,7 +1069,7 @@
           "name_en": "Yanfei",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/yanfei.png",
           "aliases": [
             "Янь Фэй",
@@ -1082,7 +1082,7 @@
           "name_en": "Sayu",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/sayu.png",
           "aliases": [
             "Саю",
@@ -1094,7 +1094,7 @@
           "name_en": "Kujou Sara",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/kujou_sara.png",
           "aliases": [
             "Кудзё Сара",
@@ -1108,7 +1108,7 @@
           "name_en": "Thoma",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/thoma.png",
           "aliases": [
             "Тома",
@@ -1120,7 +1120,7 @@
           "name_en": "Gorou",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/gorou.png",
           "aliases": [
             "Горо",
@@ -1132,7 +1132,7 @@
           "name_en": "Yun Jin",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/yun_jin.png",
           "aliases": [
             "Юнь Цзинь",
@@ -1146,7 +1146,7 @@
           "name_en": "Shikanoin Heizou",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/shikanoin_heizou.png",
           "aliases": [
             "Сиканоин Хэйдзо",
@@ -1160,7 +1160,7 @@
           "name_en": "Collei",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/collei.png",
           "aliases": [
             "Коллеи",
@@ -1172,7 +1172,7 @@
           "name_en": "Dori",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/dori.png",
           "aliases": [
             "Дори",
@@ -1184,7 +1184,7 @@
           "name_en": "Layla",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/layla.png",
           "aliases": [
             "Лайла",
@@ -1196,7 +1196,7 @@
           "name_en": "Faruzan",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/faruzan.png",
           "aliases": [
             "Фарузан",
@@ -1209,7 +1209,7 @@
           "name_en": "Yaoyao",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/yaoyao.png",
           "aliases": [
             "Яо Яо",
@@ -1222,7 +1222,7 @@
           "name_en": "Kaveh",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/kaveh.png",
           "aliases": [
             "Кавех",
@@ -1234,7 +1234,7 @@
           "name_en": "Kirara",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/kirara.png",
           "aliases": [
             "Кирара",
@@ -1246,7 +1246,7 @@
           "name_en": "Lynette",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/lynette.png",
           "aliases": [
             "Линетт",
@@ -1259,7 +1259,7 @@
           "name_en": "Freminet",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/freminet.png",
           "aliases": [
             "Фремине",
@@ -1271,7 +1271,7 @@
           "name_en": "Charlotte",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/charlotte.png",
           "aliases": [
             "Шарлотта",
@@ -1283,7 +1283,7 @@
           "name_en": "Chevreuse",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/chevreuse.png",
           "aliases": [
             "Шеврёз",
@@ -1296,7 +1296,7 @@
           "name_en": "Gaming",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/gaming.png",
           "aliases": [
             "Ка Мин",
@@ -1310,7 +1310,7 @@
           "name_en": "Sethos",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/sethos.png",
           "aliases": [
             "Сетос",
@@ -1372,7 +1372,7 @@
           "name_en": "Iansan",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/iansan.png",
           "aliases": [
             "Иансан",
@@ -1384,7 +1384,7 @@
           "name_en": "Ifa",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/ifa.png",
           "aliases": [
             "Ифа",
@@ -1396,7 +1396,7 @@
           "name_en": "Aino",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/aino.png",
           "aliases": [
             "Айно",
@@ -1408,7 +1408,7 @@
           "name_en": "Jahoda",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/jahoda.png",
           "aliases": [
             "Ягода",
@@ -1420,7 +1420,7 @@
           "name_en": "Illuga",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/illuga.png",
           "aliases": [
             "Иллуга",
@@ -1432,7 +1432,7 @@
           "name_en": "Alyosha",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/alyosha.png",
           "aliases": [
             "Алёша",
@@ -1809,7 +1809,7 @@
           "name_en": "Prune",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/characters/prune.png",
           "aliases": [
             "Прун",
@@ -3221,7 +3221,7 @@
           "name_en": "Rainslasher",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/weapons/rainslasher.png",
           "aliases": [
             "Rainslasher",
@@ -3335,7 +3335,7 @@
           "name_en": "Sacrificial Bow",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/weapons/sacrificial_bow.png",
           "aliases": [
             "Sacrificial Bow",
@@ -3584,7 +3584,7 @@
           "name_en": "The Flute",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/0/weapons/the_flute.png",
           "aliases": [
             "The Flute",
@@ -3966,7 +3966,7 @@
           "name_en": "Gallagher",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/gallagher.png",
           "aliases": []
         },
@@ -3975,7 +3975,7 @@
           "name_en": "Tingyun",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/tingyun.png",
           "aliases": []
         },
@@ -3984,7 +3984,7 @@
           "name_en": "Pela",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/pela.png",
           "aliases": []
         },
@@ -4200,7 +4200,7 @@
           "name_en": "March 7th",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/march_7th.png",
           "aliases": [
             "March 7th (Preservation)"
@@ -4211,7 +4211,7 @@
           "name_en": "Dan Heng",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/dan_heng.png",
           "aliases": []
         },
@@ -4220,7 +4220,7 @@
           "name_en": "Herta",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/herta.png",
           "aliases": []
         },
@@ -4427,7 +4427,7 @@
           "name_en": "Sampo",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/sampo.png",
           "aliases": [
             "Сампо",
@@ -4440,7 +4440,7 @@
           "name_en": "Hook",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/hook.png",
           "aliases": [
             "Хук",
@@ -4452,7 +4452,7 @@
           "name_en": "Sushang",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/sushang.png",
           "aliases": [
             "Сушан",
@@ -4464,7 +4464,7 @@
           "name_en": "Qingque",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/qingque.png",
           "aliases": [
             "Цинцюэ",
@@ -4477,7 +4477,7 @@
           "name_en": "Yukong",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/yukong.png",
           "aliases": [
             "Юйкун",
@@ -4489,7 +4489,7 @@
           "name_en": "Luka",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/luka.png",
           "aliases": [
             "Лука",
@@ -4501,7 +4501,7 @@
           "name_en": "Lynx",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/lynx.png",
           "aliases": [
             "Рысь",
@@ -4514,7 +4514,7 @@
           "name_en": "Guinaifen",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/guinaifen.png",
           "aliases": [
             "Гуйнайфэнь",
@@ -4527,7 +4527,7 @@
           "name_en": "Hanya",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/hanya.png",
           "aliases": [
             "Ханья",
@@ -4539,7 +4539,7 @@
           "name_en": "Xueyi",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/xueyi.png",
           "aliases": [
             "Сюэи",
@@ -4551,7 +4551,7 @@
           "name_en": "Misha",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/misha.png",
           "aliases": [
             "Миша",
@@ -4563,7 +4563,7 @@
           "name_en": "Moze",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/moze.png",
           "aliases": [
             "Моцзэ",
@@ -4576,7 +4576,7 @@
           "name_en": "Arlan",
           "rarity": "4★",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/characters/arlan.png",
           "aliases": [
             "Арлан",
@@ -4856,7 +4856,7 @@
           "name_en": "The Day The Cosmos Fell",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/1/weapons/the_day_the_cosmos_fell.png",
           "aliases": [
             "Cosmos Fell"
@@ -5560,7 +5560,7 @@
           "name_en": "A Little Getaway",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/a_little_getaway.png",
           "aliases": [
             "A Little Getaway"
@@ -5582,7 +5582,7 @@
           "name_en": "After the Charmony Fall",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/after_the_charmony_fall.png",
           "aliases": [
             "After the Charmony Fall"
@@ -5604,7 +5604,7 @@
           "name_en": "Boundless Choreo",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/boundless_choreo.png",
           "aliases": [
             "Boundless Choreo"
@@ -5627,7 +5627,7 @@
           "name_en": "Concert for Two",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/concert_for_two.png",
           "aliases": [
             "Concert for Two"
@@ -5638,7 +5638,7 @@
           "name_en": "Day One of My New Life",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/day_one_of_my_new_life.png",
           "aliases": [
             "Day One of My New Life",
@@ -5661,7 +5661,7 @@
           "name_en": "Dream's Montage",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/dreams_montage.png",
           "aliases": [
             "Dream's Montage"
@@ -5683,7 +5683,7 @@
           "name_en": "Eyes of the Prey",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/eyes_of_the_prey.png",
           "aliases": [
             "Eyes of the Prey",
@@ -5750,7 +5750,7 @@
           "name_en": "Geniuses' Greetings",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/geniuses_greetings.png",
           "aliases": [
             "Geniuses' Greetings"
@@ -5761,7 +5761,7 @@
           "name_en": "Geniuses' Repose",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/geniuses_repose.png",
           "aliases": [
             "Geniuses' Repose"
@@ -5805,7 +5805,7 @@
           "name_en": "Indelible Promise",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/indelible_promise.png",
           "aliases": [
             "Indelible Promise"
@@ -5838,7 +5838,7 @@
           "name_en": "Landau's Choice",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/landaus_choice.png",
           "aliases": [
             "Landau's Choice",
@@ -5850,7 +5850,7 @@
           "name_en": "Make the World Clamor",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/make_the_world_clamor.png",
           "aliases": [
             "Make the World Clamor",
@@ -5862,7 +5862,7 @@
           "name_en": "Memories of the Past",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/memories_of_the_past.png",
           "aliases": [
             "Memories of the Past",
@@ -5918,7 +5918,7 @@
           "name_en": "Poised to Bloom",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/poised_to_bloom.png",
           "aliases": [
             "Poised to Bloom"
@@ -5951,7 +5951,7 @@
           "name_en": "Resolution Shines As Pearls of Sweat",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/resolution_shines_as_pearls_of_sweat.png",
           "aliases": [
             "Resolution Shines As Pearls of Sweat"
@@ -5996,7 +5996,7 @@
           "name_en": "Shadowed by Night",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/shadowed_by_night.png",
           "aliases": [
             "Shadowed by Night"
@@ -6007,7 +6007,7 @@
           "name_en": "Shared Feeling",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/shared_feeling.png",
           "aliases": [
             "Shared Feeling",
@@ -6019,7 +6019,7 @@
           "name_en": "Subscribe for More!",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/subscribe_for_more!.png",
           "aliases": [
             "Subscribe for More!"
@@ -6041,7 +6041,7 @@
           "name_en": "The Birth of the Self",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/the_birth_of_the_self.png",
           "aliases": [
             "The Birth of the Self",
@@ -6086,7 +6086,7 @@
           "name_en": "The Moles Welcome You",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/the_moles_welcome_you.png",
           "aliases": [
             "The Moles Welcome You",
@@ -6110,7 +6110,7 @@
           "name_en": "The Story's Next Page",
           "rarity": "4★",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/1/weapons/the_storys_next_page.png",
           "aliases": [
             "The Story's Next Page",
@@ -6377,7 +6377,7 @@
           "name_en": "Anby Demara",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/anby_demara.png",
           "aliases": [
             "Анби",
@@ -6390,7 +6390,7 @@
           "name_en": "Nicole Demara",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/nicole_demara.png",
           "aliases": [
             "Nicole",
@@ -6402,7 +6402,7 @@
           "name_en": "Billy Kid",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/billy_kid.png",
           "aliases": [
             "Billy",
@@ -6554,7 +6554,7 @@
           "name_en": "Corin Wickes",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/corin_wickes.png",
           "aliases": [
             "Corin",
@@ -6566,7 +6566,7 @@
           "name_en": "Luciana de Montefio",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/luciana_de_montefio.png",
           "aliases": [
             "Lucy",
@@ -6579,7 +6579,7 @@
           "name_en": "Piper Wheel",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/piper_wheel.png",
           "aliases": [
             "Piper",
@@ -6591,7 +6591,7 @@
           "name_en": "Seth Lowell",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/seth_lowell.png",
           "aliases": [
             "Seth",
@@ -6603,7 +6603,7 @@
           "name_en": "Anton Ivanov",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/anton_ivanov.png",
           "aliases": [
             "Антон",
@@ -6616,7 +6616,7 @@
           "name_en": "Ben Bigger",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/ben_bigger.png",
           "aliases": [
             "Бен",
@@ -6629,7 +6629,7 @@
           "name_en": "Soukaku",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/soukaku.png",
           "aliases": []
         },
@@ -6638,7 +6638,7 @@
           "name_en": "Sharkboo",
           "rarity": "S",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_sharkboo.png",
           "aliases": []
         },
@@ -6647,7 +6647,7 @@
           "name_en": "Amillion",
           "rarity": "S",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_amillion.png",
           "aliases": []
         },
@@ -6656,7 +6656,7 @@
           "name_en": "Safety",
           "rarity": "S",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_safety.png",
           "aliases": []
         },
@@ -6665,7 +6665,7 @@
           "name_en": "Butler",
           "rarity": "S",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_butler.png",
           "aliases": []
         },
@@ -6674,7 +6674,7 @@
           "name_en": "Resonaboo",
           "rarity": "S",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_resonaboo.png",
           "aliases": []
         },
@@ -6683,7 +6683,7 @@
           "name_en": "Rocketboo",
           "rarity": "S",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_rocketboo.png",
           "aliases": []
         },
@@ -6692,7 +6692,7 @@
           "name_en": "Plugboo",
           "rarity": "S",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_plugboo.png",
           "aliases": []
         },
@@ -6701,7 +6701,7 @@
           "name_en": "Officer Cui",
           "rarity": "S",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_officer_cui.png",
           "aliases": []
         },
@@ -6710,7 +6710,7 @@
           "name_en": "Red Moccus",
           "rarity": "S",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_red_moccus.png",
           "aliases": []
         },
@@ -6719,7 +6719,7 @@
           "name_en": "Bangvolver",
           "rarity": "S",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_bangvolver.png",
           "aliases": []
         },
@@ -6737,7 +6737,7 @@
           "name_en": "Avocaboo",
           "rarity": "A",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_avocaboo.png",
           "aliases": []
         },
@@ -6746,7 +6746,7 @@
           "name_en": "Boollseye",
           "rarity": "A",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_boollseye.png",
           "aliases": []
         },
@@ -6755,7 +6755,7 @@
           "name_en": "Cryboo",
           "rarity": "A",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_cryboo.png",
           "aliases": []
         },
@@ -6764,7 +6764,7 @@
           "name_en": "Magnetiboo",
           "rarity": "A",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_magnetiboo.png",
           "aliases": []
         },
@@ -6773,7 +6773,7 @@
           "name_en": "Bagboo",
           "rarity": "A",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_bagboo.png",
           "aliases": []
         },
@@ -6782,7 +6782,7 @@
           "name_en": "Electroboo",
           "rarity": "A",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_electroboo.png",
           "aliases": []
         },
@@ -6791,7 +6791,7 @@
           "name_en": "Penguinboo",
           "rarity": "A",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_penguinboo.png",
           "aliases": []
         },
@@ -6800,7 +6800,7 @@
           "name_en": "Paperboo",
           "rarity": "A",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/bangboo_paperboo.png",
           "aliases": []
         },
@@ -6919,7 +6919,7 @@
           "name_en": "Pulchra Fellini",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/pulchra.png",
           "aliases": [
             "Pulchra",
@@ -7162,7 +7162,7 @@
           "name_en": "Bamboo",
           "rarity": "A",
           "type": "BANGBOO",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/2/bangboo/bamboo.png",
           "aliases": [
             "Bamboo"
@@ -7184,10 +7184,11 @@
           "name_en": "Robinboo",
           "rarity": "S",
           "type": "BANGBOO",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/bangboo/robinboo.png",
           "aliases": [
-            "Robinboo"
+            "Robinboo",
+            "Robin (Bangboo)"
           ]
         },
         {
@@ -7423,7 +7424,7 @@
           "name_en": "Komano Manato",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/komano_manato.png",
           "aliases": [
             "Komano Manato",
@@ -7435,7 +7436,7 @@
           "name_en": "Pan Yinhu",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/characters/pan_yinhu.png",
           "aliases": [
             "Пань Иньху",
@@ -7839,7 +7840,7 @@
           "name_en": "Bashful Demon",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/bashful_demon.png",
           "aliases": [
             "Bashful Demon",
@@ -7851,7 +7852,7 @@
           "name_en": "Big Cylinder",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/big_cylinder.png",
           "aliases": [
             "Big Cylinder",
@@ -7885,7 +7886,7 @@
           "name_en": "Box Cutter",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/box_cutter.png",
           "aliases": [
             "Box Cutter"
@@ -7896,7 +7897,7 @@
           "name_en": "Bunny Band",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/bunny_band.png",
           "aliases": [
             "Bunny Band",
@@ -7931,7 +7932,7 @@
           "name_en": "Catty Luck",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/catty_luck.png",
           "aliases": [
             "Catty Luck"
@@ -7976,7 +7977,7 @@
           "name_en": "Grill O'Wisp",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/grill_owisp.png",
           "aliases": [
             "Grill O'Wisp"
@@ -7998,7 +7999,7 @@
           "name_en": "Original Transmorpher",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/original_transmorpher.png",
           "aliases": [
             "Original Transmorpher",
@@ -8010,7 +8011,7 @@
           "name_en": "Peacekeeper - Specialized",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/peacekeeper_specialized.png",
           "aliases": [
             "Peacekeeper - Specialized"
@@ -8021,7 +8022,7 @@
           "name_en": "Precious Fossilized Core",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/precious_fossilized_core.png",
           "aliases": [
             "Precious Fossilized Core",
@@ -8033,7 +8034,7 @@
           "name_en": "Puzzle Sphere",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/puzzle_sphere.png",
           "aliases": [
             "Puzzle Sphere"
@@ -8055,7 +8056,7 @@
           "name_en": "Rainforest Gourmet",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/rainforest_gourmet.png",
           "aliases": [
             "Rainforest Gourmet",
@@ -8078,7 +8079,7 @@
           "name_en": "Roaring Ride",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/roaring_ride.png",
           "aliases": [
             "Roaring Ride",
@@ -8101,7 +8102,7 @@
           "name_en": "Slice of Time",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/slice_of_time.png",
           "aliases": [
             "Slice of Time",
@@ -8124,7 +8125,7 @@
           "name_en": "Steam Oven",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/steam_oven.png",
           "aliases": [
             "Steam Oven"
@@ -8146,7 +8147,7 @@
           "name_en": "The Vault",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/the_vault.png",
           "aliases": [
             "The Vault"
@@ -8157,7 +8158,7 @@
           "name_en": "Tremor Trigram Vessel",
           "rarity": "A",
           "type": "WEAPON",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/2/weapons/tremor_trigram_vessel.png",
           "aliases": [
             "Tremor Trigram Vessel"
@@ -8172,6 +8173,174 @@
           "icon_path": "avatars/2/weapons/unfettered_game_ball.png",
           "aliases": [
             "Unfettered Game Ball"
+          ]
+        },
+        {
+          "name_ru": "Агент Гулливер",
+          "name_en": "Agent Gulliver",
+          "rarity": "S",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/agent_gulliver.png",
+          "aliases": [
+            "Agent Gulliver",
+            "Агент Гулливер"
+          ]
+        },
+        {
+          "name_ru": "Ариэль",
+          "name_en": "Ariel",
+          "rarity": "S",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/ariel.png",
+          "aliases": [
+            "Ariel",
+            "Ариэль"
+          ]
+        },
+        {
+          "name_ru": "Львец",
+          "name_en": "Belion",
+          "rarity": "S",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/belion.png",
+          "aliases": [
+            "Belion",
+            "Львец"
+          ]
+        },
+        {
+          "name_ru": "Фанбу",
+          "name_en": "Biggest Fan",
+          "rarity": "S",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/biggest_fan.png",
+          "aliases": [
+            "Biggest Fan",
+            "Фанбу"
+          ]
+        },
+        {
+          "name_ru": "Биркблик",
+          "name_en": "Birkblick",
+          "rarity": "S",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/birkblick.png",
+          "aliases": [
+            "Birkblick",
+            "Биркблик"
+          ]
+        },
+        {
+          "name_ru": "Меркурий",
+          "name_en": "Mercury",
+          "rarity": "S",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/mercury.png",
+          "aliases": [
+            "Mercury",
+            "Меркурий"
+          ]
+        },
+        {
+          "name_ru": "Госпожа Эсме",
+          "name_en": "Miss Esme",
+          "rarity": "S",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/miss_esme.png",
+          "aliases": [
+            "Miss Esme",
+            "Госпожа Эсме"
+          ]
+        },
+        {
+          "name_ru": "Щелкун",
+          "name_en": "Snap",
+          "rarity": "S",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/snap.png",
+          "aliases": [
+            "Snap",
+            "Щелкун"
+          ]
+        },
+        {
+          "name_ru": "Колосок",
+          "name_en": "Sprout",
+          "rarity": "S",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/sprout.png",
+          "aliases": [
+            "Sprout",
+            "Колосок"
+          ]
+        },
+        {
+          "name_ru": "Супер-Джейк",
+          "name_en": "Ultra Jake",
+          "rarity": "S",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/ultra_jake.png",
+          "aliases": [
+            "Ultra Jake",
+            "Супер-Джейк"
+          ]
+        },
+        {
+          "name_ru": "Злобнобу",
+          "name_en": "Baddieboo",
+          "rarity": "A",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/baddieboo.png",
+          "aliases": [
+            "Baddieboo",
+            "Злобнобу"
+          ]
+        },
+        {
+          "name_ru": "Вельзебу",
+          "name_en": "Devilboo",
+          "rarity": "A",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/devilboo.png",
+          "aliases": [
+            "Devilboo",
+            "Вельзебу"
+          ]
+        },
+        {
+          "name_ru": "Искатель",
+          "name_en": "Exploreboo",
+          "rarity": "A",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/exploreboo.png",
+          "aliases": [
+            "Exploreboo",
+            "Искатель"
+          ]
+        },
+        {
+          "name_ru": "Сумобу",
+          "name_en": "Sumoboo",
+          "rarity": "A",
+          "type": "BANGBOO",
+          "is_standard": true,
+          "icon_path": "avatars/2/bangboo/sumoboo.png",
+          "aliases": [
+            "Sumoboo",
+            "Сумобу"
           ]
         }
       ]
@@ -8272,7 +8441,7 @@
           "name_en": "Herrscher of Finality",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/herrscher_of_finality.png",
           "aliases": [
             "Kiana (Finality)",
@@ -8285,7 +8454,7 @@
           "name_en": "Herrscher of Flamescion",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/herrscher_of_flamescion.png",
           "aliases": []
         },
@@ -8321,7 +8490,7 @@
           "name_en": "Herrscher of Truth",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/herrscher_of_truth.png",
           "aliases": []
         },
@@ -8339,7 +8508,7 @@
           "name_en": "Silverwing: N-EX",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/silverwing_n_ex.png",
           "aliases": []
         },
@@ -8348,7 +8517,7 @@
           "name_en": "Herrscher of Rebirth",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/herrscher_of_rebirth.png",
           "aliases": []
         },
@@ -8357,7 +8526,7 @@
           "name_en": "Herrscher of Human: Ego",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/herrscher_of_human_ego.png",
           "aliases": []
         },
@@ -8380,7 +8549,7 @@
           "name_en": "Infinite Ouroboros",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/infinite_ouroboros.png",
           "aliases": []
         },
@@ -8389,7 +8558,7 @@
           "name_en": "Disciplinary Perdition",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/disciplinary_perdition.png",
           "aliases": []
         },
@@ -8416,7 +8585,7 @@
           "name_en": "Fenghuang of Vicissitude",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/fenghuang_of_vicissitude.png",
           "aliases": []
         },
@@ -8425,7 +8594,7 @@
           "name_en": "Palatinus Equinox",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/palatinus_equinox.png",
           "aliases": []
         },
@@ -8489,7 +8658,7 @@
           "name_en": "Night Squire",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/night_squire.png",
           "aliases": [
             "Ночной оруженосец",
@@ -8501,7 +8670,7 @@
           "name_en": "Valkyrie Ranger",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/valkyrie_ranger.png",
           "aliases": [
             "Валькирия Рейнджер",
@@ -8513,7 +8682,7 @@
           "name_en": "Flame Sakitama",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/flame_sakitama.png",
           "aliases": [
             "Грешная Сакитама",
@@ -8525,7 +8694,7 @@
           "name_en": "Valkyrie Gloria",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/valkyrie_gloria.png",
           "aliases": [
             "Валькирия Глория",
@@ -8537,7 +8706,7 @@
           "name_en": "Midnight Absinthe",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/midnight_absinthe.png",
           "aliases": [
             "Полуночная Полынь",
@@ -8562,7 +8731,7 @@
           "name_en": "Spina Astera",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/spina_astera.png",
           "aliases": [
             "Спина Астера",
@@ -8588,7 +8757,7 @@
           "name_en": "Umbral Rose",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/umbrall_rose.png",
           "aliases": [
             "Umbral Rose",
@@ -8615,7 +8784,7 @@
           "name_en": "Dea Anchora",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/dea_anchora.png",
           "aliases": [
             "DA",
@@ -8658,7 +8827,7 @@
           "name_en": "Starchasm Nyx",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/starchasm_nyx.png",
           "aliases": [
             "Nyx",
@@ -8672,7 +8841,7 @@
           "name_en": "Miracle ☆ Magical Girl",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/miracle_magical_girl.png",
           "aliases": [
             "Miracle Magical Girl",
@@ -8686,7 +8855,7 @@
           "name_en": "Lunar Vow: Crimson Love",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/lunar_vow_crimson_love.png",
           "aliases": [
             "Luna",
@@ -8827,7 +8996,7 @@
           "name_en": "Swallowtail Phantasm",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/swallowtail_phantasm.png",
           "aliases": [
             "SP",
@@ -8854,7 +9023,7 @@
           "name_en": "Drive Kometa",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": false,
+          "is_standard": true,
           "icon_path": "avatars/3/characters/drive_kometa.png",
           "aliases": [
             "DK",
@@ -8909,7 +9078,7 @@
           "name_en": "Dreamseeker (AstralOp)",
           "rarity": "S",
           "type": "ASTRAL_OP",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/astral_ops/dreamseeker_astralop.png",
           "aliases": [
             "Dreamseeker",
@@ -9093,7 +9262,7 @@
           "name_en": "Jingwei's Wings",
           "rarity": "A",
           "type": "ELF",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/elves/jingweis_wings.png",
           "aliases": [
             "Jingwei",
@@ -9106,7 +9275,7 @@
           "name_en": "Blood Embrace (ELF)",
           "rarity": "A",
           "type": "ELF",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/elves/blood_embrace.png",
           "aliases": [
             "Blood Embrace",
@@ -9161,7 +9330,7 @@
           "name_en": "Domain of the Void",
           "rarity": "S",
           "type": "WEAPON",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/weapons/domain_of_the_void.png",
           "aliases": [
             "Domain of the Void",
@@ -9175,7 +9344,7 @@
           "name_en": "Domain of Revelation",
           "rarity": "S",
           "type": "WEAPON",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/weapons/domain_of_revelation.png",
           "aliases": [
             "Domain of Revelation",
@@ -9421,7 +9590,7 @@
           "name_en": "Blazing Hope",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/characters/blazing_hope.png",
           "aliases": [
             "Blazing Hope"
@@ -9454,7 +9623,7 @@
           "name_en": "Danzai Spectramancer",
           "rarity": "B",
           "type": "CHARACTER",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/characters/danzai_spectramancer.png",
           "aliases": [
             "Danzai Spectramancer"
@@ -9465,7 +9634,7 @@
           "name_en": "Darkbolt Jonin",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/characters/darkbolt_jonin.png",
           "aliases": [
             "Darkbolt Jonin"
@@ -9509,7 +9678,7 @@
           "name_en": "Fervent Tempo Δ",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/characters/fervent_tempo.png",
           "aliases": [
             "Fervent Tempo Δ"
@@ -9677,7 +9846,7 @@
           "name_en": "Schicksal's Imperative",
           "rarity": "B",
           "type": "CHARACTER",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/characters/schicksals_imperative.png",
           "aliases": [
             "Schicksal's Imperative"
@@ -9721,7 +9890,7 @@
           "name_en": "Starlit Astrologos",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/characters/starlit_astrologos.png",
           "aliases": [
             "Starlit Astrologos"
@@ -9732,7 +9901,7 @@
           "name_en": "Striker Fulminata",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/characters/striker_fulminata.png",
           "aliases": [
             "Striker Fulminata"
@@ -9768,7 +9937,7 @@
           "name_en": "Twilight Paladin",
           "rarity": "S",
           "type": "CHARACTER",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/characters/twilight_paladin.png",
           "aliases": [
             "Twilight Paladin"
@@ -9823,7 +9992,7 @@
           "name_en": "Valkyrie Quicksand",
           "rarity": "A",
           "type": "CHARACTER",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/characters/valkyrie_quicksand.png",
           "aliases": [
             "Valkyrie Quicksand"
@@ -9856,7 +10025,7 @@
           "name_en": "Void Drifter",
           "rarity": "B",
           "type": "CHARACTER",
-          "is_standard": true,
+          "is_standard": false,
           "icon_path": "avatars/3/characters/void_drifter.png",
           "aliases": [
             "Void Drifter"

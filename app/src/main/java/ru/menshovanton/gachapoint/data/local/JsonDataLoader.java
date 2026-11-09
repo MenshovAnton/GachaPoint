@@ -297,6 +297,13 @@ public final class JsonDataLoader {
                 String content = readStream(connection.getInputStream());
 
                 if (isValidJson(content, cacheFileName)) {
+                    String cached = readFromDiskCache(context, cacheFileName);
+                    if (isOlderThanCached(content, cached)) {
+                        AppLogger.w("JsonDataLoader", "Ignoring older remote dataset for " + cacheFileName);
+                        prefs.edit().putLong("last_success_" + cacheFileName, System.currentTimeMillis()).apply();
+                        notifySyncResult(cacheFileName, SyncStatus.NOT_MODIFIED);
+                        return cached;
+                    }
                     boolean saved = writeToDiskCacheSafely(context, cacheFileName, content);
                     if (saved) {
                         SharedPreferences.Editor editor = prefs.edit();
@@ -350,6 +357,31 @@ public final class JsonDataLoader {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private static boolean isOlderThanCached(@NonNull String incoming, @Nullable String cached) {
+        if (cached == null || cached.trim().isEmpty()) {
+            return false;
+        }
+        String incomingUpdatedAt = readUpdatedAt(incoming);
+        String cachedUpdatedAt = readUpdatedAt(cached);
+        if (incomingUpdatedAt == null || cachedUpdatedAt == null) {
+            return false;
+        }
+        return incomingUpdatedAt.compareTo(cachedUpdatedAt) < 0;
+    }
+
+    @Nullable
+    private static String readUpdatedAt(@NonNull String json) {
+        try {
+            JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+            JsonElement updatedAt = root.get("updated_at");
+            if (updatedAt != null && updatedAt.isJsonPrimitive()) {
+                return updatedAt.getAsString();
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     public static boolean writeToDiskCacheSafely(@NonNull Context context, @NonNull String fileName, @NonNull String data) {
