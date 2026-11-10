@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-09T12:37:47Z",
+  "updated_at": "2026-11-09T13:24:40Z",
   "codes": [
     {
       "id": "scraped_0_cdof4x83h7x2",
@@ -485,24 +485,6 @@
       "expiry_confidence": "official"
     },
     {
-      "id": "scraped_0_yuanshen",
-      "game_type": 0,
-      "code": "YUANSHEN",
-      "status": "EXPIRED",
-      "is_stream": false,
-      "is_active": false,
-      "rewards_description_ru": "50 Камней Истока, 3 Опыта героя",
-      "rewards_description_en": "50 Primogems, 3 Hero's Wit",
-      "reward_types": [
-        "PRIMOGEM",
-        "EXP"
-      ],
-      "created_at": "2020-11-10T12:00:00Z",
-      "expires_at": null,
-      "verification_status": "legacy",
-      "expiry_confidence": "unknown"
-    },
-    {
       "id": "hsr_ahablessyou",
       "game_type": 1,
       "code": "AHABLESSYOU",
@@ -662,7 +644,8 @@
       "created_at": "2026-09-23T12:00:00Z",
       "expires_at": "2026-10-22T23:59:59Z",
       "verification_status": "legacy",
-      "expiry_confidence": "estimated"
+      "expiry_confidence": "estimated",
+      "source_url": "https://x.com/GenshinImpact/status/2102941088449536145"
     },
     {
       "id": "zzz_zzzy2anniv",
@@ -1108,24 +1091,6 @@
       "expiry_confidence": "estimated"
     },
     {
-      "id": "zzz_zenlesslaunch",
-      "game_type": 2,
-      "code": "ZENLESSLAUNCH",
-      "status": "EXPIRED",
-      "is_stream": false,
-      "is_active": false,
-      "rewards_description_ru": "60 Полихромов, 6 666 Денни",
-      "rewards_description_en": "60 Polychromes, 6,666 Dennies",
-      "reward_types": [
-        "POLYCHROME",
-        "DENNY"
-      ],
-      "created_at": "2024-07-04T00:00:00Z",
-      "expires_at": null,
-      "verification_status": "legacy",
-      "expiry_confidence": "unknown"
-    },
-    {
       "id": "scraped_1_yajq2tr6zy2p",
       "game_type": 1,
       "code": "YAJQ2TR6ZY2P",
@@ -1177,23 +1142,6 @@
       "expires_at": "2026-08-15T23:59:59Z",
       "verification_status": "legacy",
       "expiry_confidence": "estimated"
-    },
-    {
-      "id": "zzz_catchaboo",
-      "game_type": 2,
-      "code": "CATCHABOO",
-      "status": "EXPIRED",
-      "is_stream": false,
-      "is_active": false,
-      "rewards_description_ru": "30 Полихромов",
-      "rewards_description_en": "30 Polychromes",
-      "reward_types": [
-        "POLYCHROME"
-      ],
-      "created_at": "2024-07-06T00:00:00Z",
-      "expires_at": null,
-      "verification_status": "legacy",
-      "expiry_confidence": "unknown"
     },
     {
       "id": "scraped_1_xtj9mv38dl3x",
@@ -1281,7 +1229,8 @@
       "created_at": "2026-04-22T00:00:00Z",
       "expires_at": "2026-04-28T23:59:59Z",
       "verification_status": "legacy",
-      "expiry_confidence": "estimated"
+      "expiry_confidence": "estimated",
+      "source_url": "https://x.com/honkaistarrail/status/2046835044547719437?s=20"
     },
     {
       "id": "scraped_3_cheerscaptain",
@@ -1319,6 +1268,41 @@
       "expiry_confidence": "estimated"
     },
     {
+      "id": "zzz_catchaboo",
+      "game_type": 2,
+      "code": "CATCHABOO",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "30 Полихромов",
+      "rewards_description_en": "30 Polychromes",
+      "reward_types": [
+        "POLYCHROME"
+      ],
+      "created_at": "2024-07-06T00:00:00Z",
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
+    },
+    {
+      "id": "zzz_zenlesslaunch",
+      "game_type": 2,
+      "code": "ZENLESSLAUNCH",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "60 Полихромов, 6 666 Денни",
+      "rewards_description_en": "60 Polychromes, 6,666 Dennies",
+      "reward_types": [
+        "POLYCHROME",
+        "DENNY"
+      ],
+      "created_at": "2024-07-04T00:00:00Z",
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
+    },
+    {
       "id": "zzz_zzztvcm",
       "game_type": 2,
       "code": "ZZZTVCM",
@@ -1331,6 +1315,24 @@
         "POLYCHROME"
       ],
       "created_at": "2024-07-04T00:00:00Z",
+      "expires_at": null,
+      "verification_status": "legacy",
+      "expiry_confidence": "unknown"
+    },
+    {
+      "id": "scraped_0_yuanshen",
+      "game_type": 0,
+      "code": "YUANSHEN",
+      "status": "EXPIRED",
+      "is_stream": false,
+      "is_active": false,
+      "rewards_description_ru": "50 Камней Истока, 3 Опыта героя",
+      "rewards_description_en": "50 Primogems, 3 Hero's Wit",
+      "reward_types": [
+        "PRIMOGEM",
+        "EXP"
+      ],
+      "created_at": "2020-11-10T12:00:00Z",
       "expires_at": null,
       "verification_status": "legacy",
       "expiry_confidence": "unknown"
@@ -1367,7 +1369,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2102714594691092649"
     },
     {
       "id": "scraped_3_qubp3ncyi3",
@@ -1384,7 +1387,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2097278777843646622"
     },
     {
       "id": "scraped_3_tosenadina",
@@ -1401,7 +1405,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2090634997870862503"
     },
     {
       "id": "scraped_3_zu1tnfwrx2",
@@ -1418,7 +1423,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2089744131388060136"
     },
     {
       "id": "scraped_3_w1gpb7dgnh",
@@ -1435,7 +1441,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2079884159355342904"
     },
     {
       "id": "scraped_3_g5mponnqut",
@@ -1452,7 +1459,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2075897891336462498"
     },
     {
       "id": "scraped_3_mydelivery",
@@ -1503,7 +1511,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2067819663120044467"
     },
     {
       "id": "scraped_3_timealbum",
@@ -1520,7 +1529,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2067094888458363364"
     },
     {
       "id": "scraped_3_m1xt0frzlc",
@@ -1537,7 +1547,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2065026257570464044"
     },
     {
       "id": "scraped_3_5t8nupyuc2",
@@ -1554,7 +1565,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2058865661418377353"
     },
     {
       "id": "scraped_3_39mtmfmmsp",
@@ -1571,7 +1583,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2051617907180724306"
     },
     {
       "id": "scraped_3_youyunsgift",
@@ -1605,7 +1618,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2049805965948600414"
     },
     {
       "id": "scraped_3_79vnqp4wqv",
@@ -1639,7 +1653,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2043645372568883337"
     },
     {
       "id": "scraped_3_6tztqfars7",
@@ -1656,7 +1671,8 @@
       "created_at": null,
       "expires_at": null,
       "verification_status": "legacy",
-      "expiry_confidence": "unknown"
+      "expiry_confidence": "unknown",
+      "source_url": "https://x.com/HonkaiImpact3rd/status/2040021494554567011"
     }
   ]
 }

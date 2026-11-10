@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-09T11:48:45Z",
+  "updated_at": "2026-11-10T09:00:13Z",
   "games": [
     {
       "game_type": 0,
@@ -3555,7 +3555,7 @@
           "source_id": "21997,21998",
           "source_type": "official",
           "verification_status": "verified",
-          "verified_at": "2026-11-09T11:41:44Z"
+          "verified_at": "2026-11-10T09:00:07Z"
         }
       ]
     },
