@@ -85,7 +85,9 @@
                 android:insetBottom="0dp"
                 android:text="@string/three_star"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:strokeColor="@color/check"
+                app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_rare_4"
@@ -98,7 +100,9 @@
                 android:insetBottom="0dp"
                 android:text="@string/four_star"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:strokeColor="@color/check"
+                app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_rare_5"
@@ -111,7 +115,9 @@
                 android:insetBottom="0dp"
                 android:text="@string/five_star"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:strokeColor="@color/check"
+                app:strokeWidth="1dp" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -183,7 +189,9 @@
                     android:paddingVertical="0dp"
                     android:text="@string/pity_status_win"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:strokeColor="@color/check"
+                    app:strokeWidth="1dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_pity_loss"
@@ -200,7 +208,9 @@
                     android:paddingVertical="0dp"
                     android:text="@string/pity_status_loss"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:strokeColor="@color/check"
+                    app:strokeWidth="1dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_pity_guaranteed"
@@ -217,7 +227,9 @@
                     android:paddingVertical="0dp"
                     android:text="@string/pity_status_guaranteed"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:strokeColor="@color/check"
+                    app:strokeWidth="1dp" />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
 

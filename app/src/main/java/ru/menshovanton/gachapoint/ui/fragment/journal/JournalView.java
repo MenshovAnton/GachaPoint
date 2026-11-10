@@ -1675,7 +1675,7 @@ public class JournalView extends Fragment {
             button.setTextColor(Color.WHITE);
         } else {
             button.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
-            button.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(ctx, R.color.pull_row_stroke)));
+            button.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(ctx, R.color.check)));
             button.setTextColor(ContextCompat.getColor(ctx, R.color.text));
         }
     }

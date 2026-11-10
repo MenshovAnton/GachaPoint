@@ -59,14 +59,14 @@ public class HelpView extends Fragment {
         List<HelpSection> sections = new ArrayList<>();
         sections.add(new HelpSection(R.string.help_feature_pulls_title, R.string.help_feature_pulls_detail, R.drawable.icon_journal));
         sections.add(new HelpSection(R.string.help_mech_pity_title, R.string.help_mech_pity_detail, R.drawable.icon_calculator));
-        sections.add(new HelpSection(R.string.help_mech_5050_title, R.string.help_mech_5050_detail, R.drawable.icon_star_rounded));
-        sections.add(new HelpSection(R.string.help_mech_weapon_title, R.string.help_mech_weapon_detail, R.drawable.icon_star));
-        sections.add(new HelpSection(R.string.help_mech_radiance_title, R.string.help_mech_radiance_detail, R.drawable.icon_star_rounded));
+        sections.add(new HelpSection(R.string.help_mech_5050_title, R.string.help_mech_5050_detail, R.drawable.icon_percent));
+        sections.add(new HelpSection(R.string.help_mech_weapon_title, R.string.help_mech_weapon_detail, R.drawable.icon_sword));
+        sections.add(new HelpSection(R.string.help_mech_radiance_title, R.string.help_mech_radiance_detail, R.drawable.icon_sparkle));
         sections.add(new HelpSection(R.string.help_mech_hi3_title, R.string.help_mech_hi3_detail, R.drawable.icon_star));
         sections.add(new HelpSection(R.string.help_feature_calendar_title, R.string.help_feature_calendar_detail, R.drawable.icon_calendar));
         sections.add(new HelpSection(R.string.help_faq_savings_title, R.string.help_faq_savings_detail, R.drawable.icon_piggy_bank));
         sections.add(new HelpSection(R.string.help_feature_promocodes_title, R.string.help_feature_promocodes_detail, R.drawable.icon_promocode));
-        sections.add(new HelpSection(R.string.help_feature_banners_title, R.string.help_feature_banners_detail, R.drawable.icon_notification));
+        sections.add(new HelpSection(R.string.help_feature_banners_title, R.string.help_feature_banners_detail, R.drawable.icon_star_rounded));
         sections.add(new HelpSection(R.string.help_faq_stats_title, R.string.help_faq_stats_detail, R.drawable.icon_statistics));
         sections.add(new HelpSection(R.string.help_feature_widgets_title, R.string.help_feature_widgets_detail, R.drawable.icon_home));
         sections.add(new HelpSection(R.string.help_feature_backup_title, R.string.help_feature_backup_detail, R.drawable.icon_backup));
