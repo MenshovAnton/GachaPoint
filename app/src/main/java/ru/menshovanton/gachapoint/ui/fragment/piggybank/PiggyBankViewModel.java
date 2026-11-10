@@ -38,18 +38,20 @@ public class PiggyBankViewModel extends AndroidViewModel {
         if (gameType != null) {
             this.currentGameType = gameType;
             refreshData();
-            calendarRepository.syncDailiesProgress(gameType, this::refreshData);
+            calendarRepository.syncDailiesProgress(gameType, () ->
+                    calendarRepository.syncSubsProgress(gameType, this::refreshData));
         }
     }
 
     public void syncAndRefresh() {
-        calendarRepository.syncDailiesProgress(currentGameType, this::refreshData);
+        calendarRepository.syncDailiesProgress(currentGameType, () ->
+                calendarRepository.syncSubsProgress(currentGameType, this::refreshData));
     }
 
     public void refreshData() {
         int totalProgress = repository.getTotalProgress(currentGameType);
         int target = repository.getTarget(currentGameType);
-        int remainderGems = repository.getManualGems(currentGameType);
+        int remainderGems = repository.getEffectiveRemainderGems(currentGameType);
         int totalGems = repository.getTotalGems(currentGameType);
 
         PiggyBankState currentState = stateLiveData.getValue();
@@ -105,6 +107,10 @@ public class PiggyBankViewModel extends AndroidViewModel {
             toRemove -= deductedDailies;
         }
 
+        if (toRemove > 0) {
+            deductedSubs += toRemove;
+        }
+
         if (deductedSubs > 0) {
             calendarRepository.recordSpentSubs(currentGameType, deductedSubs);
         }
@@ -146,18 +152,15 @@ public class PiggyBankViewModel extends AndroidViewModel {
         int subsPulls = repository.getSubsProgress(currentGameType);
         int dailiesPulls = repository.getDailiesProgress(currentGameType);
 
-        int totalPulls = manualPulls + subsPulls + dailiesPulls;
-        long totalGemsValue = (long) totalPulls * pullCost + currentManualGems;
+        int totalPulls = repository.getTotalProgress(currentGameType);
+        long totalGemsValue = repository.getTotalGems(currentGameType);
 
         if (totalGemsValue <= 0) return;
         long remainingValue = Math.max(0, totalGemsValue - gems);
         int newTotalPulls = (int) (remainingValue / pullCost);
         int newManualGems = (int) (remainingValue % pullCost);
 
-        int pullsToRemove = totalPulls - newTotalPulls;
-
-        // Cascading removal of pulls
-        int toRemove = pullsToRemove;
+        int toRemove = totalPulls - newTotalPulls;
         int newManual = manualPulls;
         int newSubs = subsPulls;
         int newDailies = dailiesPulls;
@@ -178,6 +181,10 @@ public class PiggyBankViewModel extends AndroidViewModel {
             deductedDailies = Math.min(toRemove, newDailies);
             newDailies -= deductedDailies;
             toRemove -= deductedDailies;
+        }
+
+        if (toRemove > 0) {
+            deductedSubs += toRemove;
         }
 
         if (deductedSubs > 0) {
@@ -210,6 +217,7 @@ public class PiggyBankViewModel extends AndroidViewModel {
     }
 
     public void resetTarget() {
+        calendarRepository.clearAutoProgress(currentGameType);
         repository.reset(currentGameType);
         refreshData();
     }

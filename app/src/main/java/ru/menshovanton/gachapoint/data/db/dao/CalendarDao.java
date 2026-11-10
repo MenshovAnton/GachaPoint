@@ -78,4 +78,7 @@ public interface CalendarDao {
 
     @Query("SELECT COUNT(*) FROM calendar_game_status WHERE game_type = :gameType AND daily_status = 1")
     int getCompletedDailiesCount(int gameType);
+
+    @Query("SELECT COUNT(*) FROM calendar_game_status WHERE game_type = :gameType AND (status = 1 OR status = 3) AND sub_days_remaining > 0")
+    int getClaimedSubscriptionsCount(int gameType);
 }

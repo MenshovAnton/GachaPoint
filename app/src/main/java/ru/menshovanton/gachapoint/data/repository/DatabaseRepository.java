@@ -415,6 +415,15 @@ public class DatabaseRepository {
         }, callback, 0);
     }
 
+    public void getClaimedSubscriptionsCount(GameType gameType, Callback<Integer> callback) {
+        queryAsyncSafe(() -> {
+            if (gameType != null) {
+                return getDb().calendarDao().getClaimedSubscriptionsCount(gameType.getCode());
+            }
+            return 0;
+        }, callback, 0);
+    }
+
     public void getSavings(GameType gameType, Callback<SavingsEntity> callback) {
         queryAsyncSafe(() -> {
             if (gameType != null) {

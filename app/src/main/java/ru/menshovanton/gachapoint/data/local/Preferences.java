@@ -265,6 +265,7 @@ public class Preferences {
 
     private static final String PREFIX_PIGGY_SPENT_SUBS = "piggy_bank_spent_subs_";
     private static final String PREFIX_PIGGY_SPENT_DAILIES = "piggy_bank_spent_dailies_";
+    private static final String PREFIX_PIGGY_AUTO_REMAINDER = "piggy_bank_auto_remainder_";
 
     public int getPiggyBankSpentSubs(GameType game) {
         if (game == null) return 0;
@@ -284,6 +285,16 @@ public class Preferences {
     public void savePiggyBankSpentDailies(GameType game, int spent) {
         if (game == null) return;
         settings.edit().putInt(PREFIX_PIGGY_SPENT_DAILIES + game.name(), Math.max(0, spent)).apply();
+    }
+
+    public int getPiggyBankAutoRemainder(GameType game) {
+        if (game == null) return 0;
+        return settings.getInt(PREFIX_PIGGY_AUTO_REMAINDER + game.name(), 0);
+    }
+
+    public void savePiggyBankAutoRemainder(GameType game, int remainder) {
+        if (game == null) return;
+        settings.edit().putInt(PREFIX_PIGGY_AUTO_REMAINDER + game.name(), Math.max(0, remainder)).apply();
     }
 
     public static final String KEY_VIEWED_PROMOCODES = "viewed_promocodes_set";

@@ -138,11 +138,10 @@ public class HomeViewModel extends AndroidViewModel {
         int target = piggyBankRepository.getTarget(gameType);
         int totalGems = piggyBankRepository.getTotalGems(gameType);
         int initialProgress = target > 0 ? totalProgress : 0;
-        int initialGems = target > 0 ? totalGems : 0;
-        savingsStateLiveData.setValue(new HomeSavingsState(initialProgress, target, initialGems));
+        savingsStateLiveData.setValue(new HomeSavingsState(initialProgress, target, totalGems));
         piggyTargetLiveData.setValue(target);
         piggyProgressLiveData.setValue(initialProgress);
-        piggyGemsLiveData.setValue(initialGems);
+        piggyGemsLiveData.setValue(totalGems);
 
         HomePityState cachedPity = pityCache.get(gameType);
         if (cachedPity != null) {

@@ -8,19 +8,26 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import ru.menshovanton.gachapoint.data.db.entities.SavingsEntity;
+import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 
 public class PiggyBankRepository {
 
     private final DatabaseRepository databaseRepository;
+    private final Preferences preferences;
     private final Map<GameType, SavingsEntity> cache = new ConcurrentHashMap<>();
 
     public PiggyBankRepository(@NonNull Context context) {
-        this(context, new DatabaseRepository(context));
+        this(context, new DatabaseRepository(context), new Preferences(context));
     }
 
     public PiggyBankRepository(@NonNull Context context, @NonNull DatabaseRepository databaseRepository) {
+        this(context, databaseRepository, new Preferences(context));
+    }
+
+    public PiggyBankRepository(@NonNull Context context, @NonNull DatabaseRepository databaseRepository, @NonNull Preferences preferences) {
         this.databaseRepository = databaseRepository;
+        this.preferences = preferences;
         initCache();
     }
 
@@ -108,13 +115,29 @@ public class PiggyBankRepository {
         databaseRepository.saveSavingsDailiesProgress(gameType, safeProgress, null);
     }
 
+    public int getAutoRemainderGems(GameType gameType) {
+        return preferences != null ? preferences.getPiggyBankAutoRemainder(gameType) : 0;
+    }
+
+    public int getEffectiveRemainderGems(GameType gameType) {
+        if (gameType == null) return 0;
+        int totalRem = getManualGems(gameType) + getAutoRemainderGems(gameType);
+        return totalRem % gameType.getPullCost();
+    }
+
+    public int getExtraPullsFromGems(GameType gameType) {
+        if (gameType == null) return 0;
+        int totalRem = getManualGems(gameType) + getAutoRemainderGems(gameType);
+        return totalRem / gameType.getPullCost();
+    }
+
     public int getTotalProgress(GameType gameType) {
-        return getManualProgress(gameType) + getSubsProgress(gameType) + getDailiesProgress(gameType);
+        return getManualProgress(gameType) + getSubsProgress(gameType) + getDailiesProgress(gameType) + getExtraPullsFromGems(gameType);
     }
 
     public int getTotalGems(GameType gameType) {
         if (gameType == null) return 0;
-        return getTotalProgress(gameType) * gameType.getPullCost() + getManualGems(gameType);
+        return getTotalProgress(gameType) * gameType.getPullCost() + getEffectiveRemainderGems(gameType);
     }
 
     public int getTarget(GameType gameType) {
@@ -145,10 +168,16 @@ public class PiggyBankRepository {
     }
 
     public void clearAutoProgress(GameType gameType) {
+        if (preferences != null) {
+            preferences.savePiggyBankAutoRemainder(gameType, 0);
+        }
         saveAllProgress(gameType, getManualProgress(gameType), 0, 0, getManualGems(gameType));
     }
 
     public void reset(GameType gameType) {
+        if (preferences != null) {
+            preferences.savePiggyBankAutoRemainder(gameType, 0);
+        }
         SavingsEntity s = cache.get(gameType);
         if (s != null) {
             s.target = 0;

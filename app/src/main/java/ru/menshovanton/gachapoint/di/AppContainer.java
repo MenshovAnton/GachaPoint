@@ -22,7 +22,7 @@ public class AppContainer {
         Context appContext = context.getApplicationContext();
         this.preferences = new Preferences(appContext);
         this.databaseRepository = new DatabaseRepository(appContext);
-        this.piggyBankRepository = new PiggyBankRepository(appContext, this.databaseRepository);
+        this.piggyBankRepository = new PiggyBankRepository(appContext, this.databaseRepository, this.preferences);
         this.calendar = new Calendar(this.databaseRepository);
         this.calendarRepository = new CalendarRepository(
                 this.calendar,
