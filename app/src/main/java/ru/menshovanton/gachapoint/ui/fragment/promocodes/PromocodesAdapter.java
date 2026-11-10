@@ -104,8 +104,11 @@ public class PromocodesAdapter extends RecyclerView.Adapter<PromocodesAdapter.Pr
         holder.tvCode.setText(code.getCode());
         holder.tvRewardsDescription.setText(code.getRewardsDescription(context));
 
-        if (gameType != null) {
+        if (gameType != null && code.hasGems()) {
             holder.ivRewardIcon.setImageResource(gameType.getPrimaryCurrencyDrawableResId());
+            holder.ivRewardIcon.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivRewardIcon.setVisibility(View.GONE);
         }
 
         setupStatusBadge(holder, code, context);

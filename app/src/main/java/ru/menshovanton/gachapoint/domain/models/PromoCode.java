@@ -120,6 +120,37 @@ public class PromoCode {
 
     @NonNull
     public List<String> getRewardTypes() { return rewardTypes; }
+
+    public boolean hasGems() {
+        if (rewardTypes != null && !rewardTypes.isEmpty()) {
+            for (String type : rewardTypes) {
+                if (type == null) continue;
+                String upper = type.toUpperCase(java.util.Locale.ROOT);
+                if (upper.equals("PRIMOGEM")
+                        || upper.equals("JADE")
+                        || upper.equals("STELLAR_JADE")
+                        || upper.equals("POLYCHROME")
+                        || upper.equals("CRYSTAL")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        String lowerEn = rewardsDescriptionEn != null ? rewardsDescriptionEn.toLowerCase(java.util.Locale.ROOT) : "";
+        String lowerRu = rewardsDescriptionRu != null ? rewardsDescriptionRu.toLowerCase(java.util.Locale.ROOT) : "";
+        String lowerDesc = rewardsDescription != null ? rewardsDescription.toLowerCase(java.util.Locale.ROOT) : "";
+        String combined = lowerEn + " " + lowerRu + " " + lowerDesc;
+
+        return combined.contains("primogem")
+                || combined.contains("камн")
+                || combined.contains("jade")
+                || combined.contains("нефрит")
+                || combined.contains("polychrome")
+                || combined.contains("полихром")
+                || combined.contains("crystal")
+                || combined.contains("кристалл");
+    }
     @NonNull
     public String getStatus() { return status; }
     @Nullable

@@ -459,6 +459,7 @@
     <string name="notification_banner_announced_title">Анонс баннера: %s</string>
     <string name="notification_banner_upcoming_title">Завтра старт баннера: %s</string>
     <string name="notification_banner_active_title">Баннер уже доступен: %s!</string>
+    <string name="notification_banner_active_text">%1$s — испытайте удачу!</string>
     <string name="notification_hot_code_title">Горящий промокод (%1$s): %2$s</string>
     <string name="notification_hot_code_desc">Истекает менее чем через 24 часа! Заберите награды.</string>
     <string name="drop_type_character">Персонаж</string>

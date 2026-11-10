@@ -481,6 +481,7 @@
     <string name="notification_banner_announced_title">New Banner Announced: %s</string>
     <string name="notification_banner_upcoming_title">Starting Tomorrow: %s</string>
     <string name="notification_banner_active_title">Banner is Now Live: %s!</string>
+    <string name="notification_banner_active_text">%1$s — try your luck!</string>
     <string name="notification_hot_code_title">Expiring Promo Code (%1$s): %2$s</string>
     <string name="notification_hot_code_desc">Expires in less than 24 hours! Tap to redeem your rewards.</string>
     <string name="drop_type_character">Character</string>

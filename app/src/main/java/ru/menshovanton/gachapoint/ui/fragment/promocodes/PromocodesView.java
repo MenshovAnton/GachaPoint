@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import java.util.Arrays;
+import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
@@ -66,12 +66,12 @@ public class PromocodesView extends Fragment {
         });
     };
 
-    private static final GameType[] SUPPORTED_GAMES = {
-            GameType.GENSHIN,
-            GameType.HSR,
-            GameType.ZZZ,
-            GameType.HI3
-    };
+    private List<GameType> getEnabledGames() {
+        if (getActivity() instanceof ru.menshovanton.gachapoint.ui.main.MainActivityView) {
+            return ((ru.menshovanton.gachapoint.ui.main.MainActivityView) getActivity()).getEnabledGames();
+        }
+        return new ru.menshovanton.gachapoint.data.local.Preferences(requireContext()).getEnabledGames();
+    }
 
     public PromocodesView() {}
 
@@ -116,6 +116,20 @@ public class PromocodesView extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(PromocodesViewModel.class);
 
+        List<GameType> enabledGames = getEnabledGames();
+        Bundle args = getArguments();
+        GameType targetGame = null;
+        if (args != null && args.containsKey("game_type")) {
+            int gCode = args.getInt("game_type", -1);
+            if (gCode >= 0) {
+                targetGame = GameType.fromCode(gCode);
+            }
+        }
+        if (targetGame == null || !enabledGames.contains(targetGame)) {
+            targetGame = !enabledGames.isEmpty() ? enabledGames.get(0) : GameType.GENSHIN;
+        }
+        viewModel.selectGameType(targetGame);
+
         setupGamePills();
 
         adapter = new PromocodesAdapter(
@@ -158,7 +172,7 @@ public class PromocodesView extends Fragment {
             ru.menshovanton.gachapoint.data.repository.PromocodeRepository repo =
                     ru.menshovanton.gachapoint.data.repository.PromocodeRepository.getInstance(requireContext());
             java.util.Set<GameType> badgeGames = new java.util.HashSet<>();
-            for (GameType g : SUPPORTED_GAMES) {
+            for (GameType g : getEnabledGames()) {
                 if (repo.getUnviewedPromoCodesCount(g) > 0) {
                     badgeGames.add(g);
                 }
@@ -169,6 +183,12 @@ public class PromocodesView extends Fragment {
                 }
             });
         });
+    }
+
+    private void updatePillsVisibility() {
+        if (rvGameTypes == null) return;
+        List<GameType> enabled = getEnabledGames();
+        rvGameTypes.setVisibility(enabled.size() > 1 ? View.VISIBLE : View.GONE);
     }
 
     private void showModerationDialog(PromoCode code) {
@@ -226,11 +246,20 @@ public class PromocodesView extends Fragment {
     }
 
     private void setupGamePills() {
+        List<GameType> enabledGames = getEnabledGames();
         GameType current = viewModel.getSelectedGameType().getValue();
-        if (current == null) current = GameType.GENSHIN;
+        if (current == null || !enabledGames.contains(current)) {
+            current = !enabledGames.isEmpty() ? enabledGames.get(0) : GameType.GENSHIN;
+            viewModel.selectGameType(current);
+        }
+
+        ru.menshovanton.gachapoint.ui.main.MainActivityView mainActivity =
+                getActivity() instanceof ru.menshovanton.gachapoint.ui.main.MainActivityView
+                        ? (ru.menshovanton.gachapoint.ui.main.MainActivityView) getActivity()
+                        : null;
 
         pillsAdapter = new PillsAdapter(
-                Arrays.asList(SUPPORTED_GAMES),
+                enabledGames,
                 current,
                 (gameType, position) -> {
                     HapticHelper.performClickHaptic(requireContext(), null);
@@ -247,10 +276,13 @@ public class PromocodesView extends Fragment {
                     updateMainBadge();
                     updatePillsBadges();
                 },
-                null
+                () -> ru.menshovanton.gachapoint.ui.main.GamesConfigBottomSheetDialog.show(requireContext(), () -> {
+                    if (mainActivity != null) mainActivity.refreshGamesConfig();
+                })
         );
         rvGameTypes.setAdapter(pillsAdapter);
         updatePillsBadges();
+        updatePillsVisibility();
     }
 
     private void setupFilters() {
@@ -275,6 +307,34 @@ public class PromocodesView extends Fragment {
     }
 
     private void observeViewModel() {
+        ru.menshovanton.gachapoint.ui.main.MainActivityView mainActivity =
+                getActivity() instanceof ru.menshovanton.gachapoint.ui.main.MainActivityView
+                        ? (ru.menshovanton.gachapoint.ui.main.MainActivityView) getActivity()
+                        : null;
+        if (mainActivity != null) {
+            mainActivity.getMainActivityViewModel().getEnabledGamesLiveData().observe(getViewLifecycleOwner(), enabled -> {
+                if (enabled == null || enabled.isEmpty()) return;
+                GameType current = viewModel.getSelectedGameType().getValue();
+                if (current == null || !enabled.contains(current)) {
+                    current = enabled.get(0);
+                    viewModel.selectGameType(current);
+                    if (adapter != null) {
+                        adapter = new PromocodesAdapter(
+                                current,
+                                (promoCode, isRedeemed) -> viewModel.setRedeemed(promoCode, isRedeemed),
+                                this::showModerationDialog
+                        );
+                        rvPromocodes.setAdapter(adapter);
+                    }
+                }
+                if (pillsAdapter != null) {
+                    pillsAdapter.updateData(enabled, current);
+                }
+                updatePillsBadges();
+                updatePillsVisibility();
+            });
+        }
+
         viewModel.getDisplayedCodes().observe(getViewLifecycleOwner(), codes -> {
             adapter.submitList(codes);
             boolean isEmpty = (codes == null || codes.isEmpty());

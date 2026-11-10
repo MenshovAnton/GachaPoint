@@ -115,6 +115,31 @@ public class DataSyncWorker extends Worker {
         }
     }
 
+    public static void checkStreamPromocodesSync(@NonNull Context context) {
+        Preferences prefs = new Preferences(context);
+        if (!prefs.getBooleanPreference(Preferences.ALLOW_NOTIFICATIONS, true)
+                || !prefs.isNotifyPromocodesEnabled()) {
+            return;
+        }
+        DailyNotificationWorker.createNotificationChannels(context);
+        PromocodeSyncTask.createNotificationChannel(context);
+
+        PromocodeRepository repo = PromocodeRepository.getInstance(context);
+        List<PromoCode> unnotifiedStream = repo.getUnnotifiedStreamCodes();
+        if (unnotifiedStream != null) {
+            for (PromoCode code : unnotifiedStream) {
+                GameType game = GameType.fromId(code.getGameType());
+                if (game == null || !prefs.isGameEnabled(game)) {
+                    continue;
+                }
+                if (hasNotificationPermission(context)) {
+                    showCodeNotification(context, code, true);
+                    repo.markAsNotified(code.getId());
+                }
+            }
+        }
+    }
+
     private void checkPromocodes(Context context, Preferences prefs) {
         if (!prefs.isNotifyPromocodesEnabled()) {
             return;
@@ -122,22 +147,29 @@ public class DataSyncWorker extends Worker {
         PromocodeRepository repo = PromocodeRepository.getInstance(context);
         List<PromoCode> unnotifiedStream = repo.getUnnotifiedStreamCodes();
 
-        // Check stream codes
         if (unnotifiedStream != null) {
             for (PromoCode code : unnotifiedStream) {
+                GameType game = GameType.fromId(code.getGameType());
+                if (game == null || !prefs.isGameEnabled(game)) {
+                    continue;
+                }
                 if (hasNotificationPermission(context)) {
                     showCodeNotification(context, code, true);
+                    repo.markAsNotified(code.getId());
                 }
-                repo.markAsNotified(code.getId());
             }
         }
 
-        // Check burning codes (expires within 24 hours)
         List<PromoCode> allCodes = repo.getPromoCodes(null, false);
         Instant now = Instant.now();
 
         for (PromoCode code : allCodes) {
             if (!code.isActive() || code.isRedeemed() || code.isExpiredByUser() || code.isPermanent()) {
+                continue;
+            }
+
+            GameType game = GameType.fromId(code.getGameType());
+            if (game == null || !prefs.isGameEnabled(game)) {
                 continue;
             }
 
@@ -156,8 +188,8 @@ public class DataSyncWorker extends Worker {
                     if (!prefs.getStringPreference(notifyKey, "").equals(expiresAtStr)) {
                         if (hasNotificationPermission(context)) {
                             showCodeNotification(context, code, false);
+                            prefs.saveStringPreference(notifyKey, expiresAtStr);
                         }
-                        prefs.saveStringPreference(notifyKey, expiresAtStr);
                     }
                 }
             } catch (Exception ignored) {}
@@ -196,21 +228,22 @@ public class DataSyncWorker extends Worker {
                     if (!prefs.isBannerNotifiedAnnounced(bannerId)) {
                         if (daysUntil <= 7 && hasNotificationPermission(context)) {
                             String title = context.getString(R.string.notification_banner_announced_title, gameTitle);
-                            String text = "v" + banner.getVersion() + " (" + context.getString(R.string.three_star).replace("3", String.valueOf(banner.getPhase())) + "): " + heroes;
+                            String phaseStr = context.getString(R.string.banner_phase_format, banner.getPhase());
+                            String text = "v" + banner.getVersion() + " (" + phaseStr + "): " + heroes;
                             showBannerNotification(context, banner, title, text, bannerId.hashCode() + 1);
+                            prefs.setBannerNotifiedAnnounced(bannerId);
                         }
-                        prefs.setBannerNotifiedAnnounced(bannerId);
                     }
                 }
 
-                if (daysUntil == 1) {
+                if (daysUntil <= 1 && daysUntil >= 0) {
                     if (!prefs.isBannerNotifiedUpcoming(bannerId)) {
                         if (hasNotificationPermission(context)) {
                             String title = context.getString(R.string.notification_banner_upcoming_title, gameTitle);
                             String text = heroes + " (" + banner.getStartDate() + " — " + banner.getEndDate() + ")";
                             showBannerNotification(context, banner, title, text, bannerId.hashCode() + 2);
+                            prefs.setBannerNotifiedUpcoming(bannerId);
                         }
-                        prefs.setBannerNotifiedUpcoming(bannerId);
                     }
                 }
 
@@ -219,10 +252,10 @@ public class DataSyncWorker extends Worker {
                     if (!prefs.isBannerNotifiedActive(bannerId)) {
                         if (today.isEqual(start) && hasNotificationPermission(context)) {
                             String title = context.getString(R.string.notification_banner_active_title, gameTitle);
-                            String text = heroes + " — испытайте удачу!";
+                            String text = context.getString(R.string.notification_banner_active_text, heroes);
                             showBannerNotification(context, banner, title, text, bannerId.hashCode() + 3);
+                            prefs.setBannerNotifiedActive(bannerId);
                         }
-                        prefs.setBannerNotifiedActive(bannerId);
                     }
                 }
             }
@@ -230,7 +263,7 @@ public class DataSyncWorker extends Worker {
     }
 
     @SuppressLint("MissingPermission")
-    private void showCodeNotification(Context context, PromoCode code, boolean isStream) {
+    private static void showCodeNotification(Context context, PromoCode code, boolean isStream) {
         GameType game = GameType.fromId(code.getGameType());
         String gameTitle = game != null ? context.getString(game.getDisplayNameResId()) : "";
 
@@ -251,7 +284,7 @@ public class DataSyncWorker extends Worker {
                 : context.getString(R.string.notification_hot_code_title, gameTitle, code.getCode());
 
         String content = isStream
-                ? context.getString(R.string.promocode_stream_push_text, code.getCode(), code.getRewardsDescription())
+                ? context.getString(R.string.promocode_stream_push_text, code.getCode(), code.getRewardsDescription(context))
                 : context.getString(R.string.notification_hot_code_desc);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PromocodeSyncTask.CHANNEL_PROMOCODES)
@@ -298,7 +331,7 @@ public class DataSyncWorker extends Worker {
         }
     }
 
-    private boolean hasNotificationPermission(Context context) {
+    public static boolean hasNotificationPermission(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
                     == PackageManager.PERMISSION_GRANTED;

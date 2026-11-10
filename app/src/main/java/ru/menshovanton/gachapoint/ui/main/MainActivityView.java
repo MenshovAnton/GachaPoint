@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
@@ -31,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.data.local.Preferences;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.worker.NotificationScheduler;
@@ -127,6 +129,50 @@ public class MainActivityView extends AppCompatActivity {
         NotificationScheduler.scheduleDailyNotification(this);
         ru.menshovanton.gachapoint.data.local.JsonDataLoader.addDataUpdatedListener(dataUpdatedListener);
         updatePromocodesBadge();
+        handleNotificationIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleNotificationIntent(intent);
+    }
+
+    private void handleNotificationIntent(Intent intent) {
+        if (intent == null) return;
+        String navigateTo = intent.getStringExtra("navigate_to");
+        if (navigateTo == null || navigateTo.isEmpty()) return;
+
+        int gameType = intent.getIntExtra("game_type", -1);
+        if (gameType >= 0 && viewModel != null) {
+            viewModel.setSubType(gameType);
+        }
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null) {
+            NavController navController = navHostFragment.getNavController();
+            Bundle bundle = new Bundle();
+            if (gameType >= 0) {
+                bundle.putInt("game_type", gameType);
+            }
+            try {
+                if ("promocodes".equals(navigateTo)) {
+                    if (navController.getCurrentDestination() == null
+                            || navController.getCurrentDestination().getId() != R.id.promocodesView) {
+                        navController.navigate(R.id.promocodesView, bundle);
+                    }
+                } else if ("banners".equals(navigateTo)) {
+                    if (navController.getCurrentDestination() == null
+                            || navController.getCurrentDestination().getId() != R.id.bannersView) {
+                        navController.navigate(R.id.bannersView, bundle);
+                    }
+                }
+            } catch (Exception e) {
+                AppLogger.e("MainActivityView", "Failed to navigate from intent: " + navigateTo, e);
+            }
+        }
     }
 
     private final ru.menshovanton.gachapoint.data.local.JsonDataLoader.OnDataUpdatedListener dataUpdatedListener = cacheFileName -> {
