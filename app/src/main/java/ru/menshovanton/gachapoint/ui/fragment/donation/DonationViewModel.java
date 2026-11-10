@@ -49,7 +49,6 @@ public class DonationViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        super.onCleared();
         JsonDataLoader.removeDataUpdatedListener(dataUpdatedListener);
     }
 }

@@ -205,6 +205,9 @@ public class MainActivityView extends AppCompatActivity {
             int totalUnviewed = unviewedCodes + unviewedBanners;
 
             ru.menshovanton.gachapoint.data.db.AppDatabase.postToMain(() -> {
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
                 BottomNavigationView navigation = findViewById(R.id.bnv_main);
                 if (navigation != null) {
                     if (totalUnviewed > 0) {

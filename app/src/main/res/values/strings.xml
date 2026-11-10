@@ -514,7 +514,7 @@
     <string name="nav_donation">Support &amp; Hall of Fame</string>
     <string name="donation_screen_title">Support Project</string>
     <string name="donation_hero_title">GachaPoint Independence</string>
-    <string name="donation_hero_desc">GachaPoint is built as a fair and independent community tool: 100% free, offline-first, no accounts, and no annoying ads.\n\nDonations are completely voluntary. They help cover infrastructure costs (promo codes &amp; banner schedule sync) and motivate future development.</string>
+    <string name="donation_hero_desc" formatted="false">GachaPoint is built as a fair and independent community tool: 100% free, offline-first, no accounts, and no annoying ads.\n\nDonations are completely voluntary. They help cover infrastructure costs (promo codes &amp; banner schedule sync) and motivate future development.</string>
     <string name="donation_section_tiers">Boosty Support Tiers</string>
     <string name="donation_tier_3_title">3★ Supporter • 99 ₽ / mo</string>
     <string name="donation_tier_3_desc">Name in the Hall of Fame and extra gacha luck</string>
