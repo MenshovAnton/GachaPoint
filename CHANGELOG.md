@@ -44,6 +44,18 @@
 - Stability & Compatibility: fixed storage permissions on Android 8–9 (API ≤ 28), added local diagnostic file logger, and optimized database sync lifecycles.
 - Piggy Bank Hotfix: cascading deduction of pulls and gems across all sources (including subscriptions and dailies), plus an option in the menu to clear auto-savings.
 
+# v0.3.0
+- Promo Codes Aggregator: built-in hub for up-to-date codes sourced from an open repository, categorized into active, limited stream drops, and permanent codes. Features 1-tap copying, direct links to official redemption pages, and redeemed status tracking.
+- Banner Schedule & Rerun Archive: comprehensive banner timeline across phases and patches, countdown timers for active banners, 5★ and 4★ character rosters with visual avatars, and historical rerun intervals.
+- Full Honkai Impact 3rd Support: added 4th HoYoverse title with complete gacha logic, custom pity thresholds (90/100), Crystals currency, and Battlesuit Supply passes.
+- Visual Character Catalog & Wish Avatars: item database with high-quality character portraits, autocompletion search suggestions in Journal, and automatic patch version tagging under each summon.
+- Floating Island Navigation & Polished UI: modern elevated bottom navigation bar, harmonized Material 3 card styling, smoother game transitions, and elimination of progress gauge flicker.
+- Express Onboarding: fast initial setup on first launch to easily pick active games and configure preferences in seconds.
+- Enhanced Piggy Bank & Quick Converter: exact remainder currency tracking (+120 gems/jades/polychromes), built-in two-way currency converter, and refined cascade deductions for subscription/daily savings.
+- Smart Notifications & Deep Linking: tapping notifications now navigates directly into the target screen and game context; added silent filtering for disabled games and timely alerts for promo codes and expiring banners.
+- Dedicated Project Support Screen: new section in the More menu featuring an interactive Hall of Fame of supporters and options to contribute to ongoing development.
+- Performance & Architecture: upgraded to Room database schema v5, implemented bandwidth-friendly HTTP caching (ETag / If-None-Match), and improved overall background worker reliability.
+
 # v0.2.2
 - In-App Help & FAQ: comprehensive visual guide explaining key GachaPoint features (Piggy Bank mechanics, Wish Journal, pity rules, database backups) located in the More menu.
 - Interactive Empty States: informative illustrated placeholders in Journal, Piggy Bank, and Statistics offering quick-action buttons for seamless onboarding.

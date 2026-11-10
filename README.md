@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/MenshovAnton/GachaPoint/releases"><img src="https://img.shields.io/badge/version-v0.2.0-blue?style=flat-square" alt="Version"></a>
+  <a href="https://github.com/MenshovAnton/GachaPoint/releases"><img src="https://img.shields.io/badge/version-v0.3.0-blue?style=flat-square" alt="Version"></a>
   <img src="https://img.shields.io/badge/Android-8.0%2B-green?style=flat-square&logo=android" alt="Android 8.0+">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat-square" alt="License"></a>
   <a href="https://t.me/GachaPoint_official"><img src="https://img.shields.io/badge/Telegram-@GachaPoint__official-2CA5E0?style=flat-square&logo=telegram&logoColor=white" alt="Telegram"></a>
@@ -27,19 +27,21 @@
 
 - **Account Safety:** GachaPoint does not ask for your game passwords, cookies, or auth tokens. Your game account remains completely safe from bans or credential leaks.
 - **Local Storage:** All your logs, summon histories, targets, and statistics are stored locally on your device in a Room database.
-- **Privacy First:** No hidden telemetry, third-party tracking, or proprietary server dependencies. Any networked utilities (such as the upcoming promo code aggregator) fetch directly from open, public sources without personal data exchange.
+- **Privacy First:** No hidden telemetry, third-party tracking, or proprietary server dependencies. Any networked utilities (promo code aggregator, banner schedule, character catalog) fetch directly from open, public sources without personal data exchange.
 
 ---
 
 ## Key Features
 
+- **Promo Codes Aggregator:** Up-to-date codes across all supported titles (including limited livestream giveaways), status filtering, 1-tap clipboard copying, and direct links to official web redemption portals.
+- **Banner Schedule & Rerun Archive:** Timeline of active and upcoming character/weapon banners, real-time countdown timers, visual character rosters with colorful avatars, and historical rerun intervals.
 - **Subscriptions & Dailies Calendar:** Keep track of daily pass claims (Welkin Moon, Express Supply Pass, Inter-Knot Membership, Monthly Card) and daily commissions, monitor missed days, and forecast upcoming resource yields.
-- **Pulls & Pity Tracker:** Save summon/wish history across all banner types (event, weapon, standard, and bangboo), with intuitive visual pity gauges (5★ and 4★) and 50/50 win-rate calculation.
-- **Savings & Goals:** Monitor saved resources both in raw pulls and currency equivalents, define saving goals for upcoming characters, and use the quick conversion calculator.
+- **Pulls & Pity Tracker:** Save summon/wish history across all banner types (event, weapon, standard, and bangboo), with visual character icons, automated patch version tagging, intuitive pity gauges (5★ and 4★), and 50/50 win-rate calculation.
+- **Savings & Goals:** Monitor saved resources both in raw pulls and currency equivalents with precise remainder tracking, define saving goals, and use the quick conversion calculator.
 - **Analytics & Statistics:** Detailed insights including currency expenditure, 50/50 win-rate percentages, average pulls per 5-star drop, and banner roll distribution.
-- **Shareable Stats Card:** Generate and export an attractive summary card showing your personal stats for any selected game.
-- **Customizable Home Widgets:** Reorder and toggle dashboard widgets via drag-and-drop to tailor the home screen to your needs.
-- **Reminders:** Configurable daily notifications so you never miss claiming your subscription rewards.
+- **Shareable Stats Card:** Generate and export an attractive summary card showing your personal stats for any selected game to share with friends.
+- **Customizable Modern Interface:** Floating Island Bottom Navigation Bar, modular home dashboard widgets with Drag-and-Drop ordering, and fast initial onboarding.
+- **Smart Reminders:** Configurable daily system notifications with deep links to jump straight into the relevant game section.
 
 ---
 
@@ -49,9 +51,13 @@
 |:---:|:---:|:---:|
 | <img src="./media/screenshots/en/home_screen.png" width="240" alt="Home Screen" /> | <img src="./media/screenshots/en/subscription_calendar.png" width="240" alt="Subscriptions Calendar" /> | <img src="./media/screenshots/en/pull_history.png" width="240" alt="Pulls Journal" /> |
 
-| Savings & Goals | Overall Statistics | Shareable Stats Card |
+| Savings & Goals | Promo Codes | Banner Schedule |
 |:---:|:---:|:---:|
-| <img src="./media/screenshots/en/savings_and_goals.png" width="240" alt="Savings & Goals" /> | <img src="./media/screenshots/en/overall_statistics.png" width="240" alt="Overall Statistics" /> | <img src="./media/screenshots/en/stats_share_card.png" width="240" alt="Shareable Stats Card" /> |
+| <img src="./media/screenshots/en/savings_and_goals.png" width="240" alt="Savings & Goals" /> | <img src="./media/screenshots/en/promocodes.png" width="240" alt="Promo Codes" /> | <img src="./media/screenshots/en/banner_schedule.png" width="240" alt="Banner Schedule" /> |
+
+| Overall Statistics | Shareable Stats Card |
+|:---:|:---:|
+| <img src="./media/screenshots/en/overall_statistics.png" width="240" alt="Overall Statistics" /> | <img src="./media/screenshots/en/stats_share_card.png" width="240" alt="Shareable Stats Card" /> |
 
 <details>
 <summary><b>Additional Screens (Dailies & Menu)</b></summary>
