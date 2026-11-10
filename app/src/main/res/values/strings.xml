@@ -510,6 +510,25 @@
     <string name="about_version_badge" translatable="false">v0.3.0 • Offline &amp; Open Source</string>
     <string name="about_section_project">About Project</string>
     <string name="about_section_links">Links &amp; Community</string>
+    <!-- Donation Screen -->
+    <string name="nav_donation">Support &amp; Hall of Fame</string>
+    <string name="donation_screen_title">Support Project</string>
+    <string name="donation_hero_title">GachaPoint Independence</string>
+    <string name="donation_hero_desc">GachaPoint is built as a fair and independent community tool: 100% free, offline-first, no accounts, and no annoying ads.\n\nDonations are completely voluntary. They help cover infrastructure costs (promo codes &amp; banner schedule sync) and motivate future development.</string>
+    <string name="donation_section_tiers">Boosty Support Tiers</string>
+    <string name="donation_tier_3_title">3★ Supporter • 99 ₽ / mo</string>
+    <string name="donation_tier_3_desc">Name in the Hall of Fame and extra gacha luck</string>
+    <string name="donation_tier_4_title">4★ Epic • 299 ₽ / mo</string>
+    <string name="donation_tier_4_desc">Highlighted name in the Hall of Fame + mention in release changelogs</string>
+    <string name="donation_tier_5_title">5★ Legendary • 449 ₽ / mo</string>
+    <string name="donation_tier_5_desc">Top position in the Hall of Fame + early beta test access</string>
+    <string name="donation_section_hall_of_fame">Hall of Fame</string>
+    <string name="donation_tier_5_header">5★ Legendary Guarantors</string>
+    <string name="donation_tier_4_header">4★ Epic Supporters</string>
+    <string name="donation_tier_3_header">3★ Supporters</string>
+    <string name="donation_hall_of_fame_empty_title">Hall of Fame will be here</string>
+    <string name="donation_hall_of_fame_empty_desc">Names of our 5★, 4★, and 3★ Boosty supporters will appear here in upcoming updates.</string>
+    <string name="donation_btn_boosty">Support on Boosty</string>
     <string name="about_github_title">Source Code</string>
     <string name="about_github_desc" translatable="false">github.com/MenshovAnton/GachaPoint</string>
     <string name="about_telegram_title">Telegram Channel</string>
@@ -721,7 +740,7 @@
     <string name="github_url" translatable="false">https://github.com/MenshovAnton/GachaPoint</string>
     <string name="data_repo_url" translatable="false">https://github.com/menshovanton/GachaPoint-Data</string>
     <string name="tiktok_url" translatable="false">https://www.tiktok.com/@gachapoint_official</string>
-    <string name="boosty_url" translatable="false">https://boosty.to/menshovanton/donate</string>
+    <string name="boosty_url" translatable="false">https://boosty.to/menshovanton</string>
     <string name="telegram_url" translatable="false">https://t.me/GachaPoint_official</string>
 
     <!-- About Sources -->

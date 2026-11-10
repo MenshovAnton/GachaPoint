@@ -1,7 +1,5 @@
 package ru.menshovanton.gachapoint.ui.fragment.info;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.ui.common.ChromeCustomTabsHelper;
 
 public class InfoView extends Fragment {
 
@@ -62,7 +61,7 @@ public class InfoView extends Fragment {
             rowTelegram.setOnClickListener(v -> openUrl("https://t.me/GachaPoint_official"));
         }
         if (rowDonation != null) {
-            rowDonation.setOnClickListener(v -> openUrl("https://boosty.to/menshovanton/donate"));
+            rowDonation.setOnClickListener(v -> viewModel.onDonationClicked());
         }
         if (rowDeveloper != null) {
             rowDeveloper.setOnClickListener(v -> openUrl("https://github.com/MenshovAnton"));
@@ -74,13 +73,14 @@ public class InfoView extends Fragment {
     private void observeViewModel() {
         viewModel.getNavigateToMenuEvent().observe(getViewLifecycleOwner(), unused ->
                 NavHostFragment.findNavController(this).popBackStack());
+
+        viewModel.getNavigateToDonationEvent().observe(getViewLifecycleOwner(), unused ->
+                NavHostFragment.findNavController(this).navigate(R.id.action_info_to_donation));
     }
 
     private void openUrl(String url) {
-        if (url == null || url.isEmpty()) return;
-
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(intent);
+        if (url == null || url.trim().isEmpty()) return;
+        ChromeCustomTabsHelper.openUrl(requireContext(), url.trim());
     }
 
     @Override

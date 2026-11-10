@@ -18,6 +18,7 @@ public class MoreViewModel extends AndroidViewModel {
     private final SingleLiveEvent<Void> navigateToStatisticsEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> navigateToPromocodesEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> navigateToBannersEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> navigateToDonationEvent = new SingleLiveEvent<>();
 
     public MoreViewModel(@NonNull Application application) {
         super(application);
@@ -37,6 +38,14 @@ public class MoreViewModel extends AndroidViewModel {
 
     public void onBannersButtonClicked() {
         navigateToBannersEvent.call();
+    }
+
+    public LiveData<Void> getNavigateToDonationEvent() {
+        return navigateToDonationEvent;
+    }
+
+    public void onDonationButtonClicked() {
+        navigateToDonationEvent.call();
     }
 
     public LiveData<Void> getNavigateToHelpEvent() {

@@ -35,6 +35,7 @@ import ru.menshovanton.gachapoint.domain.models.BannerScheduleItem;
 import ru.menshovanton.gachapoint.domain.models.CatalogItem;
 import ru.menshovanton.gachapoint.domain.models.PatchInfo;
 import ru.menshovanton.gachapoint.domain.models.PromoCode;
+import ru.menshovanton.gachapoint.domain.models.SupportersData;
 
 public class DataContractTest {
 
@@ -241,6 +242,16 @@ public class DataContractTest {
                 assertFalse(object.get("verified_at").getAsString().isEmpty());
             }
         }
+    }
+
+    @Test
+    public void supportersParsesAndMatchesContract() throws Exception {
+        String json = readAsset("supporters.json");
+        SupportersData data = SupportersRepository.parseJson(json);
+        assertNotNull(data);
+        assertNotNull(data.getLegendary());
+        assertNotNull(data.getEpic());
+        assertNotNull(data.getSupporter());
     }
 
     private static Set<String> allowedRarities(int gameType) {

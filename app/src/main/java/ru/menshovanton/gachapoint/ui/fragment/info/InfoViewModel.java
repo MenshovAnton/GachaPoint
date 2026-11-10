@@ -8,12 +8,21 @@ import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 public class InfoViewModel extends ViewModel {
 
     private final SingleLiveEvent<Void> navigateToSettingsEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> navigateToDonationEvent = new SingleLiveEvent<>();
 
     public LiveData<Void> getNavigateToMenuEvent() {
         return navigateToSettingsEvent;
     }
 
+    public LiveData<Void> getNavigateToDonationEvent() {
+        return navigateToDonationEvent;
+    }
+
     public void onBackToMenuClicked() {
         navigateToSettingsEvent.call();
+    }
+
+    public void onDonationClicked() {
+        navigateToDonationEvent.call();
     }
 }

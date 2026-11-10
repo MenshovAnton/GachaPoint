@@ -487,6 +487,25 @@
     <!-- About Screen -->
     <string name="about_section_project">О проекте</string>
     <string name="about_section_links">Ссылки и сообщество</string>
+    <!-- Donation Screen -->
+    <string name="nav_donation">Поддержка и Зал Славы</string>
+    <string name="donation_screen_title">Поддержка проекта</string>
+    <string name="donation_hero_title">Независимость GachaPoint</string>
+    <string name="donation_hero_desc">GachaPoint создаётся как честный фанатский инструмент: без рекламы, платных функций и сбора данных. Приложение навсегда останется бесплатным для каждого игрока.\n\nДонаты — это добровольная помощь, которая покрывает расходы на серверы синхронизации промокодов и баз данных, а также позволяет уделять разработке больше времени.</string>
+    <string name="donation_section_tiers">Уровни подписки на Boosty</string>
+    <string name="donation_tier_3_title">3★ Трёхзвёздочный вклад • 99 ₽/мес</string>
+    <string name="donation_tier_3_desc">Имя в Зале Славы и плюсик в карму на баннерах</string>
+    <string name="donation_tier_4_title">4★ Эпик • 299 ₽/мес</string>
+    <string name="donation_tier_4_desc">Выделенный ник в Зале Славы + упоминание в ченджлогах релиза</string>
+    <string name="donation_tier_5_title">5★ Легендарный гарант • 449 ₽/мес</string>
+    <string name="donation_tier_5_desc">Особое место во главе Зала Славы + ранний доступ к бета-тестам</string>
+    <string name="donation_section_hall_of_fame">Зал Славы</string>
+    <string name="donation_tier_5_header">5★ Легендарные гаранты</string>
+    <string name="donation_tier_4_header">4★ Эпические саппорты</string>
+    <string name="donation_tier_3_header">3★ Спонсоры проекта</string>
+    <string name="donation_hall_of_fame_empty_title">Здесь будет Зал Славы</string>
+    <string name="donation_hall_of_fame_empty_desc">Имена первых 5★, 4★ и 3★ спонсоров с Boosty появятся здесь с выходом обновлений.</string>
+    <string name="donation_btn_boosty">Перейти на Boosty</string>
     <string name="about_github_title">Исходный код</string>
     <string name="about_telegram_title">Telegram-канал</string>
     <string name="about_telegram_desc">Новости и обсуждение проекта</string>

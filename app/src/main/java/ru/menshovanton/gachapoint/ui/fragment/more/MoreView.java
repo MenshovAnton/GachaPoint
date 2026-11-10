@@ -81,9 +81,7 @@ public class MoreView extends Fragment {
                             requireContext(), getString(R.string.tiktok_url)));
         }
         if (rowCommunityBoosty != null) {
-            rowCommunityBoosty.setOnClickListener(v ->
-                    ru.menshovanton.gachapoint.ui.common.ChromeCustomTabsHelper.openUrl(
-                            requireContext(), getString(R.string.boosty_url)));
+            rowCommunityBoosty.setOnClickListener(v -> viewModel.onDonationButtonClicked());
         }
 
         return view;
@@ -123,6 +121,9 @@ public class MoreView extends Fragment {
 
         viewModel.getNavigateToBannersEvent().observe(getViewLifecycleOwner(), unused ->
                 NavHostFragment.findNavController(this).navigate(R.id.action_to_banners));
+
+        viewModel.getNavigateToDonationEvent().observe(getViewLifecycleOwner(), unused ->
+                NavHostFragment.findNavController(this).navigate(R.id.action_to_donation));
     }
 
     private void setupListeners() {

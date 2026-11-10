@@ -17,14 +17,17 @@ public final class DataSyncConfig {
     public static final String PROMOCODES_REMOTE_URL = BASE_REMOTE_URL + "promocodes.json";
     public static final String BANNERS_REMOTE_URL = BASE_REMOTE_URL + "banners_schedule.json";
     public static final String CATALOG_REMOTE_URL = BASE_REMOTE_URL + "game_catalog.json";
+    public static final String SUPPORTERS_REMOTE_URL = BASE_REMOTE_URL + "supporters.json";
 
     public static final String ASSET_PROMOCODES = "data/promocodes.json";
     public static final String ASSET_BANNERS = "data/banners_schedule.json";
     public static final String ASSET_CATALOG = "data/game_catalog.json";
+    public static final String ASSET_SUPPORTERS = "data/supporters.json";
 
     public static final String CACHE_PROMOCODES = "promocodes_v1_cache.json";
     public static final String CACHE_BANNERS = "banners_v1_cache.json";
     public static final String CACHE_CATALOG = "catalog_v1_cache.json";
+    public static final String CACHE_SUPPORTERS = "supporters_v1_cache.json";
 
     @Nullable
     public static String resolveRemotePath(@Nullable String path) {

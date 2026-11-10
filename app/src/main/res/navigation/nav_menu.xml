@@ -75,6 +75,14 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out"/>
 
+        <action
+            android:id="@+id/action_to_donation"
+            app:destination="@id/donationView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+
     </fragment>
 
     <fragment
@@ -105,7 +113,23 @@
         android:id="@+id/infoView"
         android:name="ru.menshovanton.gachapoint.ui.fragment.info.InfoView"
         android:label="@string/nav_info"
-        tools:layout="@layout/fragment_info" />
+        tools:layout="@layout/fragment_info">
+
+        <action
+            android:id="@+id/action_info_to_donation"
+            app:destination="@id/donationView"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/donationView"
+        android:name="ru.menshovanton.gachapoint.ui.fragment.donation.DonationView"
+        android:label="@string/nav_donation"
+        tools:layout="@layout/fragment_donation" />
 
     <fragment
         android:id="@+id/settingsView"

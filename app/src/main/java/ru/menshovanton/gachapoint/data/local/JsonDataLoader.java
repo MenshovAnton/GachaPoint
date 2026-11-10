@@ -200,6 +200,8 @@ public final class JsonDataLoader {
                 return obj.has("games") && obj.get("games").isJsonArray() && !obj.getAsJsonArray("games").isEmpty();
             } else if (cacheFileName.contains("catalog")) {
                 return obj.has("games") && obj.get("games").isJsonArray() && !obj.getAsJsonArray("games").isEmpty();
+            } else if (cacheFileName.contains("supporter")) {
+                return obj.has("supporters") && obj.get("supporters").isJsonObject();
             }
             return true;
         } catch (Exception e) {
