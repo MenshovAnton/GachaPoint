@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11T10:24:13Z",
+  "updated_at": "2026-11-11T10:39:56Z",
   "games": [
     {
       "game_type": 0,
@@ -2909,8 +2909,24 @@
             "Nilou",
             "Tighnari"
           ],
-          "featured_four_stars_ru": [],
-          "featured_four_stars_en": [],
+          "featured_four_stars_ru": [
+            "Сетос",
+            "Кавех",
+            "Фарузан",
+            "Лайла",
+            "Кандакия",
+            "Дори",
+            "Коллеи"
+          ],
+          "featured_four_stars_en": [
+            "Sethos",
+            "Kaveh",
+            "Faruzan",
+            "Layla",
+            "Candace",
+            "Dori",
+            "Collei"
+          ],
           "verification_status": "legacy"
         },
         {
@@ -3161,8 +3177,36 @@
             "Diluc",
             "Jean"
           ],
-          "featured_four_stars_ru": [],
-          "featured_four_stars_en": [],
+          "featured_four_stars_ru": [
+            "Далия",
+            "Мика",
+            "Розария",
+            "Сахароза",
+            "Диона",
+            "Ноэлль",
+            "Беннет",
+            "Фишль",
+            "Эмбер",
+            "Рэйзор",
+            "Кэйа",
+            "Барбара",
+            "Лиза"
+          ],
+          "featured_four_stars_en": [
+            "Dahlia",
+            "Mika",
+            "Rosaria",
+            "Sucrose",
+            "Diona",
+            "Noelle",
+            "Bennett",
+            "Fischl",
+            "Amber",
+            "Razor",
+            "Kaeya",
+            "Barbara",
+            "Lisa"
+          ],
           "verification_status": "legacy"
         },
         {
@@ -3271,8 +3315,18 @@
             "Navia",
             "Lyney"
           ],
-          "featured_four_stars_ru": [],
-          "featured_four_stars_en": [],
+          "featured_four_stars_ru": [
+            "Шеврёз",
+            "Шарлотта",
+            "Фремине",
+            "Линетт"
+          ],
+          "featured_four_stars_en": [
+            "Chevreuse",
+            "Charlotte",
+            "Freminet",
+            "Lynette"
+          ],
           "verification_status": "legacy"
         },
         {
@@ -5638,7 +5692,7 @@
           "source_id": "47385253",
           "source_type": "official",
           "verification_status": "verified",
-          "verified_at": "2026-11-11T10:24:10Z"
+          "verified_at": "2026-11-11T10:39:53Z"
         }
       ]
     },
@@ -6241,7 +6295,7 @@
           "version": "2.1",
           "phase": 2,
           "start_date": "2025-08-06",
-          "end_date": "2025-08-27",
+          "end_date": "2025-09-03",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
             "Элис Таймфилд",
@@ -7215,10 +7269,16 @@
           "end_date": "2020-02-12"
         },
         {
+          "version": "3.5",
+          "title": "Seele's Oneiric Stroll",
+          "start_date": "2019-11-14",
+          "end_date": "2019-12-25"
+        },
+        {
           "version": "3.4",
           "title": "Edict of Twilight",
           "start_date": "2019-09-26",
-          "end_date": "2019-12-25"
+          "end_date": "2019-11-13"
         },
         {
           "version": "3.3",
@@ -7253,24 +7313,208 @@
         {
           "version": "2.7",
           "title": "Will of the Herrscher",
-          "start_date": "2018-12-11",
+          "start_date": "2019-01-23",
           "end_date": "2019-03-05"
+        },
+        {
+          "version": "2.6",
+          "title": "Reburn",
+          "start_date": "2018-12-12",
+          "end_date": "2019-01-22"
+        },
+        {
+          "version": "2.3",
+          "title": "Battle of Schicksal",
+          "start_date": "2018-11-07",
+          "end_date": "2018-12-11"
+        },
+        {
+          "version": "2.2.8",
+          "title": "Ritual Imayoh Revived",
+          "start_date": "2018-10-18",
+          "end_date": "2018-11-06"
+        },
+        {
+          "version": "2.2.5",
+          "title": "Blazing Flames",
+          "start_date": "2018-09-28",
+          "end_date": "2018-10-17"
+        },
+        {
+          "version": "2.2.3",
+          "title": "Poetry of Life",
+          "start_date": "2018-09-05",
+          "end_date": "2018-09-27"
+        },
+        {
+          "version": "2.2.1",
+          "title": "Midsummer Beach Party",
+          "start_date": "2018-06-20",
+          "end_date": "2018-09-04"
         },
         {
           "version": "2.0",
           "title": "Sakura Samsara",
           "start_date": "2018-05-09",
-          "end_date": "2018-12-10"
+          "end_date": "2018-06-19"
         }
       ],
       "banners": [
+        {
+          "id": "hi3_2_0_1",
+          "type": "CHARACTER",
+          "version": "2.0",
+          "phase": 1,
+          "start_date": "2018-05-09",
+          "end_date": "2018-05-30",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Goushinnso Memento"
+          ],
+          "featured_five_stars_en": [
+            "Goushinnso Memento"
+          ],
+          "featured_four_stars_ru": [
+            "Gyakushinn Miko"
+          ],
+          "featured_four_stars_en": [
+            "Gyakushinn Miko"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_2_2_1_1",
+          "type": "CHARACTER",
+          "version": "2.2.1",
+          "phase": 1,
+          "start_date": "2018-06-20",
+          "end_date": "2018-07-11",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Violet Executer"
+          ],
+          "featured_five_stars_en": [
+            "Violet Executer"
+          ],
+          "featured_four_stars_ru": [
+            "Valkyrie Pledge",
+            "Sakuno Rondo"
+          ],
+          "featured_four_stars_en": [
+            "Valkyrie Pledge",
+            "Sakuno Rondo"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_2_2_3_1",
+          "type": "CHARACTER",
+          "version": "2.2.3",
+          "phase": 1,
+          "start_date": "2018-09-05",
+          "end_date": "2018-09-26",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Тереза: Небесный гимн"
+          ],
+          "featured_five_stars_en": [
+            "Celestial Hymn"
+          ],
+          "featured_four_stars_ru": [
+            "Грешная Сакитама"
+          ],
+          "featured_four_stars_en": [
+            "Flame Sakitama"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_2_2_5_1",
+          "type": "CHARACTER",
+          "version": "2.2.5",
+          "phase": 1,
+          "start_date": "2018-09-28",
+          "end_date": "2018-10-17",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Phoenix"
+          ],
+          "featured_five_stars_en": [
+            "Phoenix"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_2_2_8_1",
+          "type": "CHARACTER",
+          "version": "2.2.8",
+          "phase": 1,
+          "start_date": "2018-10-18",
+          "end_date": "2018-11-06",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Ritual Imayoh"
+          ],
+          "featured_five_stars_en": [
+            "Ritual Imayoh"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_2_3_1",
+          "type": "CHARACTER",
+          "version": "2.3",
+          "phase": 1,
+          "start_date": "2018-11-07",
+          "end_date": "2018-11-28",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Sixth Serenade"
+          ],
+          "featured_five_stars_en": [
+            "Sixth Serenade"
+          ],
+          "featured_four_stars_ru": [
+            "Ночной оруженосец"
+          ],
+          "featured_four_stars_en": [
+            "Night Squire"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_2_6_1",
+          "type": "CHARACTER",
+          "version": "2.6",
+          "phase": 1,
+          "start_date": "2018-12-12",
+          "end_date": "2019-01-02",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Фу Хуа: Теневой рыцарь"
+          ],
+          "featured_five_stars_en": [
+            "Shadow Knight"
+          ],
+          "featured_four_stars_ru": [
+            "Sündenjäger"
+          ],
+          "featured_four_stars_en": [
+            "Sündenjäger"
+          ],
+          "verification_status": "legacy"
+        },
         {
           "id": "hi3_2_7_1",
           "type": "CHARACTER",
           "version": "2.7",
           "phase": 1,
-          "start_date": "2018-12-11",
-          "end_date": "2018-12-31",
+          "start_date": "2019-01-23",
+          "end_date": "2019-02-13",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
             "Киана: Судья Пустоты"
@@ -7279,10 +7523,78 @@
             "Herrscher of the Void"
           ],
           "featured_four_stars_ru": [
-            "Ночная Роза"
+            "Ночной оруженосец"
           ],
           "featured_four_stars_en": [
             "Night Squire"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_2_8_1",
+          "type": "CHARACTER",
+          "version": "2.8",
+          "phase": 1,
+          "start_date": "2019-03-06",
+          "end_date": "2019-03-27",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Химеко: Алый рыцарь"
+          ],
+          "featured_five_stars_en": [
+            "Vermilion Knight: Eclipse"
+          ],
+          "featured_four_stars_ru": [
+            "Ночная Роза"
+          ],
+          "featured_four_stars_en": [
+            "Umbral Rose"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_3_0_1",
+          "type": "CHARACTER",
+          "version": "3.0",
+          "phase": 1,
+          "start_date": "2019-04-18",
+          "end_date": "2019-05-09",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Argent Knight: Artemis"
+          ],
+          "featured_five_stars_en": [
+            "Argent Knight: Artemis"
+          ],
+          "featured_four_stars_ru": [
+            "Striker Fulminata"
+          ],
+          "featured_four_stars_en": [
+            "Striker Fulminata"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_3_1_1",
+          "type": "CHARACTER",
+          "version": "3.1",
+          "phase": 1,
+          "start_date": "2019-05-23",
+          "end_date": "2019-06-13",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Molotov Cherry"
+          ],
+          "featured_five_stars_en": [
+            "Molotov Cherry"
+          ],
+          "featured_four_stars_ru": [
+            "Blueberry Blitz",
+            "Броня: Комета Драйв"
+          ],
+          "featured_four_stars_en": [
+            "Blueberry Blitz",
+            "Drive Kometa"
           ],
           "verification_status": "legacy"
         },
@@ -7295,17 +7607,161 @@
           "end_date": "2019-07-25",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
+            "Зеле: Призрачный хвост"
+          ],
+          "featured_five_stars_en": [
+            "Swallowtail Phantasm"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_3_3_1",
+          "type": "CHARACTER",
+          "version": "3.3",
+          "phase": 1,
+          "start_date": "2019-08-15",
+          "end_date": "2019-09-05",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
             "Броня: Судья Разума"
           ],
           "featured_five_stars_en": [
             "Herrscher of Reason"
           ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_3_4_1",
+          "type": "CHARACTER",
+          "version": "3.4",
+          "phase": 1,
+          "start_date": "2019-09-26",
+          "end_date": "2019-10-17",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Twilight Paladin"
+          ],
+          "featured_five_stars_en": [
+            "Twilight Paladin"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_3_5_1",
+          "type": "CHARACTER",
+          "version": "3.5",
+          "phase": 1,
+          "start_date": "2019-11-14",
+          "end_date": "2019-12-05",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Зеле: Стигийская Нимфа"
+          ],
+          "featured_five_stars_en": [
+            "Stygian Nymph"
+          ],
           "featured_four_stars_ru": [
-            "Валькирия Рейнджер"
+            "Фу Хуа: Ястреб в тумане"
           ],
           "featured_four_stars_en": [
-            "Valkyrie Ranger"
+            "Hawk of the Fog"
           ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_3_6_1",
+          "type": "CHARACTER",
+          "version": "3.6",
+          "phase": 1,
+          "start_date": "2019-12-26",
+          "end_date": "2020-01-16",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Darkbolt Jonin"
+          ],
+          "featured_five_stars_en": [
+            "Darkbolt Jonin"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_3_7_1",
+          "type": "CHARACTER",
+          "version": "3.7",
+          "phase": 1,
+          "start_date": "2020-02-13",
+          "end_date": "2020-03-05",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Фу Хуа: Лазурная Эмпирея"
+          ],
+          "featured_five_stars_en": [
+            "Azure Empyrea"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_3_8_1",
+          "type": "CHARACTER",
+          "version": "3.8",
+          "phase": 1,
+          "start_date": "2020-04-02",
+          "end_date": "2020-04-23",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Валькирия Глория"
+          ],
+          "featured_five_stars_en": [
+            "Valkyrie Gloria"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_3_9_1",
+          "type": "CHARACTER",
+          "version": "3.9",
+          "phase": 1,
+          "start_date": "2020-05-14",
+          "end_date": "2020-06-04",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Дюрандаль: Светлый рыцарь"
+          ],
+          "featured_five_stars_en": [
+            "Bright Knight: Excelsis"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_4_0_1",
+          "type": "CHARACTER",
+          "version": "4.0",
+          "phase": 1,
+          "start_date": "2020-06-23",
+          "end_date": "2020-07-14",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Starlit Astrologos"
+          ],
+          "featured_five_stars_en": [
+            "Starlit Astrologos"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
           "verification_status": "legacy"
         },
         {
@@ -7331,6 +7787,42 @@
           "verification_status": "legacy"
         },
         {
+          "id": "hi3_4_2_1",
+          "type": "CHARACTER",
+          "version": "4.2",
+          "phase": 1,
+          "start_date": "2020-09-15",
+          "end_date": "2020-10-06",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Рита: Падший Розмарин"
+          ],
+          "featured_five_stars_en": [
+            "Fallen Rosemary"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_4_3_1",
+          "type": "CHARACTER",
+          "version": "4.3",
+          "phase": 1,
+          "start_date": "2020-10-29",
+          "end_date": "2020-11-19",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Fervent Tempo Δ"
+          ],
+          "featured_five_stars_en": [
+            "Fervent Tempo Δ"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
           "id": "hi3_4_4_1",
           "type": "EXPANSION",
           "version": "4.4",
@@ -7343,6 +7835,24 @@
           ],
           "featured_five_stars_en": [
             "Dea Anchora"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_4_5_1",
+          "type": "CHARACTER",
+          "version": "4.5",
+          "phase": 1,
+          "start_date": "2021-01-21",
+          "end_date": "2021-02-11",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Аска: Blazing Hope"
+          ],
+          "featured_five_stars_en": [
+            "Asuka: Blazing Hope"
           ],
           "featured_four_stars_ru": [],
           "featured_four_stars_en": [],
@@ -7371,6 +7881,24 @@
           "verification_status": "legacy"
         },
         {
+          "id": "hi3_4_7_1",
+          "type": "CHARACTER",
+          "version": "4.7",
+          "phase": 1,
+          "start_date": "2021-04-22",
+          "end_date": "2021-05-13",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Брони: Хаксор Банни"
+          ],
+          "featured_five_stars_en": [
+            "Haxxor Bunny"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
           "id": "hi3_4_8_1",
           "type": "EXPANSION",
           "version": "4.8",
@@ -7383,6 +7911,24 @@
           ],
           "featured_five_stars_en": [
             "Starchasm Nyx"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_4_9_1",
+          "type": "CHARACTER",
+          "version": "4.9",
+          "phase": 1,
+          "start_date": "2021-07-08",
+          "end_date": "2021-07-29",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Фишль: Принцесса осуждения"
+          ],
+          "featured_five_stars_en": [
+            "Fischl: Prinzessin der Verurteilung"
           ],
           "featured_four_stars_ru": [],
           "featured_four_stars_en": [],
@@ -7455,6 +8001,24 @@
           "verification_status": "legacy"
         },
         {
+          "id": "hi3_5_3_1",
+          "type": "CHARACTER",
+          "version": "5.3",
+          "phase": 1,
+          "start_date": "2021-12-02",
+          "end_date": "2021-12-23",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Сладкая и Пряная"
+          ],
+          "featured_five_stars_en": [
+            "Sweet 'n' Spicy"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
           "id": "hi3_5_4_1",
           "type": "CHARACTER",
           "version": "5.4",
@@ -7490,12 +8054,8 @@
           "featured_five_stars_en": [
             "Palatinus Equinox"
           ],
-          "featured_four_stars_ru": [
-            "Спина Астера"
-          ],
-          "featured_four_stars_en": [
-            "Spina Astera"
-          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
           "verification_status": "legacy"
         },
         {
@@ -7511,6 +8071,24 @@
           ],
           "featured_five_stars_en": [
             "Spina Astera"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_5_6_1",
+          "type": "CHARACTER",
+          "version": "5.6",
+          "phase": 1,
+          "start_date": "2022-04-07",
+          "end_date": "2022-04-28",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Пардофелис"
+          ],
+          "featured_five_stars_en": [
+            "Reverist Calico"
           ],
           "featured_four_stars_ru": [],
           "featured_four_stars_en": [],
@@ -7539,6 +8117,24 @@
           "verification_status": "legacy"
         },
         {
+          "id": "hi3_5_8_1",
+          "type": "CHARACTER",
+          "version": "5.8",
+          "phase": 1,
+          "start_date": "2022-06-30",
+          "end_date": "2022-07-21",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Грисео: Звездный рисунок"
+          ],
+          "featured_five_stars_en": [
+            "Starry Impression"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
           "id": "hi3_5_9_1",
           "type": "CHARACTER",
           "version": "5.9",
@@ -7550,7 +8146,7 @@
             "Вилл-Ви: Спираль"
           ],
           "featured_five_stars_en": [
-            "Vill-V (Helix)"
+            "Helical Contraption"
           ],
           "featured_four_stars_ru": [
             "Звездная импрессионистка"
@@ -7582,6 +8178,42 @@
             "Reverist Calico",
             "Starry Impression"
           ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_6_1_1",
+          "type": "CHARACTER",
+          "version": "6.1",
+          "phase": 1,
+          "start_date": "2022-10-27",
+          "end_date": "2022-11-17",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Jade Knight"
+          ],
+          "featured_five_stars_en": [
+            "Jade Knight"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_6_2_1",
+          "type": "CHARACTER",
+          "version": "6.2",
+          "phase": 1,
+          "start_date": "2022-12-08",
+          "end_date": "2022-12-29",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Ай: Хроно Нави"
+          ],
+          "featured_five_stars_en": [
+            "Chrono Navi"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
           "verification_status": "legacy"
         },
         {
@@ -7624,14 +8256,66 @@
             "Herrscher of Finality",
             "Herrscher of Origin"
           ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_6_5_1",
+          "type": "CHARACTER",
+          "version": "6.5",
+          "phase": 1,
+          "start_date": "2023-04-06",
+          "end_date": "2023-04-27",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Valkyrie Quicksand"
+          ],
+          "featured_five_stars_en": [
+            "Valkyrie Quicksand"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_6_6_1",
+          "type": "CHARACTER",
+          "version": "6.6",
+          "phase": 1,
+          "start_date": "2023-05-18",
+          "end_date": "2023-06-08",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Dreamweaver"
+          ],
+          "featured_five_stars_en": [
+            "Dreamweaver"
+          ],
           "featured_four_stars_ru": [
-            "Валькирия Стрела",
-            "Валькирия Взрыв"
+            "Прометей"
           ],
           "featured_four_stars_en": [
-            "Valkyrie Boltstorm",
-            "Valkyrie Blastmetal"
+            "Terminal Aide 0017"
           ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_6_7_1",
+          "type": "CHARACTER",
+          "version": "6.7",
+          "phase": 1,
+          "start_date": "2023-06-29",
+          "end_date": "2023-07-20",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Шигурэ Кира"
+          ],
+          "featured_five_stars_en": [
+            "Sugary Starburst"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
           "verification_status": "legacy"
         },
         {
@@ -7867,10 +8551,10 @@
           "end_date": "2024-10-04",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Серапеум"
+            "Тереза: Императив Судьбы"
           ],
           "featured_five_stars_en": [
-            "Serapeum (Morning Dawn)"
+            "Schicksal's Imperative"
           ],
           "featured_four_stars_ru": [
             "Валькирия Стрела",
@@ -7923,7 +8607,7 @@
           ],
           "featured_five_stars_en": [
             "Disciplinary Perdition",
-            "Vill-V (Helix)",
+            "Helical Contraption",
             "Starchasm Nyx",
             "Infinite Ouroboros",
             "Herrscher of Flamescion"
@@ -8059,7 +8743,7 @@
           "end_date": "2025-12-30",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Эльф: Hi♪ Love Elf♥"
+            "Элизия: Hi♪ Love Elf♥"
           ],
           "featured_five_stars_en": [
             "Hi♪ Love Elf♥"

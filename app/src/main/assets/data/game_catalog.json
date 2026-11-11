@@ -3508,17 +3508,7 @@
           "is_standard": false,
           "icon_path": "avatars/0/weapons/sword_of_narzissenkreuz.png",
           "aliases": [
-            "Sword of Narzissenkreuz"
-          ]
-        },
-        {
-          "name_ru": "Sword of Narzissenkreuz (Quest)",
-          "name_en": "Sword of Narzissenkreuz (Quest)",
-          "rarity": "4★",
-          "type": "WEAPON",
-          "is_standard": false,
-          "icon_path": "avatars/0/weapons/sword_of_narzissenkreuz_(quest).png",
-          "aliases": [
+            "Sword of Narzissenkreuz",
             "Sword of Narzissenkreuz (Quest)"
           ]
         },
@@ -4294,15 +4284,6 @@
           "type": "WEAPON",
           "is_standard": false,
           "icon_path": "avatars/1/weapons/past_self_in_mirror.png",
-          "aliases": []
-        },
-        {
-          "name_ru": "Перекованные воспоминания",
-          "name_en": "Reforged Remembrances",
-          "rarity": "5★",
-          "type": "WEAPON",
-          "is_standard": false,
-          "icon_path": "avatars/1/weapons/reforged_remembrances.png",
           "aliases": []
         },
         {
@@ -5345,7 +5326,7 @@
           ]
         },
         {
-          "name_ru": "Изменённые воспоминания",
+          "name_ru": "Перекованные воспоминания",
           "name_en": "Reforged Remembrance",
           "rarity": "5★",
           "type": "WEAPON",
@@ -5353,7 +5334,9 @@
           "icon_path": "avatars/1/weapons/reforged_remembrance.png",
           "aliases": [
             "Reforged Remembrance",
-            "Изменённые воспоминания"
+            "Изменённые воспоминания",
+            "Reforged Remembrances",
+            "Перекованные воспоминания"
           ]
         },
         {
@@ -6867,7 +6850,11 @@
           "type": "WEAPON",
           "is_standard": false,
           "icon_path": "avatars/2/weapons/flamemaker_shaker.png",
-          "aliases": []
+          "aliases": [
+            "Hailstorm Shaker",
+            "Огненный шейкер",
+            "Burnice W-Engine"
+          ]
         },
         {
           "name_ru": "Ткач времени",
@@ -7043,28 +7030,6 @@
             "Yidhari Murphy",
             "Идхари",
             "Идхари Мерфи"
-          ]
-        },
-        {
-          "name_ru": "Огненный шейкер",
-          "name_en": "Hailstorm Shaker",
-          "rarity": "S",
-          "type": "WEAPON",
-          "is_standard": false,
-          "icon_path": "avatars/2/weapons/hailstorm_shaker.png",
-          "aliases": [
-            "Burnice W-Engine"
-          ]
-        },
-        {
-          "name_ru": "Лунный клинок",
-          "name_en": "Moonlit Blossom",
-          "rarity": "S",
-          "type": "WEAPON",
-          "is_standard": false,
-          "icon_path": "avatars/2/weapons/moonlit_blossom.png",
-          "aliases": [
-            "Miyabi W-Engine"
           ]
         },
         {
@@ -7244,7 +7209,7 @@
         {
           "name_ru": "Чжао",
           "name_en": "Zhao",
-          "rarity": "A",
+          "rarity": "S",
           "type": "CHARACTER",
           "is_standard": false,
           "icon_path": "avatars/2/characters/zhao.png",
@@ -7577,7 +7542,10 @@
           "icon_path": "avatars/2/weapons/hailstorm_shrine.png",
           "aliases": [
             "Hailstorm Shrine",
-            "Храм вьюги"
+            "Храм вьюги",
+            "Moonlit Blossom",
+            "Лунный клинок",
+            "Miyabi W-Engine"
           ]
         },
         {
@@ -8414,18 +8382,6 @@
           ]
         },
         {
-          "name_ru": "Серапеум",
-          "name_en": "Serapeum (Morning Dawn)",
-          "rarity": "S",
-          "type": "CHARACTER",
-          "is_standard": false,
-          "icon_path": "avatars/3/characters/serapeum_morning_dawn.png",
-          "aliases": [
-            "Serapeum",
-            "Morning Dawn"
-          ]
-        },
-        {
           "name_ru": "Вита",
           "name_en": "Vita (Lone Planetfarer)",
           "rarity": "S",
@@ -8562,15 +8518,6 @@
           "type": "CHARACTER",
           "is_standard": true,
           "icon_path": "avatars/3/characters/disciplinary_perdition.png",
-          "aliases": []
-        },
-        {
-          "name_ru": "Вилл-Ви: Спираль",
-          "name_en": "Vill-V (Helix)",
-          "rarity": "S",
-          "type": "CHARACTER",
-          "is_standard": false,
-          "icon_path": "avatars/3/characters/vill_v_helix.png",
           "aliases": []
         },
         {
@@ -8980,7 +8927,7 @@
         },
         {
           "name_ru": "Фишль: Принцесса осуждения",
-          "name_en": "Prinzessin der Verurteilung",
+          "name_en": "Fischl: Prinzessin der Verurteilung",
           "rarity": "A",
           "type": "CHARACTER",
           "is_standard": false,
@@ -8990,7 +8937,9 @@
             "Prinzessin der Verurteilung",
             "Prinzessin der Verurteilung!",
             "Принцесса осуждения",
-            "Фишль"
+            "Фишль",
+            "Fischl: Prinzessin der Verurteilung",
+            "Фишль: Принцесса осуждения"
           ]
         },
         {
@@ -9397,8 +9346,8 @@
         },
         {
           "name_ru": "Банкетная роза",
-          "name_en": "Banquet Rose: Crown",
-          "rarity": "S",
+          "name_en": "Banquet Rose",
+          "rarity": "A",
           "type": "WEAPON",
           "is_standard": false,
           "icon_path": "avatars/3/weapons/banquet_rose.png",
@@ -9484,14 +9433,27 @@
         },
         {
           "name_ru": "Эльф: Hi♪ Love Elf♥",
-          "name_en": "Hi♪ Love Elf♥",
+          "name_en": "Hi♪ Love Elf♥ (ELF)",
           "rarity": "S",
           "type": "ELF",
           "is_standard": false,
           "icon_path": "avatars/3/elves/hi_love_elf.png",
           "aliases": [
             "Эльф: Hi♪ Love Elf♥",
-            "Hi♪ Love Elf♥"
+            "Hi♪ Love Elf♥ (ELF)"
+          ]
+        },
+        {
+          "name_ru": "Элизия: Hi♪ Love Elf♥",
+          "name_en": "Hi♪ Love Elf♥",
+          "rarity": "S",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_path": "avatars/3/characters/hi_love_elf.png",
+          "aliases": [
+            "Элизия: Hi♪ Love Elf♥",
+            "Hi♪ Love Elf♥",
+            "Элизия: Привет♪ Эльф любви♥"
           ]
         },
         {
@@ -9588,14 +9550,18 @@
           ]
         },
         {
-          "name_ru": "Blazing Hope",
-          "name_en": "Blazing Hope",
+          "name_ru": "Аска: Blazing Hope",
+          "name_en": "Asuka: Blazing Hope",
           "rarity": "A",
           "type": "CHARACTER",
           "is_standard": false,
           "icon_path": "avatars/3/characters/blazing_hope.png",
           "aliases": [
-            "Blazing Hope"
+            "Blazing Hope",
+            "Asuka",
+            "Asuka: Blazing Hope",
+            "Аска",
+            "Аска: Blazing Hope"
           ]
         },
         {
@@ -9709,14 +9675,18 @@
           ]
         },
         {
-          "name_ru": "Helical Contraption",
+          "name_ru": "Вилл-Ви: Спираль",
           "name_en": "Helical Contraption",
           "rarity": "S",
           "type": "CHARACTER",
           "is_standard": true,
           "icon_path": "avatars/3/characters/helical_contraption.png",
           "aliases": [
-            "Helical Contraption"
+            "Helical Contraption",
+            "Vill-V (Helix)",
+            "Vill-V",
+            "Вилл-Ви",
+            "Вилл-Ви: Спираль"
           ]
         },
         {
@@ -9844,14 +9814,16 @@
           ]
         },
         {
-          "name_ru": "Schicksal's Imperative",
+          "name_ru": "Тереза: Императив Судьбы",
           "name_en": "Schicksal's Imperative",
-          "rarity": "B",
+          "rarity": "S",
           "type": "CHARACTER",
           "is_standard": false,
           "icon_path": "avatars/3/characters/schicksals_imperative.png",
           "aliases": [
-            "Schicksal's Imperative"
+            "Тереза: Императив Судьбы",
+            "Schicksal's Imperative",
+            "Тереза: Императив Шиксала"
           ]
         },
         {
