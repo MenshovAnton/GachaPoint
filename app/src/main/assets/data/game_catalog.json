@@ -4716,7 +4716,8 @@
           "is_standard": false,
           "icon_path": "avatars/1/characters/sparxie.png",
           "aliases": [
-            "Sparxie"
+            "Sparxie",
+            "Искра"
           ]
         },
         {
@@ -5047,7 +5048,8 @@
           "icon_path": "avatars/1/characters/silver_wolf_lv.999.png",
           "aliases": [
             "Серебряный Волк LV.999",
-            "Silver Wolf LV.999"
+            "Silver Wolf LV.999",
+            "Серебряный Волк ур. 999"
           ]
         },
         {

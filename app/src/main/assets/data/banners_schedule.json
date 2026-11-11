@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-10T09:00:13Z",
+  "updated_at": "2026-11-11T10:24:13Z",
   "games": [
     {
       "game_type": 0,
@@ -3566,7 +3566,7 @@
           "version": "4.7",
           "title": "Now, Lay Laughter to All Stars",
           "start_date": "2026-11-11",
-          "end_date": "2026-12-22"
+          "end_date": "2026-12-23"
         },
         {
           "version": "4.6",
@@ -5514,7 +5514,7 @@
           "version": "4.5",
           "phase": 2,
           "start_date": "2026-09-12",
-          "end_date": "2026-09-27",
+          "end_date": "2026-09-28",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
             "Авантюрин: Прибой",
@@ -5534,7 +5534,11 @@
             "Hook",
             "Guinaifen"
           ],
-          "verification_status": "legacy"
+          "verification_status": "verified",
+          "source_url": "https://www.hoyolab.com/article/46634922",
+          "source_id": "46634922",
+          "source_type": "official",
+          "verified_at": "2026-11-11T10:24:11Z"
         },
         {
           "id": "hsr_4_6_1",
@@ -5575,7 +5579,7 @@
           "phase": 2,
           "start_date": "2026-10-21",
           "end_date": "2026-11-10",
-          "status": "CURRENT",
+          "status": "EXPIRED",
           "featured_five_stars_ru": [
             "Жемчуг",
             "Мортенакс Блэйд"
@@ -5599,6 +5603,42 @@
           "source_type": "official",
           "verification_status": "verified",
           "verified_at": "2026-11-09T11:48:43Z"
+        },
+        {
+          "id": "hsr_4_7_1",
+          "type": "CHARACTER",
+          "version": "4.7",
+          "phase": 1,
+          "start_date": "2026-11-11",
+          "end_date": "2026-12-02",
+          "status": "CURRENT",
+          "featured_five_stars_ru": [
+            "Эон ★ Аха",
+            "Серебряный Волк LV.999",
+            "Спаркси",
+            "Яо Гуан"
+          ],
+          "featured_five_stars_en": [
+            "Aeon ★ Aha",
+            "Silver Wolf LV.999",
+            "Sparxie",
+            "Yao Guang"
+          ],
+          "featured_four_stars_ru": [
+            "Аста",
+            "Рысь",
+            "Юйкун"
+          ],
+          "featured_four_stars_en": [
+            "Asta",
+            "Lynx",
+            "Yukong"
+          ],
+          "source_url": "https://www.hoyolab.com/article/47385253",
+          "source_id": "47385253",
+          "source_type": "official",
+          "verification_status": "verified",
+          "verified_at": "2026-11-11T10:24:10Z"
         }
       ]
     },
@@ -6816,7 +6856,7 @@
           "phase": 2,
           "start_date": "2026-11-11",
           "end_date": "2026-12-01",
-          "status": "ANNOUNCED",
+          "status": "CURRENT",
           "featured_five_stars_ru": [
             "Севериан Лоуэлл",
             "Норма Холлоуэлл"

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-09T13:24:40Z",
+  "updated_at": "2026-11-11T03:17:43Z",
   "codes": [
     {
       "id": "scraped_0_cdof4x83h7x2",
@@ -274,30 +274,6 @@
       "checked_note": ""
     },
     {
-      "id": "verified_2_jrny2sky",
-      "game_type": 2,
-      "code": "JRNY2SKY",
-      "rewards_description_ru": "300 Полихромов, 30 000 Денни, 2 Журнала специалиста, 3 Источника питания",
-      "rewards_description_en": "300 Polychromes, 30,000 Dennies, 2 Investigator Logs, 3 W-Engine Power Supplies",
-      "reward_types": [
-        "POLYCHROME",
-        "DENNY",
-        "EXP",
-        "MATERIAL"
-      ],
-      "status": "ACTIVE",
-      "expires_at": "2026-11-10T15:59:59Z",
-      "created_at": "2026-10-09T12:00:00Z",
-      "is_stream": false,
-      "is_active": true,
-      "source_url": "https://zenless.hoyoverse.com/en-us/news/detail/166644",
-      "source_id": "166644",
-      "source_type": "official",
-      "verification_status": "verified",
-      "verified_at": "2026-11-09T12:18:54Z",
-      "expiry_confidence": "official"
-    },
-    {
       "id": "zzz_zenlessgift",
       "game_type": 2,
       "code": "ZENLESSGIFT",
@@ -482,6 +458,30 @@
       "created_at": "2021-01-01T00:00:00Z",
       "expires_at": null,
       "verification_status": "legacy",
+      "expiry_confidence": "official"
+    },
+    {
+      "id": "verified_2_jrny2sky",
+      "game_type": 2,
+      "code": "JRNY2SKY",
+      "rewards_description_ru": "300 Полихромов, 30 000 Денни, 2 Журнала специалиста, 3 Источника питания",
+      "rewards_description_en": "300 Polychromes, 30,000 Dennies, 2 Investigator Logs, 3 W-Engine Power Supplies",
+      "reward_types": [
+        "POLYCHROME",
+        "DENNY",
+        "EXP",
+        "MATERIAL"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-11-10T15:59:59Z",
+      "created_at": "2026-10-09T12:00:00Z",
+      "is_stream": false,
+      "is_active": false,
+      "source_url": "https://zenless.hoyoverse.com/en-us/news/detail/166644",
+      "source_id": "166644",
+      "source_type": "official",
+      "verification_status": "verified",
+      "verified_at": "2026-11-09T12:18:54Z",
       "expiry_confidence": "official"
     },
     {
