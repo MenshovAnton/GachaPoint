@@ -773,4 +773,12 @@
     <string name="about_data_repo_desc">Открытый репозиторий данных и автоматизации</string>
     <string name="settings_notif_perm_disabled_title">Уведомления отключены в системе</string>
     <string name="settings_notif_perm_disabled_desc">Нажмите, чтобы включить их в настройках и не пропускать промокоды и дейлики</string>
+    <string name="banners_version_phase_format">Патч %1$s — Фаза %2$d</string>
+    <string name="catalog_pool_standard">Стандарт</string>
+    <string name="catalog_pool_event">Ивент</string>
+    <string name="feedback_body_type_bug">[Тип: Ошибка]</string>
+    <string name="feedback_body_type_feature">[Тип: Предложение]</string>
+    <string name="feedback_body_type_review">[Тип: Отзыв (%1$d/5)]</string>
+    <string name="feedback_body_steps_header">Шаги для воспроизведения:</string>
+    <string name="feedback_body_diagnostics_header">Диагностические данные:</string>
 </resources>

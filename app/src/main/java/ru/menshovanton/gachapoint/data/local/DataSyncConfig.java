@@ -63,7 +63,7 @@ public final class DataSyncConfig {
 
         switch (gameType) {
             case GENSHIN:
-                return "https://genshin.hoyoverse.com/ru/gift?code=" + cleanCode;
+                return "https://genshin.hoyoverse.com/gift?code=" + cleanCode;
             case HSR:
                 return "https://hsr.hoyoverse.com/gift?code=" + cleanCode;
             case ZZZ:

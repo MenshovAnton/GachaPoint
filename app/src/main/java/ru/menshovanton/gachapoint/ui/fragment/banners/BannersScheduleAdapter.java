@@ -55,24 +55,32 @@ public class BannersScheduleAdapter extends RecyclerView.Adapter<BannersSchedule
         BannerScheduleItem banner = items.get(position);
         Context context = holder.itemView.getContext();
 
-        boolean isRu = "ru".equalsIgnoreCase(context.getResources().getConfiguration().getLocales().get(0).getLanguage());
-        String cleanVersion = banner.getVersion() != null ? banner.getVersion().replaceAll("^[vV]+", "") : "";
-        holder.tvVersionTitle.setText((isRu ? "Патч " : "Version ") + cleanVersion + (isRu ? " — Фаза " : " — Phase ") + banner.getPhase());
+        String cleanVersion = banner.getVersion().replaceAll("^[vV]+", "");
+        holder.tvVersionTitle.setText(context.getString(R.string.banners_version_phase_format, cleanVersion, banner.getPhase()));
 
         List<String> fiveStars = banner.getFeaturedFiveStars(context);
         String fiveStarsText = android.text.TextUtils.join(", ", fiveStars);
         holder.tvFiveStars.setText(!fiveStarsText.isEmpty() ? fiveStarsText : "—");
 
         List<String> fourStars = banner.getFeaturedFourStars(context);
-        String fourStarsText = android.text.TextUtils.join(", ", fourStars);
-        holder.tvFourStars.setText(!fourStarsText.isEmpty() ? fourStarsText : "—");
+        boolean hasFourStars = !fourStars.isEmpty();
+        int fourStarsVisibility = hasFourStars ? View.VISIBLE : View.GONE;
+        holder.tvFourStarsLabel.setVisibility(fourStarsVisibility);
+        holder.tvFourStars.setVisibility(fourStarsVisibility);
+        holder.llFourStarsAvatars.setVisibility(fourStarsVisibility);
+        if (hasFourStars) {
+            holder.tvFourStars.setText(android.text.TextUtils.join(", ", fourStars));
+        }
 
         holder.tvDates.setText(banner.getStartDate() + " — " + banner.getEndDate());
 
-        // Bind 5★ and 4★ Avatars
         GameType gameType = GameType.fromId(banner.getGameType());
         bindAvatars(holder.llFiveStarsAvatars, fiveStars, gameType, true, context);
-        bindAvatars(holder.llFourStarsAvatars, fourStars, gameType, false, context);
+        if (hasFourStars) {
+            bindAvatars(holder.llFourStarsAvatars, fourStars, gameType, false, context);
+        } else {
+            holder.llFourStarsAvatars.removeAllViews();
+        }
 
         LocalDate today = LocalDate.now();
         DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -200,13 +208,14 @@ public class BannersScheduleAdapter extends RecyclerView.Adapter<BannersSchedule
         return items.size();
     }
 
-    static class BannerViewHolder extends RecyclerView.ViewHolder {
+    public static class BannerViewHolder extends RecyclerView.ViewHolder {
         final TextView tvVersionTitle;
         final MaterialCardView cardStatus;
         final TextView tvStatus;
         final TextView tvTimer;
         final TextView tvDates;
         final TextView tvFiveStars;
+        final TextView tvFourStarsLabel;
         final TextView tvFourStars;
         final LinearLayout llFiveStarsAvatars;
         final LinearLayout llFourStarsAvatars;
@@ -219,6 +228,7 @@ public class BannersScheduleAdapter extends RecyclerView.Adapter<BannersSchedule
             tvTimer = itemView.findViewById(R.id.tv_banner_timer);
             tvDates = itemView.findViewById(R.id.tv_banner_dates);
             tvFiveStars = itemView.findViewById(R.id.tv_five_stars_list);
+            tvFourStarsLabel = itemView.findViewById(R.id.tv_four_stars_label);
             tvFourStars = itemView.findViewById(R.id.tv_four_stars_list);
             llFiveStarsAvatars = itemView.findViewById(R.id.ll_five_stars_avatars);
             llFourStarsAvatars = itemView.findViewById(R.id.ll_four_stars_avatars);

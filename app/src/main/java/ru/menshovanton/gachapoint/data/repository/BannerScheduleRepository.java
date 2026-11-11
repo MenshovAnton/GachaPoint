@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.local.AppLogger;
@@ -309,8 +310,11 @@ public class BannerScheduleRepository {
 
             int days = (latestEnd != null) ? (int) ChronoUnit.DAYS.between(latestEnd, today) : 999;
             String endDateStr = (latestEnd != null) ? latestEnd.toString() : null;
+            String nameRu = !item.getNameRu().isEmpty() ? item.getNameRu() : charName;
+            String nameEn = !item.getNameEn().isEmpty() ? item.getNameEn() : charName;
             result.add(new ru.menshovanton.gachapoint.domain.models.CharacterRerunInfo(
-                    charName,
+                    nameRu,
+                    nameEn,
                     gameType.getId(),
                     days,
                     latestVersion,
@@ -321,28 +325,41 @@ public class BannerScheduleRepository {
         if (result.isEmpty() && !banners.isEmpty()) {
             Map<String, LocalDate> charLastDates = new HashMap<>();
             Map<String, String> charLastVersions = new HashMap<>();
+            Map<String, String> charNamesRu = new HashMap<>();
+            Map<String, String> charNamesEn = new HashMap<>();
             for (BannerScheduleItem b : banners) {
                 LocalDate bEnd = null;
                 try {
                     bEnd = LocalDate.parse(b.getEndDate(), DateTimeFormatter.ISO_LOCAL_DATE);
                 } catch (Exception ignored) {}
-                for (String c : b.getFeaturedFiveStars()) {
+                List<String> ruList = b.getFeaturedFiveStarsRu();
+                List<String> enList = b.getFeaturedFiveStarsEn();
+                int count = Math.max(ruList.size(), enList.size());
+                for (int i = 0; i < count; i++) {
+                    String nameRu = i < ruList.size() ? ruList.get(i) : "";
+                    String nameEn = i < enList.size() ? enList.get(i) : "";
+                    String key = !nameEn.isEmpty() ? nameEn : nameRu;
+                    if (key.isEmpty()) continue;
+                    charNamesRu.put(key, !nameRu.isEmpty() ? nameRu : key);
+                    charNamesEn.put(key, !nameEn.isEmpty() ? nameEn : key);
                     if (bEnd != null) {
-                        LocalDate prev = charLastDates.get(c);
+                        LocalDate prev = charLastDates.get(key);
                         if (prev == null || bEnd.isAfter(prev)) {
-                            charLastDates.put(c, bEnd);
-                            charLastVersions.put(c, b.getVersion());
+                            charLastDates.put(key, bEnd);
+                            charLastVersions.put(key, b.getVersion());
                         }
                     }
                 }
             }
             for (Map.Entry<String, LocalDate> entry : charLastDates.entrySet()) {
                 int days = (int) ChronoUnit.DAYS.between(entry.getValue(), today);
+                String key = entry.getKey();
                 result.add(new ru.menshovanton.gachapoint.domain.models.CharacterRerunInfo(
-                        entry.getKey(),
+                        Objects.requireNonNull(charNamesRu.getOrDefault(key, key)),
+                        Objects.requireNonNull(charNamesEn.getOrDefault(key, key)),
                         gameType.getId(),
                         days,
-                        charLastVersions.get(entry.getKey()),
+                        charLastVersions.get(key),
                         entry.getValue().toString()
                 ));
             }

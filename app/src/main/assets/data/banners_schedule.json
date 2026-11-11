@@ -7357,9 +7357,237 @@
           "title": "Sakura Samsara",
           "start_date": "2018-05-09",
           "end_date": "2018-06-19"
+        },
+        {
+          "version": "1.8",
+          "title": "Global Launch",
+          "start_date": "2018-03-22",
+          "end_date": "2018-05-08"
+        },
+        {
+          "version": "1.7",
+          "title": "Silver Wolf Awakening",
+          "start_date": "2017-08-24",
+          "end_date": "2018-03-21"
+        },
+        {
+          "version": "1.6",
+          "title": "Summer Reunion",
+          "start_date": "2017-07-06",
+          "end_date": "2017-08-23"
+        },
+        {
+          "version": "1.5",
+          "title": "Theresa, Action!",
+          "start_date": "2017-05-25",
+          "end_date": "2017-07-05"
+        },
+        {
+          "version": "1.4",
+          "title": "Sakura Samsara",
+          "start_date": "2017-04-12",
+          "end_date": "2017-05-24"
+        },
+        {
+          "version": "1.3",
+          "title": "Armada Departure",
+          "start_date": "2017-02-23",
+          "end_date": "2017-04-11"
+        },
+        {
+          "version": "1.2",
+          "title": "Sword of Curses",
+          "start_date": "2017-01-12",
+          "end_date": "2017-02-22"
+        },
+        {
+          "version": "1.1",
+          "title": "Sword of Seals",
+          "start_date": "2016-11-15",
+          "end_date": "2017-01-04"
+        },
+        {
+          "version": "1.0",
+          "title": "Launch",
+          "start_date": "2016-10-14",
+          "end_date": "2016-11-14"
         }
       ],
       "banners": [
+        {
+          "id": "hi3_1_0_1",
+          "type": "STANDARD",
+          "version": "1.0",
+          "phase": 1,
+          "start_date": "2016-10-14",
+          "end_date": "2016-11-14",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Белый рыцарь: лунный луч",
+            "Королева грома",
+            "Разрушительница измерений"
+          ],
+          "featured_five_stars_en": [
+            "Knight Moonbeam",
+            "Lightning Empress",
+            "Dimension Breaker"
+          ],
+          "featured_four_stars_ru": [
+            "Белое облачение",
+            "Багровый импульс",
+            "Валькирия: Танк"
+          ],
+          "featured_four_stars_en": [
+            "White Comet",
+            "Crimson Impulse",
+            "Valkyrie Chariot"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_1_1_1",
+          "type": "CHARACTER",
+          "version": "1.1",
+          "phase": 1,
+          "start_date": "2016-11-15",
+          "end_date": "2017-01-04",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Броня слияния: багрянец"
+          ],
+          "featured_five_stars_en": [
+            "Scarlet Fusion"
+          ],
+          "featured_four_stars_ru": [
+            "Боевой шторм"
+          ],
+          "featured_four_stars_en": [
+            "Battle Storm"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_1_2_1",
+          "type": "CHARACTER",
+          "version": "1.2",
+          "phase": 1,
+          "start_date": "2017-01-12",
+          "end_date": "2017-02-22",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Химеко: Кровавая Роза"
+          ],
+          "featured_five_stars_en": [
+            "Blood Rose"
+          ],
+          "featured_four_stars_ru": [
+            "Валькирия: Триумф"
+          ],
+          "featured_four_stars_en": [
+            "Valkyrie Triumph"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_1_4_1",
+          "type": "CHARACTER",
+          "version": "1.4",
+          "phase": 1,
+          "start_date": "2017-04-12",
+          "end_date": "2017-05-24",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Госинсо: незабудка"
+          ],
+          "featured_five_stars_en": [
+            "Goushinnso Memento"
+          ],
+          "featured_four_stars_ru": [
+            "Гякусин мико"
+          ],
+          "featured_four_stars_en": [
+            "Gyakushinn Miko"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_1_5_1",
+          "type": "CHARACTER",
+          "version": "1.5",
+          "phase": 1,
+          "start_date": "2017-05-25",
+          "end_date": "2017-07-05",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Казнь: пурпурная астра"
+          ],
+          "featured_five_stars_en": [
+            "Violet Executer"
+          ],
+          "featured_four_stars_ru": [
+            "Валькирия: Клятва",
+            "Рондо Сакуры"
+          ],
+          "featured_four_stars_en": [
+            "Valkyrie Pledge",
+            "Sakuno Rondo"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_1_7_1",
+          "type": "CHARACTER",
+          "version": "1.7",
+          "phase": 1,
+          "start_date": "2017-08-24",
+          "end_date": "2017-09-14",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Эрозия ядра"
+          ],
+          "featured_five_stars_en": [
+            "Black Nucleus"
+          ],
+          "featured_four_stars_ru": [
+            "Рассвет серебряного волка"
+          ],
+          "featured_four_stars_en": [
+            "Wolf's Dawn"
+          ],
+          "verification_status": "legacy"
+        },
+        {
+          "id": "hi3_1_8_1",
+          "type": "STANDARD",
+          "version": "1.8",
+          "phase": 1,
+          "start_date": "2018-03-22",
+          "end_date": "2018-04-12",
+          "status": "EXPIRED",
+          "featured_five_stars_ru": [
+            "Белый рыцарь: лунный луч",
+            "Королева грома",
+            "Разрушительница измерений",
+            "Химеко: Кровавая Роза"
+          ],
+          "featured_five_stars_en": [
+            "Knight Moonbeam",
+            "Lightning Empress",
+            "Dimension Breaker",
+            "Blood Rose"
+          ],
+          "featured_four_stars_ru": [
+            "Валькирия Рейнджер",
+            "Молитва святой",
+            "Снежный снайпер"
+          ],
+          "featured_four_stars_en": [
+            "Valkyrie Ranger",
+            "Divine Prayer",
+            "Snowy Sniper"
+          ],
+          "verification_status": "legacy"
+        },
         {
           "id": "hi3_2_0_1",
           "type": "CHARACTER",
@@ -7369,13 +7597,13 @@
           "end_date": "2018-05-30",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Goushinnso Memento"
+            "Госинсо: незабудка"
           ],
           "featured_five_stars_en": [
             "Goushinnso Memento"
           ],
           "featured_four_stars_ru": [
-            "Gyakushinn Miko"
+            "Гякусин мико"
           ],
           "featured_four_stars_en": [
             "Gyakushinn Miko"
@@ -7391,14 +7619,14 @@
           "end_date": "2018-07-11",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Violet Executer"
+            "Казнь: пурпурная астра"
           ],
           "featured_five_stars_en": [
             "Violet Executer"
           ],
           "featured_four_stars_ru": [
-            "Valkyrie Pledge",
-            "Sakuno Rondo"
+            "Валькирия: Клятва",
+            "Рондо Сакуры"
           ],
           "featured_four_stars_en": [
             "Valkyrie Pledge",
@@ -7437,7 +7665,7 @@
           "end_date": "2018-10-17",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Phoenix"
+            "Феникс"
           ],
           "featured_five_stars_en": [
             "Phoenix"
@@ -7455,7 +7683,7 @@
           "end_date": "2018-11-06",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Ritual Imayoh"
+            "Священное одеяние: Имаё"
           ],
           "featured_five_stars_en": [
             "Ritual Imayoh"
@@ -7473,7 +7701,7 @@
           "end_date": "2018-11-28",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Sixth Serenade"
+            "Шестая серенада"
           ],
           "featured_five_stars_en": [
             "Sixth Serenade"
@@ -7501,7 +7729,7 @@
             "Shadow Knight"
           ],
           "featured_four_stars_ru": [
-            "Sündenjäger"
+            "Охотница первородного греха"
           ],
           "featured_four_stars_en": [
             "Sündenjäger"
@@ -7561,13 +7789,13 @@
           "end_date": "2019-05-09",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Argent Knight: Artemis"
+            "Серебряный рыцарь: Лунный дух"
           ],
           "featured_five_stars_en": [
             "Argent Knight: Artemis"
           ],
           "featured_four_stars_ru": [
-            "Striker Fulminata"
+            "Рассветная нападающая"
           ],
           "featured_four_stars_en": [
             "Striker Fulminata"
@@ -7583,13 +7811,13 @@
           "end_date": "2019-06-13",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Molotov Cherry"
+            "Клубничная бомба"
           ],
           "featured_five_stars_en": [
             "Molotov Cherry"
           ],
           "featured_four_stars_ru": [
-            "Blueberry Blitz",
+            "Черничная атака",
             "Броня: Комета Драйв"
           ],
           "featured_four_stars_en": [
@@ -7630,8 +7858,18 @@
           "featured_five_stars_en": [
             "Herrscher of Reason"
           ],
-          "featured_four_stars_ru": [],
-          "featured_four_stars_en": [],
+          "featured_four_stars_ru": [
+            "Валькирия Рейнджер",
+            "Снежный снайпер",
+            "Ночной оруженосец",
+            "Броня: Комета Драйв"
+          ],
+          "featured_four_stars_en": [
+            "Valkyrie Ranger",
+            "Snowy Sniper",
+            "Night Squire",
+            "Drive Kometa"
+          ],
           "verification_status": "legacy"
         },
         {
@@ -7643,7 +7881,7 @@
           "end_date": "2019-10-17",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Twilight Paladin"
+            "Сумеречный рыцарь: лунный свет"
           ],
           "featured_five_stars_en": [
             "Twilight Paladin"
@@ -7683,7 +7921,7 @@
           "end_date": "2020-01-16",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Darkbolt Jonin"
+            "Дзёнин ночи"
           ],
           "featured_five_stars_en": [
             "Darkbolt Jonin"
@@ -7755,7 +7993,7 @@
           "end_date": "2020-07-14",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Starlit Astrologos"
+            "Астролог новолуния"
           ],
           "featured_five_stars_en": [
             "Starlit Astrologos"
@@ -7813,7 +8051,7 @@
           "end_date": "2020-11-19",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Fervent Tempo Δ"
+            "Бурный блюз Δ"
           ],
           "featured_five_stars_en": [
             "Fervent Tempo Δ"
@@ -8189,7 +8427,7 @@
           "end_date": "2022-11-17",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Jade Knight"
+            "Нефритовый рыцарь: лунный шрам"
           ],
           "featured_five_stars_en": [
             "Jade Knight"
@@ -8269,7 +8507,7 @@
           "end_date": "2023-04-27",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Valkyrie Quicksand"
+            "Валькирия: Горячие пески"
           ],
           "featured_five_stars_en": [
             "Valkyrie Quicksand"
@@ -8287,7 +8525,7 @@
           "end_date": "2023-06-08",
           "status": "EXPIRED",
           "featured_five_stars_ru": [
-            "Dreamweaver"
+            "Ткач снов"
           ],
           "featured_five_stars_en": [
             "Dreamweaver"

@@ -1786,7 +1786,7 @@ public class JournalView extends Fragment {
     private List<String> getTrashDropPresets(GameType gameType) {
         List<String> list = new ArrayList<>();
         list.add(getString(R.string.default_pull_content));
-        boolean isRu = "ru".equalsIgnoreCase(Locale.getDefault().getLanguage());
+        boolean isRu = "ru".equalsIgnoreCase(requireContext().getResources().getConfiguration().getLocales().get(0).getLanguage());
         if (gameType == GameType.GENSHIN) {
             if (isRu) {
                 list.add("Дубина переговоров");

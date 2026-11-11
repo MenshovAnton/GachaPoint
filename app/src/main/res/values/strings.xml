@@ -820,4 +820,12 @@
     <string name="settings_reset_success_toast">Application data has been reset.</string>
     <string name="settings_notif_perm_disabled_title">Notifications are disabled in system</string>
     <string name="settings_notif_perm_disabled_desc">Tap to allow notifications so you don\'t miss stream codes and daily reminders</string>
+    <string name="banners_version_phase_format">Version %1$s — Phase %2$d</string>
+    <string name="catalog_pool_standard">Standard</string>
+    <string name="catalog_pool_event">Event</string>
+    <string name="feedback_body_type_bug">[Type: Bug]</string>
+    <string name="feedback_body_type_feature">[Type: Feature]</string>
+    <string name="feedback_body_type_review">[Type: Review (%1$d/5)]</string>
+    <string name="feedback_body_steps_header">Steps to reproduce:</string>
+    <string name="feedback_body_diagnostics_header">Diagnostics:</string>
 </resources>

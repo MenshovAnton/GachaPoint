@@ -47,9 +47,8 @@ public class CharacterRerunAdapter extends RecyclerView.Adapter<CharacterRerunAd
         CharacterRerunInfo rerun = items.get(position);
         Context context = holder.itemView.getContext();
 
-        holder.tvName.setText(rerun.getCharacterName());
-
-        String name = rerun.getCharacterName();
+        String name = rerun.getCharacterName(context);
+        holder.tvName.setText(name);
         ru.menshovanton.gachapoint.domain.enums.GameType gt =
                 ru.menshovanton.gachapoint.domain.enums.GameType.fromId(rerun.getGameType());
         ru.menshovanton.gachapoint.domain.models.CatalogItem item =
@@ -98,7 +97,7 @@ public class CharacterRerunAdapter extends RecyclerView.Adapter<CharacterRerunAd
         return items.size();
     }
 
-    static class RerunViewHolder extends RecyclerView.ViewHolder {
+    public static class RerunViewHolder extends RecyclerView.ViewHolder {
         final ImageView ivAvatar;
         final TextView tvAvatarLetter;
         final TextView tvName;

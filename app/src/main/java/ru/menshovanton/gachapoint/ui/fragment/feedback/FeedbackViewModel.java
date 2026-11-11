@@ -181,25 +181,29 @@ public class FeedbackViewModel extends AndroidViewModel {
 
         switch (type) {
             case TYPE_BUG:
-                sb.append("[Тип: Ошибка]\n\n");
+                sb.append(getApplication().getString(R.string.feedback_body_type_bug)).append("\n\n");
                 break;
             case TYPE_FEATURE:
-                sb.append("[Тип: Предложение]\n\n");
+                sb.append(getApplication().getString(R.string.feedback_body_type_feature)).append("\n\n");
                 break;
             case TYPE_REVIEW:
-                sb.append("[Тип: Отзыв (").append(getRatingVal()).append("/5)]\n\n");
+                sb.append(getApplication().getString(R.string.feedback_body_type_review, getRatingVal())).append("\n\n");
                 break;
         }
 
         sb.append(messageInput.trim());
 
         if (type == TYPE_BUG && stepsInput != null && !stepsInput.trim().isEmpty()) {
-            sb.append("\n\nШаги для воспроизведения:\n");
+            sb.append("\n\n")
+                    .append(getApplication().getString(R.string.feedback_body_steps_header))
+                    .append("\n");
             sb.append(stepsInput.trim());
         }
 
         if (attachDiagnostics && diagnosticInfo != null && !diagnosticInfo.trim().isEmpty()) {
-            sb.append("\n\n---\nДиагностические данные:\n");
+            sb.append("\n\n---\n")
+                    .append(getApplication().getString(R.string.feedback_body_diagnostics_header))
+                    .append("\n");
             sb.append(diagnosticInfo.trim());
         }
 

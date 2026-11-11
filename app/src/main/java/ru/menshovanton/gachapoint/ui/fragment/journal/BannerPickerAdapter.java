@@ -1,5 +1,6 @@
 package ru.menshovanton.gachapoint.ui.fragment.journal;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -40,6 +41,7 @@ public class BannerPickerAdapter extends RecyclerView.Adapter<BannerPickerAdapte
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setItems(@NonNull List<BannerScheduleItem> newItems) {
         this.items.clear();
         this.items.addAll(newItems);
@@ -69,7 +71,7 @@ public class BannerPickerAdapter extends RecyclerView.Adapter<BannerPickerAdapte
         holder.tvFourStarBadge.setText(Rarity.EPIC.getDisplayRank(gameType, context));
 
         List<String> fiveStars = item.getFeaturedFiveStars(context);
-        if (fiveStars != null && !fiveStars.isEmpty()) {
+        if (!fiveStars.isEmpty()) {
             holder.llFiveStarsContainer.setVisibility(View.VISIBLE);
             holder.tvFiveStars.setText(TextUtils.join(", ", fiveStars));
         } else {
@@ -77,7 +79,7 @@ public class BannerPickerAdapter extends RecyclerView.Adapter<BannerPickerAdapte
         }
 
         List<String> fourStars = item.getFeaturedFourStars(context);
-        if (fourStars != null && !fourStars.isEmpty()) {
+        if (!fourStars.isEmpty()) {
             holder.llFourStarsContainer.setVisibility(View.VISIBLE);
             holder.tvFourStars.setText(TextUtils.join(", ", fourStars));
         } else {
@@ -102,7 +104,7 @@ public class BannerPickerAdapter extends RecyclerView.Adapter<BannerPickerAdapte
         }
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         final MaterialCardView cardItem;
         final TextView tvPatchPhase;
         final TextView tvDates;

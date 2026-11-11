@@ -98,17 +98,16 @@ public class CatalogAutoCompleteAdapter extends ArrayAdapter<CatalogItem> {
         );
 
         if (cardPool != null && tvPool != null) {
-            boolean isRu = "ru".equalsIgnoreCase(Locale.getDefault().getLanguage());
             if (item.isFiveStar()) {
                 cardPool.setVisibility(View.VISIBLE);
                 if (item.isStandard()) {
                     cardPool.setCardBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.badge_blue_bg)));
                     tvPool.setTextColor(ContextCompat.getColor(getContext(), R.color.check));
-                    tvPool.setText(isRu ? "Стандарт" : "Standard");
+                    tvPool.setText(R.string.catalog_pool_standard);
                 } else {
                     cardPool.setCardBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.badge_gold_bg)));
                     tvPool.setTextColor(ContextCompat.getColor(getContext(), R.color.rare_legendary));
-                    tvPool.setText(isRu ? "Ивент" : "Event");
+                    tvPool.setText(R.string.catalog_pool_event);
                 }
             } else {
                 cardPool.setVisibility(View.GONE);
@@ -135,9 +134,11 @@ public class CatalogAutoCompleteAdapter extends ArrayAdapter<CatalogItem> {
                     List<CatalogItem> containsMatches = new ArrayList<>();
 
                     for (CatalogItem it : allItems) {
-                        String name = it.getName() != null ? it.getName().toLowerCase(Locale.ROOT) : "";
-                        String nameRu = it.getNameRu() != null ? it.getNameRu().toLowerCase(Locale.ROOT) : "";
-                        String nameEn = it.getNameEn() != null ? it.getNameEn().toLowerCase(Locale.ROOT) : "";
+                        String name = it.getName().toLowerCase(Locale.ROOT);
+                        it.getNameRu();
+                        String nameRu = it.getNameRu().toLowerCase(Locale.ROOT);
+                        it.getNameEn();
+                        String nameEn = it.getNameEn().toLowerCase(Locale.ROOT);
 
                         if (name.equals(query) || nameRu.equals(query) || nameEn.equals(query)) {
                             exactMatches.add(it);
@@ -145,7 +146,7 @@ public class CatalogAutoCompleteAdapter extends ArrayAdapter<CatalogItem> {
                             startsWithMatches.add(it);
                         } else if (name.contains(query) || nameRu.contains(query) || nameEn.contains(query)) {
                             containsMatches.add(it);
-                        } else if (it.getAliases() != null) {
+                        } else {
                             for (String alias : it.getAliases()) {
                                 if (alias != null && alias.toLowerCase(Locale.ROOT).contains(query)) {
                                     containsMatches.add(it);
