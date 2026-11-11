@@ -89,8 +89,8 @@ public class Preferences {
     }
 
     public boolean isGameEnabled(GameType gameType) {
-        if (gameType == null) return false;
-        return getEnabledGames().contains(gameType);
+        if (gameType == null) return true;
+        return !getEnabledGames().contains(gameType);
     }
 
     public void setGameEnabled(GameType gameType, boolean enabled) {
@@ -265,7 +265,11 @@ public class Preferences {
 
     private static final String PREFIX_PIGGY_SPENT_SUBS = "piggy_bank_spent_subs_";
     private static final String PREFIX_PIGGY_SPENT_DAILIES = "piggy_bank_spent_dailies_";
+    private static final String PREFIX_PIGGY_SPENT_SUBS_GEMS = "piggy_bank_spent_subs_gems_";
+    private static final String PREFIX_PIGGY_SPENT_DAILIES_GEMS = "piggy_bank_spent_dailies_gems_";
     private static final String PREFIX_PIGGY_AUTO_REMAINDER = "piggy_bank_auto_remainder_";
+    private static final String PREFIX_PIGGY_AUTO_SUBS_REMAINDER = "piggy_bank_auto_subs_remainder_";
+    private static final String PREFIX_PIGGY_AUTO_DAILIES_REMAINDER = "piggy_bank_auto_dailies_remainder_";
 
     public int getPiggyBankSpentSubs(GameType game) {
         if (game == null) return 0;
@@ -287,6 +291,34 @@ public class Preferences {
         settings.edit().putInt(PREFIX_PIGGY_SPENT_DAILIES + game.name(), Math.max(0, spent)).apply();
     }
 
+    public int getPiggyBankSpentSubsGems(GameType game) {
+        if (game == null) return 0;
+        String key = PREFIX_PIGGY_SPENT_SUBS_GEMS + game.name();
+        if (settings.contains(key)) {
+            return Math.max(0, settings.getInt(key, 0));
+        }
+        return Math.max(0, getPiggyBankSpentSubs(game)) * game.getPullCost();
+    }
+
+    public void savePiggyBankSpentSubsGems(GameType game, int spentGems) {
+        if (game == null) return;
+        settings.edit().putInt(PREFIX_PIGGY_SPENT_SUBS_GEMS + game.name(), Math.max(0, spentGems)).apply();
+    }
+
+    public int getPiggyBankSpentDailiesGems(GameType game) {
+        if (game == null) return 0;
+        String key = PREFIX_PIGGY_SPENT_DAILIES_GEMS + game.name();
+        if (settings.contains(key)) {
+            return Math.max(0, settings.getInt(key, 0));
+        }
+        return Math.max(0, getPiggyBankSpentDailies(game)) * game.getPullCost();
+    }
+
+    public void savePiggyBankSpentDailiesGems(GameType game, int spentGems) {
+        if (game == null) return;
+        settings.edit().putInt(PREFIX_PIGGY_SPENT_DAILIES_GEMS + game.name(), Math.max(0, spentGems)).apply();
+    }
+
     public int getPiggyBankAutoRemainder(GameType game) {
         if (game == null) return 0;
         return settings.getInt(PREFIX_PIGGY_AUTO_REMAINDER + game.name(), 0);
@@ -295,6 +327,35 @@ public class Preferences {
     public void savePiggyBankAutoRemainder(GameType game, int remainder) {
         if (game == null) return;
         settings.edit().putInt(PREFIX_PIGGY_AUTO_REMAINDER + game.name(), Math.max(0, remainder)).apply();
+    }
+
+    public boolean hasPiggyBankSplitAutoRemainder(GameType game) {
+        if (game == null) return false;
+        return settings.contains(PREFIX_PIGGY_AUTO_SUBS_REMAINDER + game.name())
+                || settings.contains(PREFIX_PIGGY_AUTO_DAILIES_REMAINDER + game.name());
+    }
+
+    public int getPiggyBankAutoSubsRemainder(GameType game) {
+        if (game == null) return 0;
+        return Math.max(0, settings.getInt(PREFIX_PIGGY_AUTO_SUBS_REMAINDER + game.name(), 0));
+    }
+
+    public void savePiggyBankAutoSubsRemainder(GameType game, int remainder) {
+        if (game == null) return;
+        settings.edit().putInt(PREFIX_PIGGY_AUTO_SUBS_REMAINDER + game.name(), Math.max(0, remainder)).apply();
+    }
+
+    public int getPiggyBankAutoDailiesRemainder(GameType game) {
+        if (game == null) return 0;
+        if (hasPiggyBankSplitAutoRemainder(game)) {
+            return Math.max(0, settings.getInt(PREFIX_PIGGY_AUTO_DAILIES_REMAINDER + game.name(), 0));
+        }
+        return Math.max(0, getPiggyBankAutoRemainder(game));
+    }
+
+    public void savePiggyBankAutoDailiesRemainder(GameType game, int remainder) {
+        if (game == null) return;
+        settings.edit().putInt(PREFIX_PIGGY_AUTO_DAILIES_REMAINDER + game.name(), Math.max(0, remainder)).apply();
     }
 
     public static final String KEY_VIEWED_PROMOCODES = "viewed_promocodes_set";

@@ -115,24 +115,53 @@ public class PiggyBankRepository {
         databaseRepository.saveSavingsDailiesProgress(gameType, safeProgress, null);
     }
 
+    public int getAutoSubsRemainderGems(GameType gameType) {
+        return preferences != null ? preferences.getPiggyBankAutoSubsRemainder(gameType) : 0;
+    }
+
+    public int getAutoDailiesRemainderGems(GameType gameType) {
+        return preferences != null ? preferences.getPiggyBankAutoDailiesRemainder(gameType) : 0;
+    }
+
     public int getAutoRemainderGems(GameType gameType) {
-        return preferences != null ? preferences.getPiggyBankAutoRemainder(gameType) : 0;
+        if (preferences == null || gameType == null) return 0;
+        if (preferences.hasPiggyBankSplitAutoRemainder(gameType)) {
+            return preferences.getPiggyBankAutoSubsRemainder(gameType)
+                    + preferences.getPiggyBankAutoDailiesRemainder(gameType);
+        }
+        return preferences.getPiggyBankAutoRemainder(gameType);
+    }
+
+    public void saveAutoRemainders(GameType gameType, int subsRemainder, int dailiesRemainder) {
+        if (preferences == null || gameType == null) return;
+        int safeSubs = Math.max(0, subsRemainder);
+        int safeDailies = Math.max(0, dailiesRemainder);
+        preferences.savePiggyBankAutoSubsRemainder(gameType, safeSubs);
+        preferences.savePiggyBankAutoDailiesRemainder(gameType, safeDailies);
+        preferences.savePiggyBankAutoRemainder(gameType, (safeSubs + safeDailies) % gameType.getPullCost());
     }
 
     public int getEffectiveRemainderGems(GameType gameType) {
         if (gameType == null) return 0;
-        int totalRem = getManualGems(gameType) + getAutoRemainderGems(gameType);
-        return totalRem % gameType.getPullCost();
+        return calculateEffectiveRemainderGems(getManualGems(gameType), getAutoRemainderGems(gameType), gameType.getPullCost());
     }
 
     public int getExtraPullsFromGems(GameType gameType) {
         if (gameType == null) return 0;
-        int totalRem = getManualGems(gameType) + getAutoRemainderGems(gameType);
+        int totalRem = Math.max(0, getManualGems(gameType)) + Math.max(0, getAutoRemainderGems(gameType));
         return totalRem / gameType.getPullCost();
     }
 
     public int getTotalProgress(GameType gameType) {
-        return getManualProgress(gameType) + getSubsProgress(gameType) + getDailiesProgress(gameType) + getExtraPullsFromGems(gameType);
+        if (gameType == null) return 0;
+        return calculateTotalProgress(
+                getManualProgress(gameType),
+                getManualGems(gameType),
+                getSubsProgress(gameType),
+                getDailiesProgress(gameType),
+                getAutoRemainderGems(gameType),
+                gameType.getPullCost()
+        );
     }
 
     public int getTotalGems(GameType gameType) {
@@ -168,16 +197,12 @@ public class PiggyBankRepository {
     }
 
     public void clearAutoProgress(GameType gameType) {
-        if (preferences != null) {
-            preferences.savePiggyBankAutoRemainder(gameType, 0);
-        }
+        saveAutoRemainders(gameType, 0, 0);
         saveAllProgress(gameType, getManualProgress(gameType), 0, 0, getManualGems(gameType));
     }
 
     public void reset(GameType gameType) {
-        if (preferences != null) {
-            preferences.savePiggyBankAutoRemainder(gameType, 0);
-        }
+        saveAutoRemainders(gameType, 0, 0);
         SavingsEntity s = cache.get(gameType);
         if (s != null) {
             s.target = 0;
@@ -187,5 +212,173 @@ public class PiggyBankRepository {
             s.dailiesProgress = 0;
         }
         databaseRepository.resetSavings(gameType, null);
+    }
+
+    public static int calculateEffectiveRemainderGems(int manualGems, int autoRemainderGems, int pullCost) {
+        int safePullCost = Math.max(1, pullCost);
+        return (Math.max(0, manualGems) + Math.max(0, autoRemainderGems)) % safePullCost;
+    }
+
+    public static int calculateTotalProgress(
+            int manualPulls,
+            int manualGems,
+            int subsPulls,
+            int dailiesPulls,
+            int autoRemainderGems,
+            int pullCost
+    ) {
+        int safePullCost = Math.max(1, pullCost);
+        int extraPulls = (Math.max(0, manualGems) + Math.max(0, autoRemainderGems)) / safePullCost;
+        return Math.max(0, manualPulls) + Math.max(0, subsPulls) + Math.max(0, dailiesPulls) + extraPulls;
+    }
+
+    public static int calculateTotalGems(
+            int manualPulls,
+            int manualGems,
+            int subsPulls,
+            int dailiesPulls,
+            int autoRemainderGems,
+            int pullCost
+    ) {
+        int safePullCost = Math.max(1, pullCost);
+        int totalProgress = calculateTotalProgress(manualPulls, manualGems, subsPulls, dailiesPulls, autoRemainderGems, safePullCost);
+        int rem = calculateEffectiveRemainderGems(manualGems, autoRemainderGems, safePullCost);
+        return totalProgress * safePullCost + rem;
+    }
+
+    public static AutoProgressResult calculateAutoProgress(
+            int totalSubsGems,
+            int totalDailiesGems,
+            int spentSubsGems,
+            int spentDailiesGems,
+            int pullCost
+    ) {
+        int safeTotalSubs = Math.max(0, totalSubsGems);
+        int safeTotalDailies = Math.max(0, totalDailiesGems);
+        int clampedSpentSubs = Math.min(Math.max(0, spentSubsGems), safeTotalSubs);
+        int clampedSpentDailies = Math.min(Math.max(0, spentDailiesGems), safeTotalDailies);
+
+        int availSubs = safeTotalSubs - clampedSpentSubs;
+        int availDailies = safeTotalDailies - clampedSpentDailies;
+
+        int safePullCost = Math.max(1, pullCost);
+        return new AutoProgressResult(
+                availSubs / safePullCost,
+                availSubs % safePullCost,
+                availDailies / safePullCost,
+                availDailies % safePullCost,
+                clampedSpentSubs,
+                clampedSpentDailies
+        );
+    }
+
+    public static DeductionResult calculateDeduction(
+            int manualPulls,
+            int manualGems,
+            int subsPulls,
+            int subsRemainder,
+            int dailiesPulls,
+            int dailiesRemainder,
+            int pullCost,
+            long gemsToRemove
+    ) {
+        int safePullCost = Math.max(1, pullCost);
+        long manualTotal = Math.max(0L, (long) Math.max(0, manualPulls) * safePullCost + Math.max(0, manualGems));
+        long subsTotal = Math.max(0L, (long) Math.max(0, subsPulls) * safePullCost + Math.max(0, subsRemainder));
+        long dailiesTotal = Math.max(0L, (long) Math.max(0, dailiesPulls) * safePullCost + Math.max(0, dailiesRemainder));
+        long total = manualTotal + subsTotal + dailiesTotal;
+
+        if (gemsToRemove <= 0 || total <= 0) {
+            return new DeductionResult(
+                    (int) (manualTotal / safePullCost),
+                    (int) (manualTotal % safePullCost),
+                    (int) (subsTotal / safePullCost),
+                    (int) (subsTotal % safePullCost),
+                    (int) (dailiesTotal / safePullCost),
+                    (int) (dailiesTotal % safePullCost),
+                    0,
+                    0
+            );
+        }
+
+        long remaining = Math.min(gemsToRemove, total);
+
+        long fromManual = Math.min(remaining, manualTotal);
+        manualTotal -= fromManual;
+        remaining -= fromManual;
+
+        long fromSubs = Math.min(remaining, subsTotal);
+        subsTotal -= fromSubs;
+        remaining -= fromSubs;
+
+        long fromDailies = Math.min(remaining, dailiesTotal);
+        dailiesTotal -= fromDailies;
+
+        return new DeductionResult(
+                (int) (manualTotal / safePullCost),
+                (int) (manualTotal % safePullCost),
+                (int) (subsTotal / safePullCost),
+                (int) (subsTotal % safePullCost),
+                (int) (dailiesTotal / safePullCost),
+                (int) (dailiesTotal % safePullCost),
+                (int) fromSubs,
+                (int) fromDailies
+        );
+    }
+
+    public static final class AutoProgressResult {
+        public final int subsPulls;
+        public final int subsRemainder;
+        public final int dailiesPulls;
+        public final int dailiesRemainder;
+        public final int clampedSpentSubsGems;
+        public final int clampedSpentDailiesGems;
+
+        public AutoProgressResult(
+                int subsPulls,
+                int subsRemainder,
+                int dailiesPulls,
+                int dailiesRemainder,
+                int clampedSpentSubsGems,
+                int clampedSpentDailiesGems
+        ) {
+            this.subsPulls = subsPulls;
+            this.subsRemainder = subsRemainder;
+            this.dailiesPulls = dailiesPulls;
+            this.dailiesRemainder = dailiesRemainder;
+            this.clampedSpentSubsGems = clampedSpentSubsGems;
+            this.clampedSpentDailiesGems = clampedSpentDailiesGems;
+        }
+    }
+
+    public static final class DeductionResult {
+        public final int manualPulls;
+        public final int manualGems;
+        public final int subsPulls;
+        public final int subsRemainder;
+        public final int dailiesPulls;
+        public final int dailiesRemainder;
+        public final int spentFromSubsGems;
+        public final int spentFromDailiesGems;
+
+        public DeductionResult(
+                int manualPulls,
+                int manualGems,
+                int subsPulls,
+                int subsRemainder,
+                int dailiesPulls,
+                int dailiesRemainder,
+                int spentFromSubsGems,
+                int spentFromDailiesGems
+        ) {
+            this.manualPulls = manualPulls;
+            this.manualGems = manualGems;
+            this.subsPulls = subsPulls;
+            this.subsRemainder = subsRemainder;
+            this.dailiesPulls = dailiesPulls;
+            this.dailiesRemainder = dailiesRemainder;
+            this.spentFromSubsGems = spentFromSubsGems;
+            this.spentFromDailiesGems = spentFromDailiesGems;
+        }
     }
 }

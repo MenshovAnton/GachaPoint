@@ -491,36 +491,27 @@ public class CalendarRepository {
             int totalDailyGems = (dailiesCount != null ? dailiesCount : 0) * dailyReward;
             int totalSubsGems = (subsCount != null ? subsCount : 0) * currencyPerDay;
 
-            int spentDailies = preferences.getPiggyBankSpentDailies(gameType);
-            int spentSubs = preferences.getPiggyBankSpentSubs(gameType);
+            int spentDailiesGems = preferences.getPiggyBankSpentDailiesGems(gameType);
+            int spentSubsGems = preferences.getPiggyBankSpentSubsGems(gameType);
 
-            int maxDailiesPulls = totalDailyGems / pullCost;
-            if (spentDailies > maxDailiesPulls) {
-                spentDailies = maxDailiesPulls;
-                preferences.savePiggyBankSpentDailies(gameType, spentDailies);
+            PiggyBankRepository.AutoProgressResult result = PiggyBankRepository.calculateAutoProgress(
+                    totalSubsGems,
+                    totalDailyGems,
+                    spentSubsGems,
+                    spentDailiesGems,
+                    pullCost
+            );
+
+            if (result.clampedSpentDailiesGems != spentDailiesGems) {
+                preferences.savePiggyBankSpentDailiesGems(gameType, result.clampedSpentDailiesGems);
+            }
+            if (result.clampedSpentSubsGems != spentSubsGems) {
+                preferences.savePiggyBankSpentSubsGems(gameType, result.clampedSpentSubsGems);
             }
 
-            int maxSubsPulls = totalSubsGems / pullCost;
-            if (spentSubs > maxSubsPulls) {
-                spentSubs = maxSubsPulls;
-                preferences.savePiggyBankSpentSubs(gameType, spentSubs);
-            }
-
-            int availDailyGems = Math.max(0, totalDailyGems - spentDailies * pullCost);
-            int availSubsGems = Math.max(0, totalSubsGems - spentSubs * pullCost);
-
-            int dailyPulls = availDailyGems / pullCost;
-            int subsPulls = availSubsGems / pullCost;
-
-            int combinedRemainder = (availDailyGems % pullCost) + (availSubsGems % pullCost);
-            if (combinedRemainder >= pullCost) {
-                subsPulls += combinedRemainder / pullCost;
-                combinedRemainder = combinedRemainder % pullCost;
-            }
-
-            preferences.savePiggyBankAutoRemainder(gameType, combinedRemainder);
-            piggyBankRepository.saveSubsProgress(gameType, subsPulls);
-            piggyBankRepository.saveDailiesProgress(gameType, dailyPulls);
+            piggyBankRepository.saveAutoRemainders(gameType, result.subsRemainder, result.dailiesRemainder);
+            piggyBankRepository.saveSubsProgress(gameType, result.subsPulls);
+            piggyBankRepository.saveDailiesProgress(gameType, result.dailiesPulls);
 
             if (onComplete != null) onComplete.run();
         }));
@@ -534,31 +525,29 @@ public class CalendarRepository {
         syncAutoProgress(gameType, onComplete);
     }
 
-    public void recordSpentDailies(GameType gameType, int amount) {
-        if (amount <= 0 || gameType == null) return;
-        int current = preferences.getPiggyBankSpentDailies(gameType);
-        preferences.savePiggyBankSpentDailies(gameType, current + amount);
+    public void recordSpentDailiesGems(GameType gameType, int gems) {
+        if (gems <= 0 || gameType == null) return;
+        int current = preferences.getPiggyBankSpentDailiesGems(gameType);
+        preferences.savePiggyBankSpentDailiesGems(gameType, current + gems);
     }
 
-    public void recordSpentSubs(GameType gameType, int amount) {
-        if (amount <= 0 || gameType == null) return;
-        int current = preferences.getPiggyBankSpentSubs(gameType);
-        preferences.savePiggyBankSpentSubs(gameType, current + amount);
+    public void recordSpentSubsGems(GameType gameType, int gems) {
+        if (gems <= 0 || gameType == null) return;
+        int current = preferences.getPiggyBankSpentSubsGems(gameType);
+        preferences.savePiggyBankSpentSubsGems(gameType, current + gems);
     }
 
     public void clearAutoProgress(GameType gameType) {
         if (gameType == null) return;
         databaseRepository.getCompletedDailiesCount(gameType, count -> {
             int totalGems = (count != null ? count : 0) * gameType.getDailyReward();
-            int totalWishes = totalGems / gameType.getPullCost();
-            preferences.savePiggyBankSpentDailies(gameType, totalWishes);
+            preferences.savePiggyBankSpentDailiesGems(gameType, totalGems);
         });
         databaseRepository.getClaimedSubscriptionsCount(gameType, count -> {
             int totalGems = (count != null ? count : 0) * gameType.getCurrencyPerDay();
-            int totalWishes = totalGems / gameType.getPullCost();
-            preferences.savePiggyBankSpentSubs(gameType, totalWishes);
+            preferences.savePiggyBankSpentSubsGems(gameType, totalGems);
         });
-        preferences.savePiggyBankAutoRemainder(gameType, 0);
+        piggyBankRepository.saveAutoRemainders(gameType, 0, 0);
     }
 
     public void getDaySubDaysRemaining(int year, int dayOfYear, GameType gameType, DatabaseRepository.Callback<Integer> callback) {

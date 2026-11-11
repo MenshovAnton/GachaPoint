@@ -84,61 +84,26 @@ public class PiggyBankViewModel extends AndroidViewModel {
         int totalProgress = repository.getTotalProgress(currentGameType);
         if (totalProgress <= 0) return;
 
-        int toRemove = Math.min(wishes, totalProgress);
-        int manual = repository.getManualProgress(currentGameType);
-        int subs = repository.getSubsProgress(currentGameType);
-        int dailies = repository.getDailiesProgress(currentGameType);
-
-        int fromManual = Math.min(toRemove, manual);
-        manual -= fromManual;
-        toRemove -= fromManual;
-
-        int deductedSubs = 0;
-        if (toRemove > 0) {
-            deductedSubs = Math.min(toRemove, subs);
-            subs -= deductedSubs;
-            toRemove -= deductedSubs;
-        }
-
-        int deductedDailies = 0;
-        if (toRemove > 0) {
-            deductedDailies = Math.min(toRemove, dailies);
-            dailies -= deductedDailies;
-            toRemove -= deductedDailies;
-        }
-
-        if (toRemove > 0) {
-            deductedSubs += toRemove;
-        }
-
-        if (deductedSubs > 0) {
-            calendarRepository.recordSpentSubs(currentGameType, deductedSubs);
-        }
-        if (deductedDailies > 0) {
-            calendarRepository.recordSpentDailies(currentGameType, deductedDailies);
-        }
-
-        repository.saveAllProgress(currentGameType, manual, subs, dailies, repository.getManualGems(currentGameType));
-        refreshData();
+        int toRemovePulls = Math.min(wishes, totalProgress);
+        deductGemsInternal((long) toRemovePulls * currentGameType.getPullCost());
     }
 
     public void addGems(int gems) {
         if (gems <= 0) return;
         int pullCost = currentGameType.getPullCost();
+        long totalGems = repository.getTotalGems(currentGameType);
+        int target = repository.getTarget(currentGameType);
+
+        if (target > 0 && totalGems + gems > (long) target * pullCost) {
+            goalExceededEvent.call();
+            return;
+        }
+
         int currentManualGems = repository.getManualGems(currentGameType);
         int currentManualPulls = repository.getManualProgress(currentGameType);
         int totalNewManualGems = currentManualGems + gems;
         int additionalPulls = totalNewManualGems / pullCost;
         int remainingGems = totalNewManualGems % pullCost;
-
-        int totalProgress = repository.getTotalProgress(currentGameType);
-        int target = repository.getTarget(currentGameType);
-
-        if (target > 0 && (totalProgress + additionalPulls > target ||
-                (totalProgress + additionalPulls == target && remainingGems > 0))) {
-            goalExceededEvent.call();
-            return;
-        }
 
         repository.saveManual(currentGameType, currentManualPulls + additionalPulls, remainingGems);
         refreshData();
@@ -146,55 +111,37 @@ public class PiggyBankViewModel extends AndroidViewModel {
 
     public void removeGems(int gems) {
         if (gems <= 0) return;
-        int pullCost = currentGameType.getPullCost();
-        int currentManualGems = repository.getManualGems(currentGameType);
-        int manualPulls = repository.getManualProgress(currentGameType);
-        int subsPulls = repository.getSubsProgress(currentGameType);
-        int dailiesPulls = repository.getDailiesProgress(currentGameType);
+        deductGemsInternal(gems);
+    }
 
-        int totalPulls = repository.getTotalProgress(currentGameType);
-        long totalGemsValue = repository.getTotalGems(currentGameType);
+    private void deductGemsInternal(long gems) {
+        if (gems <= 0) return;
+        PiggyBankRepository.DeductionResult result = PiggyBankRepository.calculateDeduction(
+                repository.getManualProgress(currentGameType),
+                repository.getManualGems(currentGameType),
+                repository.getSubsProgress(currentGameType),
+                repository.getAutoSubsRemainderGems(currentGameType),
+                repository.getDailiesProgress(currentGameType),
+                repository.getAutoDailiesRemainderGems(currentGameType),
+                currentGameType.getPullCost(),
+                gems
+        );
 
-        if (totalGemsValue <= 0) return;
-        long remainingValue = Math.max(0, totalGemsValue - gems);
-        int newTotalPulls = (int) (remainingValue / pullCost);
-        int newManualGems = (int) (remainingValue % pullCost);
-
-        int toRemove = totalPulls - newTotalPulls;
-        int newManual = manualPulls;
-        int newSubs = subsPulls;
-        int newDailies = dailiesPulls;
-
-        int fromManual = Math.min(toRemove, newManual);
-        newManual -= fromManual;
-        toRemove -= fromManual;
-
-        int deductedSubs = 0;
-        if (toRemove > 0) {
-            deductedSubs = Math.min(toRemove, newSubs);
-            newSubs -= deductedSubs;
-            toRemove -= deductedSubs;
+        if (result.spentFromSubsGems > 0) {
+            calendarRepository.recordSpentSubsGems(currentGameType, result.spentFromSubsGems);
+        }
+        if (result.spentFromDailiesGems > 0) {
+            calendarRepository.recordSpentDailiesGems(currentGameType, result.spentFromDailiesGems);
         }
 
-        int deductedDailies = 0;
-        if (toRemove > 0) {
-            deductedDailies = Math.min(toRemove, newDailies);
-            newDailies -= deductedDailies;
-            toRemove -= deductedDailies;
-        }
-
-        if (toRemove > 0) {
-            deductedSubs += toRemove;
-        }
-
-        if (deductedSubs > 0) {
-            calendarRepository.recordSpentSubs(currentGameType, deductedSubs);
-        }
-        if (deductedDailies > 0) {
-            calendarRepository.recordSpentDailies(currentGameType, deductedDailies);
-        }
-
-        repository.saveAllProgress(currentGameType, newManual, newSubs, newDailies, newManualGems);
+        repository.saveAutoRemainders(currentGameType, result.subsRemainder, result.dailiesRemainder);
+        repository.saveAllProgress(
+                currentGameType,
+                result.manualPulls,
+                result.subsPulls,
+                result.dailiesPulls,
+                result.manualGems
+        );
         refreshData();
     }
 

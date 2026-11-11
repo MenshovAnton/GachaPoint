@@ -129,7 +129,7 @@ public class DataSyncWorker extends Worker {
         if (unnotifiedStream != null) {
             for (PromoCode code : unnotifiedStream) {
                 GameType game = GameType.fromId(code.getGameType());
-                if (game == null || !prefs.isGameEnabled(game)) {
+                if (game == null || prefs.isGameEnabled(game)) {
                     continue;
                 }
                 if (hasNotificationPermission(context)) {
@@ -150,7 +150,7 @@ public class DataSyncWorker extends Worker {
         if (unnotifiedStream != null) {
             for (PromoCode code : unnotifiedStream) {
                 GameType game = GameType.fromId(code.getGameType());
-                if (game == null || !prefs.isGameEnabled(game)) {
+                if (game == null || prefs.isGameEnabled(game)) {
                     continue;
                 }
                 if (hasNotificationPermission(context)) {
@@ -169,7 +169,7 @@ public class DataSyncWorker extends Worker {
             }
 
             GameType game = GameType.fromId(code.getGameType());
-            if (game == null || !prefs.isGameEnabled(game)) {
+            if (game == null || prefs.isGameEnabled(game)) {
                 continue;
             }
 
