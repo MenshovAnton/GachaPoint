@@ -384,6 +384,7 @@
     <string name="menu_promo_title">Агрегатор промокодов</string>
     <string name="menu_promo_desc">Свежие коды на гемы</string>
     <string name="promocode_new_badge">НОВОЕ</string>
+    <string name="menu_new_badge_count">+%d</string>
     <string name="promocodes_notification_channel_name">Промокоды</string>
     <string name="promocodes_notification_channel_desc">Уведомления о стримовых и срочных промокодах</string>
     <string name="promocode_stream_push_title">Срочный промокод со стрима %s!</string>

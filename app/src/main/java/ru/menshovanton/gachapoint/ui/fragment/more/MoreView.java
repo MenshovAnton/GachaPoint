@@ -11,7 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.TextView;
 import android.widget.Toast;
 
 import ru.menshovanton.gachapoint.R;
@@ -31,6 +31,8 @@ public class MoreView extends Fragment {
     private View rowBanners;
     private View badgeNewPromocodes;
     private View badgeNewBanners;
+    private TextView tvNewPromoCount;
+    private TextView tvNewBannersCount;
     private View rowCommunityTelegram;
     private View rowCommunityTiktok;
     private View rowCommunityBoosty;
@@ -63,6 +65,8 @@ public class MoreView extends Fragment {
         rowBanners = view.findViewById(R.id.row_banners);
         badgeNewPromocodes = view.findViewById(R.id.badge_new_promocodes);
         badgeNewBanners = view.findViewById(R.id.badge_new_banners);
+        tvNewPromoCount = view.findViewById(R.id.tv_new_promo_count);
+        tvNewBannersCount = view.findViewById(R.id.tv_new_banners_badge);
         rowCommunityTelegram = view.findViewById(R.id.row_community_telegram);
         rowCommunityTiktok = view.findViewById(R.id.row_community_tiktok);
         rowCommunityBoosty = view.findViewById(R.id.row_community_boosty);
@@ -163,7 +167,7 @@ public class MoreView extends Fragment {
         if (ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_PROMOCODES.equals(cacheFileName)) {
             updatePromocodesBadge();
         } else if (ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_BANNERS.equals(cacheFileName)) {
-            updateBannersBadge();
+            updateBannersBadge(true);
         }
     };
 
@@ -171,7 +175,7 @@ public class MoreView extends Fragment {
     public void onResume() {
         super.onResume();
         updatePromocodesBadge();
-        updateBannersBadge();
+        updateBannersBadge(false);
     }
 
     private void updatePromocodesBadge() {
@@ -183,20 +187,29 @@ public class MoreView extends Fragment {
             ru.menshovanton.gachapoint.data.db.AppDatabase.postToMain(() -> {
                 if (badgeNewPromocodes != null) {
                     badgeNewPromocodes.setVisibility(unviewed > 0 ? View.VISIBLE : View.GONE);
+                    if (unviewed > 0 && tvNewPromoCount != null && isAdded()) {
+                        tvNewPromoCount.setText(getString(R.string.menu_new_badge_count, unviewed));
+                    }
                 }
             });
         });
     }
 
-    private void updateBannersBadge() {
+    private void updateBannersBadge(boolean reloadFromCache) {
         if (getContext() == null || badgeNewBanners == null) return;
         ru.menshovanton.gachapoint.data.local.NetworkExecutor.execute(() -> {
             ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository repo =
                     ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository.getInstance(requireContext());
+            if (reloadFromCache) {
+                repo.reload(false);
+            }
             int unviewed = repo.getUnviewedBannersCount();
             ru.menshovanton.gachapoint.data.db.AppDatabase.postToMain(() -> {
                 if (badgeNewBanners != null) {
                     badgeNewBanners.setVisibility(unviewed > 0 ? View.VISIBLE : View.GONE);
+                    if (unviewed > 0 && tvNewBannersCount != null && isAdded()) {
+                        tvNewBannersCount.setText(getString(R.string.menu_new_badge_count, unviewed));
+                    }
                 }
             });
         });
@@ -216,6 +229,8 @@ public class MoreView extends Fragment {
         rowBanners = null;
         badgeNewPromocodes = null;
         badgeNewBanners = null;
+        tvNewPromoCount = null;
+        tvNewBannersCount = null;
         rowCommunityTelegram = null;
         rowCommunityTiktok = null;
         rowCommunityBoosty = null;

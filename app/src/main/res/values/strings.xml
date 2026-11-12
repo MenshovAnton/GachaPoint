@@ -406,6 +406,7 @@
     <string name="menu_promo_title">Promo Codes Hub</string>
     <string name="menu_promo_desc">Latest codes for primogems and jade</string>
     <string name="promocode_new_badge">NEW</string>
+    <string name="menu_new_badge_count">+%d</string>
     <string name="promocodes_notification_channel_name">Promo Codes</string>
     <string name="promocodes_notification_channel_desc">Stream and emergency promo code notifications</string>
     <string name="promocode_stream_push_title">Urgent stream promo code for %s!</string>

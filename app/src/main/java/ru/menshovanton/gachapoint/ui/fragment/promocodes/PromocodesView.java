@@ -155,9 +155,10 @@ public class PromocodesView extends Fragment {
         if (current == null) current = GameType.GENSHIN;
         ru.menshovanton.gachapoint.data.repository.PromocodeRepository repo =
                 ru.menshovanton.gachapoint.data.repository.PromocodeRepository.getInstance(requireContext());
-        repo.markPromocodesAsViewed(current);
-        updateMainBadge();
-        updatePillsBadges();
+        repo.markPromocodesAsViewed(current, () -> {
+            updateMainBadge();
+            updatePillsBadges();
+        });
     }
 
     private void updateMainBadge() {
@@ -272,9 +273,10 @@ public class PromocodesView extends Fragment {
                     viewModel.selectGameType(gameType);
 
                     ru.menshovanton.gachapoint.data.repository.PromocodeRepository.getInstance(requireContext())
-                            .markPromocodesAsViewed(gameType);
-                    updateMainBadge();
-                    updatePillsBadges();
+                            .markPromocodesAsViewed(gameType, () -> {
+                                updateMainBadge();
+                                updatePillsBadges();
+                            });
                 },
                 () -> ru.menshovanton.gachapoint.ui.main.GamesConfigBottomSheetDialog.show(requireContext(), () -> {
                     if (mainActivity != null) mainActivity.refreshGamesConfig();

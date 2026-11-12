@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -393,7 +394,7 @@ public class InMemoryTrackerTestHarness {
                     result.add(sub);
                 }
             }
-            result.sort((a, b) -> Long.compare(a.startDate, b.startDate));
+            result.sort(Comparator.comparingLong(a -> a.startDate));
             if (callback != null) callback.onResult(result);
         }
 

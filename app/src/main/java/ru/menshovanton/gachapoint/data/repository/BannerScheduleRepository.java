@@ -153,7 +153,8 @@ public class BannerScheduleRepository {
                 }
             }
         } else {
-            for (List<BannerScheduleItem> list : bannerCache.values()) {
+            for (GameType g : prefs.getEnabledGames()) {
+                List<BannerScheduleItem> list = bannerCache.get(g.getId());
                 if (list == null) continue;
                 for (BannerScheduleItem banner : list) {
                     String st = banner.getStatus();

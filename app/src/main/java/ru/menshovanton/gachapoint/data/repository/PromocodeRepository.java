@@ -186,6 +186,13 @@ public class PromocodeRepository {
         );
 
         List<PromoCode> allCodes = parsePromoCodes(json, gameType != null ? gameType.getCode() : -1);
+        Set<Integer> enabledGameCodes = null;
+        if (gameType == null) {
+            enabledGameCodes = new HashSet<>();
+            for (GameType g : prefs.getEnabledGames()) {
+                enabledGameCodes.add(g.getCode());
+            }
+        }
         int unviewedCount = 0;
 
         try {
@@ -197,6 +204,9 @@ public class PromocodeRepository {
 
             for (PromoCode code : allCodes) {
                 if (gameType != null && code.getGameType() != gameType.getCode()) {
+                    continue;
+                }
+                if (enabledGameCodes != null && !enabledGameCodes.contains(code.getGameType())) {
                     continue;
                 }
                 if (code.isActive() && !code.isPermanent()) {
@@ -216,6 +226,10 @@ public class PromocodeRepository {
     }
 
     public void markPromocodesAsViewed(@NonNull GameType gameType) {
+        markPromocodesAsViewed(gameType, null);
+    }
+
+    public void markPromocodesAsViewed(@NonNull GameType gameType, @Nullable Runnable onComplete) {
         AppDatabase.getExecutor().execute(() -> {
             try {
                 String json = JsonDataLoader.loadJsonData(
@@ -236,6 +250,10 @@ public class PromocodeRepository {
                 new Preferences(context).markPromocodesAsViewed(ids);
             } catch (Exception e) {
                 AppLogger.e("PromocodeRepository", "Error marking game promocodes as viewed", e);
+            } finally {
+                if (onComplete != null) {
+                    AppDatabase.postToMain(onComplete);
+                }
             }
         });
     }

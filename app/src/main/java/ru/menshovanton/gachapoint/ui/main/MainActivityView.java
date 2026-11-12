@@ -176,9 +176,10 @@ public class MainActivityView extends AppCompatActivity {
     }
 
     private final ru.menshovanton.gachapoint.data.local.JsonDataLoader.OnDataUpdatedListener dataUpdatedListener = cacheFileName -> {
-        if (ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_PROMOCODES.equals(cacheFileName)
-                || ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_BANNERS.equals(cacheFileName)) {
+        if (ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_PROMOCODES.equals(cacheFileName)) {
             updatePromocodesBadge();
+        } else if (ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_BANNERS.equals(cacheFileName)) {
+            updatePromocodesBadge(true);
         }
     };
 
@@ -195,11 +196,18 @@ public class MainActivityView extends AppCompatActivity {
     }
 
     public void updatePromocodesBadge() {
+        updatePromocodesBadge(false);
+    }
+
+    private void updatePromocodesBadge(boolean reloadBannersFromCache) {
         ru.menshovanton.gachapoint.data.local.NetworkExecutor.execute(() -> {
             ru.menshovanton.gachapoint.data.repository.PromocodeRepository promoRepo =
                     ru.menshovanton.gachapoint.data.repository.PromocodeRepository.getInstance(this);
             ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository bannerRepo =
                     ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository.getInstance(this);
+            if (reloadBannersFromCache) {
+                bannerRepo.reload(false);
+            }
             int unviewedCodes = promoRepo.getUnviewedPromoCodesCount();
             int unviewedBanners = bannerRepo.getUnviewedBannersCount();
             int totalUnviewed = unviewedCodes + unviewedBanners;
@@ -343,6 +351,7 @@ public class MainActivityView extends AppCompatActivity {
         if (viewModel != null) {
             viewModel.refreshEnabledGames();
         }
+        updatePromocodesBadge();
     }
 
     public GameType getSubType() {

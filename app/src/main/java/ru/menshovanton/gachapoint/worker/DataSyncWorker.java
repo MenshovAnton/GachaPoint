@@ -183,7 +183,7 @@ public class DataSyncWorker extends Worker {
                 Duration diff = Duration.between(now, expiry);
                 long hours = diff.toHours();
 
-                if (hours > 0 && hours <= 24) {
+                if (!diff.isNegative() && !diff.isZero() && hours <= 24) {
                     String notifyKey = "notified_expiring_" + code.getId();
                     if (!prefs.getStringPreference(notifyKey, "").equals(expiresAtStr)) {
                         if (hasNotificationPermission(context)) {
@@ -236,7 +236,7 @@ public class DataSyncWorker extends Worker {
                     }
                 }
 
-                if (daysUntil <= 1 && daysUntil >= 0) {
+                if (daysUntil == 1) {
                     if (!prefs.isBannerNotifiedUpcoming(bannerId)) {
                         if (hasNotificationPermission(context)) {
                             String title = context.getString(R.string.notification_banner_upcoming_title, gameTitle);
