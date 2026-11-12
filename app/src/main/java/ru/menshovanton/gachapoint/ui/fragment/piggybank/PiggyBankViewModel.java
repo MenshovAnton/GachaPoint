@@ -38,14 +38,12 @@ public class PiggyBankViewModel extends AndroidViewModel {
         if (gameType != null) {
             this.currentGameType = gameType;
             refreshData();
-            calendarRepository.syncDailiesProgress(gameType, () ->
-                    calendarRepository.syncSubsProgress(gameType, this::refreshData));
+            calendarRepository.syncAutoProgress(gameType, this::refreshData);
         }
     }
 
     public void syncAndRefresh() {
-        calendarRepository.syncDailiesProgress(currentGameType, () ->
-                calendarRepository.syncSubsProgress(currentGameType, this::refreshData));
+        calendarRepository.syncAutoProgress(currentGameType, this::refreshData);
     }
 
     public void refreshData() {

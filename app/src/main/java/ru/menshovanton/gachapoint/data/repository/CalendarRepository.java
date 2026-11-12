@@ -55,7 +55,7 @@ public class CalendarRepository {
 
         databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
             setSubsCount(gameType, (activeSub != null) ? activeSub.count : 0);
-            syncDailiesProgress(gameType, () -> syncSubsProgress(gameType, onComplete));
+            syncAutoProgress(gameType, onComplete);
         });
     }
 
@@ -286,36 +286,44 @@ public class CalendarRepository {
             }
 
             if (activeSub == null || todayEpoch > activeSub.endDate || isSeparatePastSub) {
-                int currencyPerDay = gameType.getCurrencyPerDay();
+                databaseRepository.getSubscriptionsInRange(gameType, actualStart.toEpochDay(), endDate.toEpochDay(), overlapping -> {
+                    if (overlapping != null && !overlapping.isEmpty()) {
+                        if (callback != null) callback.onResult(false);
+                        return;
+                    }
 
-                SubscriptionEntity newSub = new SubscriptionEntity(
-                        gameType.getCode(),
-                        totalCount,
-                        actualStart.toEpochDay(),
-                        endDate.toEpochDay(),
-                        0,
-                        0,
-                        totalCount * gameType.getSubscriptionDurationDays() * currencyPerDay
-                );
+                    int currencyPerDay = gameType.getCurrencyPerDay();
 
-                calendar.ensureYearInitialized(actualStart.getYear(), () ->
-                        calendar.ensureYearInitialized(endDate.getYear(), () ->
-                                databaseRepository.insertSubscription(newSub, id -> {
-                                    newSub.id = id != null ? id.intValue() : 0;
-                                    if (isSeparatePastSub) {
-                                        setSubsCount(gameType, activeSub.count);
-                                        recalculateSubscriptionEntity(newSub, gameType, today, () -> {
-                                            if (callback != null) callback.onResult(true);
-                                        });
-                                    } else {
-                                        setSubsCount(gameType, totalCount);
-                                        calculateMissesAndClaims(gameType, actualStart.getYear(), () -> {
-                                            if (callback != null) callback.onResult(true);
-                                        });
-                                    }
-                                })
-                        )
-                );
+                    SubscriptionEntity newSub = new SubscriptionEntity(
+                            gameType.getCode(),
+                            totalCount,
+                            actualStart.toEpochDay(),
+                            endDate.toEpochDay(),
+                            0,
+                            0,
+                            totalCount * gameType.getSubscriptionDurationDays() * currencyPerDay
+                    );
+
+                    calendar.ensureYearInitialized(actualStart.getYear(), () ->
+                            calendar.ensureYearInitialized(endDate.getYear(), () ->
+                                    databaseRepository.insertSubscription(newSub, id -> {
+                                        newSub.id = id != null ? id.intValue() : 0;
+                                        if (isSeparatePastSub || endDate.toEpochDay() < todayEpoch) {
+                                            int currentActiveCount = (activeSub != null && todayEpoch <= activeSub.endDate) ? activeSub.count : 0;
+                                            setSubsCount(gameType, currentActiveCount);
+                                            recalculateSubscriptionEntity(newSub, gameType, today, () -> {
+                                                if (callback != null) callback.onResult(true);
+                                            });
+                                        } else {
+                                            setSubsCount(gameType, totalCount);
+                                            calculateMissesAndClaims(gameType, actualStart.getYear(), () -> {
+                                                if (callback != null) callback.onResult(true);
+                                            });
+                                        }
+                                    })
+                            )
+                    );
+                });
             } else {
                 int newCount = Math.min(activeSub.count + countToAdd, gameType.getMaxSubs());
                 int added = newCount - activeSub.count;
@@ -396,16 +404,23 @@ public class CalendarRepository {
 
         databaseRepository.getSubscriptionsInRange(gameType, epoch, epoch, subs -> {
             int subDaysRemaining = 0;
+            SubscriptionEntity matchingSub = null;
             if (subs != null && !subs.isEmpty()) {
-                SubscriptionEntity sub = subs.get(0);
-                subDaysRemaining = (int) (sub.endDate - epoch + 1);
+                matchingSub = subs.get(0);
+                subDaysRemaining = (int) (matchingSub.endDate - epoch + 1);
             }
 
             final int finalRem = subDaysRemaining;
+            final SubscriptionEntity finalSub = matchingSub;
             calendar.getDay(year, dayOfYear, gameType, date ->
-                    calendar.updateDay(year, dayOfYear, gameType, status, finalRem, () ->
-                    calculateMissesAndClaims(gameType, year, () ->
-                            syncSubsProgress(gameType, onComplete))));
+                    calendar.updateDay(year, dayOfYear, gameType, status, finalRem, () -> {
+                        LocalDate today = LocalDate.now();
+                        if (finalSub != null && finalSub.endDate < today.toEpochDay()) {
+                            recalculateSubscriptionEntity(finalSub, gameType, today, onComplete);
+                        } else {
+                            calculateMissesAndClaims(gameType, year, onComplete);
+                        }
+                    }));
         });
     }
 
@@ -466,8 +481,7 @@ public class CalendarRepository {
         }
         ensureYearsInitialized(distinctYears, 0, () ->
                 databaseRepository.setCalendarDaysSubscriptionStatusBatch(years, daysOfYear, gameType, status, () ->
-                        calculateMissesAndClaims(gameType, dates.get(0).getYear(), () ->
-                                syncSubsProgress(gameType, onComplete)))
+                        calculateMissesAndClaims(gameType, dates.get(0).getYear(), onComplete))
         );
     }
 

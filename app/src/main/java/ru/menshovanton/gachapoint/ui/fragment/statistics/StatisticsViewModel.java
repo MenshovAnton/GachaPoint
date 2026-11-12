@@ -202,7 +202,7 @@ public class StatisticsViewModel extends AndroidViewModel {
 
         int target = piggyBankRepository.getTarget(gameType);
         int totalProgress = piggyBankRepository.getTotalProgress(gameType);
-        int manualProgress = piggyBankRepository.getManualProgress(gameType);
+        int manualProgress = piggyBankRepository.getManualProgress(gameType) + piggyBankRepository.getExtraPullsFromGems(gameType);
         int subsProgress = piggyBankRepository.getSubsProgress(gameType);
         int dailiesProgress = piggyBankRepository.getDailiesProgress(gameType);
         int dailiesCurrency = completedDailiesCount * gameType.getDailyReward();

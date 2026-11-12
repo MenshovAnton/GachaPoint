@@ -425,7 +425,12 @@ public class DatabaseRepository {
     public void getClaimedSubscriptionsCount(GameType gameType, Callback<Integer> callback) {
         queryAsyncSafe(() -> {
             if (gameType != null) {
-                return getDb().calendarDao().getClaimedSubscriptionsCount(gameType.getCode());
+                LocalDate today = LocalDate.now();
+                return getDb().calendarDao().getClaimedSubscriptionsCount(
+                        gameType.getCode(),
+                        today.getYear(),
+                        today.getDayOfYear()
+                );
             }
             return 0;
         }, callback, 0);

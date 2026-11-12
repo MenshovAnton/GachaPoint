@@ -451,10 +451,14 @@ public class InMemoryTrackerTestHarness {
         public void getClaimedSubscriptionsCount(GameType gameType, Callback<Integer> callback) {
             int count = 0;
             if (gameType != null) {
+                LocalDate today = LocalDate.now();
+                int todayYear = today.getYear();
+                int todayDay = today.getDayOfYear();
                 for (CalendarGameStatusEntity e : gameStatuses.values()) {
                     if (e.gameType == gameType.getCode()
                             && (e.status == DayState.STATUS_RECEIVED || e.status == DayState.STATUS_OLD_RECEIVED)
-                            && e.subDaysRemaining > 0) {
+                            && e.subDaysRemaining > 0
+                            && (e.year < todayYear || (e.year == todayYear && e.dayOfYear <= todayDay))) {
                         count++;
                     }
                 }

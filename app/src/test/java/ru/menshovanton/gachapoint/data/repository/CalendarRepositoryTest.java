@@ -328,4 +328,41 @@ public class CalendarRepositoryTest {
         assertEquals(90, harness.preferences.getPiggyBankSpentSubsGems(GameType.GENSHIN));
         assertEquals(60, harness.preferences.getPiggyBankSpentDailiesGems(GameType.GENSHIN));
     }
+
+    @Test
+    public void pastSubscriptionWithoutActiveRecalculatesProgressAndRejectsOverlap() {
+        LocalDate pastStart = LocalDate.now().minusDays(40);
+        AtomicBoolean added = new AtomicBoolean(false);
+        repo.addSubscription(GameType.GENSHIN, 1, pastStart, added::set);
+        assertTrue(added.get());
+        assertEquals(0, repo.getSubsCount(GameType.GENSHIN));
+
+        AtomicReference<List<SubscriptionEntity>> allSubsRef = new AtomicReference<>();
+        harness.databaseRepository.getAllSubscriptions(GameType.GENSHIN, allSubsRef::set);
+        assertEquals(1, allSubsRef.get().size());
+        SubscriptionEntity pastSub = allSubsRef.get().get(0);
+        assertEquals(0, pastSub.wait);
+        assertEquals(30 * 90, pastSub.missed);
+
+        LocalDate claimedDay = pastStart.plusDays(2);
+        repo.setDayStatus(claimedDay.getYear(), claimedDay.getDayOfYear(), GameType.GENSHIN, DayState.STATUS_RECEIVED, null);
+        harness.databaseRepository.getAllSubscriptions(GameType.GENSHIN, allSubsRef::set);
+        pastSub = allSubsRef.get().get(0);
+        assertEquals(90, pastSub.claimed);
+        assertEquals(29 * 90, pastSub.missed);
+
+        AtomicBoolean overlapAdded = new AtomicBoolean(true);
+        repo.addSubscription(GameType.GENSHIN, 1, pastStart.plusDays(10), overlapAdded::set);
+        assertFalse(overlapAdded.get());
+    }
+
+    @Test
+    public void futureSubscriptionDayDoesNotCountTowardPiggyBank() {
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plusDays(1);
+        repo.addSubscription(GameType.GENSHIN, 1, today, null);
+        repo.setDayStatus(tomorrow.getYear(), tomorrow.getDayOfYear(), GameType.GENSHIN, DayState.STATUS_RECEIVED, null);
+
+        assertEquals(0, piggy.getTotalGems(GameType.GENSHIN));
+    }
 }

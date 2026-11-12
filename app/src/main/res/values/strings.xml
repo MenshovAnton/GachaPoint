@@ -136,6 +136,7 @@
     <string name="add_sub">Subscription added</string>
     <string name="del_sub">Subscription deleted</string>
     <string name="subs_limit">Subscription limit reached</string>
+    <string name="subs_overlap">Subscription overlaps with an existing one</string>
     <string name="check_today">Marking complete!</string>
     <string name="cancel_check_today">Mark removed</string>
     <string name="already_checked">You have already checked in today</string>

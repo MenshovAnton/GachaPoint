@@ -432,7 +432,9 @@ public class TrackerViewModel extends AndroidViewModel {
     }
 
     public void addSubscriptionChain(int count, LocalDate startDate) {
-        if (calendarRepository.getSubsCount(currentGameType) >= currentGameType.getMaxSubs()) {
+        LocalDate today = LocalDate.now();
+        boolean isPastStart = startDate != null && startDate.isBefore(today);
+        if (!isPastStart && calendarRepository.getSubsCount(currentGameType) >= currentGameType.getMaxSubs()) {
             toastMessageEvent.setValue(R.string.subs_limit);
             return;
         }
@@ -443,7 +445,9 @@ public class TrackerViewModel extends AndroidViewModel {
                 toastMessageEvent.setValue(R.string.add_sub);
                 refreshData();
             } else {
-                toastMessageEvent.setValue(R.string.subs_limit);
+                boolean isLimitReached = !isPastStart
+                        && calendarRepository.getSubsCount(currentGameType) >= currentGameType.getMaxSubs();
+                toastMessageEvent.setValue(isLimitReached ? R.string.subs_limit : R.string.subs_overlap);
             }
         });
     }

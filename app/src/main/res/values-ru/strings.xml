@@ -130,6 +130,7 @@
     <string name="add_sub">Подписка добавлена</string>
     <string name="del_sub">Подписка удалена</string>
     <string name="subs_limit">Достигнут лимит подписок</string>
+    <string name="subs_overlap">Подписка пересекается с существующей</string>
     <string name="check_today">Отметка выполнена!</string>
     <string name="cancel_check_today">Отметка удалена</string>
     <string name="already_checked">Вы уже отмечались сегодня</string>
