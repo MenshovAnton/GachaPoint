@@ -976,6 +976,7 @@ public class TrackerView extends Fragment {
         TextView tvDate = dialog.findViewById(R.id.tv_sheet_date);
         TextView tvFutureBadge = dialog.findViewById(R.id.tv_future_date_badge);
         TextView tvGame = dialog.findViewById(R.id.tv_sheet_game);
+        View rowDaily = dialog.findViewById(R.id.row_daily);
         MaterialSwitch switchDaily = dialog.findViewById(R.id.switch_daily);
         View rowSub = dialog.findViewById(R.id.row_sub);
         View rowAddMoreSub = dialog.findViewById(R.id.row_add_more_sub);
@@ -1001,22 +1002,33 @@ public class TrackerView extends Fragment {
         final String finalFormattedDate = formattedDate;
 
         if (switchDaily != null) {
+            final boolean[] suppressDaily = {false};
             switchDaily.setChecked(cell.dailyStatus == 1);
             switchDaily.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (buttonView.isPressed()) {
-                    if (isFuture) {
-                        new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
-                                .setTitle(R.string.future_date_warning_title)
-                                .setMessage(getString(R.string.future_date_action_confirm_message, finalFormattedDate))
-                                .setPositiveButton(R.string.ok_button, (d, w) -> viewModel.toggleDailyStatus(cell.year, cell.dayOfYear, isChecked))
-                                .setNegativeButton(R.string.cancel, (d, w) -> switchDaily.setChecked(!isChecked))
-                                .setOnCancelListener(d -> switchDaily.setChecked(!isChecked))
-                                .show();
-                    } else {
-                        viewModel.toggleDailyStatus(cell.year, cell.dayOfYear, isChecked);
-                    }
+                if (suppressDaily[0]) return;
+                if (isFuture) {
+                    new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
+                            .setTitle(R.string.future_date_warning_title)
+                            .setMessage(getString(R.string.future_date_action_confirm_message, finalFormattedDate))
+                            .setPositiveButton(R.string.ok_button, (d, w) -> viewModel.toggleDailyStatus(cell.year, cell.dayOfYear, isChecked))
+                            .setNegativeButton(R.string.cancel, (d, w) -> {
+                                suppressDaily[0] = true;
+                                switchDaily.setChecked(!isChecked);
+                                suppressDaily[0] = false;
+                            })
+                            .setOnCancelListener(d -> {
+                                suppressDaily[0] = true;
+                                switchDaily.setChecked(!isChecked);
+                                suppressDaily[0] = false;
+                            })
+                            .show();
+                } else {
+                    viewModel.toggleDailyStatus(cell.year, cell.dayOfYear, isChecked);
                 }
             });
+            if (rowDaily != null) {
+                rowDaily.setOnClickListener(v -> switchDaily.toggle());
+            }
         }
 
         GameType currentGame = viewModel.getCurrentGameType();
@@ -1050,23 +1062,34 @@ public class TrackerView extends Fragment {
                 tvSubSubtitle.setText(subInfo);
             }
             if (switchSub != null) {
+                final boolean[] suppressSub = {false};
                 boolean isClaimed = (cell.status == DayState.STATUS_RECEIVED || cell.status == DayState.STATUS_OLD_RECEIVED);
                 switchSub.setChecked(isClaimed);
                 switchSub.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (buttonView.isPressed()) {
-                        if (isFuture) {
-                            new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
-                                    .setTitle(R.string.future_date_warning_title)
-                                    .setMessage(getString(R.string.future_date_action_confirm_message, finalFormattedDate))
-                                    .setPositiveButton(R.string.ok_button, (d, w) -> viewModel.toggleSubStatus(cell.year, cell.dayOfYear, isChecked))
-                                    .setNegativeButton(R.string.cancel, (d, w) -> switchSub.setChecked(!isChecked))
-                                    .setOnCancelListener(d -> switchSub.setChecked(!isChecked))
-                                    .show();
-                        } else {
-                            viewModel.toggleSubStatus(cell.year, cell.dayOfYear, isChecked);
-                        }
+                    if (suppressSub[0]) return;
+                    if (isFuture) {
+                        new MaterialAlertDialogBuilder(context, R.style.Dialog_GachaPoint_AlertDialog)
+                                .setTitle(R.string.future_date_warning_title)
+                                .setMessage(getString(R.string.future_date_action_confirm_message, finalFormattedDate))
+                                .setPositiveButton(R.string.ok_button, (d, w) -> viewModel.toggleSubStatus(cell.year, cell.dayOfYear, isChecked))
+                                .setNegativeButton(R.string.cancel, (d, w) -> {
+                                    suppressSub[0] = true;
+                                    switchSub.setChecked(!isChecked);
+                                    suppressSub[0] = false;
+                                })
+                                .setOnCancelListener(d -> {
+                                    suppressSub[0] = true;
+                                    switchSub.setChecked(!isChecked);
+                                    suppressSub[0] = false;
+                                })
+                                .show();
+                    } else {
+                        viewModel.toggleSubStatus(cell.year, cell.dayOfYear, isChecked);
                     }
                 });
+                if (rowSub != null) {
+                    rowSub.setOnClickListener(v -> switchSub.toggle());
+                }
             }
         } else {
             if (rowSub != null) rowSub.setVisibility(View.GONE);

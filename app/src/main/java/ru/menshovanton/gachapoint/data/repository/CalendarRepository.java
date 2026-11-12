@@ -269,10 +269,12 @@ public class CalendarRepository {
         long todayEpoch = today.toEpochDay();
 
         databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
-            if (activeSub == null || todayEpoch > activeSub.endDate) {
-                int totalCount = Math.min(countToAdd, gameType.getMaxSubs());
-                LocalDate actualStart = (startDate != null) ? startDate : today;
-                LocalDate endDate = actualStart.plusDays((long) totalCount * gameType.getSubscriptionDurationDays() - 1);
+            LocalDate actualStart = (startDate != null) ? startDate : today;
+            int totalCount = Math.min(countToAdd, gameType.getMaxSubs());
+            LocalDate endDate = actualStart.plusDays((long) totalCount * gameType.getSubscriptionDurationDays() - 1);
+            boolean isSeparatePastSub = activeSub != null && startDate != null && endDate.toEpochDay() < activeSub.startDate;
+
+            if (activeSub == null || todayEpoch > activeSub.endDate || isSeparatePastSub) {
                 int currencyPerDay = gameType.getCurrencyPerDay();
 
                 SubscriptionEntity newSub = new SubscriptionEntity(
@@ -399,6 +401,14 @@ public class CalendarRepository {
         );
     }
 
+    private void ensureYearsInitialized(List<Integer> years, int index, Runnable onComplete) {
+        if (years == null || index >= years.size()) {
+            if (onComplete != null) onComplete.run();
+            return;
+        }
+        calendar.ensureYearInitialized(years.get(index), () -> ensureYearsInitialized(years, index + 1, onComplete));
+    }
+
     public void setDaysDailyStatusBatch(List<LocalDate> dates, GameType gameType, int dailyStatus, Runnable onComplete) {
         if (dates == null || dates.isEmpty() || gameType == null) {
             if (onComplete != null) onComplete.run();
@@ -406,12 +416,19 @@ public class CalendarRepository {
         }
         List<Integer> years = new ArrayList<>(dates.size());
         List<Integer> daysOfYear = new ArrayList<>(dates.size());
+        List<Integer> distinctYears = new ArrayList<>();
         for (LocalDate d : dates) {
-            years.add(d.getYear());
+            int y = d.getYear();
+            years.add(y);
             daysOfYear.add(d.getDayOfYear());
+            if (!distinctYears.contains(y)) {
+                distinctYears.add(y);
+            }
         }
-        databaseRepository.setCalendarDaysDailyStatusBatch(years, daysOfYear, gameType, dailyStatus, () ->
-                syncDailiesProgress(gameType, onComplete)
+        ensureYearsInitialized(distinctYears, 0, () ->
+                databaseRepository.setCalendarDaysDailyStatusBatch(years, daysOfYear, gameType, dailyStatus, () ->
+                        syncDailiesProgress(gameType, onComplete)
+                )
         );
     }
 
@@ -422,13 +439,20 @@ public class CalendarRepository {
         }
         List<Integer> years = new ArrayList<>(dates.size());
         List<Integer> daysOfYear = new ArrayList<>(dates.size());
+        List<Integer> distinctYears = new ArrayList<>();
         for (LocalDate d : dates) {
-            years.add(d.getYear());
+            int y = d.getYear();
+            years.add(y);
             daysOfYear.add(d.getDayOfYear());
+            if (!distinctYears.contains(y)) {
+                distinctYears.add(y);
+            }
         }
-        databaseRepository.setCalendarDaysSubscriptionStatusBatch(years, daysOfYear, gameType, status, () ->
-                calculateMissesAndClaims(gameType, dates.get(0).getYear(), () ->
-                        syncSubsProgress(gameType, onComplete)));
+        ensureYearsInitialized(distinctYears, 0, () ->
+                databaseRepository.setCalendarDaysSubscriptionStatusBatch(years, daysOfYear, gameType, status, () ->
+                        calculateMissesAndClaims(gameType, dates.get(0).getYear(), () ->
+                                syncSubsProgress(gameType, onComplete)))
+        );
     }
 
     public void getDailiesStatistic(GameType gameType, int year, int month, DatabaseRepository.Callback<Statistic> callback) {

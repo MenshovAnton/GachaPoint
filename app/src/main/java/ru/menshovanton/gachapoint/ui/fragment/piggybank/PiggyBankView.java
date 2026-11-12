@@ -353,7 +353,7 @@ public class PiggyBankView extends Fragment {
             int[] presets = inGems ? new int[]{daily, subDaily, pullCost, 300, 600, 10 * pullCost} : new int[]{1, 5, 10, 50};
             for (int p : presets) {
                 MaterialButton chip = new MaterialButton(requireContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle);
-                chip.setText("+" + p);
+                chip.setText((isAdd ? "+" : "-") + p);
                 chip.setTextSize(13);
                 chip.setCornerRadius((int) (10 * getResources().getDisplayMetrics().density));
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -397,7 +397,7 @@ public class PiggyBankView extends Fragment {
                         tvPreview.setText(getString(R.string.dialog_quick_remove_preview, pulls, remGems));
                     }
                 } else {
-                    int gems = val * pullCost;
+                    long gems = (long) val * pullCost;
                     tvPreview.setText(getString(R.string.savings_currency_approx_format, String.valueOf(gems), getString(gameType.getCurrencyNameResId())));
                 }
             }
@@ -460,7 +460,7 @@ public class PiggyBankView extends Fragment {
                 isUpdatingConverter = true;
                 if (!TextUtils.isEmpty(s)) {
                     try {
-                        int pulls = Integer.parseInt(s.toString());
+                        long pulls = Long.parseLong(s.toString());
                         int cost = viewModel.getCurrentGameType().getPullCost();
                         etConvertCurrency.setText(String.valueOf(pulls * cost));
                     } catch (NumberFormatException ignored) {}

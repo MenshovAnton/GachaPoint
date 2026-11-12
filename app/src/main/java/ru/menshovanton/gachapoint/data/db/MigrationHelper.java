@@ -289,42 +289,6 @@ public class MigrationHelper {
             LocalDate today = LocalDate.now();
             long todayEpoch = today.toEpochDay();
 
-            List<Integer> corruptSubIds = new ArrayList<>();
-            try (android.database.Cursor cur = db.query(new SimpleSQLiteQuery(
-                    "SELECT `id`, `game_type`, `count`, `start_date`, `end_date` FROM `subscriptions` WHERE `count` > 1"))) {
-                while (cur.moveToNext()) {
-                    int subId = cur.getInt(0);
-                    int gType = cur.getInt(1);
-                    long sEpoch = cur.getLong(3);
-                    long eEpoch = cur.getLong(4);
-
-                    try (android.database.Cursor statusCur = db.query(new SimpleSQLiteQuery(
-                            "SELECT `year`, `day_of_year`, `sub_days_remaining` " +
-                                    "FROM `calendar_game_status` " +
-                                    "WHERE `game_type` = ? AND `sub_days_remaining` > 0",
-                            new Object[]{gType}))) {
-                        while (statusCur.moveToNext()) {
-                            int y = statusCur.getInt(0);
-                            int doy = statusCur.getInt(1);
-                            int rem = statusCur.getInt(2);
-                            LocalDate d = LocalDate.ofYearDay(y, doy);
-                            long dEpoch = d.toEpochDay();
-                            if (dEpoch >= sEpoch && dEpoch <= eEpoch) {
-                                LocalDate expectedEnd = d.plusDays(rem - 1);
-                                if (expectedEnd.toEpochDay() < eEpoch - 1) {
-                                    corruptSubIds.add(subId);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            for (int badId : corruptSubIds) {
-                db.execSQL("DELETE FROM `subscriptions` WHERE `id` = ?", new Object[]{badId});
-            }
-
             for (GameType gameType : GameType.values()) {
                 int gameCode = gameType.getCode();
                 int currencyPerDay = gameType.getCurrencyPerDay();

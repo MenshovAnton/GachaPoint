@@ -313,11 +313,18 @@ public class DatabaseRepository {
                 for (int i = 0; i < years.size(); i++) {
                     int y = years.get(i);
                     int d = daysOfYear.get(i);
+                    long epoch = LocalDate.ofYearDay(y, d).toEpochDay();
+                    List<SubscriptionEntity> subs = getDb().subscriptionDao().getSubscriptionsInRange(gameTypeCode, epoch, epoch);
+                    int subDaysRemaining = 0;
+                    if (subs != null && !subs.isEmpty()) {
+                        subDaysRemaining = Math.max(0, (int) (subs.get(0).endDate - epoch + 1));
+                    }
                     CalendarGameStatusEntity entity = getDb().calendarDao().getGameStatus(y, d, gameTypeCode);
                     if (entity == null) {
-                        entity = new CalendarGameStatusEntity(y, d, gameTypeCode, status, 0, 0);
+                        entity = new CalendarGameStatusEntity(y, d, gameTypeCode, status, subDaysRemaining, 0);
                     } else {
                         entity.status = status;
+                        entity.subDaysRemaining = subDaysRemaining;
                     }
                     entities.add(entity);
                 }

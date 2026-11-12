@@ -69,13 +69,14 @@ public class PiggyBankViewModel extends AndroidViewModel {
         int totalProgress = repository.getTotalProgress(currentGameType);
         int target = repository.getTarget(currentGameType);
 
-        if (target > 0 && totalProgress + wishes > target) {
+        if (target > 0 && totalProgress >= target) {
             goalExceededEvent.call();
             return;
         }
 
+        int effectiveWishes = (target > 0) ? Math.min(wishes, target - totalProgress) : wishes;
         int manualProgress = repository.getManualProgress(currentGameType);
-        repository.saveManualProgress(currentGameType, manualProgress + wishes);
+        repository.saveManualProgress(currentGameType, manualProgress + effectiveWishes);
         refreshData();
     }
 
@@ -93,17 +94,19 @@ public class PiggyBankViewModel extends AndroidViewModel {
         int pullCost = currentGameType.getPullCost();
         long totalGems = repository.getTotalGems(currentGameType);
         int target = repository.getTarget(currentGameType);
+        long targetGems = (long) target * pullCost;
 
-        if (target > 0 && totalGems + gems > (long) target * pullCost) {
+        if (target > 0 && totalGems >= targetGems) {
             goalExceededEvent.call();
             return;
         }
 
+        long effectiveGems = (target > 0) ? Math.min(gems, targetGems - totalGems) : gems;
         int currentManualGems = repository.getManualGems(currentGameType);
         int currentManualPulls = repository.getManualProgress(currentGameType);
-        int totalNewManualGems = currentManualGems + gems;
-        int additionalPulls = totalNewManualGems / pullCost;
-        int remainingGems = totalNewManualGems % pullCost;
+        long totalNewManualGems = (long) currentManualGems + effectiveGems;
+        int additionalPulls = (int) (totalNewManualGems / pullCost);
+        int remainingGems = (int) (totalNewManualGems % pullCost);
 
         repository.saveManual(currentGameType, currentManualPulls + additionalPulls, remainingGems);
         refreshData();

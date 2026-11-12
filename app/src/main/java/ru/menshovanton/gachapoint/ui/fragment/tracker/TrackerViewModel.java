@@ -378,7 +378,7 @@ public class TrackerViewModel extends AndroidViewModel {
 
         if (currentMode == TrackerMode.SUBSCRIPTION) {
             calendarRepository.getDayStatus(currentYear, todayDay, currentGameType, status -> {
-                if (status == 1) {
+                if (status == DayState.STATUS_RECEIVED || status == DayState.STATUS_OLD_RECEIVED) {
                     toastMessageEvent.setValue(R.string.already_checked);
                 } else {
                     calendarRepository.getDaySubDaysRemaining(currentYear, todayDay, currentGameType, remaining -> {
@@ -484,7 +484,7 @@ public class TrackerViewModel extends AndroidViewModel {
         int yesterdayDay = yesterdayDate.getDayOfYear();
 
         calendarRepository.getDayStatus(yesterdayYear, yesterdayDay, currentGameType, status -> {
-            if (status == 1) {
+            if (status == DayState.STATUS_RECEIVED || status == DayState.STATUS_OLD_RECEIVED) {
                 toastMessageEvent.setValue(R.string.not_miss_day);
             } else {
                 calendarRepository.getDaySubDaysRemaining(yesterdayYear, yesterdayDay, currentGameType, remaining -> {
@@ -505,7 +505,7 @@ public class TrackerViewModel extends AndroidViewModel {
         int todayDay = today.getDayOfYear();
 
         calendarRepository.getDayStatus(currentYear, todayDay, currentGameType, status -> {
-            if (status == 0) {
+            if (status != DayState.STATUS_RECEIVED && status != DayState.STATUS_OLD_RECEIVED) {
                 toastMessageEvent.setValue(R.string.not_check_today);
             } else {
                 calendarRepository.getDaySubDaysRemaining(currentYear, todayDay, currentGameType, remaining -> {
