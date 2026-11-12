@@ -128,7 +128,7 @@ public class TrackerViewModel extends AndroidViewModel {
 
     public void refreshData() {
         calendarRepository.init(currentGameType, selectedYear, () -> {
-            int count = calendarRepository.getSubsCount();
+            int count = calendarRepository.getSubsCount(currentGameType);
             subsCountLiveData.setValue(count);
 
             loadCalendarGrid();
@@ -432,7 +432,7 @@ public class TrackerViewModel extends AndroidViewModel {
     }
 
     public void addSubscriptionChain(int count, LocalDate startDate) {
-        if (calendarRepository.getSubsCount() >= currentGameType.getMaxSubs()) {
+        if (calendarRepository.getSubsCount(currentGameType) >= currentGameType.getMaxSubs()) {
             toastMessageEvent.setValue(R.string.subs_limit);
             return;
         }
@@ -456,7 +456,7 @@ public class TrackerViewModel extends AndroidViewModel {
     }
 
     public void onAddClick() {
-        if (calendarRepository.getSubsCount() < currentGameType.getMaxSubs()) {
+        if (calendarRepository.getSubsCount(currentGameType) < currentGameType.getMaxSubs()) {
             openAddSubscriptionDialogEvent.setValue(LocalDate.now());
         } else {
             toastMessageEvent.setValue(R.string.subs_limit);

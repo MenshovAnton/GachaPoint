@@ -326,6 +326,51 @@ public class PiggyBankRepository {
         );
     }
 
+    public static ManualAddResult calculateManualAddByPulls(
+            int manualPulls,
+            int manualGems,
+            long totalGems,
+            int targetPulls,
+            int pullCost,
+            int wishesToAdd
+    ) {
+        int safePullCost = Math.max(1, pullCost);
+        int safeManualPulls = Math.max(0, manualPulls);
+        int safeManualGems = Math.max(0, manualGems);
+        if (wishesToAdd <= 0) {
+            return new ManualAddResult(safeManualPulls, safeManualGems, false);
+        }
+
+        if (targetPulls > 0) {
+            long targetGems = (long) targetPulls * safePullCost;
+            if (totalGems >= targetGems) {
+                return new ManualAddResult(safeManualPulls, safeManualGems, true);
+            }
+            long maxAddableGems = targetGems - totalGems;
+            long requestedGems = (long) wishesToAdd * safePullCost;
+            if (requestedGems > maxAddableGems) {
+                long newManualGemsTotal = (long) safeManualGems + maxAddableGems;
+                int additionalPulls = (int) (newManualGemsTotal / safePullCost);
+                int remainingGems = (int) (newManualGemsTotal % safePullCost);
+                return new ManualAddResult(safeManualPulls + additionalPulls, remainingGems, false);
+            }
+        }
+
+        return new ManualAddResult(safeManualPulls + wishesToAdd, safeManualGems, false);
+    }
+
+    public static final class ManualAddResult {
+        public final int manualPulls;
+        public final int manualGems;
+        public final boolean goalAlreadyReached;
+
+        public ManualAddResult(int manualPulls, int manualGems, boolean goalAlreadyReached) {
+            this.manualPulls = manualPulls;
+            this.manualGems = manualGems;
+            this.goalAlreadyReached = goalAlreadyReached;
+        }
+    }
+
     public static final class AutoProgressResult {
         public final int subsPulls;
         public final int subsRemainder;

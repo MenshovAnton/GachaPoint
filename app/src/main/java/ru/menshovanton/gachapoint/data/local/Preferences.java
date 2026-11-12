@@ -90,7 +90,7 @@ public class Preferences {
 
     public boolean isGameEnabled(GameType gameType) {
         if (gameType == null) return true;
-        return !getEnabledGames().contains(gameType);
+        return getEnabledGames().contains(gameType);
     }
 
     public void setGameEnabled(GameType gameType, boolean enabled) {

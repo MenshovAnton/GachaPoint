@@ -66,17 +66,21 @@ public class PiggyBankViewModel extends AndroidViewModel {
 
     public void addProgress(int wishes) {
         if (wishes <= 0) return;
-        int totalProgress = repository.getTotalProgress(currentGameType);
-        int target = repository.getTarget(currentGameType);
+        PiggyBankRepository.ManualAddResult result = PiggyBankRepository.calculateManualAddByPulls(
+                repository.getManualProgress(currentGameType),
+                repository.getManualGems(currentGameType),
+                repository.getTotalGems(currentGameType),
+                repository.getTarget(currentGameType),
+                currentGameType.getPullCost(),
+                wishes
+        );
 
-        if (target > 0 && totalProgress >= target) {
+        if (result.goalAlreadyReached) {
             goalExceededEvent.call();
             return;
         }
 
-        int effectiveWishes = (target > 0) ? Math.min(wishes, target - totalProgress) : wishes;
-        int manualProgress = repository.getManualProgress(currentGameType);
-        repository.saveManualProgress(currentGameType, manualProgress + effectiveWishes);
+        repository.saveManual(currentGameType, result.manualPulls, result.manualGems);
         refreshData();
     }
 
@@ -149,9 +153,9 @@ public class PiggyBankViewModel extends AndroidViewModel {
     }
 
     public void clearAutoProgress() {
-        calendarRepository.clearAutoProgress(currentGameType);
         repository.clearAutoProgress(currentGameType);
         refreshData();
+        calendarRepository.clearAutoProgress(currentGameType, this::refreshData);
     }
 
     public void setTarget(int target) {
@@ -167,8 +171,8 @@ public class PiggyBankViewModel extends AndroidViewModel {
     }
 
     public void resetTarget() {
-        calendarRepository.clearAutoProgress(currentGameType);
         repository.reset(currentGameType);
         refreshData();
+        calendarRepository.clearAutoProgress(currentGameType, this::refreshData);
     }
 }

@@ -7,7 +7,9 @@ import androidx.annotation.NonNull;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import ru.menshovanton.gachapoint.calendar.Calendar;
 import ru.menshovanton.gachapoint.data.db.entities.CalendarGameStatusEntity;
@@ -24,6 +26,7 @@ public class CalendarRepository {
     private final DatabaseRepository databaseRepository;
     private final Preferences preferences;
 
+    private final Map<GameType, Integer> subsCounts = new EnumMap<>(GameType.class);
     private int subsCount = 0;
 
     public CalendarRepository(@NonNull Context context) {
@@ -51,7 +54,7 @@ public class CalendarRepository {
         long todayEpoch = now.toEpochDay();
 
         databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
-            subsCount = (activeSub != null) ? activeSub.count : 0;
+            setSubsCount(gameType, (activeSub != null) ? activeSub.count : 0);
             syncDailiesProgress(gameType, () -> syncSubsProgress(gameType, onComplete));
         });
     }
@@ -102,12 +105,12 @@ public class CalendarRepository {
 
         databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
             if (activeSub == null) {
-                subsCount = 0;
+                setSubsCount(gameType, 0);
                 if (onComplete != null) onComplete.run();
                 return;
             }
 
-            subsCount = activeSub.count;
+            setSubsCount(gameType, activeSub.count);
             LocalDate startDate = LocalDate.ofEpochDay(activeSub.startDate);
 
             if (today.isBefore(startDate)) {
@@ -190,14 +193,14 @@ public class CalendarRepository {
 
         databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
             if (activeSub == null || todayEpoch > activeSub.endDate) {
-                subsCount = 0;
+                setSubsCount(gameType, 0);
                 if (callback != null) {
                     callback.onResult(new Statistic(0, 0, 0, 0, 0, 0));
                 }
                 return;
             }
 
-            subsCount = activeSub.count;
+            setSubsCount(gameType, activeSub.count);
             LocalDate startDate = LocalDate.ofEpochDay(activeSub.startDate);
             LocalDate endDate = LocalDate.ofEpochDay(activeSub.endDate);
 
@@ -273,6 +276,14 @@ public class CalendarRepository {
             int totalCount = Math.min(countToAdd, gameType.getMaxSubs());
             LocalDate endDate = actualStart.plusDays((long) totalCount * gameType.getSubscriptionDurationDays() - 1);
             boolean isSeparatePastSub = activeSub != null && startDate != null && endDate.toEpochDay() < activeSub.startDate;
+            boolean isOverlappingPastSub = activeSub != null && startDate != null
+                    && actualStart.toEpochDay() < activeSub.startDate
+                    && endDate.toEpochDay() >= activeSub.startDate;
+
+            if (isOverlappingPastSub) {
+                if (callback != null) callback.onResult(false);
+                return;
+            }
 
             if (activeSub == null || todayEpoch > activeSub.endDate || isSeparatePastSub) {
                 int currencyPerDay = gameType.getCurrencyPerDay();
@@ -290,10 +301,18 @@ public class CalendarRepository {
                 calendar.ensureYearInitialized(actualStart.getYear(), () ->
                         calendar.ensureYearInitialized(endDate.getYear(), () ->
                                 databaseRepository.insertSubscription(newSub, id -> {
-                                    subsCount = totalCount;
-                                    calculateMissesAndClaims(gameType, actualStart.getYear(), () -> {
-                                        if (callback != null) callback.onResult(true);
-                                    });
+                                    newSub.id = id != null ? id.intValue() : 0;
+                                    if (isSeparatePastSub) {
+                                        setSubsCount(gameType, activeSub.count);
+                                        recalculateSubscriptionEntity(newSub, gameType, today, () -> {
+                                            if (callback != null) callback.onResult(true);
+                                        });
+                                    } else {
+                                        setSubsCount(gameType, totalCount);
+                                        calculateMissesAndClaims(gameType, actualStart.getYear(), () -> {
+                                            if (callback != null) callback.onResult(true);
+                                        });
+                                    }
                                 })
                         )
                 );
@@ -313,7 +332,7 @@ public class CalendarRepository {
 
                 calendar.ensureYearInitialized(newEnd.getYear(), () ->
                         databaseRepository.updateSubscription(activeSub, () -> {
-                            subsCount = activeSub.count;
+                            setSubsCount(gameType, activeSub.count);
                             if (callback != null) callback.onResult(true);
                         })
                 );
@@ -338,22 +357,19 @@ public class CalendarRepository {
                 activeSub.endDate = newEnd.toEpochDay();
                 activeSub.wait = Math.max(0, activeSub.wait - gameType.getCurrencyPerDay() * gameType.getSubscriptionDurationDays());
 
-                databaseRepository.clearCalendarStatusesInRange(gameType, newEnd.plusDays(1), curEnd, () ->
-                        databaseRepository.updateSubscription(activeSub, () -> {
-                            subsCount = activeSub.count;
-                            calculateMissesAndClaims(gameType, today.getYear(), () ->
-                                    syncSubsProgress(gameType, () -> {
-                                        if (callback != null) callback.onResult(true);
-                                    })
-                            );
-                        })
-                );
+                databaseRepository.clearCalendarStatusesInRange(gameType, newEnd.plusDays(1), curEnd, () -> {
+                    int remainingActiveCount = newEnd.toEpochDay() >= todayEpoch ? activeSub.count : 0;
+                    setSubsCount(gameType, remainingActiveCount);
+                    recalculateSubscriptionEntity(activeSub, gameType, today, () -> {
+                        if (callback != null) callback.onResult(true);
+                    });
+                });
             } else {
                 LocalDate subStartDate = LocalDate.ofEpochDay(activeSub.startDate);
                 LocalDate subEndDate = LocalDate.ofEpochDay(activeSub.endDate);
                 databaseRepository.clearCalendarStatusesInRange(gameType, subStartDate, subEndDate, () ->
                         databaseRepository.deleteSubscription(activeSub, () -> {
-                    subsCount = 0;
+                    setSubsCount(gameType, 0);
                     syncSubsProgress(gameType, () -> {
                         if (callback != null) callback.onResult(true);
                     });
@@ -562,16 +578,25 @@ public class CalendarRepository {
     }
 
     public void clearAutoProgress(GameType gameType) {
-        if (gameType == null) return;
-        databaseRepository.getCompletedDailiesCount(gameType, count -> {
-            int totalGems = (count != null ? count : 0) * gameType.getDailyReward();
-            preferences.savePiggyBankSpentDailiesGems(gameType, totalGems);
-        });
-        databaseRepository.getClaimedSubscriptionsCount(gameType, count -> {
-            int totalGems = (count != null ? count : 0) * gameType.getCurrencyPerDay();
-            preferences.savePiggyBankSpentSubsGems(gameType, totalGems);
-        });
+        clearAutoProgress(gameType, null);
+    }
+
+    public void clearAutoProgress(GameType gameType, Runnable onComplete) {
+        if (gameType == null) {
+            if (onComplete != null) onComplete.run();
+            return;
+        }
         piggyBankRepository.saveAutoRemainders(gameType, 0, 0);
+        databaseRepository.getCompletedDailiesCount(gameType, dailiesCount -> {
+            int totalDailiesGems = (dailiesCount != null ? dailiesCount : 0) * gameType.getDailyReward();
+            preferences.savePiggyBankSpentDailiesGems(gameType, totalDailiesGems);
+            databaseRepository.getClaimedSubscriptionsCount(gameType, subsCount -> {
+                int totalSubsGems = (subsCount != null ? subsCount : 0) * gameType.getCurrencyPerDay();
+                preferences.savePiggyBankSpentSubsGems(gameType, totalSubsGems);
+                piggyBankRepository.saveAutoRemainders(gameType, 0, 0);
+                if (onComplete != null) onComplete.run();
+            });
+        });
     }
 
     public void getDaySubDaysRemaining(int year, int dayOfYear, GameType gameType, DatabaseRepository.Callback<Integer> callback) {
@@ -629,7 +654,7 @@ public class CalendarRepository {
                             ? todayStatus
                             : (targetSubDays > 0 ? date.status : 0);
                 }
-                batchList.add(new CalendarGameStatusEntity(date.year, date.dayOfYear, gameTypeCode, statusToSet, targetSubDays));
+                batchList.add(new CalendarGameStatusEntity(date.year, date.dayOfYear, gameTypeCode, statusToSet, targetSubDays, date.dailyStatus));
                 i++;
             }
 
@@ -642,5 +667,39 @@ public class CalendarRepository {
     }
 
 
-    public int getSubsCount() { return subsCount; }
+    private void recalculateSubscriptionEntity(SubscriptionEntity sub, GameType gameType, LocalDate today, Runnable onComplete) {
+        LocalDate startDate = LocalDate.ofEpochDay(sub.startDate);
+        LocalDate endDate = LocalDate.ofEpochDay(sub.endDate);
+        long todayEpoch = today.toEpochDay();
+
+        if (today.isBefore(startDate)) {
+            applySubscriptionProgress(sub, gameType, 0, 0);
+            databaseRepository.updateSubscription(sub, () -> syncSubsProgress(gameType, onComplete));
+            return;
+        }
+
+        LocalDate countEnd = today.isAfter(endDate) ? endDate : today;
+        fetchDatesInRange(startDate, countEnd, gameType, chainDates -> {
+            int[] counts = countClaimsAndMisses(chainDates, todayEpoch);
+            applySubscriptionProgress(sub, gameType, counts[0], counts[1]);
+            databaseRepository.updateSubscription(sub, () -> syncSubsProgress(gameType, onComplete));
+        });
+    }
+
+    private void setSubsCount(GameType gameType, int count) {
+        this.subsCount = count;
+        if (gameType != null) {
+            subsCounts.put(gameType, count);
+        }
+    }
+
+    public int getSubsCount() {
+        return subsCount;
+    }
+
+    public int getSubsCount(GameType gameType) {
+        if (gameType == null) return subsCount;
+        Integer count = subsCounts.get(gameType);
+        return count != null ? count : 0;
+    }
 }
