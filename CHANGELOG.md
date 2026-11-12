@@ -64,3 +64,10 @@
 - Smart Notifications & Deep Linking: tapping notifications now navigates directly into the target screen and game context; added silent filtering for disabled games and timely alerts for promo codes and expiring banners.
 - Dedicated Project Support Screen: new section in the More menu featuring an interactive Hall of Fame of supporters and options to contribute to ongoing development.
 - Performance & Architecture: upgraded to Room database schema v5, implemented bandwidth-friendly HTTP caching (ETag / If-None-Match), and improved overall background worker reliability.
+
+# v0.3.1
+- Tracker & Subscriptions: fixed erroneous deletion of extended subscriptions during database sync, preserved daily statuses during batch updates, fixed `OLD_RECEIVED` day handling and bottom-sheet switch toggling, and isolated active subscription counts per game.
+- Piggy Bank & Savings: switched auto-progress and deductions to exact gem accounting across manual, subscription, and daily buckets so spent remainders are never restored on resync; clamped additions near 100% target and prevented `int` overflow in converter previews.
+- Badges & Notifications: filtered unviewed promo code and banner counts by enabled games, fixed inverted `isGameEnabled` check, replaced static `"NEW"` badges with exact `+N` counts, and refined `DataSyncWorker` reminder thresholds.
+- Localization & Data Sync: completed RU/EN localization for banner reruns, catalog pools, feedback emails, and Genshin redemption URLs; synced updated catalog, promo codes, and Honkai Impact 3rd v1.0–v6.7+ banner history.
+- Quality & Documentation: added unit test suites for `Preferences`, `CalendarRepository`, and `PiggyBankRepository`, and updated README screenshots.

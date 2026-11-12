@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/MenshovAnton/GachaPoint/releases"><img src="https://img.shields.io/badge/version-v0.3.0-blue?style=flat-square" alt="Version"></a>
+  <a href="https://github.com/MenshovAnton/GachaPoint/releases"><img src="https://img.shields.io/badge/version-v0.3.1-blue?style=flat-square" alt="Version"></a>
   <img src="https://img.shields.io/badge/Android-8.0%2B-green?style=flat-square&logo=android" alt="Android 8.0+">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat-square" alt="License"></a>
   <a href="https://t.me/GachaPoint_official"><img src="https://img.shields.io/badge/Telegram-@GachaPoint__official-2CA5E0?style=flat-square&logo=telegram&logoColor=white" alt="Telegram"></a>
