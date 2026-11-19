@@ -377,8 +377,18 @@ public class InMemoryTrackerTestHarness {
             SubscriptionEntity best = null;
             for (SubscriptionEntity sub : subscriptions) {
                 if (sub.gameType == code && sub.endDate >= epochDay) {
-                    if (best == null || sub.id > best.id) {
+                    if (best == null) {
                         best = sub;
+                    } else {
+                        boolean bestActive = epochDay >= best.startDate && epochDay <= best.endDate;
+                        boolean subActive = epochDay >= sub.startDate && epochDay <= sub.endDate;
+                        if (subActive && !bestActive) {
+                            best = sub;
+                        } else if (subActive == bestActive) {
+                            if (sub.startDate < best.startDate || (sub.startDate == best.startDate && sub.id > best.id)) {
+                                best = sub;
+                            }
+                        }
                     }
                 }
             }

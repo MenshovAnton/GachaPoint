@@ -16,6 +16,7 @@ public class PiggyBankRepository {
     private final DatabaseRepository databaseRepository;
     private final Preferences preferences;
     private final Map<GameType, SavingsEntity> cache = new ConcurrentHashMap<>();
+    private volatile boolean isLoaded = false;
 
     public PiggyBankRepository(@NonNull Context context) {
         this(context, new DatabaseRepository(context), new Preferences(context));
@@ -46,8 +47,13 @@ public class PiggyBankRepository {
                     cache.put(game, entity);
                 }
             }
+            isLoaded = true;
             if (onComplete != null) onComplete.run();
         });
+    }
+
+    public boolean isLoaded() {
+        return isLoaded;
     }
 
     public int getManualProgress(GameType gameType) {
@@ -334,28 +340,11 @@ public class PiggyBankRepository {
             int pullCost,
             int wishesToAdd
     ) {
-        int safePullCost = Math.max(1, pullCost);
         int safeManualPulls = Math.max(0, manualPulls);
         int safeManualGems = Math.max(0, manualGems);
         if (wishesToAdd <= 0) {
             return new ManualAddResult(safeManualPulls, safeManualGems, false);
         }
-
-        if (targetPulls > 0) {
-            long targetGems = (long) targetPulls * safePullCost;
-            if (totalGems >= targetGems) {
-                return new ManualAddResult(safeManualPulls, safeManualGems, true);
-            }
-            long maxAddableGems = targetGems - totalGems;
-            long requestedGems = (long) wishesToAdd * safePullCost;
-            if (requestedGems > maxAddableGems) {
-                long newManualGemsTotal = (long) safeManualGems + maxAddableGems;
-                int additionalPulls = (int) (newManualGemsTotal / safePullCost);
-                int remainingGems = (int) (newManualGemsTotal % safePullCost);
-                return new ManualAddResult(safeManualPulls + additionalPulls, remainingGems, false);
-            }
-        }
-
         return new ManualAddResult(safeManualPulls + wishesToAdd, safeManualGems, false);
     }
 

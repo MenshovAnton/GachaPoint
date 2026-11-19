@@ -576,13 +576,6 @@ public class CalendarRepository {
                     pullCost
             );
 
-            if (result.clampedSpentDailiesGems != spentDailiesGems) {
-                preferences.savePiggyBankSpentDailiesGems(gameType, result.clampedSpentDailiesGems);
-            }
-            if (result.clampedSpentSubsGems != spentSubsGems) {
-                preferences.savePiggyBankSpentSubsGems(gameType, result.clampedSpentSubsGems);
-            }
-
             piggyBankRepository.saveAutoRemainders(gameType, result.subsRemainder, result.dailiesRemainder);
             piggyBankRepository.saveSubsProgress(gameType, result.subsPulls);
             piggyBankRepository.saveDailiesProgress(gameType, result.dailiesPulls);
@@ -637,14 +630,25 @@ public class CalendarRepository {
         LocalDate date = LocalDate.ofYearDay(year, dayOfYear);
         long dateEpoch = date.toEpochDay();
 
-        databaseRepository.getSubscriptionsInRange(gameType, dateEpoch, dateEpoch, subs -> {
+        databaseRepository.getAllSubscriptions(gameType, subs -> {
             if (subs != null && !subs.isEmpty()) {
-                SubscriptionEntity sub = subs.get(0);
-                int rem = (int) (sub.endDate - dateEpoch + 1);
-                if (callback != null) callback.onResult(Math.max(0, rem));
-            } else {
-                if (callback != null) callback.onResult(0);
+                SubscriptionEntity matchingSub = null;
+                for (SubscriptionEntity sub : subs) {
+                    if (dateEpoch >= sub.startDate && dateEpoch <= sub.endDate) {
+                        matchingSub = sub;
+                        break;
+                    }
+                }
+                if (matchingSub != null) {
+                    long chainEnd = getChainEnd(subs, matchingSub);
+                    int rem = (int) (chainEnd - dateEpoch + 1);
+                    if (callback != null) {
+                        callback.onResult(Math.max(0, rem));
+                        return;
+                    }
+                }
             }
+            if (callback != null) callback.onResult(0);
         });
     }
 

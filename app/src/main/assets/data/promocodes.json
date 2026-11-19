@@ -1,7 +1,30 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11T03:17:43Z",
+  "updated_at": "2026-11-16T07:22:04Z",
   "codes": [
+    {
+      "id": "scraped_0_archonsanswers",
+      "game_type": 0,
+      "code": "ARCHONSANSWERS",
+      "rewards_description_ru": "40 Камней Истока, 30 000 Моры, 3 Опыта героя",
+      "rewards_description_en": "40 Primogems, 30 000 Mora, 3 Hero's Wit",
+      "reward_types": [
+        "PRIMOGEM",
+        "MORA",
+        "EXP"
+      ],
+      "status": "ACTIVE",
+      "expires_at": null,
+      "expiry_confidence": "unknown",
+      "created_at": "2026-11-15T12:00:00Z",
+      "source_url": "https://x.com/GenshinImpact/status/2122162757814637041",
+      "is_stream": false,
+      "is_active": true,
+      "verification_status": "verified",
+      "verified_at": "2026-11-16T07:22:04Z",
+      "source_type": "manual_in_game",
+      "checked_note": ""
+    },
     {
       "id": "scraped_0_cdof4x83h7x2",
       "game_type": 0,
@@ -19,7 +42,7 @@
       "is_active": true,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -40,30 +63,9 @@
       "is_active": true,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
-    },
-    {
-      "id": "scraped_0_keepupwithmitya",
-      "game_type": 0,
-      "code": "KEEPUPWITHMITYA",
-      "rewards_description_ru": "Указания о «Милосердии» x3, Кристаллический гриб-зонтик x3, Энергетический обед x3",
-      "rewards_description_en": "Guide to Charity x3, Kristallfold x3, Energy-Replenishing Meal x3",
-      "reward_types": [
-        "TALENT_BOOK",
-        "MATERIAL",
-        "FOOD"
-      ],
-      "status": "ACTIVE",
-      "expires_at": "2026-11-15T16:00:00Z",
-      "created_at": "2026-11-04T04:00:00Z",
-      "is_stream": false,
-      "is_active": true,
-      "source_url": "https://genshin.hoyoverse.com/ru/news/detail/167189",
-      "verification_status": "verified",
-      "verified_at": "2026-11-09T00:00:00Z",
-      "expiry_confidence": "official"
     },
     {
       "id": "scraped_0_pj2kebraysrm",
@@ -82,7 +84,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -102,7 +104,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -227,7 +229,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -248,7 +250,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -269,7 +271,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -458,6 +460,27 @@
       "created_at": "2021-01-01T00:00:00Z",
       "expires_at": null,
       "verification_status": "legacy",
+      "expiry_confidence": "official"
+    },
+    {
+      "id": "scraped_0_keepupwithmitya",
+      "game_type": 0,
+      "code": "KEEPUPWITHMITYA",
+      "rewards_description_ru": "Указания о «Милосердии» x3, Кристаллический гриб-зонтик x3, Энергетический обед x3",
+      "rewards_description_en": "Guide to Charity x3, Kristallfold x3, Energy-Replenishing Meal x3",
+      "reward_types": [
+        "TALENT_BOOK",
+        "MATERIAL",
+        "FOOD"
+      ],
+      "status": "EXPIRED",
+      "expires_at": "2026-11-15T16:00:00Z",
+      "created_at": "2026-11-04T04:00:00Z",
+      "is_stream": false,
+      "is_active": false,
+      "source_url": "https://genshin.hoyoverse.com/ru/news/detail/167189",
+      "verification_status": "verified",
+      "verified_at": "2026-11-09T00:00:00Z",
       "expiry_confidence": "official"
     },
     {
@@ -699,7 +722,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -719,7 +742,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -740,7 +763,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -832,7 +855,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -852,7 +875,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -872,7 +895,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -893,7 +916,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -914,7 +937,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -974,7 +997,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": ""
     },
@@ -996,7 +1019,7 @@
       "expires_at": null,
       "verification_status": "verified",
       "expiry_confidence": "unknown",
-      "verified_at": "2026-11-09T12:37:47Z",
+      "verified_at": "2026-11-16T07:22:04Z",
       "source_type": "manual_in_game",
       "checked_note": "Максимальное число использований"
     },

@@ -64,21 +64,8 @@ public class PiggyBankViewModel extends AndroidViewModel {
 
     public void addProgress(int wishes) {
         if (wishes <= 0) return;
-        PiggyBankRepository.ManualAddResult result = PiggyBankRepository.calculateManualAddByPulls(
-                repository.getManualProgress(currentGameType),
-                repository.getManualGems(currentGameType),
-                repository.getTotalGems(currentGameType),
-                repository.getTarget(currentGameType),
-                currentGameType.getPullCost(),
-                wishes
-        );
-
-        if (result.goalAlreadyReached) {
-            goalExceededEvent.call();
-            return;
-        }
-
-        repository.saveManual(currentGameType, result.manualPulls, result.manualGems);
+        int currentManualPulls = repository.getManualProgress(currentGameType);
+        repository.saveManualProgress(currentGameType, currentManualPulls + wishes);
         refreshData();
     }
 
@@ -94,19 +81,9 @@ public class PiggyBankViewModel extends AndroidViewModel {
     public void addGems(int gems) {
         if (gems <= 0) return;
         int pullCost = currentGameType.getPullCost();
-        long totalGems = repository.getTotalGems(currentGameType);
-        int target = repository.getTarget(currentGameType);
-        long targetGems = (long) target * pullCost;
-
-        if (target > 0 && totalGems >= targetGems) {
-            goalExceededEvent.call();
-            return;
-        }
-
-        long effectiveGems = (target > 0) ? Math.min(gems, targetGems - totalGems) : gems;
         int currentManualGems = repository.getManualGems(currentGameType);
         int currentManualPulls = repository.getManualProgress(currentGameType);
-        long totalNewManualGems = (long) currentManualGems + effectiveGems;
+        long totalNewManualGems = (long) currentManualGems + gems;
         int additionalPulls = (int) (totalNewManualGems / pullCost);
         int remainingGems = (int) (totalNewManualGems % pullCost);
 

@@ -17,7 +17,8 @@ public interface SubscriptionDao {
     @Query("SELECT * FROM subscriptions WHERE game_type = :gameType AND :epochDay BETWEEN start_date AND end_date LIMIT 1")
     SubscriptionEntity getActiveSubscription(int gameType, long epochDay);
 
-    @Query("SELECT * FROM subscriptions WHERE game_type = :gameType AND end_date >= :epochDay ORDER BY id DESC LIMIT 1")
+    @Query("SELECT * FROM subscriptions WHERE game_type = :gameType AND end_date >= :epochDay " +
+            "ORDER BY CASE WHEN :epochDay BETWEEN start_date AND end_date THEN 0 ELSE 1 END ASC, start_date ASC, id DESC LIMIT 1")
     SubscriptionEntity getActiveOrUpcomingSubscription(int gameType, long epochDay);
 
     @Query("SELECT * FROM subscriptions WHERE game_type = :gameType ORDER BY id DESC LIMIT 1")

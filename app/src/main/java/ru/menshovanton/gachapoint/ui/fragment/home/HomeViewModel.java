@@ -134,15 +134,17 @@ public class HomeViewModel extends AndroidViewModel {
         int currentMonth = today.getMonthValue();
         int dayOfYear = today.getDayOfYear();
 
-        int totalProgress = piggyBankRepository.getTotalProgress(gameType);
-        int target = piggyBankRepository.getTarget(gameType);
-        int totalGems = piggyBankRepository.getTotalGems(gameType);
-        int initialProgress = target > 0 ? totalProgress : 0;
-        int initialGems = target > 0 ? totalGems : 0;
-        savingsStateLiveData.setValue(new HomeSavingsState(initialProgress, target, initialGems));
-        piggyTargetLiveData.setValue(target);
-        piggyProgressLiveData.setValue(initialProgress);
-        piggyGemsLiveData.setValue(initialGems);
+        if (piggyBankRepository.isLoaded()) {
+            int totalProgress = piggyBankRepository.getTotalProgress(gameType);
+            int target = piggyBankRepository.getTarget(gameType);
+            int totalGems = piggyBankRepository.getTotalGems(gameType);
+            int initialProgress = target > 0 ? totalProgress : 0;
+            int initialGems = target > 0 ? totalGems : 0;
+            savingsStateLiveData.setValue(new HomeSavingsState(initialProgress, target, initialGems));
+            piggyTargetLiveData.setValue(target);
+            piggyProgressLiveData.setValue(initialProgress);
+            piggyGemsLiveData.setValue(initialGems);
+        }
 
         HomePityState cachedPity = pityCache.get(gameType);
         if (cachedPity != null) {

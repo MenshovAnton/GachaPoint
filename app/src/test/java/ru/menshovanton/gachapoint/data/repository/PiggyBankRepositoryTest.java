@@ -141,36 +141,21 @@ public class PiggyBankRepositoryTest {
     }
 
     @Test
-    public void calculateManualAddByPullsClampsToTargetGemsWhenRemainderPresent() {
-        PiggyBankRepository.ManualAddResult clamped = PiggyBankRepository.calculateManualAddByPulls(
-                9, 0,
+    public void calculateManualAddByPullsAddsPullsDirectlyWithoutArtificialCap() {
+        PiggyBankRepository.ManualAddResult res = PiggyBankRepository.calculateManualAddByPulls(
+                9, 40,
                 9 * 160 + 120,
                 10,
                 160,
-                1
-        );
-        assertFalse(clamped.goalAlreadyReached);
-        assertEquals(9, clamped.manualPulls);
-        assertEquals(40, clamped.manualGems);
-
-        PiggyBankRepository.ManualAddResult alreadyReached = PiggyBankRepository.calculateManualAddByPulls(
-                10, 0,
-                10 * 160,
-                10,
-                160,
-                1
-        );
-        assertTrue(alreadyReached.goalAlreadyReached);
-
-        PiggyBankRepository.ManualAddResult noTarget = PiggyBankRepository.calculateManualAddByPulls(
-                3, 50,
-                3 * 160 + 50,
-                0,
-                160,
                 2
         );
-        assertFalse(noTarget.goalAlreadyReached);
-        assertEquals(5, noTarget.manualPulls);
-        assertEquals(50, noTarget.manualGems);
+        assertFalse(res.goalAlreadyReached);
+        assertEquals(11, res.manualPulls);
+        assertEquals(40, res.manualGems);
+    }
+
+    @Test
+    public void isLoadedFlagBecomesTrueAfterLoadFromDatabase() {
+        assertTrue(repo.isLoaded());
     }
 }

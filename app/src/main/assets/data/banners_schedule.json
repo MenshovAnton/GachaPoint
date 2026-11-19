@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-11T10:39:56Z",
+  "updated_at": "2026-11-17T13:00:42Z",
   "games": [
     {
       "game_type": 0,
@@ -3609,7 +3609,7 @@
           "source_id": "21997,21998",
           "source_type": "official",
           "verification_status": "verified",
-          "verified_at": "2026-11-10T09:00:07Z"
+          "verified_at": "2026-11-17T13:00:35Z"
         }
       ]
     },
@@ -6880,7 +6880,7 @@
           "phase": 1,
           "start_date": "2026-10-21",
           "end_date": "2026-11-11",
-          "status": "CURRENT",
+          "status": "EXPIRED",
           "featured_five_stars_ru": [
             "Феникс Реффаэлла",
             "Велина Эйргид"

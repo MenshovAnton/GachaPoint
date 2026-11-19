@@ -396,4 +396,51 @@ public class CalendarRepositoryTest {
         assertTrue(added.get());
         assertEquals(6, repo.getSubsCount(GameType.GENSHIN));
     }
+
+    @Test
+    public void syncAutoProgressDoesNotEraseSpentGemsWhenTotalGemsIsZero() {
+        harness.preferences.savePiggyBankSpentSubsGems(GameType.GENSHIN, 500);
+        harness.preferences.savePiggyBankSpentDailiesGems(GameType.GENSHIN, 300);
+
+        repo.syncAutoProgress(GameType.GENSHIN, null);
+
+        assertEquals(500, harness.preferences.getPiggyBankSpentSubsGems(GameType.GENSHIN));
+        assertEquals(300, harness.preferences.getPiggyBankSpentDailiesGems(GameType.GENSHIN));
+    }
+
+    @Test
+    public void getActiveSubscriptionPrioritizesCurrentlyActiveOverUpcoming() {
+        LocalDate today = LocalDate.now();
+        repo.addSubscription(GameType.GENSHIN, 1, today, null);
+
+        SubscriptionEntity futureSub = new SubscriptionEntity(
+                GameType.GENSHIN.getCode(),
+                1,
+                today.plusDays(40).toEpochDay(),
+                today.plusDays(69).toEpochDay(),
+                0, 0, 2700
+        );
+        harness.databaseRepository.insertSubscription(futureSub, null);
+
+        AtomicReference<SubscriptionEntity> activeRef = new AtomicReference<>();
+        harness.databaseRepository.getActiveSubscription(GameType.GENSHIN, today.toEpochDay(), activeRef::set);
+        assertNotNull(activeRef.get());
+        assertEquals(today.toEpochDay(), activeRef.get().startDate);
+    }
+
+    @Test
+    public void getDaySubDaysRemainingChainsContiguousPeriodsCorrectly() {
+        LocalDate today = LocalDate.now();
+        LocalDate start = today.minusDays(35);
+        repo.addSubscription(GameType.GENSHIN, 2, start, null);
+
+        AtomicReference<Integer> remToday = new AtomicReference<>(-1);
+        repo.getDaySubDaysRemaining(today.getYear(), today.getDayOfYear(), GameType.GENSHIN, remToday::set);
+        assertEquals(25, (int) remToday.get());
+
+        LocalDate pastDay = start.plusDays(10);
+        AtomicReference<Integer> remPast = new AtomicReference<>(-1);
+        repo.getDaySubDaysRemaining(pastDay.getYear(), pastDay.getDayOfYear(), GameType.GENSHIN, remPast::set);
+        assertEquals(50, (int) remPast.get());
+    }
 }
