@@ -51,9 +51,8 @@ public class CalendarRepository {
 
     public void init(GameType gameType, int year, Runnable onComplete) {
         LocalDate now = LocalDate.now();
-        long todayEpoch = now.toEpochDay();
 
-        databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
+        getActiveSubscriptionPruned(gameType, now, activeSub -> {
             setSubsCount(gameType, (activeSub != null) ? activeSub.count : 0);
             syncAutoProgress(gameType, onComplete);
         });
@@ -86,7 +85,8 @@ public class CalendarRepository {
                     }
 
                     if (matchingSub != null) {
-                        date.subDaysRemaining = (int) (matchingSub.endDate - dateEpoch + 1);
+                        long chainEnd = getChainEnd(subs, matchingSub);
+                        date.subDaysRemaining = (int) (chainEnd - dateEpoch + 1);
                     } else {
                         date.subDaysRemaining = 0;
                     }
@@ -99,11 +99,27 @@ public class CalendarRepository {
         });
     }
 
+    private static long getChainEnd(List<SubscriptionEntity> subs, SubscriptionEntity matchingSub) {
+        long chainEnd = matchingSub.endDate;
+        boolean foundNext;
+        do {
+            foundNext = false;
+            for (SubscriptionEntity s : subs) {
+                if (s.startDate == chainEnd + 1) {
+                    chainEnd = s.endDate;
+                    foundNext = true;
+                    break;
+                }
+            }
+        } while (foundNext);
+        return chainEnd;
+    }
+
     public void calculateMissesAndClaims(GameType gameType, int year, Runnable onComplete) {
         LocalDate today = LocalDate.now();
         long todayEpoch = today.toEpochDay();
 
-        databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
+        getActiveSubscriptionPruned(gameType, today, activeSub -> {
             if (activeSub == null) {
                 setSubsCount(gameType, 0);
                 if (onComplete != null) onComplete.run();
@@ -191,7 +207,7 @@ public class CalendarRepository {
         LocalDate today = LocalDate.now();
         long todayEpoch = today.toEpochDay();
 
-        databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
+        getActiveSubscriptionPruned(gameType, today, activeSub -> {
             if (activeSub == null || todayEpoch > activeSub.endDate) {
                 setSubsCount(gameType, 0);
                 if (callback != null) {
@@ -271,7 +287,7 @@ public class CalendarRepository {
         LocalDate today = LocalDate.now();
         long todayEpoch = today.toEpochDay();
 
-        databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
+        getActiveSubscriptionPruned(gameType, today, activeSub -> {
             LocalDate actualStart = (startDate != null) ? startDate : today;
             int totalCount = Math.min(countToAdd, gameType.getMaxSubs());
             LocalDate endDate = actualStart.plusDays((long) totalCount * gameType.getSubscriptionDurationDays() - 1);
@@ -315,7 +331,11 @@ public class CalendarRepository {
                                                 if (callback != null) callback.onResult(true);
                                             });
                                         } else {
-                                            setSubsCount(gameType, totalCount);
+                                            int expiredInNewSub = (todayEpoch > actualStart.toEpochDay())
+                                                    ? (int) ((todayEpoch - actualStart.toEpochDay()) / gameType.getSubscriptionDurationDays())
+                                                    : 0;
+                                            int initialActiveCount = Math.max(0, totalCount - expiredInNewSub);
+                                            setSubsCount(gameType, initialActiveCount);
                                             calculateMissesAndClaims(gameType, actualStart.getYear(), () -> {
                                                 if (callback != null) callback.onResult(true);
                                             });
@@ -352,7 +372,7 @@ public class CalendarRepository {
         LocalDate today = LocalDate.now();
         long todayEpoch = today.toEpochDay();
 
-        databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
+        getActiveSubscriptionPruned(gameType, today, activeSub -> {
             if (activeSub == null) {
                 if (callback != null) callback.onResult(false);
                 return;
@@ -680,6 +700,79 @@ public class CalendarRepository {
         });
     }
 
+
+    private void getActiveSubscriptionPruned(GameType gameType, LocalDate today, DatabaseRepository.Callback<SubscriptionEntity> callback) {
+        long todayEpoch = today.toEpochDay();
+        databaseRepository.getActiveSubscription(gameType, todayEpoch, activeSub -> {
+            if (activeSub == null || todayEpoch > activeSub.endDate) {
+                if (callback != null) callback.onResult(null);
+                return;
+            }
+
+            int subDuration = gameType != null ? gameType.getSubscriptionDurationDays() : 30;
+            long daysElapsed = todayEpoch - activeSub.startDate;
+            int expiredCount = (daysElapsed > 0 && subDuration > 0) ? (int) (daysElapsed / subDuration) : 0;
+
+            if (expiredCount <= 0) {
+                if (callback != null) callback.onResult(activeSub);
+                return;
+            }
+
+            if (expiredCount >= activeSub.count) {
+                if (callback != null) callback.onResult(null);
+                return;
+            }
+
+            long pastStart = activeSub.startDate;
+            long pastEnd = activeSub.startDate + (long) expiredCount * subDuration - 1;
+
+            activeSub.startDate = activeSub.startDate + (long) expiredCount * subDuration;
+            activeSub.count = activeSub.count - expiredCount;
+
+            LocalDate pastStartDate = LocalDate.ofEpochDay(pastStart);
+            LocalDate pastEndDate = LocalDate.ofEpochDay(pastEnd);
+
+            fetchDatesInRange(pastStartDate, pastEndDate, gameType, pastDates -> {
+                int[] pastCounts = countClaimsAndMisses(pastDates, todayEpoch);
+                int currencyPerDay = gameType != null ? gameType.getCurrencyPerDay() : 90;
+                int pastClaimed = pastCounts[0] * currencyPerDay;
+                int pastMissed = pastCounts[1] * currencyPerDay;
+                int pastTotal = expiredCount * subDuration * currencyPerDay;
+                int pastWait = Math.max(0, pastTotal - pastClaimed - pastMissed);
+
+                SubscriptionEntity pastSub = new SubscriptionEntity(
+                        gameType != null ? gameType.getCode() : activeSub.gameType,
+                        expiredCount,
+                        pastStart,
+                        pastEnd,
+                        pastClaimed,
+                        pastMissed,
+                        pastWait
+                );
+
+                databaseRepository.insertSubscription(pastSub, id -> {
+                    LocalDate activeStart = LocalDate.ofEpochDay(activeSub.startDate);
+                    if (today.isBefore(activeStart)) {
+                        assert gameType != null;
+                        applySubscriptionProgress(activeSub, gameType, 0, 0);
+                        databaseRepository.updateSubscription(activeSub, () -> {
+                            if (callback != null) callback.onResult(activeSub);
+                        });
+                    } else {
+                        LocalDate countEnd = today.isAfter(LocalDate.ofEpochDay(activeSub.endDate)) ? LocalDate.ofEpochDay(activeSub.endDate) : today;
+                        fetchDatesInRange(activeStart, countEnd, gameType, activeDates -> {
+                            int[] activeCounts = countClaimsAndMisses(activeDates, todayEpoch);
+                            assert gameType != null;
+                            applySubscriptionProgress(activeSub, gameType, activeCounts[0], activeCounts[1]);
+                            databaseRepository.updateSubscription(activeSub, () -> {
+                                if (callback != null) callback.onResult(activeSub);
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    }
 
     private void recalculateSubscriptionEntity(SubscriptionEntity sub, GameType gameType, LocalDate today, Runnable onComplete) {
         LocalDate startDate = LocalDate.ofEpochDay(sub.startDate);

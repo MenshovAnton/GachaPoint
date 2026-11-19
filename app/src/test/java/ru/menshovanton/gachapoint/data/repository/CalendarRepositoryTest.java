@@ -289,7 +289,7 @@ public class CalendarRepositoryTest {
         LocalDate today = LocalDate.now();
         LocalDate start = today.minusDays(40);
         repo.addSubscription(GameType.GENSHIN, 2, start, null);
-        assertEquals(2, repo.getSubsCount(GameType.GENSHIN));
+        assertEquals(1, repo.getSubsCount(GameType.GENSHIN));
 
         AtomicBoolean deleted = new AtomicBoolean(false);
         repo.deleteSubscription(GameType.GENSHIN, deleted::set);
@@ -364,5 +364,36 @@ public class CalendarRepositoryTest {
         repo.setDayStatus(tomorrow.getYear(), tomorrow.getDayOfYear(), GameType.GENSHIN, DayState.STATUS_RECEIVED, null);
 
         assertEquals(0, piggy.getTotalGems(GameType.GENSHIN));
+    }
+
+    @Test
+    public void expiredSubscriptionsArePrunedFromChainAllowingNewAdditions() {
+        LocalDate today = LocalDate.now();
+        LocalDate start = today.minusDays(35);
+        repo.addSubscription(GameType.GENSHIN, 6, start, null);
+        assertEquals(5, repo.getSubsCount(GameType.GENSHIN));
+
+        AtomicBoolean added = new AtomicBoolean(false);
+        repo.addSubscription(GameType.GENSHIN, 1, today, added::set);
+        assertTrue(added.get());
+        assertEquals(6, repo.getSubsCount(GameType.GENSHIN));
+
+        added.set(false);
+        repo.addSubscription(GameType.GENSHIN, 1, today, added::set);
+        assertFalse(added.get());
+        assertEquals(6, repo.getSubsCount(GameType.GENSHIN));
+    }
+
+    @Test
+    public void multipleExpiredSubscriptionsArePrunedFromChain() {
+        LocalDate today = LocalDate.now();
+        LocalDate start = today.minusDays(65);
+        repo.addSubscription(GameType.GENSHIN, 6, start, null);
+        assertEquals(4, repo.getSubsCount(GameType.GENSHIN));
+
+        AtomicBoolean added = new AtomicBoolean(false);
+        repo.addSubscription(GameType.GENSHIN, 2, today, added::set);
+        assertTrue(added.get());
+        assertEquals(6, repo.getSubsCount(GameType.GENSHIN));
     }
 }
