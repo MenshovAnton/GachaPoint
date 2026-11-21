@@ -64,6 +64,7 @@ public class PiggyBankRepository {
     public void saveManualProgress(GameType gameType, int progress) {
         int safeProgress = Math.max(0, progress);
         SavingsEntity s = cache.get(gameType);
+        if (s != null && s.manualProgress == safeProgress) return;
         if (s != null) s.manualProgress = safeProgress;
         databaseRepository.saveSavingsManualProgress(gameType, safeProgress, null);
     }
@@ -76,6 +77,7 @@ public class PiggyBankRepository {
     public void saveManualGems(GameType gameType, int gems) {
         int safeGems = Math.max(0, gems);
         SavingsEntity s = cache.get(gameType);
+        if (s != null && s.manualGems == safeGems) return;
         if (s != null) s.manualGems = safeGems;
         databaseRepository.saveSavingsManualGems(gameType, safeGems, null);
     }
@@ -84,6 +86,7 @@ public class PiggyBankRepository {
         int safeProgress = Math.max(0, progress);
         int safeGems = Math.max(0, gems);
         SavingsEntity s = cache.get(gameType);
+        if (s != null && s.manualProgress == safeProgress && s.manualGems == safeGems) return;
         if (s != null) {
             s.manualProgress = safeProgress;
             s.manualGems = safeGems;
@@ -99,6 +102,7 @@ public class PiggyBankRepository {
     public void saveSubsProgress(GameType gameType, int progress) {
         int safeProgress = Math.max(0, progress);
         SavingsEntity s = cache.get(gameType);
+        if (s != null && s.subsProgress == safeProgress) return;
         if (s != null) s.subsProgress = safeProgress;
         databaseRepository.saveSavingsSubsProgress(gameType, safeProgress, null);
     }
@@ -117,6 +121,7 @@ public class PiggyBankRepository {
     public void saveDailiesProgress(GameType gameType, int progress) {
         int safeProgress = Math.max(0, progress);
         SavingsEntity s = cache.get(gameType);
+        if (s != null && s.dailiesProgress == safeProgress) return;
         if (s != null) s.dailiesProgress = safeProgress;
         databaseRepository.saveSavingsDailiesProgress(gameType, safeProgress, null);
     }
@@ -183,6 +188,7 @@ public class PiggyBankRepository {
     public void saveTarget(GameType gameType, int target) {
         int safeTarget = Math.max(0, target);
         SavingsEntity s = cache.get(gameType);
+        if (s != null && s.target == safeTarget) return;
         if (s != null) s.target = safeTarget;
         databaseRepository.saveSavingsTarget(gameType, safeTarget, null);
     }
@@ -193,6 +199,7 @@ public class PiggyBankRepository {
         int safeDailies = Math.max(0, dailies);
         int safeGems = Math.max(0, manualGems);
         SavingsEntity s = cache.get(gameType);
+        if (s != null && s.manualProgress == safeManual && s.subsProgress == safeSubs && s.dailiesProgress == safeDailies && s.manualGems == safeGems) return;
         if (s != null) {
             s.manualProgress = safeManual;
             s.subsProgress = safeSubs;

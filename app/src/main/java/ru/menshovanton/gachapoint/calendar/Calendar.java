@@ -14,6 +14,7 @@ import ru.menshovanton.gachapoint.domain.models.Date;
 public class Calendar {
 
     private final DatabaseRepository dbHelper;
+    private final java.util.Set<Integer> initializedYears = java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<>());
 
     public Calendar(Context context) {
         this(new DatabaseRepository(context));
@@ -24,15 +25,31 @@ public class Calendar {
     }
 
     public void ensureYearInitialized(int year, Runnable onComplete) {
+        if (initializedYears.contains(year)) {
+            if (onComplete != null) {
+                onComplete.run();
+            }
+            return;
+        }
         dbHelper.hasDataForYear(year, hasData -> {
             if (!hasData) {
-                generateAndSaveYear(year, onComplete);
+                generateAndSaveYear(year, () -> {
+                    initializedYears.add(year);
+                    if (onComplete != null) {
+                        onComplete.run();
+                    }
+                });
             } else {
+                initializedYears.add(year);
                 if (onComplete != null) {
                     onComplete.run();
                 }
             }
         });
+    }
+
+    public void clearCache() {
+        initializedYears.clear();
     }
 
     private void generateAndSaveYear(int year, Runnable onComplete) {

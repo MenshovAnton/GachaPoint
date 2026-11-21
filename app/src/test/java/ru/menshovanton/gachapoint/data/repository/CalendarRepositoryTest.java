@@ -443,4 +443,37 @@ public class CalendarRepositoryTest {
         repo.getDaySubDaysRemaining(pastDay.getYear(), pastDay.getDayOfYear(), GameType.GENSHIN, remPast::set);
         assertEquals(50, (int) remPast.get());
     }
+
+    @Test
+    public void getDayReturnsCombinedDateModel() {
+        LocalDate today = LocalDate.now();
+        int year = today.getYear();
+        int dayOfYear = today.getDayOfYear();
+
+        repo.setDayDailyStatus(year, dayOfYear, GameType.GENSHIN, 1, null);
+        repo.setDayStatus(year, dayOfYear, GameType.GENSHIN, DayState.STATUS_RECEIVED, null);
+
+        AtomicReference<Date> dateRef = new AtomicReference<>();
+        repo.getDay(year, dayOfYear, GameType.GENSHIN, dateRef::set);
+
+        Date date = dateRef.get();
+        assertNotNull(date);
+        assertEquals(1, date.dailyStatus);
+        assertEquals(DayState.STATUS_RECEIVED, date.status);
+    }
+
+    @Test
+    public void getMonthDailiesCompletedCountComputesCorrectTotal() {
+        LocalDate today = LocalDate.now();
+        int year = today.getYear();
+        int month = today.getMonthValue();
+
+        repo.setDayDailyStatus(year, 10, GameType.GENSHIN, 1, null);
+        repo.setDayDailyStatus(year, 11, GameType.GENSHIN, 1, null);
+        repo.setDayDailyStatus(year, 12, GameType.GENSHIN, 0, null);
+
+        AtomicReference<Integer> completedCount = new AtomicReference<>(-1);
+        harness.databaseRepository.getCompletedDailiesCountInRange(GameType.GENSHIN, year, 10, 15, completedCount::set);
+        assertEquals(2, (int) completedCount.get());
+    }
 }

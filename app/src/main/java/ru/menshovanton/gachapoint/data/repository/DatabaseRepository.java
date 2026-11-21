@@ -100,6 +100,18 @@ public class DatabaseRepository {
         }, callback, Collections.emptyList());
     }
 
+    public void getRecentPullsByBanner(GameType gameType, String bannerType, int limit, Callback<List<Pull>> callback) {
+        queryAsyncSafe(() -> {
+            int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
+            List<PullEntity> entities = getDb().pullDao().getRecentPulls(code, bannerType, limit);
+            List<Pull> pulls = new ArrayList<>(entities.size());
+            for (PullEntity entity : entities) {
+                pulls.add(entity.toWishModel());
+            }
+            return pulls;
+        }, callback, Collections.emptyList());
+    }
+
     public void getAllPullsForGame(GameType gameType, Callback<List<Pull>> callback) {
         queryAsyncSafe(() -> {
             int code = gameType != null ? gameType.getCode() : GameType.GENSHIN.getCode();
@@ -417,6 +429,15 @@ public class DatabaseRepository {
         queryAsyncSafe(() -> {
             if (gameType != null) {
                 return getDb().calendarDao().getCompletedDailiesCount(gameType.getCode());
+            }
+            return 0;
+        }, callback, 0);
+    }
+
+    public void getCompletedDailiesCountInRange(GameType gameType, int year, int startDay, int endDay, Callback<Integer> callback) {
+        queryAsyncSafe(() -> {
+            if (gameType != null) {
+                return getDb().calendarDao().getCompletedDailiesCountInRange(gameType.getCode(), year, startDay, endDay);
             }
             return 0;
         }, callback, 0);

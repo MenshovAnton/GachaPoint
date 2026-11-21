@@ -25,7 +25,8 @@ import androidx.room.Index;
         },
         indices = {
                 @Index(value = {"year", "day_of_year"}, name = "idx_calendar_status_day"),
-                @Index(value = "game_type", name = "idx_calendar_status_game")
+                @Index(value = "game_type", name = "idx_calendar_status_game"),
+                @Index(value = {"game_type", "daily_status"}, name = "idx_calendar_status_game_daily")
         }
 )
 public class CalendarGameStatusEntity {

@@ -15,6 +15,9 @@ public interface PullDao {
     @Query("SELECT * FROM pulls WHERE game_type = :gameType AND banner_type = :bannerType ORDER BY order_index DESC, id DESC")
     List<PullEntity> getPulls(int gameType, String bannerType);
 
+    @Query("SELECT * FROM pulls WHERE game_type = :gameType AND banner_type = :bannerType ORDER BY order_index DESC, id DESC LIMIT :limit")
+    List<PullEntity> getRecentPulls(int gameType, String bannerType, int limit);
+
     @Query("SELECT * FROM pulls WHERE game_type = :gameType ORDER BY order_index ASC, id ASC")
     List<PullEntity> getAllPullsForGame(int gameType);
 

@@ -34,7 +34,7 @@ import ru.menshovanton.gachapoint.domain.enums.GameType;
 
 @Database(
         entities = {CalendarEntity.class, CalendarGameStatusEntity.class, PullEntity.class, SubscriptionEntity.class, GameEntity.class, SavingsEntity.class, PromocodeStatusEntity.class},
-        version = 5
+        version = 6
 )
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -57,7 +57,13 @@ public abstract class AppDatabase extends RoomDatabase {
                         AppDatabase.class,
                         databaseName
                 )
-                .addMigrations(MigrationHelper.MIGRATION_1_2, MigrationHelper.MIGRATION_2_3, MigrationHelper.MIGRATION_3_4, MigrationHelper.MIGRATION_4_5)
+                .addMigrations(
+                        MigrationHelper.MIGRATION_1_2,
+                        MigrationHelper.MIGRATION_2_3,
+                        MigrationHelper.MIGRATION_3_4,
+                        MigrationHelper.MIGRATION_4_5,
+                        MigrationHelper.MIGRATION_5_6
+                )
                 .addCallback(new RoomDatabase.Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {

@@ -244,11 +244,10 @@ public class CalendarRepository {
                 int claims = counts[0];
                 int misses = counts[1];
 
+                boolean changed = (activeSub.claimed != claims * primogemsPerDay) || (activeSub.missed != misses * primogemsPerDay);
                 applySubscriptionProgress(activeSub, gameType, claims, misses);
 
-                databaseRepository.updateSubscription(activeSub, () -> {
-                    syncSubsProgress(gameType, null);
-
+                Runnable finishStatistic = () -> {
                     int missedPrimogemsCount = misses * primogemsPerDay;
                     int claimPrimogemsCount = claims * primogemsPerDay;
                     int laterPrimogemsCount = Math.max(0, totalPromogemsInActiveSubs - claimPrimogemsCount - missedPrimogemsCount);
@@ -265,7 +264,14 @@ public class CalendarRepository {
                     if (callback != null) {
                         callback.onResult(statistic);
                     }
-                });
+                };
+
+                if (changed) {
+                    databaseRepository.updateSubscription(activeSub, () ->
+                            syncSubsProgress(gameType, finishStatistic));
+                } else {
+                    finishStatistic.run();
+                }
             });
         });
     }
@@ -406,14 +412,24 @@ public class CalendarRepository {
         });
     }
 
+    public void getDay(int year, int dayOfYear, GameType gameType, DatabaseRepository.Callback<Date> callback) {
+        calendar.getDay(year, dayOfYear, gameType, callback);
+    }
+
+    public void getMonthDailiesCompletedCount(int year, int month, GameType gameType, DatabaseRepository.Callback<Integer> callback) {
+        int startDay = LocalDate.of(year, month, 1).getDayOfYear();
+        int endDay = startDay + YearMonth.of(year, month).lengthOfMonth() - 1;
+        databaseRepository.getCompletedDailiesCountInRange(gameType, year, startDay, endDay, callback);
+    }
+
     public void getDayStatus(int year, int dayOfYear, GameType gameType, DatabaseRepository.Callback<Integer> callback) {
-        calendar.getDay(year, dayOfYear, gameType, date -> {
+        getDay(year, dayOfYear, gameType, date -> {
             if (callback != null) callback.onResult(date != null ? date.status : DayState.STATUS_MISSED);
         });
     }
 
     public void getDayDailyStatus(int year, int dayOfYear, GameType gameType, DatabaseRepository.Callback<Integer> callback) {
-        calendar.getDay(year, dayOfYear, gameType, date -> {
+        getDay(year, dayOfYear, gameType, date -> {
             if (callback != null) callback.onResult(date != null ? date.dailyStatus : 0);
         });
     }

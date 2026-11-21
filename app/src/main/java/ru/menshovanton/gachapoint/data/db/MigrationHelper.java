@@ -109,6 +109,21 @@ public class MigrationHelper {
         }
     };
 
+    public static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(@NotNull SupportSQLiteDatabase database) {
+            AppLogger.i("MigrationHelper", "Starting Room database migration from version 5 to 6...");
+            try {
+                database.execSQL("CREATE INDEX IF NOT EXISTS `idx_calendar_status_game_daily` ON `calendar_game_status` (`game_type`, `daily_status`)");
+                database.execSQL("CREATE INDEX IF NOT EXISTS `idx_pull_game_banner_order` ON `pulls` (`game_type` ASC, `banner_type` ASC, `order_index` DESC, `id` DESC)");
+                AppLogger.i("MigrationHelper", "Room database migration 5 -> 6 completed successfully.");
+            } catch (Throwable t) {
+                AppLogger.e("MigrationHelper", "Room database migration 5 -> 6 FAILED!", t);
+                throw t;
+            }
+        }
+    };
+
     public static void migrateLegacyCalendarAndSchemaIfNeeded(SupportSQLiteDatabase database) {
         boolean hasGameStatus = false;
         try (android.database.Cursor cur = database.query(new SimpleSQLiteQuery(
@@ -203,6 +218,7 @@ public class MigrationHelper {
             database.execSQL("DROP TABLE `calendar_temp_status`");
             database.execSQL("CREATE INDEX IF NOT EXISTS `idx_calendar_status_day` ON `calendar_game_status` (`year`, `day_of_year`)");
             database.execSQL("CREATE INDEX IF NOT EXISTS `idx_calendar_status_game` ON `calendar_game_status` (`game_type`)");
+            database.execSQL("CREATE INDEX IF NOT EXISTS `idx_calendar_status_game_daily` ON `calendar_game_status` (`game_type`, `daily_status`)");
 
             database.execSQL(
                     "UPDATE `pulls` SET `game_type` = 0 WHERE `game_type` NOT IN (SELECT `id` FROM `games`)"
@@ -229,6 +245,7 @@ public class MigrationHelper {
             database.execSQL("ALTER TABLE `pulls_new` RENAME TO `pulls`");
             database.execSQL("CREATE INDEX IF NOT EXISTS `idx_pull_game_banner` ON `pulls` (`game_type`, `banner_type`)");
             database.execSQL("CREATE INDEX IF NOT EXISTS `idx_pull_game_type` ON `pulls` (`game_type`)");
+            database.execSQL("CREATE INDEX IF NOT EXISTS `idx_pull_game_banner_order` ON `pulls` (`game_type` ASC, `banner_type` ASC, `order_index` DESC, `id` DESC)");
 
             database.execSQL(
                     "CREATE TABLE IF NOT EXISTS `subscriptions` (" +

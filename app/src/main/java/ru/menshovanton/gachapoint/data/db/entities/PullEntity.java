@@ -20,7 +20,10 @@ import ru.menshovanton.gachapoint.domain.models.Pull;
         ),
         indices = {
                 @Index(value = {"game_type", "banner_type"}, name = "idx_pull_game_banner"),
-                @Index(value = "game_type", name = "idx_pull_game_type")
+                @Index(value = "game_type", name = "idx_pull_game_type"),
+                @Index(value = {"game_type", "banner_type", "order_index", "id"},
+                        orders = {Index.Order.ASC, Index.Order.ASC, Index.Order.DESC, Index.Order.DESC},
+                        name = "idx_pull_game_banner_order")
         }
 )
 public class PullEntity {

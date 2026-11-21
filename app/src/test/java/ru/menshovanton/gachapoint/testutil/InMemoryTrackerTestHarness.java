@@ -458,6 +458,19 @@ public class InMemoryTrackerTestHarness {
         }
 
         @Override
+        public void getCompletedDailiesCountInRange(GameType gameType, int year, int startDay, int endDay, Callback<Integer> callback) {
+            int count = 0;
+            if (gameType != null) {
+                for (CalendarGameStatusEntity e : gameStatuses.values()) {
+                    if (e.gameType == gameType.getCode() && e.year == year && e.dailyStatus == 1 && e.dayOfYear >= startDay && e.dayOfYear <= endDay) {
+                        count++;
+                    }
+                }
+            }
+            if (callback != null) callback.onResult(count);
+        }
+
+        @Override
         public void getClaimedSubscriptionsCount(GameType gameType, Callback<Integer> callback) {
             int count = 0;
             if (gameType != null) {

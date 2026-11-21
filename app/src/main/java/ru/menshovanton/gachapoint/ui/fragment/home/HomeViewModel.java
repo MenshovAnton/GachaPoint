@@ -9,8 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.time.YearMonth;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,6 @@ import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.enums.PityStatus;
 import ru.menshovanton.gachapoint.domain.enums.RareType;
 import ru.menshovanton.gachapoint.domain.models.BannerInfo;
-import ru.menshovanton.gachapoint.domain.models.Date;
 import ru.menshovanton.gachapoint.domain.models.Pull;
 import ru.menshovanton.gachapoint.domain.models.Statistic;
 import ru.menshovanton.gachapoint.ui.fragment.home.model.HomeWidgetItem;
@@ -184,43 +182,35 @@ public class HomeViewModel extends AndroidViewModel {
             }
         });
 
-        calendarRepository.getDayDailyStatus(currentYear, dayOfYear, gameType, status -> {
-            if (currentGen == loadGeneration && gameTypeLiveData.getValue() == finalGameType) {
-                isDailyDoneTodayLiveData.setValue(status != null && status == 1);
-            }
-        });
-
-        calendarRepository.getDayStatus(currentYear, dayOfYear, gameType, status -> {
-            if (currentGen == loadGeneration && gameTypeLiveData.getValue() == finalGameType) {
-                boolean claimed = (status != null) && (status == DayState.STATUS_RECEIVED || status == DayState.STATUS_OLD_RECEIVED);
-                isSubClaimedTodayLiveData.setValue(claimed);
-            }
-        });
-
-        calendarRepository.getDaySubDaysRemaining(currentYear, dayOfYear, gameType, rem -> {
-            if (currentGen == loadGeneration && gameTypeLiveData.getValue() == finalGameType) {
-                subDaysRemainingTodayLiveData.setValue(rem != null ? rem : 0);
-            }
-        });
-
-        calendarRepository.getMonthDates(currentYear, currentMonth, gameType, dates -> {
+        calendarRepository.getDay(currentYear, dayOfYear, gameType, date -> {
             if (currentGen != loadGeneration || gameTypeLiveData.getValue() != finalGameType) {
                 return;
             }
-            if (dates != null) {
-                int total = dates.size();
-                int completed = 0;
-                for (Date d : dates) {
-                    if (d.dailyStatus == 1) completed++;
-                }
-                dailiesMonthProgressLiveData.setValue(new int[]{completed, total});
+            if (date != null) {
+                isDailyDoneTodayLiveData.setValue(date.dailyStatus == 1);
+                boolean claimed = (date.status == DayState.STATUS_RECEIVED || date.status == DayState.STATUS_OLD_RECEIVED);
+                isSubClaimedTodayLiveData.setValue(claimed);
+                subDaysRemainingTodayLiveData.setValue(date.subDaysRemaining);
+            } else {
+                isDailyDoneTodayLiveData.setValue(false);
+                isSubClaimedTodayLiveData.setValue(false);
+                subDaysRemainingTodayLiveData.setValue(0);
             }
+        });
+
+        int daysInMonth = YearMonth.of(currentYear, currentMonth).lengthOfMonth();
+        calendarRepository.getMonthDailiesCompletedCount(currentYear, currentMonth, gameType, completed -> {
+            if (currentGen != loadGeneration || gameTypeLiveData.getValue() != finalGameType) {
+                return;
+            }
+            int safeCompleted = completed != null ? completed : 0;
+            dailiesMonthProgressLiveData.setValue(new int[]{safeCompleted, daysInMonth});
         });
 
         BannerInfo bannerInfo = gameType.getBannerInfo(BannerType.EVENT.getDbKey());
         int defaultMaxPity = bannerInfo != null ? bannerInfo.getMaxPity5Star() : 90;
 
-        databaseRepository.getPullsByBanner(gameType, BannerType.EVENT.getDbKey(), rawPulls -> {
+        databaseRepository.getRecentPullsByBanner(gameType, BannerType.EVENT.getDbKey(), 200, rawPulls -> {
             if (currentGen != loadGeneration || gameTypeLiveData.getValue() != finalGameType) {
                 return;
             }
@@ -242,35 +232,31 @@ public class HomeViewModel extends AndroidViewModel {
             return;
         }
 
-        List<Pull> chronological = new ArrayList<>(rawPulls);
-        Collections.reverse(chronological);
-
         int counter5 = 0;
         boolean guaranteed = false;
         boolean bannerHas5050 = bannerInfo != null && bannerInfo.hasFiftyFifty();
+        Pull lastLegendary = null;
 
-        for (Pull pull : chronological) {
-            counter5++;
+        for (Pull pull : rawPulls) {
             RareType rareType = RareType.from(pull.getDropRare(), getApplication());
             if (rareType == RareType.LEGENDARY) {
-                if (bannerHas5050) {
-                    PityStatus status = pull.getPityStatus();
-                    if (status == null || status == PityStatus.NONE) {
-                        ru.menshovanton.gachapoint.data.repository.CatalogRepository catalogRepo =
-                                ru.menshovanton.gachapoint.data.repository.CatalogRepository.getInstance(getApplication());
-                        ru.menshovanton.gachapoint.domain.models.CatalogItem item =
-                                catalogRepo.findItemByName(gameType, pull.getDropType());
-                        boolean isStd = (item != null && item.isStandard())
-                                || catalogRepo.isStandardFiveStar(gameType, pull.getDropType());
-                        status = isStd ? PityStatus.LOSS_50_50 : (guaranteed ? PityStatus.GUARANTEED : PityStatus.WIN_50_50);
-                    }
-                    if (status == PityStatus.LOSS_50_50) {
-                        guaranteed = true;
-                    } else if (status == PityStatus.WIN_50_50 || status == PityStatus.GUARANTEED) {
-                        guaranteed = false;
-                    }
-                }
-                counter5 = 0;
+                lastLegendary = pull;
+                break;
+            }
+            counter5++;
+        }
+
+        if (bannerHas5050 && lastLegendary != null) {
+            PityStatus status = lastLegendary.getPityStatus();
+            if (status == null || status == PityStatus.NONE) {
+                ru.menshovanton.gachapoint.data.repository.CatalogRepository catalogRepo =
+                        ru.menshovanton.gachapoint.data.repository.CatalogRepository.getInstance(getApplication());
+                ru.menshovanton.gachapoint.domain.models.CatalogItem item =
+                        catalogRepo.findItemByName(gameType, lastLegendary.getDropType());
+                guaranteed = (item != null && item.isStandard())
+                        || catalogRepo.isStandardFiveStar(gameType, lastLegendary.getDropType());
+            } else {
+                guaranteed = (status == PityStatus.LOSS_50_50);
             }
         }
 

@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +33,8 @@ public class PromocodeRepository {
 
     private final Context context;
     private final PromocodeDao promocodeDao;
+    private final Map<String, PromocodeStatusEntity> statusCache = new java.util.concurrent.ConcurrentHashMap<>();
+    private volatile boolean isStatusesLoaded = false;
 
     private PromocodeRepository(Context context) {
         this.context = context.getApplicationContext();
@@ -51,6 +52,28 @@ public class PromocodeRepository {
         return INSTANCE;
     }
 
+    private Map<String, PromocodeStatusEntity> getStatusMap(boolean forceRefresh) {
+        if (!isStatusesLoaded || forceRefresh) {
+            synchronized (statusCache) {
+                if (!isStatusesLoaded || forceRefresh) {
+                    try {
+                        List<PromocodeStatusEntity> statuses = promocodeDao.getAllStatusesSync();
+                        statusCache.clear();
+                        if (statuses != null) {
+                            for (PromocodeStatusEntity s : statuses) {
+                                statusCache.put(s.codeId, s);
+                            }
+                        }
+                        isStatusesLoaded = true;
+                    } catch (Exception e) {
+                        AppLogger.e("PromocodeRepository", "Error syncing promocode statuses from DB", e);
+                    }
+                }
+            }
+        }
+        return statusCache;
+    }
+
     public List<PromoCode> getPromoCodes(GameType gameType, boolean forceRefresh) {
         String json = JsonDataLoader.loadJsonData(
                 context,
@@ -63,11 +86,7 @@ public class PromocodeRepository {
         List<PromoCode> result = parsePromoCodes(json, gameType != null ? gameType.getId() : -1);
 
         try {
-            List<PromocodeStatusEntity> statuses = promocodeDao.getAllStatusesSync();
-            Map<String, PromocodeStatusEntity> statusMap = new HashMap<>();
-            for (PromocodeStatusEntity s : statuses) {
-                statusMap.put(s.codeId, s);
-            }
+            Map<String, PromocodeStatusEntity> statusMap = getStatusMap(forceRefresh);
 
             for (PromoCode code : result) {
                 PromocodeStatusEntity st = statusMap.get(code.getId());
@@ -84,10 +103,18 @@ public class PromocodeRepository {
     }
 
     public void setRedeemed(@NonNull String codeId, boolean isRedeemed) {
+        long now = System.currentTimeMillis();
+        PromocodeStatusEntity cached = statusCache.get(codeId);
+        if (cached != null) {
+            cached.isRedeemed = isRedeemed;
+            cached.redeemedAt = now;
+        } else {
+            statusCache.put(codeId, new PromocodeStatusEntity(codeId, isRedeemed, now, false));
+        }
+
         AppDatabase.getExecutor().execute(() -> {
             try {
                 PromocodeStatusEntity entity = promocodeDao.getStatusSync(codeId);
-                long now = System.currentTimeMillis();
                 if (entity == null) {
                     entity = new PromocodeStatusEntity(codeId, isRedeemed, now, false);
                     promocodeDao.insertOrUpdate(entity);
@@ -101,6 +128,13 @@ public class PromocodeRepository {
     }
 
     public void setExpiredByUser(@NonNull String codeId, boolean isExpiredByUser) {
+        PromocodeStatusEntity cached = statusCache.get(codeId);
+        if (cached != null) {
+            cached.isExpiredByUser = isExpiredByUser;
+        } else {
+            statusCache.put(codeId, new PromocodeStatusEntity(codeId, false, 0, false, isExpiredByUser));
+        }
+
         AppDatabase.getExecutor().execute(() -> {
             try {
                 PromocodeStatusEntity entity = promocodeDao.getStatusSync(codeId);
@@ -129,11 +163,7 @@ public class PromocodeRepository {
         List<PromoCode> streamCodes = new ArrayList<>();
 
         try {
-            List<PromocodeStatusEntity> statuses = promocodeDao.getAllStatusesSync();
-            Map<String, PromocodeStatusEntity> statusMap = new HashMap<>();
-            for (PromocodeStatusEntity s : statuses) {
-                statusMap.put(s.codeId, s);
-            }
+            Map<String, PromocodeStatusEntity> statusMap = getStatusMap(false);
 
             for (PromoCode code : allCodes) {
                 if (code.isStream() && code.isActive()) {
@@ -154,6 +184,13 @@ public class PromocodeRepository {
     }
 
     public void markAsNotified(@NonNull String codeId) {
+        PromocodeStatusEntity cached = statusCache.get(codeId);
+        if (cached != null) {
+            cached.isNotified = true;
+        } else {
+            statusCache.put(codeId, new PromocodeStatusEntity(codeId, false, 0, true));
+        }
+
         AppDatabase.getExecutor().execute(() -> {
             try {
                 PromocodeStatusEntity entity = promocodeDao.getStatusSync(codeId);
@@ -196,11 +233,7 @@ public class PromocodeRepository {
         int unviewedCount = 0;
 
         try {
-            List<PromocodeStatusEntity> statuses = promocodeDao.getAllStatusesSync();
-            Map<String, PromocodeStatusEntity> statusMap = new HashMap<>();
-            for (PromocodeStatusEntity s : statuses) {
-                statusMap.put(s.codeId, s);
-            }
+            Map<String, PromocodeStatusEntity> statusMap = getStatusMap(false);
 
             for (PromoCode code : allCodes) {
                 if (gameType != null && code.getGameType() != gameType.getCode()) {
