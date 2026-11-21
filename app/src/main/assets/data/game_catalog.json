@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-03T09:13:19Z",
+  "updated_at": "2026-11-21T11:06:40Z",
   "games": [
     {
       "game_type": 0,
@@ -8311,6 +8311,18 @@
           "aliases": [
             "Sumoboo",
             "Сумобу"
+          ]
+        },
+        {
+          "name_ru": "Санбрингер",
+          "name_en": "Sunbringer",
+          "rarity": "S",
+          "type": "CHARACTER",
+          "is_standard": false,
+          "icon_path": "avatars/2/characters/sunbringer.png",
+          "aliases": [
+            "Санбрингер",
+            "Sunbringer"
           ]
         }
       ]

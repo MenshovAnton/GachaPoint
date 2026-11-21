@@ -55,8 +55,16 @@ public class BannersScheduleAdapter extends RecyclerView.Adapter<BannersSchedule
         BannerScheduleItem banner = items.get(position);
         Context context = holder.itemView.getContext();
 
+        GameType gameType = GameType.fromId(banner.getGameType());
         String cleanVersion = banner.getVersion().replaceAll("^[vV]+", "");
-        holder.tvVersionTitle.setText(context.getString(R.string.banners_version_phase_format, cleanVersion, banner.getPhase()));
+        if (banner.getId().toLowerCase(java.util.Locale.ROOT).contains("chronicled")) {
+            int chronicledRes = gameType == GameType.HSR
+                    ? R.string.banner_type_hsr_chronicled
+                    : R.string.banner_type_genshin_chronicled;
+            holder.tvVersionTitle.setText(cleanVersion + " — " + context.getString(chronicledRes));
+        } else {
+            holder.tvVersionTitle.setText(context.getString(R.string.banners_version_phase_format, cleanVersion, banner.getPhase()));
+        }
 
         List<String> fiveStars = banner.getFeaturedFiveStars(context);
         String fiveStarsText = android.text.TextUtils.join(", ", fiveStars);
@@ -74,7 +82,6 @@ public class BannersScheduleAdapter extends RecyclerView.Adapter<BannersSchedule
 
         holder.tvDates.setText(banner.getStartDate() + " — " + banner.getEndDate());
 
-        GameType gameType = GameType.fromId(banner.getGameType());
         bindAvatars(holder.llFiveStarsAvatars, fiveStars, gameType, true, context);
         if (hasFourStars) {
             bindAvatars(holder.llFourStarsAvatars, fourStars, gameType, false, context);

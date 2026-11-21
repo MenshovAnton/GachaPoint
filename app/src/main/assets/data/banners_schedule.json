@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-17T13:00:42Z",
+  "updated_at": "2026-11-21T13:04:47Z",
   "games": [
     {
       "game_type": 0,
@@ -8,7 +8,7 @@
         {
           "version": "7.2",
           "title": "Час погибели",
-          "start_date": "2026-11-04",
+          "start_date": "2026-11-03",
           "end_date": "2026-12-15"
         },
         {
@@ -3584,7 +3584,7 @@
           "type": "CHARACTER",
           "version": "7.2",
           "phase": 1,
-          "start_date": "2026-11-04",
+          "start_date": "2026-11-03",
           "end_date": "2026-11-24",
           "status": "CURRENT",
           "featured_five_stars_ru": [
@@ -3609,7 +3609,69 @@
           "source_id": "21997,21998",
           "source_type": "official",
           "verification_status": "verified",
-          "verified_at": "2026-11-17T13:00:35Z"
+          "verified_at": "2026-11-20T02:27:03Z"
+        },
+        {
+          "id": "genshin_7_2_2",
+          "type": "CHARACTER",
+          "version": "7.2",
+          "phase": 2,
+          "start_date": "2026-11-24",
+          "end_date": "2026-12-15",
+          "status": "ANNOUNCED",
+          "featured_five_stars_ru": [
+            "Цзы Бай",
+            "Линнея"
+          ],
+          "featured_five_stars_en": [
+            "Zibai",
+            "Linnea"
+          ],
+          "featured_four_stars_ru": [
+            "Иллуги",
+            "Айно",
+            "Нин Гуан"
+          ],
+          "featured_four_stars_en": [
+            "Illuga",
+            "Aino",
+            "Ningguang"
+          ],
+          "source_url": "https://genshin.hoyoverse.com/en/news/detail/21980",
+          "source_id": "21980,21981",
+          "source_type": "official",
+          "verification_status": "verified",
+          "verified_at": "2026-11-21T13:04:40Z"
+        },
+        {
+          "id": "genshin_7_2_chronicled",
+          "type": "CHRONICLED",
+          "version": "7.2",
+          "phase": 2,
+          "start_date": "2026-11-24",
+          "end_date": "2026-12-15",
+          "status": "ANNOUNCED",
+          "featured_five_stars_ru": [
+            "Вареса",
+            "Часка",
+            "Шилонен",
+            "Муалани",
+            "Кинич"
+          ],
+          "featured_five_stars_en": [
+            "Varesa",
+            "Chasca",
+            "Xilonen",
+            "Mualani",
+            "Kinich"
+          ],
+          "featured_four_stars_ru": [],
+          "featured_four_stars_en": [],
+          "source_url": "https://genshin.hoyoverse.com/en/news/detail/21983",
+          "source_id": "21983",
+          "source_type": "official",
+          "verification_status": "verified",
+          "verified_at": "2026-11-21T13:04:40Z"
         }
       ]
     },
@@ -5693,6 +5755,40 @@
           "source_type": "official",
           "verification_status": "verified",
           "verified_at": "2026-11-11T10:39:53Z"
+        },
+        {
+          "id": "hsr_4_7_2",
+          "type": "CHARACTER",
+          "version": "4.7",
+          "phase": 2,
+          "start_date": "2026-12-02",
+          "end_date": "2026-12-22",
+          "status": "ANNOUNCED",
+          "featured_five_stars_ru": [
+            "Ахерон",
+            "Пожиратель Луны",
+            "Цзин Юань"
+          ],
+          "featured_five_stars_en": [
+            "Acheron",
+            "Dan Heng Imbibitor Lunae",
+            "Jing Yuan"
+          ],
+          "featured_four_stars_ru": [
+            "Аста",
+            "Рысь",
+            "Юйкун"
+          ],
+          "featured_four_stars_en": [
+            "Asta",
+            "Lynx",
+            "Yukong"
+          ],
+          "source_url": "https://api.ennead.cc/mihoyo/starrail/calendar",
+          "source_id": "102",
+          "source_type": "trusted_api",
+          "verification_status": "verified",
+          "verified_at": "2026-11-21T13:04:46Z"
         }
       ]
     },
@@ -6919,13 +7015,47 @@
             "Severian Lowell",
             "Norma Hollowell"
           ],
-          "featured_four_stars_ru": [],
-          "featured_four_stars_en": [],
+          "featured_four_stars_ru": [
+            "Николь",
+            "Пульхра"
+          ],
+          "featured_four_stars_en": [
+            "Nicole Demara",
+            "Pulchra Fellini"
+          ],
           "source_url": "https://zenless.hoyoverse.com/en-us/news/detail/167269",
           "source_id": "167269",
           "source_type": "official",
           "verification_status": "verified",
           "verified_at": "2026-11-09T11:41:45Z"
+        },
+        {
+          "id": "zzz_3_4_1",
+          "type": "CHARACTER",
+          "version": "3.4",
+          "phase": 1,
+          "start_date": "2026-12-02",
+          "end_date": "2027-01-12",
+          "status": "ANNOUNCED",
+          "featured_five_stars_ru": [
+            "Санбрингер"
+          ],
+          "featured_five_stars_en": [
+            "Sunbringer"
+          ],
+          "featured_four_stars_ru": [
+            "Бен Биггер",
+            "Люси"
+          ],
+          "featured_four_stars_en": [
+            "Ben Bigger",
+            "Luciana de Montefio"
+          ],
+          "source_url": "https://api.ennead.cc/mihoyo/zenless/calendar",
+          "source_id": "ennead_zenless_3.4_1",
+          "source_type": "trusted_api",
+          "verification_status": "verified",
+          "verified_at": "2026-11-21T13:04:47Z"
         }
       ]
     },
