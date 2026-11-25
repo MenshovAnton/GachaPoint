@@ -55,14 +55,24 @@ public class BannerPickerAdapter extends RecyclerView.Adapter<BannerPickerAdapte
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BannerScheduleItem item = items.get(position);
         Context context = holder.itemView.getContext();
 
-        String patchTitle = context.getString(R.string.patch_format, item.getVersion())
-                + " • " + context.getString(R.string.banner_phase_format, item.getPhase());
-        holder.tvPatchPhase.setText(patchTitle);
+        if (item.isChronicled()) {
+            String cleanVersion = item.getVersion().replaceAll("^[vV]+", "");
+            int chronicledRes = gameType == GameType.HSR
+                    ? R.string.banner_type_hsr_chronicled
+                    : R.string.banner_type_genshin_chronicled;
+            holder.tvPatchPhase.setText(context.getString(R.string.patch_format, cleanVersion)
+                    + " — " + context.getString(chronicledRes));
+        } else {
+            String patchTitle = context.getString(R.string.patch_format, item.getVersion())
+                    + " • " + context.getString(R.string.banner_phase_format, item.getPhase());
+            holder.tvPatchPhase.setText(patchTitle);
+        }
 
         String dateStr = formatDates(item.getStartDate(), item.getEndDate());
         holder.tvDates.setText(dateStr);

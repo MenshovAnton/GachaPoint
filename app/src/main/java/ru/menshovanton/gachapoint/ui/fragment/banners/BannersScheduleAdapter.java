@@ -57,7 +57,7 @@ public class BannersScheduleAdapter extends RecyclerView.Adapter<BannersSchedule
 
         GameType gameType = GameType.fromId(banner.getGameType());
         String cleanVersion = banner.getVersion().replaceAll("^[vV]+", "");
-        if (banner.getId().toLowerCase(java.util.Locale.ROOT).contains("chronicled")) {
+        if (banner.isChronicled()) {
             int chronicledRes = gameType == GameType.HSR
                     ? R.string.banner_type_hsr_chronicled
                     : R.string.banner_type_genshin_chronicled;

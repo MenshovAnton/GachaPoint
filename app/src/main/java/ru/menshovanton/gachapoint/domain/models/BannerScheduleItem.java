@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class BannerScheduleItem {
     private final String id;
@@ -15,7 +16,8 @@ public class BannerScheduleItem {
     private final int phase;
     private final String startDate;
     private final String endDate;
-    private final String status; // CURRENT, FUTURE, PAST
+    private final String status;
+    private final String type;
     private final List<String> featuredFiveStars;
     private final List<String> featuredFourStars;
     private final List<String> featuredFiveStarsRu;
@@ -32,6 +34,7 @@ public class BannerScheduleItem {
             @NonNull String startDate,
             @NonNull String endDate,
             @NonNull String status,
+            @Nullable String type,
             @Nullable List<String> featuredFiveStars,
             @Nullable List<String> featuredFourStars,
             @Nullable List<String> featuredFiveStarsRu,
@@ -47,6 +50,13 @@ public class BannerScheduleItem {
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
+        if (type != null && !type.trim().isEmpty()) {
+            this.type = type.trim();
+        } else if (id.toLowerCase(Locale.ROOT).contains("chronicled")) {
+            this.type = "CHRONICLED";
+        } else {
+            this.type = "CHARACTER";
+        }
         this.featuredFiveStars = featuredFiveStars != null ? featuredFiveStars : Collections.emptyList();
         this.featuredFourStars = featuredFourStars != null ? featuredFourStars : Collections.emptyList();
         this.featuredFiveStarsRu = featuredFiveStarsRu != null ? featuredFiveStarsRu : this.featuredFiveStars;
@@ -65,9 +75,30 @@ public class BannerScheduleItem {
             @NonNull String endDate,
             @NonNull String status,
             @Nullable List<String> featuredFiveStars,
+            @Nullable List<String> featuredFourStars,
+            @Nullable List<String> featuredFiveStarsRu,
+            @Nullable List<String> featuredFiveStarsEn,
+            @Nullable List<String> featuredFourStarsRu,
+            @Nullable List<String> featuredFourStarsEn,
+            @Nullable String bannerImageUrl
+    ) {
+        this(id, gameType, version, phase, startDate, endDate, status, null,
+                featuredFiveStars, featuredFourStars, featuredFiveStarsRu, featuredFiveStarsEn,
+                featuredFourStarsRu, featuredFourStarsEn, bannerImageUrl);
+    }
+
+    public BannerScheduleItem(
+            @NonNull String id,
+            int gameType,
+            @NonNull String version,
+            int phase,
+            @NonNull String startDate,
+            @NonNull String endDate,
+            @NonNull String status,
+            @Nullable List<String> featuredFiveStars,
             @Nullable List<String> featuredFourStars
     ) {
-        this(id, gameType, version, phase, startDate, endDate, status,
+        this(id, gameType, version, phase, startDate, endDate, status, null,
                 featuredFiveStars, featuredFourStars, featuredFiveStars, featuredFiveStars,
                 featuredFourStars, featuredFourStars, null);
     }
@@ -84,6 +115,14 @@ public class BannerScheduleItem {
     public String getEndDate() { return endDate; }
     @NonNull
     public String getStatus() { return status; }
+    @NonNull
+    public String getType() { return type; }
+    public boolean isChronicled() {
+        return "CHRONICLED".equalsIgnoreCase(type) || id.toLowerCase(Locale.ROOT).contains("chronicled");
+    }
+    public boolean isLightrace() {
+        return "LIGHTRACE".equalsIgnoreCase(type) || id.toLowerCase(Locale.ROOT).contains("lightrace");
+    }
 
     @NonNull
     public List<String> getFeaturedFiveStars() { return featuredFiveStars; }

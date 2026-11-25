@@ -1379,20 +1379,26 @@ public class JournalView extends Fragment {
         }
         final boolean[] suppressAutoOutcomeChange = new boolean[]{isEditMode};
 
-        BannerInfo bannerInfo = viewModel.getCurrentBannerInfo();
-        boolean bannerHas5050 = bannerInfo != null && bannerInfo.hasFiftyFifty();
         String currentBannerType = (wishToEdit != null && wishToEdit.getBannerType() != null)
                 ? wishToEdit.getBannerType()
                 : viewModel.getCurrentBannerType();
-        boolean isCharacterBanner = BannerType.EVENT.getDbKey().equals(currentBannerType);
-        boolean isWeaponBanner = BannerType.WEAPON.getDbKey().equals(currentBannerType);
-        boolean isStandardBanner = BannerType.STANDARD.getDbKey().equals(currentBannerType)
-                || BannerType.BEGINNER.getDbKey().equals(currentBannerType);
+        BannerInfo bannerInfo = currentGameType.getBannerInfo(currentBannerType);
+        BannerType resolvedBannerType = bannerInfo != null ? bannerInfo.getType() : BannerType.EVENT;
+        boolean bannerHas5050 = bannerInfo != null && bannerInfo.hasFiftyFifty();
+        boolean isCharacterBanner = resolvedBannerType == BannerType.EVENT;
+        boolean isWeaponBanner = resolvedBannerType == BannerType.WEAPON;
+        boolean isStandardBanner = resolvedBannerType == BannerType.STANDARD
+                || resolvedBannerType == BannerType.BEGINNER;
 
         CatalogRepository catalogRepo = CatalogRepository.getInstance(requireContext());
         List<CatalogItem> catalogItems = catalogRepo.getItemsForGame(currentGameType);
 
         java.util.function.Function<LocalDate, BannerScheduleItem> resolveBannerForDate = date -> {
+            if (isStandardBanner
+                    || resolvedBannerType == BannerType.BANGBOO
+                    || resolvedBannerType == BannerType.SPECIAL) {
+                return null;
+            }
             if (selectedBannerSchedule[0] != null) {
                 try {
                     LocalDate start = LocalDate.parse(selectedBannerSchedule[0].getStartDate(), dbFormatter);
@@ -1403,8 +1409,8 @@ public class JournalView extends Fragment {
                 } catch (Exception ignored) {}
             }
             BannerScheduleRepository bannerRepo = BannerScheduleRepository.getInstance(requireContext());
-            BannerScheduleItem b = bannerRepo.getBannerForDate(currentGameType, date);
-            return b != null ? b : bannerRepo.getCurrentBanner(currentGameType);
+            BannerScheduleItem b = bannerRepo.getBannerForDate(currentGameType, resolvedBannerType, date);
+            return b != null ? b : bannerRepo.getCurrentBanner(currentGameType, resolvedBannerType);
         };
 
             final boolean[] isProgrammaticOutcomeCheck = new boolean[]{false};
@@ -1566,23 +1572,27 @@ public class JournalView extends Fragment {
                         priorityList.add(featItem);
                     }
                 }
+                List<CatalogItem> otherChars = new ArrayList<>();
+                List<CatalogItem> otherNonChars = new ArrayList<>();
                 for (CatalogItem item : catalogItems) {
                     if (item.isFiveStar() && item.isStandard()) {
                         if (isCharacterBanner && !item.getType().equalsIgnoreCase("CHARACTER")) continue;
                         if (isWeaponBanner && !item.getType().equalsIgnoreCase("WEAPON")) continue;
                         if (addedNames.add(item.getName())) {
-                            others.add(item);
-                        }
-                    }
-                }
-                if (isStandardBanner) {
-                    for (CatalogItem item : catalogItems) {
-                        if (item.isFiveStar() && item.isStandard() && item.getType().equalsIgnoreCase("WEAPON")) {
-                            if (addedNames.add(item.getName())) {
-                                others.add(item);
+                            if (item.getType().equalsIgnoreCase("CHARACTER")) {
+                                otherChars.add(item);
+                            } else {
+                                otherNonChars.add(item);
                             }
                         }
                     }
+                }
+                if (isWeaponBanner) {
+                    others.addAll(otherNonChars);
+                    others.addAll(otherChars);
+                } else {
+                    others.addAll(otherChars);
+                    others.addAll(otherNonChars);
                 }
             } else {
                 for (String fourName : featuredFours) {
@@ -1592,10 +1602,23 @@ public class JournalView extends Fragment {
                     }
                 }
                 if (priorityList.isEmpty() || isStandardBanner) {
+                    List<CatalogItem> otherChars = new ArrayList<>();
+                    List<CatalogItem> otherNonChars = new ArrayList<>();
                     for (CatalogItem item : catalogItems) {
                         if (item.isFourStar() && item.isStandard() && addedNames.add(item.getName())) {
-                            others.add(item);
+                            if (item.getType().equalsIgnoreCase("CHARACTER")) {
+                                otherChars.add(item);
+                            } else {
+                                otherNonChars.add(item);
+                            }
                         }
+                    }
+                    if (isWeaponBanner) {
+                        others.addAll(otherNonChars);
+                        others.addAll(otherChars);
+                    } else {
+                        others.addAll(otherChars);
+                        others.addAll(otherNonChars);
                     }
                 }
             }
@@ -1847,7 +1870,7 @@ public class JournalView extends Fragment {
 
         if (btnPickBannerDate != null) {
             btnPickBannerDate.setOnClickListener(v ->
-                    showBannerDatePickerDialog(currentGameType, selectedDate, selectedBannerSchedule, editDate, displayFormatter, populateChips, toggleRarity));
+                    showBannerDatePickerDialog(currentGameType, resolvedBannerType, selectedDate, selectedBannerSchedule, editDate, displayFormatter, populateChips, toggleRarity));
         }
 
         btnClose.setOnClickListener(v -> dialog.dismiss());
@@ -1932,6 +1955,7 @@ public class JournalView extends Fragment {
 
     @SuppressLint("InflateParams")
     private void showBannerDatePickerDialog(GameType gameType,
+                                            BannerType bannerType,
                                             LocalDate[] selectedDate,
                                             BannerScheduleItem[] selectedBannerSchedule,
                                             TextInputEditText editDate,
@@ -1939,7 +1963,10 @@ public class JournalView extends Fragment {
                                             java.util.function.Consumer<Integer> populateChips,
                                             MaterialButtonToggleGroup toggleRarity) {
         BannerScheduleRepository bannerRepo = BannerScheduleRepository.getInstance(requireContext());
-        List<BannerScheduleItem> banners = bannerRepo.getBanners(gameType);
+        List<BannerScheduleItem> banners = bannerRepo.getBanners(gameType, bannerType);
+        if (banners.isEmpty()) {
+            banners = bannerRepo.getBanners(gameType);
+        }
         if (banners.isEmpty()) {
             Toast.makeText(requireContext(), R.string.empty_pulls_list, Toast.LENGTH_SHORT).show();
             return;

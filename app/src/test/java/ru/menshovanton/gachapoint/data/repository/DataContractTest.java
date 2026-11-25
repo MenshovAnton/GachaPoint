@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import ru.menshovanton.gachapoint.data.local.DataSyncConfig;
+import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.BannerScheduleItem;
 import ru.menshovanton.gachapoint.domain.models.CatalogItem;
@@ -121,6 +122,42 @@ public class DataContractTest {
         }
 
         assertCurrentBannersAreVerified(json);
+    }
+
+    @Test
+    public void chronicledBannerResolvesSeparatelyFromEventBanner() throws Exception {
+        String scheduleJson = readAsset("banners_schedule.json");
+        Map<Integer, List<PatchInfo>> patches = new HashMap<>();
+        Map<Integer, List<BannerScheduleItem>> banners = new HashMap<>();
+        BannerScheduleRepository.parseScheduleJson(scheduleJson, patches, banners);
+
+        List<BannerScheduleItem> genshinBanners = banners.get(GameType.GENSHIN.getId());
+        assertNotNull(genshinBanners);
+
+        LocalDate targetDate = LocalDate.of(2026, 11, 25);
+        BannerScheduleItem eventBanner = BannerScheduleRepository.findBannerForDate(
+                genshinBanners, BannerType.EVENT, targetDate, targetDate);
+        BannerScheduleItem chronicledBanner = BannerScheduleRepository.findBannerForDate(
+                genshinBanners, BannerType.CHRONICLE, targetDate, targetDate);
+
+        assertNotNull(eventBanner);
+        assertNotNull(chronicledBanner);
+        assertFalse(eventBanner.isChronicled());
+        assertTrue(chronicledBanner.isChronicled());
+        assertEquals("genshin_7_2_2", eventBanner.getId());
+        assertEquals("genshin_7_2_chronicled", chronicledBanner.getId());
+        assertFalse(chronicledBanner.getFeaturedFourStarsEn().isEmpty());
+        assertEquals(Arrays.asList("Ifa", "Iansan", "Ororon", "Kachina"),
+                chronicledBanner.getFeaturedFourStarsEn());
+
+        BannerScheduleItem currentChronicled = BannerScheduleRepository.findCurrentBanner(
+                genshinBanners, BannerType.CHRONICLE, targetDate);
+        assertNotNull(currentChronicled);
+        assertEquals("genshin_7_2_chronicled", currentChronicled.getId());
+
+        List<BannerScheduleItem> hsrBanners = banners.get(GameType.HSR.getId());
+        assertNull(BannerScheduleRepository.findBannerForDate(
+                hsrBanners, BannerType.CHRONICLE, targetDate, targetDate));
     }
 
     @Test

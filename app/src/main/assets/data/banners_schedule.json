@@ -3665,8 +3665,18 @@
             "Mualani",
             "Kinich"
           ],
-          "featured_four_stars_ru": [],
-          "featured_four_stars_en": [],
+          "featured_four_stars_ru": [
+            "Ифа",
+            "Иансан",
+            "Оророн",
+            "Качина"
+          ],
+          "featured_four_stars_en": [
+            "Ifa",
+            "Iansan",
+            "Ororon",
+            "Kachina"
+          ],
           "source_url": "https://genshin.hoyoverse.com/en/news/detail/21983",
           "source_id": "21983",
           "source_type": "official",

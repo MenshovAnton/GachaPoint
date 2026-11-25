@@ -24,6 +24,7 @@ import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.local.AppLogger;
 import ru.menshovanton.gachapoint.data.local.DataSyncConfig;
 import ru.menshovanton.gachapoint.data.local.JsonDataLoader;
+import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.BannerScheduleItem;
 import ru.menshovanton.gachapoint.domain.models.PatchInfo;
@@ -58,20 +59,33 @@ public class BannerScheduleRepository {
 
     @Nullable
     public synchronized BannerScheduleItem getCurrentBanner(@Nullable GameType gameType) {
-        if (gameType == null) return null;
-        List<BannerScheduleItem> banners = bannerCache.get(gameType.getId());
-        if (banners == null || banners.isEmpty()) return null;
+        return getCurrentBanner(gameType, null);
+    }
 
-        LocalDate today = LocalDate.now();
+    @Nullable
+    public synchronized BannerScheduleItem getCurrentBanner(@Nullable GameType gameType, @Nullable BannerType bannerType) {
+        if (gameType == null) return null;
+        return findCurrentBanner(bannerCache.get(gameType.getId()), bannerType, LocalDate.now());
+    }
+
+    @Nullable
+    static BannerScheduleItem findCurrentBanner(
+            @Nullable List<BannerScheduleItem> banners,
+            @Nullable BannerType bannerType,
+            @NonNull LocalDate today
+    ) {
+        List<BannerScheduleItem> candidates = filterBannersForType(banners, bannerType);
+        if (candidates.isEmpty()) return null;
+
         DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
 
-        for (BannerScheduleItem banner : banners) {
+        for (BannerScheduleItem banner : candidates) {
             if ("CURRENT".equalsIgnoreCase(banner.getStatus())) {
                 return banner;
             }
         }
 
-        for (BannerScheduleItem banner : banners) {
+        for (BannerScheduleItem banner : candidates) {
             try {
                 LocalDate start = LocalDate.parse(banner.getStartDate(), fmt);
                 LocalDate end = LocalDate.parse(banner.getEndDate(), fmt);
@@ -81,18 +95,38 @@ public class BannerScheduleRepository {
             } catch (Exception ignored) {}
         }
 
-        return banners.get(banners.size() - 1);
+        return candidates.get(candidates.size() - 1);
     }
 
     @Nullable
     public synchronized BannerScheduleItem getBannerForDate(@Nullable GameType gameType, @Nullable LocalDate date) {
+        return getBannerForDate(gameType, null, date);
+    }
+
+    @Nullable
+    public synchronized BannerScheduleItem getBannerForDate(
+            @Nullable GameType gameType,
+            @Nullable BannerType bannerType,
+            @Nullable LocalDate date
+    ) {
         if (gameType == null || date == null) return null;
-        List<BannerScheduleItem> banners = bannerCache.get(gameType.getId());
-        if (banners == null || banners.isEmpty()) return null;
+        return findBannerForDate(bannerCache.get(gameType.getId()), bannerType, date, LocalDate.now());
+    }
+
+    @Nullable
+    static BannerScheduleItem findBannerForDate(
+            @Nullable List<BannerScheduleItem> banners,
+            @Nullable BannerType bannerType,
+            @Nullable LocalDate date,
+            @NonNull LocalDate today
+    ) {
+        if (date == null) return null;
+        List<BannerScheduleItem> candidates = filterBannersForType(banners, bannerType);
+        if (candidates.isEmpty()) return null;
 
         DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
 
-        for (BannerScheduleItem banner : banners) {
+        for (BannerScheduleItem banner : candidates) {
             try {
                 LocalDate start = LocalDate.parse(banner.getStartDate(), fmt);
                 LocalDate end = LocalDate.parse(banner.getEndDate(), fmt);
@@ -102,13 +136,13 @@ public class BannerScheduleRepository {
             } catch (Exception ignored) {}
         }
 
-        if (date.equals(LocalDate.now())) {
-            return getCurrentBanner(gameType);
+        if (date.equals(today)) {
+            return findCurrentBanner(candidates, bannerType, today);
         }
 
         BannerScheduleItem closest = null;
         long minDiff = Long.MAX_VALUE;
-        for (BannerScheduleItem banner : banners) {
+        for (BannerScheduleItem banner : candidates) {
             try {
                 LocalDate start = LocalDate.parse(banner.getStartDate(), fmt);
                 long diff = Math.abs(ChronoUnit.DAYS.between(start, date));
@@ -118,7 +152,7 @@ public class BannerScheduleRepository {
                 }
             } catch (Exception ignored) {}
         }
-        return closest != null ? closest : getCurrentBanner(gameType);
+        return closest != null ? closest : findCurrentBanner(candidates, bannerType, today);
     }
 
     @NonNull
@@ -128,6 +162,46 @@ public class BannerScheduleRepository {
         if (list == null || list.isEmpty()) return Collections.emptyList();
         List<BannerScheduleItem> result = new ArrayList<>(list);
         Collections.reverse(result);
+        return result;
+    }
+
+    @NonNull
+    public synchronized List<BannerScheduleItem> getBanners(@Nullable GameType gameType, @Nullable BannerType bannerType) {
+        if (gameType == null) return Collections.emptyList();
+        List<BannerScheduleItem> filtered = filterBannersForType(bannerCache.get(gameType.getId()), bannerType);
+        if (filtered.isEmpty()) return Collections.emptyList();
+        List<BannerScheduleItem> result = new ArrayList<>(filtered);
+        Collections.reverse(result);
+        return result;
+    }
+
+    @NonNull
+    static List<BannerScheduleItem> filterBannersForType(
+            @Nullable List<BannerScheduleItem> banners,
+            @Nullable BannerType bannerType
+    ) {
+        if (banners == null || banners.isEmpty()) return Collections.emptyList();
+
+        List<BannerScheduleItem> result = new ArrayList<>();
+        if (bannerType == BannerType.CHRONICLE) {
+            for (BannerScheduleItem banner : banners) {
+                if (banner.isChronicled()) {
+                    result.add(banner);
+                }
+            }
+            return result;
+        }
+
+        List<BannerScheduleItem> secondary = new ArrayList<>();
+        for (BannerScheduleItem banner : banners) {
+            if (banner.isChronicled()) continue;
+            if (banner.isLightrace()) {
+                secondary.add(banner);
+            } else {
+                result.add(banner);
+            }
+        }
+        result.addAll(secondary);
         return result;
     }
 
@@ -443,6 +517,7 @@ public class BannerScheduleRepository {
                             optString(bObj, "start_date", ""),
                             optString(bObj, "end_date", ""),
                             optString(bObj, "status", "PAST"),
+                            optString(bObj, "type", "CHARACTER"),
                             fiveStars,
                             fourStars,
                             fiveStarsRu,
