@@ -446,6 +446,10 @@
     <string name="promocode_filter_permanent_count">Permanent (%1$d)</string>
     <string name="promocode_filter_expired_count">Expired (%1$d)</string>
     <string name="promocode_filter_redeemed_count">Redeemed (%1$d)</string>
+    <string name="promocode_filter_with_gems">With Gems</string>
+    <string name="promocode_filter_with_gems_count">With Gems (%1$d)</string>
+    <string name="promocode_filter_no_gems">No Gems</string>
+    <string name="promocode_filter_no_gems_count">No Gems (%1$d)</string>
     <string name="promocode_status_stream_expired">Expired (Stream)</string>
     <string name="promocodes_empty">No promo codes found for this game yet</string>
     <string name="journal_standard_loss_hint">Standard 5★: 50/50 Loss auto-selected</string>
@@ -499,6 +503,45 @@
     <string name="banners_rerun_days_ago" tools:ignore="PluralsCandidate">%d days without rerun</string>
     <string name="banners_rerun_active">Currently in banner</string>
     <string name="banners_last_seen">Last banner in %s</string>
+    <string name="journal_search_hint">Search drops by name...</string>
+    <string name="banners_search_hint">Search character or version...</string>
+    <string name="search_no_results_title">No results found</string>
+    <string name="search_no_results_desc">Try checking your spelling or use another search query</string>
+    <string name="search_clear">Clear search</string>
+    <string name="a11y_btn_clear_search">Clear search query</string>
+    <string name="a11y_btn_filter">Filters</string>
+
+    <string name="banners_filter_all">All</string>
+    <string name="banners_filter_current">Current</string>
+    <string name="banners_filter_future">Announced</string>
+    <string name="banners_filter_past">Completed</string>
+    <string name="banners_rerun_filter_all">All</string>
+    <string name="banners_rerun_filter_active">In Banner</string>
+    <string name="banners_rerun_filter_overdue">&gt; 180 days</string>
+    <string name="banners_rerun_filter_never">Never</string>
+
+    <string name="journal_filter_all">All</string>
+    <string name="journal_filter_5star">5★</string>
+    <string name="journal_filter_4star">4★</string>
+    <string name="journal_filter_3star">3★</string>
+    <string name="journal_filter_characters">Characters</string>
+    <string name="journal_filter_agents">Agents</string>
+    <string name="journal_filter_weapons">Weapons</string>
+    <string name="journal_filter_light_cones">Light Cones</string>
+    <string name="journal_filter_w_engines">W-Engines</string>
+    <string name="journal_filter_bangboo">Bangboo</string>
+    <string name="journal_filter_astralops">AstralOps</string>
+    <string name="journal_filter_win_5050">50/50 Won</string>
+    <string name="journal_filter_loss_5050">50/50 Lost</string>
+    <string name="journal_filter_win_7525">75/25 Won</string>
+    <string name="journal_filter_loss_7525">75/25 Lost</string>
+    <string name="journal_filter_guaranteed">Guaranteed</string>
+    <string name="journal_filter_sheet_title">Filter Journal</string>
+    <string name="journal_filter_section_rarity">Rarity</string>
+    <string name="journal_filter_section_type">Drop Type</string>
+    <string name="journal_filter_section_pity">Pity Outcome</string>
+    <string name="journal_filter_apply">Apply</string>
+    <string name="journal_filter_reset">Reset</string>
     <string name="banners_five_star_characters">5★ Characters</string>
     <string name="banners_four_star_characters">4★ Characters</string>
     <string name="banners_rerun_never">No previous reruns recorded</string>

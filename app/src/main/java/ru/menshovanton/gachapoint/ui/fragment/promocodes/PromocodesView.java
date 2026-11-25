@@ -34,6 +34,8 @@ public class PromocodesView extends Fragment {
     private RecyclerView rvGameTypes;
     private ChipGroup chipGroupStatus;
     private Chip chipActive;
+    private Chip chipWithGems;
+    private Chip chipNoGems;
     private Chip chipStream;
     private Chip chipPermanent;
     private Chip chipExpired;
@@ -87,6 +89,8 @@ public class PromocodesView extends Fragment {
         rvGameTypes = root.findViewById(R.id.rv_game_types);
         chipGroupStatus = root.findViewById(R.id.chip_group_status);
         chipActive = root.findViewById(R.id.chip_active);
+        chipWithGems = root.findViewById(R.id.chip_with_gems);
+        chipNoGems = root.findViewById(R.id.chip_no_gems);
         chipStream = root.findViewById(R.id.chip_stream);
         chipPermanent = root.findViewById(R.id.chip_permanent);
         chipExpired = root.findViewById(R.id.chip_expired);
@@ -296,6 +300,10 @@ public class PromocodesView extends Fragment {
                 viewModel.setFilterMode(PromocodesViewModel.FilterMode.ALL);
             } else if (id == R.id.chip_active) {
                 viewModel.setFilterMode(PromocodesViewModel.FilterMode.ACTIVE);
+            } else if (id == R.id.chip_with_gems) {
+                viewModel.setFilterMode(PromocodesViewModel.FilterMode.WITH_GEMS);
+            } else if (id == R.id.chip_no_gems) {
+                viewModel.setFilterMode(PromocodesViewModel.FilterMode.NO_GEMS);
             } else if (id == R.id.chip_stream) {
                 viewModel.setFilterMode(PromocodesViewModel.FilterMode.STREAM);
             } else if (id == R.id.chip_permanent) {
@@ -349,6 +357,12 @@ public class PromocodesView extends Fragment {
             if (chipActive != null) {
                 chipActive.setText(getString(R.string.promocode_filter_active_count, counts.activeCount));
             }
+            if (chipWithGems != null) {
+                chipWithGems.setText(getString(R.string.promocode_filter_with_gems_count, counts.withGemsCount));
+            }
+            if (chipNoGems != null) {
+                chipNoGems.setText(getString(R.string.promocode_filter_no_gems_count, counts.noGemsCount));
+            }
             if (chipStream != null) {
                 chipStream.setText(getString(R.string.promocode_filter_stream_count, counts.streamCount));
             }
@@ -394,6 +408,8 @@ public class PromocodesView extends Fragment {
         adapter = null;
         chipGroupStatus = null;
         chipActive = null;
+        chipWithGems = null;
+        chipNoGems = null;
         chipStream = null;
         chipPermanent = null;
         chipExpired = null;

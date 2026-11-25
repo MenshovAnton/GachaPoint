@@ -1,9 +1,12 @@
 package ru.menshovanton.gachapoint.ui.fragment.banners;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -14,11 +17,14 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
+import ru.menshovanton.gachapoint.domain.models.BannerScheduleItem;
+import ru.menshovanton.gachapoint.domain.models.CharacterRerunInfo;
 import ru.menshovanton.gachapoint.ui.common.HapticHelper;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
 
@@ -34,6 +40,15 @@ public class BannersView extends Fragment {
     private androidx.swiperefreshlayout.widget.SwipeRefreshLayout srlBanners;
     private View cardOfflineNotice;
     private PillsAdapter pillsAdapter;
+
+    private View cardSearch;
+    private EditText etSearch;
+    private ImageButton btnClearSearch;
+    private View emptySearchState;
+    private TextWatcher searchTextWatcher;
+
+    private ChipGroup chipGroupScheduleFilters;
+    private ChipGroup chipGroupRerunFilters;
 
     private final ru.menshovanton.gachapoint.data.local.JsonDataLoader.OnDataSyncResultListener syncResultListener = (cacheFileName, status) -> {
         if (!ru.menshovanton.gachapoint.data.local.DataSyncConfig.CACHE_BANNERS.equals(cacheFileName)) return;
@@ -80,6 +95,13 @@ public class BannersView extends Fragment {
         srlBanners = root.findViewById(R.id.srl_banners);
         cardOfflineNotice = root.findViewById(R.id.card_offline_notice);
 
+        cardSearch = root.findViewById(R.id.card_banners_search);
+        etSearch = root.findViewById(R.id.et_banners_search);
+        btnClearSearch = root.findViewById(R.id.btn_clear_banners_search);
+        emptySearchState = root.findViewById(R.id.ll_empty_search);
+        chipGroupScheduleFilters = root.findViewById(R.id.chip_group_schedule_filters);
+        chipGroupRerunFilters = root.findViewById(R.id.chip_group_rerun_filters);
+
         ImageButton btnBack = root.findViewById(R.id.btn_back);
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> {
@@ -118,6 +140,8 @@ public class BannersView extends Fragment {
         rvContent.setAdapter(scheduleAdapter);
 
         setupModeToggle();
+        setupSearch();
+        setupFilterChips();
 
         ru.menshovanton.gachapoint.data.local.JsonDataLoader.addSyncResultListener(syncResultListener);
 
@@ -135,6 +159,57 @@ public class BannersView extends Fragment {
                 .markBannersAsViewed(current);
         updateMainBadge();
         updatePillsBadges();
+    }
+
+    private void setupSearch() {
+        if (etSearch == null) return;
+        searchTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int count, int after) {
+                if (btnClearSearch != null) {
+                    btnClearSearch.setVisibility(s != null && s.length() > 0 ? View.VISIBLE : View.GONE);
+                }
+                if (viewModel != null) {
+                    viewModel.setSearchQuery(s != null ? s.toString() : "");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+        etSearch.addTextChangedListener(searchTextWatcher);
+
+        if (btnClearSearch != null) {
+            btnClearSearch.setOnClickListener(v -> {
+                HapticHelper.performClickHaptic(requireContext(), v);
+                etSearch.setText("");
+            });
+        }
+    }
+
+    private void updateEmptyState() {
+        if (emptySearchState == null || rvContent == null) return;
+        boolean hasQuery = viewModel != null && !viewModel.getSearchQuery().isEmpty();
+        boolean isEmpty = false;
+        if (viewModel != null) {
+            if (viewModel.getDisplayMode().getValue() == BannersViewModel.DisplayMode.SCHEDULE) {
+                List<BannerScheduleItem> list = viewModel.getBannersList().getValue();
+                isEmpty = list == null || list.isEmpty();
+            } else {
+                List<CharacterRerunInfo> list = viewModel.getRerunList().getValue();
+                isEmpty = list == null || list.isEmpty();
+            }
+        }
+        if (hasQuery && isEmpty) {
+            emptySearchState.setVisibility(View.VISIBLE);
+            rvContent.setVisibility(View.GONE);
+        } else {
+            emptySearchState.setVisibility(View.GONE);
+            rvContent.setVisibility(View.VISIBLE);
+        }
     }
 
     private void updateMainBadge() {
@@ -210,13 +285,54 @@ public class BannersView extends Fragment {
                     viewModel.setDisplayMode(BannersViewModel.DisplayMode.SCHEDULE);
                     scheduleAdapter.submitList(viewModel.getBannersList().getValue());
                     rvContent.setAdapter(scheduleAdapter);
+                    if (chipGroupScheduleFilters != null) chipGroupScheduleFilters.setVisibility(View.VISIBLE);
+                    if (chipGroupRerunFilters != null) chipGroupRerunFilters.setVisibility(View.GONE);
+                    updateEmptyState();
                 } else if (checkedId == R.id.btn_tab_reruns) {
                     viewModel.setDisplayMode(BannersViewModel.DisplayMode.RERUNS);
                     rerunAdapter.submitList(viewModel.getRerunList().getValue());
                     rvContent.setAdapter(rerunAdapter);
+                    if (chipGroupScheduleFilters != null) chipGroupScheduleFilters.setVisibility(View.GONE);
+                    if (chipGroupRerunFilters != null) chipGroupRerunFilters.setVisibility(View.VISIBLE);
+                    updateEmptyState();
                 }
             }
         });
+    }
+
+    private void setupFilterChips() {
+        if (chipGroupScheduleFilters != null) {
+            chipGroupScheduleFilters.setOnCheckedStateChangeListener((group, checkedIds) -> {
+                if (checkedIds.isEmpty() || viewModel == null) return;
+                HapticHelper.performClickHaptic(requireContext(), null);
+                int id = checkedIds.get(0);
+                if (id == R.id.chip_schedule_all) {
+                    viewModel.setScheduleFilter(BannersViewModel.ScheduleFilter.ALL);
+                } else if (id == R.id.chip_schedule_current) {
+                    viewModel.setScheduleFilter(BannersViewModel.ScheduleFilter.CURRENT);
+                } else if (id == R.id.chip_schedule_future) {
+                    viewModel.setScheduleFilter(BannersViewModel.ScheduleFilter.FUTURE);
+                } else if (id == R.id.chip_schedule_past) {
+                    viewModel.setScheduleFilter(BannersViewModel.ScheduleFilter.PAST);
+                }
+            });
+        }
+        if (chipGroupRerunFilters != null) {
+            chipGroupRerunFilters.setOnCheckedStateChangeListener((group, checkedIds) -> {
+                if (checkedIds.isEmpty() || viewModel == null) return;
+                HapticHelper.performClickHaptic(requireContext(), null);
+                int id = checkedIds.get(0);
+                if (id == R.id.chip_rerun_all) {
+                    viewModel.setRerunFilter(BannersViewModel.RerunFilter.ALL);
+                } else if (id == R.id.chip_rerun_active) {
+                    viewModel.setRerunFilter(BannersViewModel.RerunFilter.ACTIVE);
+                } else if (id == R.id.chip_rerun_overdue) {
+                    viewModel.setRerunFilter(BannersViewModel.RerunFilter.OVERDUE);
+                } else if (id == R.id.chip_rerun_never) {
+                    viewModel.setRerunFilter(BannersViewModel.RerunFilter.NEVER);
+                }
+            });
+        }
     }
 
     private void observeViewModel() {
@@ -240,11 +356,15 @@ public class BannersView extends Fragment {
             });
         }
 
-        viewModel.getBannersList().observe(getViewLifecycleOwner(), banners ->
-                scheduleAdapter.submitList(banners));
+        viewModel.getBannersList().observe(getViewLifecycleOwner(), banners -> {
+            scheduleAdapter.submitList(banners);
+            updateEmptyState();
+        });
 
-        viewModel.getRerunList().observe(getViewLifecycleOwner(), reruns ->
-                rerunAdapter.submitList(reruns));
+        viewModel.getRerunList().observe(getViewLifecycleOwner(), reruns -> {
+            rerunAdapter.submitList(reruns);
+            updateEmptyState();
+        });
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
             if (srlBanners != null) {
@@ -257,6 +377,14 @@ public class BannersView extends Fragment {
     public void onDestroyView() {
         ru.menshovanton.gachapoint.data.local.JsonDataLoader.removeSyncResultListener(syncResultListener);
         super.onDestroyView();
+        if (etSearch != null && searchTextWatcher != null) {
+            etSearch.removeTextChangedListener(searchTextWatcher);
+            searchTextWatcher = null;
+        }
+        etSearch = null;
+        btnClearSearch = null;
+        emptySearchState = null;
+        cardSearch = null;
         if (srlBanners != null) {
             srlBanners.setOnRefreshListener(null);
             srlBanners = null;
@@ -274,5 +402,7 @@ public class BannersView extends Fragment {
         scheduleAdapter = null;
         rerunAdapter = null;
         toggleBannerMode = null;
+        chipGroupScheduleFilters = null;
+        chipGroupRerunFilters = null;
     }
 }

@@ -12,15 +12,21 @@ import androidx.lifecycle.MutableLiveData;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.data.repository.CatalogRepository;
 import ru.menshovanton.gachapoint.data.repository.DatabaseRepository;
 import ru.menshovanton.gachapoint.domain.enums.BannerType;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.enums.PityStatus;
 import ru.menshovanton.gachapoint.domain.enums.RareType;
+import ru.menshovanton.gachapoint.domain.enums.Rarity;
 import ru.menshovanton.gachapoint.domain.models.BannerInfo;
+import ru.menshovanton.gachapoint.domain.models.CatalogItem;
 import ru.menshovanton.gachapoint.domain.models.Pull;
 import ru.menshovanton.gachapoint.ui.event.SingleLiveEvent;
 
@@ -39,6 +45,11 @@ public class JournalViewModel extends AndroidViewModel {
 
     private GameType currentGameType = GameType.GENSHIN;
     private long loadGeneration = 0;
+    private List<Pull> allProcessedWishes = new ArrayList<>();
+    private String currentSearchQuery = "";
+    private final Set<Rarity> selectedRarities = new HashSet<>();
+    private final Set<String> selectedDropTypes = new HashSet<>();
+    private final Set<PityStatus> selectedPityStatuses = new HashSet<>();
 
     public JournalViewModel(@NonNull Application application) {
         super(application);
@@ -53,6 +64,139 @@ public class JournalViewModel extends AndroidViewModel {
     public LiveData<String> getCurrentBannerTypeLiveData() { return currentBannerTypeLiveData; }
     public SingleLiveEvent<Void> getOpenDialogEvent() { return openDialogEvent; }
     public LiveData<Boolean> getIsLoadingLiveData() { return isLoadingLiveData; }
+    public String getSearchQuery() { return currentSearchQuery; }
+    public boolean hasWishes() { return allProcessedWishes != null && !allProcessedWishes.isEmpty(); }
+
+    public Set<Rarity> getSelectedRarities() {
+        return Collections.unmodifiableSet(selectedRarities);
+    }
+
+    public Set<String> getSelectedDropTypes() {
+        return Collections.unmodifiableSet(selectedDropTypes);
+    }
+
+    public Set<PityStatus> getSelectedPityStatuses() {
+        return Collections.unmodifiableSet(selectedPityStatuses);
+    }
+
+    public boolean isFilterActive() {
+        return !selectedRarities.isEmpty() || !selectedDropTypes.isEmpty() || !selectedPityStatuses.isEmpty();
+    }
+
+    public void setFilterCriteria(Set<Rarity> rarities, Set<String> types, Set<PityStatus> pityStatuses) {
+        selectedRarities.clear();
+        if (rarities != null) {
+            selectedRarities.addAll(rarities);
+        }
+        selectedDropTypes.clear();
+        if (types != null) {
+            selectedDropTypes.addAll(types);
+        }
+        selectedPityStatuses.clear();
+        if (pityStatuses != null) {
+            selectedPityStatuses.addAll(pityStatuses);
+        }
+        applyFilter();
+    }
+
+    public void resetFilters() {
+        selectedRarities.clear();
+        selectedDropTypes.clear();
+        selectedPityStatuses.clear();
+        applyFilter();
+    }
+
+    public void setSearchQuery(String query) {
+        this.currentSearchQuery = query != null ? query.trim() : "";
+        applyFilter();
+    }
+
+    private void applyFilter() {
+        if (allProcessedWishes == null || allProcessedWishes.isEmpty()) {
+            wishesLiveData.setValue(new ArrayList<>());
+            return;
+        }
+
+        if (currentSearchQuery.isEmpty() && !isFilterActive()) {
+            wishesLiveData.setValue(allProcessedWishes);
+            return;
+        }
+
+        String query = currentSearchQuery.toLowerCase(Locale.ROOT);
+        List<Pull> filtered = new ArrayList<>();
+        for (Pull pull : allProcessedWishes) {
+            if (matchesPull(pull, query)) {
+                filtered.add(pull);
+            }
+        }
+        wishesLiveData.setValue(filtered);
+    }
+
+    private boolean matchesPull(Pull pull, String query) {
+        if (!query.isEmpty()) {
+            boolean textMatch = false;
+            if (pull.getDropType() != null && pull.getDropType().toLowerCase(Locale.ROOT).contains(query)) {
+                textMatch = true;
+            } else if (pull.getDropRare() != null && pull.getDropRare().toLowerCase(Locale.ROOT).contains(query)) {
+                textMatch = true;
+            } else if (pull.getDateTime() != null && pull.getDateTime().toLowerCase(Locale.ROOT).contains(query)) {
+                textMatch = true;
+            }
+            if (!textMatch) {
+                return false;
+            }
+        }
+
+        if (!selectedRarities.isEmpty()) {
+            Rarity rarity = Rarity.from(pull.getDropRare(), currentGameType);
+            if (!selectedRarities.contains(rarity)) {
+                return false;
+            }
+        }
+
+        if (!selectedDropTypes.isEmpty()) {
+            String itemType = getItemTypeForPull(pull);
+            if (!selectedDropTypes.contains(itemType)) {
+                return false;
+            }
+        }
+
+        if (!selectedPityStatuses.isEmpty()) {
+            return selectedPityStatuses.contains(pull.getPityStatus());
+        }
+
+        return true;
+    }
+
+    private String getItemTypeForPull(Pull pull) {
+        BannerInfo bannerInfo = getCurrentBannerInfo();
+        if (bannerInfo != null && bannerInfo.getType() == BannerType.BANGBOO) {
+            return "BANGBOO";
+        }
+
+        CatalogRepository catalogRepo = CatalogRepository.getInstance(getApplication());
+        CatalogItem item = catalogRepo.findItemByName(currentGameType, pull.getDropType());
+        if (item != null) {
+            if (item.isCompanion()) {
+                return "BANGBOO";
+            }
+            String type = item.getType();
+            if ("CHARACTER".equalsIgnoreCase(type)) {
+                return "CHARACTER";
+            }
+            if ("WEAPON".equalsIgnoreCase(type)) {
+                return "WEAPON";
+            }
+        }
+        Rarity rarity = Rarity.from(pull.getDropRare(), currentGameType);
+        if (rarity == Rarity.COMMON) {
+            return "WEAPON";
+        }
+        if (bannerInfo != null && bannerInfo.getType() == BannerType.WEAPON) {
+            return "WEAPON";
+        }
+        return "CHARACTER";
+    }
 
     public void setGameType(GameType gameType) {
         if (gameType != null) {
@@ -68,6 +212,7 @@ public class JournalViewModel extends AndroidViewModel {
             if (!banners && !bannersInfo.isEmpty()) {
                 currentBannerTypeLiveData.setValue(bannersInfo.get(0).getDbKey());
             }
+            validateFiltersForCurrentBanner();
             refreshData();
         }
     }
@@ -83,7 +228,22 @@ public class JournalViewModel extends AndroidViewModel {
     public void setBannerType(String bannerTypeKey) {
         if (bannerTypeKey != null && !bannerTypeKey.equals(currentBannerTypeLiveData.getValue())) {
             currentBannerTypeLiveData.setValue(bannerTypeKey);
+            validateFiltersForCurrentBanner();
             refreshData();
+        }
+    }
+
+    private void validateFiltersForCurrentBanner() {
+        BannerInfo bannerInfo = getCurrentBannerInfo();
+        if (bannerInfo == null || !bannerInfo.hasFiftyFifty()) {
+            selectedPityStatuses.clear();
+        }
+        if (bannerInfo != null && bannerInfo.getType() == BannerType.BANGBOO) {
+            selectedDropTypes.remove("CHARACTER");
+            selectedDropTypes.remove("WEAPON");
+            selectedRarities.remove(Rarity.COMMON);
+        } else {
+            selectedDropTypes.remove("BANGBOO");
         }
     }
 
@@ -113,7 +273,8 @@ public class JournalViewModel extends AndroidViewModel {
             if (showLoading) {
                 isLoadingLiveData.setValue(false);
             }
-            wishesLiveData.setValue(processedList);
+            allProcessedWishes = processedList;
+            applyFilter();
         });
     }
 

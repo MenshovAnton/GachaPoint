@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-21T13:04:47Z",
+  "updated_at": "2026-11-24T14:00:19Z",
   "games": [
     {
       "game_type": 0,
@@ -3618,7 +3618,7 @@
           "phase": 2,
           "start_date": "2026-11-24",
           "end_date": "2026-12-15",
-          "status": "ANNOUNCED",
+          "status": "CURRENT",
           "featured_five_stars_ru": [
             "Цзы Бай",
             "Линнея"
@@ -3650,7 +3650,7 @@
           "phase": 2,
           "start_date": "2026-11-24",
           "end_date": "2026-12-15",
-          "status": "ANNOUNCED",
+          "status": "CURRENT",
           "featured_five_stars_ru": [
             "Вареса",
             "Часка",

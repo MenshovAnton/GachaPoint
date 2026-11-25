@@ -20,6 +20,8 @@ public class PromocodesViewModel extends AndroidViewModel {
 
     public enum FilterMode {
         ACTIVE,
+        WITH_GEMS,
+        NO_GEMS,
         STREAM,
         PERMANENT,
         EXPIRED,
@@ -30,14 +32,18 @@ public class PromocodesViewModel extends AndroidViewModel {
     public static class FilterCounts {
         public final int allCount;
         public final int activeCount;
+        public final int withGemsCount;
+        public final int noGemsCount;
         public final int streamCount;
         public final int permanentCount;
         public final int expiredCount;
         public final int redeemedCount;
 
-        public FilterCounts(int allCount, int activeCount, int streamCount, int permanentCount, int expiredCount, int redeemedCount) {
+        public FilterCounts(int allCount, int activeCount, int withGemsCount, int noGemsCount, int streamCount, int permanentCount, int expiredCount, int redeemedCount) {
             this.allCount = allCount;
             this.activeCount = activeCount;
+            this.withGemsCount = withGemsCount;
+            this.noGemsCount = noGemsCount;
             this.streamCount = streamCount;
             this.permanentCount = permanentCount;
             this.expiredCount = expiredCount;
@@ -49,7 +55,7 @@ public class PromocodesViewModel extends AndroidViewModel {
     private final MutableLiveData<GameType> selectedGameType = new MutableLiveData<>(GameType.GENSHIN);
     private final MutableLiveData<FilterMode> filterMode = new MutableLiveData<>(FilterMode.ACTIVE);
     private final MutableLiveData<List<PromoCode>> displayedCodes = new MutableLiveData<>(Collections.emptyList());
-    private final MutableLiveData<FilterCounts> filterCounts = new MutableLiveData<>(new FilterCounts(0, 0, 0, 0, 0, 0));
+    private final MutableLiveData<FilterCounts> filterCounts = new MutableLiveData<>(new FilterCounts(0, 0, 0, 0, 0, 0, 0, 0));
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
     private List<PromoCode> rawCodes = new ArrayList<>();
@@ -123,6 +129,8 @@ public class PromocodesViewModel extends AndroidViewModel {
 
         int allCount = rawCodes.size();
         int activeCount = 0;
+        int withGemsCount = 0;
+        int noGemsCount = 0;
         int streamCount = 0;
         int permanentCount = 0;
         int expiredCount = 0;
@@ -133,9 +141,15 @@ public class PromocodesViewModel extends AndroidViewModel {
             boolean isRed = code.isRedeemed();
             boolean isStr = code.isStream() || "STREAM".equalsIgnoreCase(code.getStatus());
             boolean isPerm = code.isPermanent();
+            boolean hasGems = code.hasGems();
 
             if (!isExp && !isRed) {
                 activeCount++;
+                if (hasGems) {
+                    withGemsCount++;
+                } else {
+                    noGemsCount++;
+                }
             }
             if (isStr && !isExp && !isRed) {
                 streamCount++;
@@ -150,7 +164,7 @@ public class PromocodesViewModel extends AndroidViewModel {
                 redeemedCount++;
             }
         }
-        filterCounts.setValue(new FilterCounts(allCount, activeCount, streamCount, permanentCount, expiredCount, redeemedCount));
+        filterCounts.setValue(new FilterCounts(allCount, activeCount, withGemsCount, noGemsCount, streamCount, permanentCount, expiredCount, redeemedCount));
 
         List<PromoCode> filtered = new ArrayList<>();
         for (PromoCode code : rawCodes) {
@@ -160,8 +174,11 @@ public class PromocodesViewModel extends AndroidViewModel {
             boolean isPerm = code.isPermanent();
 
             if (mode == FilterMode.ACTIVE) {
-                // ACTIVE tab displays all currently actionable working promo codes
                 if (isExp || isRed) continue;
+            } else if (mode == FilterMode.WITH_GEMS) {
+                if (isExp || isRed || !code.hasGems()) continue;
+            } else if (mode == FilterMode.NO_GEMS) {
+                if (isExp || isRed || code.hasGems()) continue;
             } else if (mode == FilterMode.STREAM) {
                 if (!isStr || isExp || isRed) continue;
             } else if (mode == FilterMode.PERMANENT) {

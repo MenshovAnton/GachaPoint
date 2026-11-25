@@ -89,6 +89,20 @@
                 android:text="@string/promocode_filter_active" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/chip_with_gems"
+                style="@style/Chip.GachaPoint.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/promocode_filter_with_gems" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_no_gems"
+                style="@style/Chip.GachaPoint.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/promocode_filter_no_gems" />
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/chip_stream"
                 style="@style/Chip.GachaPoint.Filter"
                 android:layout_width="wrap_content"

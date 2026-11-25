@@ -20,6 +20,11 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import java.util.HashSet;
+import java.util.Set;
 import ru.menshovanton.gachapoint.ui.common.NoFilterArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -66,11 +71,9 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Set;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
@@ -107,6 +110,12 @@ public class JournalView extends Fragment {
     private View emptyView;
     private View emptyContentView;
     private View cardBannerDashboard;
+    private View cardSearch;
+    private EditText etSearch;
+    private ImageButton btnClearSearch;
+    private ImageButton btnJournalFilter;
+    private View llEmptyActions;
+    private TextWatcher searchTextWatcher;
     private TextView tvEmptyTitle;
     private TextView tvEmptyDesc;
     private MaterialButton btnEmptyAddOne;
@@ -148,6 +157,11 @@ public class JournalView extends Fragment {
 
         appbarLayout = view.findViewById(R.id.appbar_journal);
         cardBannerDashboard = view.findViewById(R.id.card_banner_dashboard);
+        cardSearch = view.findViewById(R.id.card_journal_search);
+        etSearch = view.findViewById(R.id.et_journal_search);
+        btnClearSearch = view.findViewById(R.id.btn_clear_journal_search);
+        btnJournalFilter = view.findViewById(R.id.btn_journal_filter);
+        llEmptyActions = view.findViewById(R.id.ll_empty_actions);
         rvGameTypes = view.findViewById(R.id.rv_game_types);
         btnAdd = view.findViewById(R.id.btn_add);
         btnScrollTop = view.findViewById(R.id.btn_scroll_top);
@@ -190,6 +204,8 @@ public class JournalView extends Fragment {
         setupRecyclerView();
         setupBannerSelector();
         setupSelectionBar();
+        setupSearch();
+        setupFilters();
         observeViewModel();
 
         btnAdd.setOnClickListener(this::showMoreMenu);
@@ -245,6 +261,9 @@ public class JournalView extends Fragment {
                     }
                     if (btnScrollTop != null && btnScrollTop.getVisibility() == View.VISIBLE) {
                         btnScrollTop.hide();
+                    }
+                    if (etSearch != null) {
+                        etSearch.setText("");
                     }
                     viewModel.setGameType(selectedGame);
                     updateBannerSelector(selectedGame);
@@ -353,6 +372,197 @@ public class JournalView extends Fragment {
         }
     }
 
+    private void setupSearch() {
+        if (etSearch == null) return;
+        searchTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int count, int after) {
+                if (btnClearSearch != null) {
+                    btnClearSearch.setVisibility(s != null && s.length() > 0 ? View.VISIBLE : View.GONE);
+                }
+                if (pullsAdapter != null && pullsAdapter.isSelectionMode()) {
+                    pullsAdapter.clearSelection();
+                }
+                if (viewModel != null) {
+                    viewModel.setSearchQuery(s != null ? s.toString() : "");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+        etSearch.addTextChangedListener(searchTextWatcher);
+
+        if (btnClearSearch != null) {
+            btnClearSearch.setOnClickListener(v -> {
+                HapticHelper.performClickHaptic(requireContext(), v);
+                etSearch.setText("");
+            });
+        }
+    }
+
+    private void setupFilters() {
+        if (btnJournalFilter != null) {
+            btnJournalFilter.setOnClickListener(v -> {
+                HapticHelper.performClickHaptic(requireContext(), v);
+                showFilterBottomSheet();
+            });
+        }
+        updateFilterButtonTint();
+    }
+
+    private void updateFilterButtonTint() {
+        if (btnJournalFilter == null || viewModel == null || getContext() == null) return;
+        boolean active = viewModel.isFilterActive();
+        int tintColor = ContextCompat.getColor(requireContext(), active ? R.color.check : R.color.text_secondary);
+        btnJournalFilter.setImageTintList(ColorStateList.valueOf(tintColor));
+    }
+
+    private void showFilterBottomSheet() {
+        if (getContext() == null || viewModel == null) return;
+
+        BottomSheetDialog dialog = new BottomSheetDialog(requireContext(), R.style.ThemeOverlay_GachaPoint_BottomSheetDialog);
+        @SuppressLint("InflateParams") View sheetView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_journal_filter_sheet, null);
+        dialog.setContentView(sheetView);
+
+        GameType gameType = viewModel.getCurrentGameType();
+        BannerInfo bannerInfo = viewModel.getCurrentBannerInfo();
+        boolean isBangbooBanner = bannerInfo != null && bannerInfo.getType() == BannerType.BANGBOO;
+        boolean isWeaponBanner = bannerInfo != null && bannerInfo.getType() == BannerType.WEAPON;
+
+        Chip chip5Star = sheetView.findViewById(R.id.chip_sheet_5star);
+        Chip chip4Star = sheetView.findViewById(R.id.chip_sheet_4star);
+        Chip chip3Star = sheetView.findViewById(R.id.chip_sheet_3star);
+        Chip chipCharacters = sheetView.findViewById(R.id.chip_sheet_characters);
+        Chip chipWeapons = sheetView.findViewById(R.id.chip_sheet_weapons);
+        Chip chipBangboo = sheetView.findViewById(R.id.chip_sheet_bangboo);
+        Chip chipWin5050 = sheetView.findViewById(R.id.chip_sheet_win_5050);
+        Chip chipLoss5050 = sheetView.findViewById(R.id.chip_sheet_loss_5050);
+        Chip chipGuaranteed = sheetView.findViewById(R.id.chip_sheet_guaranteed);
+
+        TextView tvSectionPity = sheetView.findViewById(R.id.tv_sheet_section_pity);
+        ChipGroup cgPity = sheetView.findViewById(R.id.cg_sheet_pity);
+
+        MaterialButton btnReset = sheetView.findViewById(R.id.btn_reset_filters);
+        MaterialButton btnApply = sheetView.findViewById(R.id.btn_apply_filters);
+
+        if (chip5Star != null) {
+            chip5Star.setText(Rarity.LEGENDARY.getDisplayRank(gameType, requireContext()));
+        }
+        if (chip4Star != null) {
+            chip4Star.setText(Rarity.EPIC.getDisplayRank(gameType, requireContext()));
+        }
+        if (chip3Star != null) {
+            if (isBangbooBanner) {
+                chip3Star.setVisibility(View.GONE);
+            } else {
+                chip3Star.setVisibility(View.VISIBLE);
+                chip3Star.setText(Rarity.COMMON.getDisplayRank(gameType, requireContext()));
+            }
+        }
+
+        if (isBangbooBanner) {
+            if (chipCharacters != null) chipCharacters.setVisibility(View.GONE);
+            if (chipWeapons != null) chipWeapons.setVisibility(View.GONE);
+            if (chipBangboo != null) {
+                chipBangboo.setVisibility(View.VISIBLE);
+                chipBangboo.setText(gameType == GameType.HI3 ? R.string.journal_filter_astralops : R.string.journal_filter_bangboo);
+            }
+        } else {
+            if (chipBangboo != null) chipBangboo.setVisibility(View.GONE);
+            if (chipCharacters != null) {
+                chipCharacters.setVisibility(View.VISIBLE);
+                chipCharacters.setText(gameType == GameType.ZZZ ? R.string.journal_filter_agents : R.string.journal_filter_characters);
+            }
+            if (chipWeapons != null) {
+                chipWeapons.setVisibility(View.VISIBLE);
+                if (gameType == GameType.HSR) {
+                    chipWeapons.setText(R.string.journal_filter_light_cones);
+                } else if (gameType == GameType.ZZZ) {
+                    chipWeapons.setText(R.string.journal_filter_w_engines);
+                } else {
+                    chipWeapons.setText(R.string.journal_filter_weapons);
+                }
+            }
+        }
+
+        boolean hasFiftyFifty = bannerInfo != null && bannerInfo.hasFiftyFifty();
+        if (tvSectionPity != null) {
+            tvSectionPity.setVisibility(hasFiftyFifty ? View.VISIBLE : View.GONE);
+        }
+        if (cgPity != null) {
+            cgPity.setVisibility(hasFiftyFifty ? View.VISIBLE : View.GONE);
+        }
+        if (hasFiftyFifty) {
+            if (isWeaponBanner) {
+                if (chipWin5050 != null) chipWin5050.setText(R.string.journal_filter_win_7525);
+                if (chipLoss5050 != null) chipLoss5050.setText(R.string.journal_filter_loss_7525);
+            } else {
+                if (chipWin5050 != null) chipWin5050.setText(R.string.journal_filter_win_5050);
+                if (chipLoss5050 != null) chipLoss5050.setText(R.string.journal_filter_loss_5050);
+            }
+        }
+
+        Set<Rarity> curRarities = viewModel.getSelectedRarities();
+        if (chip5Star != null) chip5Star.setChecked(curRarities.contains(Rarity.LEGENDARY));
+        if (chip4Star != null) chip4Star.setChecked(curRarities.contains(Rarity.EPIC));
+        if (chip3Star != null && !isBangbooBanner) chip3Star.setChecked(curRarities.contains(Rarity.COMMON));
+
+        Set<String> curTypes = viewModel.getSelectedDropTypes();
+        if (chipCharacters != null) chipCharacters.setChecked(curTypes.contains("CHARACTER"));
+        if (chipWeapons != null) chipWeapons.setChecked(curTypes.contains("WEAPON"));
+        if (chipBangboo != null) chipBangboo.setChecked(curTypes.contains("BANGBOO"));
+
+        Set<PityStatus> curPity = viewModel.getSelectedPityStatuses();
+        if (chipWin5050 != null) chipWin5050.setChecked(curPity.contains(PityStatus.WIN_50_50));
+        if (chipLoss5050 != null) chipLoss5050.setChecked(curPity.contains(PityStatus.LOSS_50_50));
+        if (chipGuaranteed != null) chipGuaranteed.setChecked(curPity.contains(PityStatus.GUARANTEED));
+
+        if (btnReset != null) {
+            btnReset.setOnClickListener(v -> {
+                HapticHelper.performClickHaptic(requireContext(), v);
+                viewModel.resetFilters();
+                updateFilterButtonTint();
+                dialog.dismiss();
+            });
+        }
+
+        if (btnApply != null) {
+            btnApply.setOnClickListener(v -> {
+                HapticHelper.performClickHaptic(requireContext(), v);
+
+                Set<Rarity> newRarities = new HashSet<>();
+                if (chip5Star != null && chip5Star.isChecked()) newRarities.add(Rarity.LEGENDARY);
+                if (chip4Star != null && chip4Star.isChecked()) newRarities.add(Rarity.EPIC);
+                if (chip3Star != null && !isBangbooBanner && chip3Star.isChecked()) newRarities.add(Rarity.COMMON);
+
+                Set<String> newTypes = new HashSet<>();
+                if (isBangbooBanner) {
+                    if (chipBangboo != null && chipBangboo.isChecked()) newTypes.add("BANGBOO");
+                } else {
+                    if (chipCharacters != null && chipCharacters.isChecked()) newTypes.add("CHARACTER");
+                    if (chipWeapons != null && chipWeapons.isChecked()) newTypes.add("WEAPON");
+                }
+
+                Set<PityStatus> newPity = new HashSet<>();
+                if (hasFiftyFifty) {
+                    if (chipWin5050 != null && chipWin5050.isChecked()) newPity.add(PityStatus.WIN_50_50);
+                    if (chipLoss5050 != null && chipLoss5050.isChecked()) newPity.add(PityStatus.LOSS_50_50);
+                    if (chipGuaranteed != null && chipGuaranteed.isChecked()) newPity.add(PityStatus.GUARANTEED);
+                }
+
+                viewModel.setFilterCriteria(newRarities, newTypes, newPity);
+                updateFilterButtonTint();
+                dialog.dismiss();
+            });
+        }
+
+        dialog.show();
+    }
+
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setItemAnimator(new SlideInItemAnimator());
@@ -383,7 +593,7 @@ public class JournalView extends Fragment {
 
             @Override
             public int getMovementFlags(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh) {
-                if (pullsAdapter.isSelectionMode()) {
+                if (pullsAdapter.isSelectionMode() && (viewModel == null || (viewModel.getSearchQuery().isEmpty() && !viewModel.isFilterActive()))) {
                     return makeMovementFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0);
                 }
                 return 0;
@@ -393,6 +603,9 @@ public class JournalView extends Fragment {
             public boolean onMove(@NonNull RecyclerView rv,
                                   @NonNull RecyclerView.ViewHolder viewHolder,
                                   @NonNull RecyclerView.ViewHolder target) {
+                if (viewModel != null && (!viewModel.getSearchQuery().isEmpty() || viewModel.isFilterActive())) {
+                    return false;
+                }
                 int from = viewHolder.getBindingAdapterPosition();
                 int to = target.getBindingAdapterPosition();
                 if (from != RecyclerView.NO_POSITION && to != RecyclerView.NO_POSITION) {
@@ -433,7 +646,11 @@ public class JournalView extends Fragment {
             }
         });
         itemTouchHelper.attachToRecyclerView(recyclerView);
-        pullsAdapter.setOnStartDragListener(itemTouchHelper::startDrag);
+        pullsAdapter.setOnStartDragListener(vh -> {
+            if (viewModel == null || viewModel.getSearchQuery().isEmpty()) {
+                itemTouchHelper.startDrag(vh);
+            }
+        });
 
         scrollListener = new RecyclerView.OnScrollListener() {
             @Override
@@ -552,6 +769,15 @@ public class JournalView extends Fragment {
         tvEmptyDesc = null;
         btnEmptyAddOne = null;
         btnEmptyAddTen = null;
+        llEmptyActions = null;
+        if (etSearch != null && searchTextWatcher != null) {
+            etSearch.removeTextChangedListener(searchTextWatcher);
+            searchTextWatcher = null;
+        }
+        etSearch = null;
+        btnClearSearch = null;
+        btnJournalFilter = null;
+        cardSearch = null;
         progressBar = null;
         tvPity5StarCounter = null;
         tvLabel5Star = null;
@@ -583,8 +809,12 @@ public class JournalView extends Fragment {
             if (btnScrollTop != null && btnScrollTop.getVisibility() == View.VISIBLE) {
                 btnScrollTop.hide();
             }
+            if (etSearch != null) {
+                etSearch.setText("");
+            }
             viewModel.setBannerType(bannerKey);
             updateDashboardLimits();
+            updateFilterButtonTint();
             bannerSelector.dismissDropDown();
             bannerSelector.clearFocus();
         });
@@ -606,6 +836,7 @@ public class JournalView extends Fragment {
         bannerSelector.setText(currentLabel, false);
         updateDashboardLimits();
         updateEmptyState(gameType);
+        updateFilterButtonTint();
     }
 
     private void updateEmptyState(GameType gameType) {
@@ -727,6 +958,13 @@ public class JournalView extends Fragment {
         viewModel.getWishesLiveData().observe(getViewLifecycleOwner(), pulls -> {
             if (pulls == null) return;
             boolean isEmpty = pulls.isEmpty();
+            boolean hasAnyWishes = viewModel.hasWishes();
+            boolean isFilteredEmpty = isEmpty && hasAnyWishes;
+
+            if (cardSearch != null) {
+                cardSearch.setVisibility(hasAnyWishes ? View.VISIBLE : View.GONE);
+            }
+
             String currentBannerKey = viewModel.getCurrentBannerType();
             GameType currentGameType = viewModel.getCurrentGameType();
             boolean bannerChanged = !Objects.equals(lastLoadedBannerKey, currentBannerKey);
@@ -742,6 +980,18 @@ public class JournalView extends Fragment {
                 progressBar.setVisibility(View.GONE);
 
                 if (isEmpty) {
+                    if (isFilteredEmpty) {
+                        tvEmptyTitle.setText(R.string.search_no_results_title);
+                        tvEmptyDesc.setText(R.string.search_no_results_desc);
+                        if (llEmptyActions != null) {
+                            llEmptyActions.setVisibility(View.GONE);
+                        }
+                    } else {
+                        updateEmptyState(viewModel.getCurrentGameType());
+                        if (llEmptyActions != null) {
+                            llEmptyActions.setVisibility(View.VISIBLE);
+                        }
+                    }
                     if (emptyView.getVisibility() != View.VISIBLE) {
                         crossFadeViews(recyclerView, emptyView);
                     }
@@ -1799,7 +2049,7 @@ public class JournalView extends Fragment {
                 list.add("Debate Club");
                 list.add("Black Tassel");
                 list.add("Harbinger of Dawn");
-                list.add("Skyrider Sword");
+                list.add("Sky rider Sword");
                 list.add("Thrilling Tales");
                 list.add("White Tassel");
             }
