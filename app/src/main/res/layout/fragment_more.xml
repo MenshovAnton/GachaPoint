@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:fillViewport="true"
-        android:paddingBottom="90dp"
+        android:paddingBottom="@dimen/screen_padding_bottom"
         tools:ignore="UselessParent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -382,7 +382,8 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/badge_new_promocodes"
                             app:layout_constraintStart_toEndOf="@+id/badge_promo"
-                            app:layout_constraintTop_toTopOf="parent">
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_goneMarginEnd="10dp">
 
                             <TextView
                                 android:id="@+id/tv_promo_title"
@@ -496,7 +497,8 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/badge_new_banners"
                             app:layout_constraintStart_toEndOf="@+id/badge_banners"
-                            app:layout_constraintTop_toTopOf="parent">
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_goneMarginEnd="10dp">
 
                             <TextView
                                 android:id="@+id/tv_banners_title"
@@ -666,8 +668,8 @@
 
                         <ImageView
                             android:id="@+id/ic_help_chevron"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -752,8 +754,8 @@
 
                         <ImageView
                             android:id="@+id/ic_settings_chevron"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -838,8 +840,8 @@
 
                         <ImageView
                             android:id="@+id/ic_feedback_chevron"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -924,8 +926,8 @@
 
                         <ImageView
                             android:id="@+id/ic_about_chevron"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -961,7 +963,6 @@
                 android:layout_marginStart="@dimen/card_margin_horizontal"
                 android:layout_marginTop="@dimen/card_margin_vertical"
                 android:layout_marginEnd="@dimen/card_margin_horizontal"
-                android:layout_marginBottom="32dp"
                 app:cardCornerRadius="@dimen/card_corner_radius"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -1042,8 +1043,8 @@
 
                         <ImageView
                             android:id="@+id/iv_community_telegram_arrow"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -1128,8 +1129,8 @@
 
                         <ImageView
                             android:id="@+id/iv_community_tiktok_arrow"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -1183,10 +1184,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
+                            android:layout_marginEnd="10dp"
                             android:gravity="center_vertical"
                             android:minHeight="40dp"
                             android:orientation="vertical"
                             app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_community_boosty_arrow"
                             app:layout_constraintStart_toEndOf="@+id/badge_community_boosty"
                             app:layout_constraintTop_toTopOf="parent">
 
@@ -1212,8 +1215,8 @@
 
                         <ImageView
                             android:id="@+id/iv_community_boosty_arrow"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"

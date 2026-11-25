@@ -201,6 +201,7 @@ public class PiggyBankView extends Fragment {
                     }
                     viewModel.setGameType(selectedGame);
                     updateGameAppearance(selectedGame);
+                    CarouselAnimator.alignPositionToStart(rvGameTypes, position, true);
                 },
                 () -> GamesConfigBottomSheetDialog.show(requireContext(), () -> {
                     if (mainActivityView != null) mainActivityView.refreshGamesConfig();
@@ -233,6 +234,9 @@ public class PiggyBankView extends Fragment {
         }
         if (pillsAdapter != null) {
             pillsAdapter.updateData(enabled, mainActivityView.getSubType());
+            if (isMultiGame) {
+                CarouselAnimator.alignSelectedGame(rvGameTypes, pillsAdapter, mainActivityView.getSubType(), false);
+            }
         }
     }
 
@@ -509,6 +513,7 @@ public class PiggyBankView extends Fragment {
             mainActivityView.getMainActivityViewModel().getSubTypeLiveData().observe(getViewLifecycleOwner(), game -> {
                 if (pillsAdapter != null) {
                     pillsAdapter.setSelectedGame(game);
+                    CarouselAnimator.alignSelectedGame(rvGameTypes, pillsAdapter, game, rvGameTypes != null && rvGameTypes.isLaidOut());
                 }
                 if (viewModel != null && viewModel.getCurrentGameType() != game) {
                     viewModel.setGameType(game);

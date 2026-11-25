@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:fillViewport="true"
-        android:paddingBottom="90dp">
+        android:paddingBottom="@dimen/screen_padding_bottom">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -154,8 +154,8 @@
 
                         <ImageView
                             android:id="@+id/ic_telegram_chevron"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -240,8 +240,8 @@
 
                         <ImageView
                             android:id="@+id/ic_github_chevron"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -326,8 +326,8 @@
 
                         <ImageView
                             android:id="@+id/ic_google_form_chevron"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -364,9 +364,7 @@
                 android:layout_marginStart="@dimen/card_margin_horizontal"
                 android:layout_marginTop="@dimen/card_margin_vertical"
                 android:layout_marginEnd="@dimen/card_margin_horizontal"
-                android:layout_marginBottom="24dp"
                 app:cardCornerRadius="@dimen/card_corner_radius"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_form_header">
@@ -481,51 +479,81 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_feedback_subject"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:hint="@string/feedback_subject_hint_bug">
+                        android:hint="@string/feedback_subject_hint_bug"
+                        android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
+                        app:boxCornerRadiusBottomEnd="14dp"
+                        app:boxCornerRadiusBottomStart="14dp"
+                        app:boxCornerRadiusTopEnd="14dp"
+                        app:boxCornerRadiusTopStart="14dp"
+                        app:boxStrokeColor="@color/dropdown_stroke_color">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/tiet_feedback_subject"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/genshin_font"
                             android:inputType="textCapSentences"
-                            android:maxLines="2" />
+                            android:maxLines="2"
+                            android:textColor="@color/text"
+                            android:textSize="14sp" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_feedback_message"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:hint="@string/feedback_message_hint_bug">
+                        android:hint="@string/feedback_message_hint_bug"
+                        android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
+                        app:boxCornerRadiusBottomEnd="14dp"
+                        app:boxCornerRadiusBottomStart="14dp"
+                        app:boxCornerRadiusTopEnd="14dp"
+                        app:boxCornerRadiusTopStart="14dp"
+                        app:boxStrokeColor="@color/dropdown_stroke_color">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/tiet_feedback_message"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/genshin_font"
                             android:gravity="top"
                             android:inputType="textMultiLine|textCapSentences"
-                            android:minLines="3" />
+                            android:minLines="3"
+                            android:textColor="@color/text"
+                            android:textSize="14sp" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_feedback_steps"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:hint="@string/feedback_steps_hint">
+                        android:hint="@string/feedback_steps_hint"
+                        android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
+                        app:boxCornerRadiusBottomEnd="14dp"
+                        app:boxCornerRadiusBottomStart="14dp"
+                        app:boxCornerRadiusTopEnd="14dp"
+                        app:boxCornerRadiusTopStart="14dp"
+                        app:boxStrokeColor="@color/dropdown_stroke_color">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/tiet_feedback_steps"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/genshin_font"
                             android:gravity="top"
                             android:inputType="textMultiLine|textCapSentences"
-                            android:minLines="2" />
+                            android:minLines="2"
+                            android:textColor="@color/text"
+                            android:textSize="14sp" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -590,7 +618,7 @@
                             android:padding="10dp"
                             android:textColor="@color/text_secondary"
                             android:textSize="11sp"
-                            tools:text="Устройство: Xiaomi 2201116SG\nОС: Android 13 (API 33)\nВерсия: v0.2.0" />
+                            tools:text="Устройство: Xiaomi 2201116SG\nОС: Android 13 (API 33)\nВерсия: v0.3.1" />
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -616,17 +644,120 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="@string/feedback_btn_copy_telegram" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_share_diagnostic_log"
-                        style="@style/Button.GachaPoint.Outlined"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/feedback_btn_share_log" />
+                        android:text="@string/feedback_btn_copy_text" />
 
                 </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_diagnostics_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding_horizontal"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/genshin_font"
+                android:includeFontPadding="false"
+                android:text="@string/feedback_section_diagnostics"
+                android:textColor="@color/check"
+                android:textSize="@dimen/text_size_section_title"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mcv_form" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_diagnostics"
+                style="@style/Widget.GachaPoint.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
+                android:layout_marginEnd="@dimen/card_margin_horizontal"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_diagnostics_header"
+                app:layout_constraintVertical_bias="0.0">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/row_share_diagnostic_log"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/badge_diagnostic_log"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardBackgroundColor="@color/badge_blue_bg"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/ll_text_diagnostic_log"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/ll_text_diagnostic_log"
+                        app:strokeWidth="0dp">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/icon_share"
+                            app:tint="@color/check" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:id="@+id/ll_text_diagnostic_log"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="10dp"
+                        android:gravity="center_vertical"
+                        android:minHeight="40dp"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/ic_diagnostic_log_chevron"
+                        app:layout_constraintStart_toEndOf="@+id/badge_diagnostic_log"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/tv_diagnostic_log_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/feedback_btn_share_log"
+                            android:textColor="@color/text"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_diagnostic_log_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/feedback_log_card_desc"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/ic_diagnostic_log_chevron"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/icon_right_arrow"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/text_secondary" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>
 

@@ -251,52 +251,19 @@
         </FrameLayout>
     </HorizontalScrollView>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_offline_notice"
-        style="@style/Widget.GachaPoint.Card"
+    <include
+        layout="@layout/include_offline_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/card_margin_horizontal"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        app:cardBackgroundColor="@color/card_bg"
-        app:layout_constraintTop_toBottomOf="@+id/scroll_banners_filters"
-        tools:visibility="visible">
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/scroll_banners_filters" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="10dp">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:importantForAccessibility="no"
-                android:src="@drawable/icon_wifi_off"
-                app:tint="@color/text_secondary" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:text="@string/sync_offline_notice"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Список расписания или реранов -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/srl_banners"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_offline_notice">
 
@@ -307,50 +274,71 @@
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/card_margin_horizontal"
             android:paddingTop="4dp"
-            android:paddingBottom="96dp"
+            android:paddingBottom="@dimen/screen_padding_bottom"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/ll_empty_search"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="28dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingHorizontal="32dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scroll_banners_filters"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_offline_notice"
         tools:visibility="visible">
 
         <ImageView
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:id="@+id/iv_empty_banners"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/icon_search"
-            app:tint="@color/text_secondary" />
+            android:src="@drawable/ic_empty_banners" />
 
         <TextView
             android:id="@+id/tv_empty_search_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/genshin_font"
+            android:gravity="center"
             android:text="@string/search_no_results_title"
             android:textColor="@color/text"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_empty_search_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="8dp"
             android:gravity="center"
+            android:lineSpacingExtra="4dp"
             android:text="@string/search_no_results_desc"
             android:textColor="@color/text_secondary"
             android:textSize="13sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_empty_banners_reset"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginTop="20dp"
+            android:minHeight="0dp"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="0dp"
+            android:text="@string/banners_empty_reset_filter"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:backgroundTint="@color/check"
+            app:cornerRadius="12dp"
+            tools:visibility="visible" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

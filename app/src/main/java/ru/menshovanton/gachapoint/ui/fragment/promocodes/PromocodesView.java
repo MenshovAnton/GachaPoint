@@ -15,14 +15,17 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.data.local.JsonDataLoader;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.PromoCode;
+import ru.menshovanton.gachapoint.ui.animation.CarouselAnimator;
 import ru.menshovanton.gachapoint.ui.common.HapticHelper;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
 
@@ -43,6 +46,7 @@ public class PromocodesView extends Fragment {
     private Chip chipRedeemed;
     private RecyclerView rvPromocodes;
     private View emptyStateView;
+    private MaterialButton btnEmptyReset;
     private androidx.swiperefreshlayout.widget.SwipeRefreshLayout srlPromocodes;
     private View cardOfflineNotice;
     private PillsAdapter pillsAdapter;
@@ -98,8 +102,18 @@ public class PromocodesView extends Fragment {
         chipRedeemed = root.findViewById(R.id.chip_redeemed);
         rvPromocodes = root.findViewById(R.id.rv_promocodes);
         emptyStateView = root.findViewById(R.id.ll_empty_state);
+        btnEmptyReset = root.findViewById(R.id.btn_empty_promo_reset);
         srlPromocodes = root.findViewById(R.id.srl_promocodes);
         cardOfflineNotice = root.findViewById(R.id.card_offline_notice);
+
+        if (btnEmptyReset != null) {
+            btnEmptyReset.setOnClickListener(v -> {
+                HapticHelper.performClickHaptic(requireContext(), v);
+                if (chipAll != null) {
+                    chipAll.setChecked(true);
+                }
+            });
+        }
 
         ImageButton btnBack = root.findViewById(R.id.btn_back);
         if (btnBack != null) {
@@ -146,6 +160,7 @@ public class PromocodesView extends Fragment {
         setupSwipeToRedeem();
 
         ru.menshovanton.gachapoint.data.local.JsonDataLoader.addSyncResultListener(syncResultListener);
+        updateOfflineNotice();
 
         if (srlPromocodes != null) {
             srlPromocodes.setColorSchemeResources(R.color.check);
@@ -190,10 +205,27 @@ public class PromocodesView extends Fragment {
         });
     }
 
+    private void updateOfflineNotice() {
+        if (cardOfflineNotice == null || getContext() == null) return;
+        cardOfflineNotice.setVisibility(JsonDataLoader.isNetworkAvailable(requireContext()) ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateOfflineNotice();
+        updatePillsVisibility();
+    }
+
     private void updatePillsVisibility() {
         if (rvGameTypes == null) return;
         List<GameType> enabled = getEnabledGames();
-        rvGameTypes.setVisibility(enabled.size() > 1 ? View.VISIBLE : View.GONE);
+        ViewGroup root = (getView() instanceof ViewGroup) ? (ViewGroup) getView() : null;
+        boolean isMultiGame = enabled.size() > 1;
+        CarouselAnimator.setCarouselVisibility(rvGameTypes, root, isMultiGame);
+        if (isMultiGame && pillsAdapter != null && viewModel != null) {
+            CarouselAnimator.alignSelectedGame(rvGameTypes, pillsAdapter, viewModel.getSelectedGameType().getValue(), false);
+        }
     }
 
     private void showModerationDialog(PromoCode code) {
@@ -268,6 +300,7 @@ public class PromocodesView extends Fragment {
                 current,
                 (gameType, position) -> {
                     HapticHelper.performClickHaptic(requireContext(), null);
+                    CarouselAnimator.alignPositionToStart(rvGameTypes, position, true);
                     adapter = new PromocodesAdapter(
                             gameType,
                             (promoCode, isRedeemed) -> viewModel.setRedeemed(promoCode, isRedeemed),
@@ -286,6 +319,7 @@ public class PromocodesView extends Fragment {
                     if (mainActivity != null) mainActivity.refreshGamesConfig();
                 })
         );
+        CarouselAnimator.setupItemAnimator(rvGameTypes);
         rvGameTypes.setAdapter(pillsAdapter);
         updatePillsBadges();
         updatePillsVisibility();
@@ -350,6 +384,12 @@ public class PromocodesView extends Fragment {
             boolean isEmpty = (codes == null || codes.isEmpty());
             emptyStateView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
             rvPromocodes.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+            if (btnEmptyReset != null) {
+                PromocodesViewModel.FilterCounts counts = viewModel.getFilterCounts().getValue();
+                PromocodesViewModel.FilterMode mode = viewModel.getFilterMode().getValue();
+                boolean canShowAll = isEmpty && counts != null && counts.allCount > 0 && mode != PromocodesViewModel.FilterMode.ALL;
+                btnEmptyReset.setVisibility(canShowAll ? View.VISIBLE : View.GONE);
+            }
         });
 
         viewModel.getFilterCounts().observe(getViewLifecycleOwner(), counts -> {
@@ -416,5 +456,6 @@ public class PromocodesView extends Fragment {
         chipAll = null;
         chipRedeemed = null;
         emptyStateView = null;
+        btnEmptyReset = null;
     }
 }

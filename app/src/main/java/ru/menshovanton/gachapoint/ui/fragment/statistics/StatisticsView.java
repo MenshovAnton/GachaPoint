@@ -257,6 +257,7 @@ public class StatisticsView extends Fragment {
                         isHistoryExpanded = false;
                         if (mainActivityView != null) mainActivityView.setSubType(selectedGame);
                         viewModel.setGameType(selectedGame);
+                        CarouselAnimator.alignPositionToStart(rvGameTypes, position, true);
                     }
                 },
                 () -> GamesConfigBottomSheetDialog.show(requireContext(), () -> {
@@ -291,6 +292,9 @@ public class StatisticsView extends Fragment {
         }
         if (pillsAdapter != null) {
             pillsAdapter.updateData(enabled, mainActivityView.getSubType());
+            if (isMultiGame) {
+                CarouselAnimator.alignSelectedGame(rvGameTypes, pillsAdapter, mainActivityView.getSubType(), false);
+            }
         }
     }
 
@@ -318,6 +322,7 @@ public class StatisticsView extends Fragment {
             mainActivityView.getMainActivityViewModel().getSubTypeLiveData().observe(getViewLifecycleOwner(), game -> {
                 if (pillsAdapter != null) {
                     pillsAdapter.setSelectedGame(game);
+                    CarouselAnimator.alignSelectedGame(rvGameTypes, pillsAdapter, game, rvGameTypes != null && rvGameTypes.isLaidOut());
                 }
                 if (viewModel != null && viewModel.getCurrentGameType() != game) {
                     isHistoryExpanded = false;

@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:fillViewport="true"
-        android:paddingBottom="90dp"
+        android:paddingBottom="@dimen/screen_padding_bottom"
         tools:ignore="UselessParent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -229,8 +229,8 @@
 
                         <ImageView
                             android:id="@+id/iv_tier_3_arrow"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -317,8 +317,8 @@
 
                         <ImageView
                             android:id="@+id/iv_tier_4_arrow"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -405,8 +405,8 @@
 
                         <ImageView
                             android:id="@+id/iv_tier_5_arrow"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -461,7 +461,6 @@
                 android:layout_marginStart="@dimen/card_margin_horizontal"
                 android:layout_marginTop="@dimen/card_margin_vertical"
                 android:layout_marginEnd="@dimen/card_margin_horizontal"
-                android:layout_marginBottom="32dp"
                 app:cardCornerRadius="@dimen/card_corner_radius"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

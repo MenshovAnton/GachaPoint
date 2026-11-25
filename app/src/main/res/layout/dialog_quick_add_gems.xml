@@ -156,18 +156,26 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_amount"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:hint="@string/dialog_quick_add_hint_gems">
+            android:hint="@string/dialog_quick_add_hint_gems"
+            android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
+            app:boxCornerRadiusBottomEnd="14dp"
+            app:boxCornerRadiusBottomStart="14dp"
+            app:boxCornerRadiusTopEnd="14dp"
+            app:boxCornerRadiusTopStart="14dp"
+            app:boxStrokeColor="@color/dropdown_stroke_color">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/genshin_font"
                 android:inputType="number"
                 android:maxLength="8"
+                android:textColor="@color/text"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

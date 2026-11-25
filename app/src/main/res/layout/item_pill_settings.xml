@@ -12,7 +12,7 @@
         android:background="@drawable/pill_background"
         android:padding="9dp"
         android:src="@drawable/icon_edit"
-        app:tint="@color/text"
+        app:tint="@color/white"
         android:contentDescription="@string/games_settings_title" />
 
 </FrameLayout>

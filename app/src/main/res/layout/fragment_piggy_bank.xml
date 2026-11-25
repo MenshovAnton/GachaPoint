@@ -58,10 +58,11 @@
                 android:id="@+id/rv_game_types"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="10dp"
                 android:clipToPadding="false"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/pills_padding_horizontal"
+                android:paddingVertical="@dimen/pills_padding_vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -148,7 +149,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
-                android:layout_marginTop="@dimen/card_margin_vertical"
+                android:layout_marginTop="12dp"
                 app:cardCornerRadius="@dimen/card_corner_radius_large"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -182,9 +183,12 @@
                             android:id="@+id/btn_edit_target"
                             style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="36dp"
+                            android:layout_height="30dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:minWidth="0dp"
                             android:minHeight="0dp"
-                            android:paddingHorizontal="12dp"
+                            android:paddingHorizontal="10dp"
                             android:paddingVertical="0dp"
                             android:text="@string/goal_edit_button"
                             android:textColor="@color/white"
@@ -193,14 +197,14 @@
                             app:cornerRadius="10dp"
                             app:icon="@drawable/icon_edit"
                             app:iconPadding="4dp"
-                            app:iconSize="14dp"
+                            app:iconSize="13dp"
                             app:iconTint="@color/white" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -644,7 +648,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
                 android:layout_marginTop="@dimen/card_margin_vertical"
-                android:layout_marginBottom="88dp"
+                android:layout_marginBottom="@dimen/screen_padding_bottom"
                 app:cardCornerRadius="@dimen/card_corner_radius"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -661,6 +665,7 @@
                         android:id="@+id/tv_converter_rate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/genshin_font"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp"
                         tools:text="1 pull = 160 gems" />
@@ -674,44 +679,65 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/til_convert_pulls"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:hint="@string/pulls">
+                            android:hint="@string/pulls"
+                            android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
+                            app:boxCornerRadiusBottomEnd="14dp"
+                            app:boxCornerRadiusBottomStart="14dp"
+                            app:boxCornerRadiusTopEnd="14dp"
+                            app:boxCornerRadiusTopStart="14dp"
+                            app:boxStrokeColor="@color/dropdown_stroke_color">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_convert_pulls"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/genshin_font"
                                 android:inputType="number"
                                 android:maxLength="5"
-                                android:textSize="15sp" />
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginHorizontal="8dp"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:fontFamily="@font/genshin_font"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/icon_right_arrow"
-                            app:tint="@color/check" />
+                            android:text="="
+                            android:textColor="@color/check"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/til_convert_currency"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:hint="@string/savings_current_gems">
+                            android:hint="@string/savings_current_gems"
+                            android:theme="@style/ThemeOverlay.GachaPoint.DropdownMenu"
+                            app:boxCornerRadiusBottomEnd="14dp"
+                            app:boxCornerRadiusBottomStart="14dp"
+                            app:boxCornerRadiusTopEnd="14dp"
+                            app:boxCornerRadiusTopStart="14dp"
+                            app:boxStrokeColor="@color/dropdown_stroke_color">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_convert_currency"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/genshin_font"
                                 android:inputType="number"
                                 android:maxLength="7"
-                                android:textSize="15sp" />
+                                android:textColor="@color/text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                     </LinearLayout>

@@ -826,4 +826,13 @@
     <string name="feedback_body_type_review">[Тип: Отзыв (%1$d/5)]</string>
     <string name="feedback_body_steps_header">Шаги для воспроизведения:</string>
     <string name="feedback_body_diagnostics_header">Диагностические данные:</string>
+    <string name="feedback_section_diagnostics">Диагностика</string>
+    <string name="feedback_log_card_desc">Экспортировать лог работы приложения для отчёта об ошибке</string>
+    <string name="feedback_btn_copy_text">Скопировать текст обращения</string>
+    <string name="promocodes_empty_title">Промокодов нет</string>
+    <string name="promocodes_empty_desc">Для выбранной игры и фильтра сейчас нет доступных промокодов</string>
+    <string name="promocodes_empty_reset_filter">Показать все</string>
+    <string name="banners_empty_title">Баннеры не найдены</string>
+    <string name="banners_empty_desc">Попробуйте выбрать другую категорию или изменить фильтр</string>
+    <string name="banners_empty_reset_filter">Сбросить фильтры</string>
 </resources>

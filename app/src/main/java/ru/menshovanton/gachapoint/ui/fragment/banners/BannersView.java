@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,15 +17,19 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
 import ru.menshovanton.gachapoint.R;
+import ru.menshovanton.gachapoint.data.local.JsonDataLoader;
 import ru.menshovanton.gachapoint.domain.enums.GameType;
 import ru.menshovanton.gachapoint.domain.models.BannerScheduleItem;
 import ru.menshovanton.gachapoint.domain.models.CharacterRerunInfo;
+import ru.menshovanton.gachapoint.ui.animation.CarouselAnimator;
 import ru.menshovanton.gachapoint.ui.common.HapticHelper;
 import ru.menshovanton.gachapoint.ui.main.PillsAdapter;
 
@@ -45,6 +50,9 @@ public class BannersView extends Fragment {
     private EditText etSearch;
     private ImageButton btnClearSearch;
     private View emptySearchState;
+    private TextView tvEmptyTitle;
+    private TextView tvEmptyDesc;
+    private MaterialButton btnEmptyReset;
     private TextWatcher searchTextWatcher;
 
     private ChipGroup chipGroupScheduleFilters;
@@ -99,8 +107,29 @@ public class BannersView extends Fragment {
         etSearch = root.findViewById(R.id.et_banners_search);
         btnClearSearch = root.findViewById(R.id.btn_clear_banners_search);
         emptySearchState = root.findViewById(R.id.ll_empty_search);
+        tvEmptyTitle = root.findViewById(R.id.tv_empty_search_title);
+        tvEmptyDesc = root.findViewById(R.id.tv_empty_search_desc);
+        btnEmptyReset = root.findViewById(R.id.btn_empty_banners_reset);
         chipGroupScheduleFilters = root.findViewById(R.id.chip_group_schedule_filters);
         chipGroupRerunFilters = root.findViewById(R.id.chip_group_rerun_filters);
+
+        if (btnEmptyReset != null) {
+            btnEmptyReset.setOnClickListener(v -> {
+                HapticHelper.performClickHaptic(requireContext(), v);
+                if (etSearch != null && etSearch.getText() != null && etSearch.getText().length() > 0) {
+                    etSearch.setText("");
+                }
+                if (viewModel != null) {
+                    if (viewModel.getDisplayMode().getValue() == BannersViewModel.DisplayMode.SCHEDULE) {
+                        Chip chipAll = root.findViewById(R.id.chip_schedule_all);
+                        if (chipAll != null) chipAll.setChecked(true);
+                    } else {
+                        Chip chipAll = root.findViewById(R.id.chip_rerun_all);
+                        if (chipAll != null) chipAll.setChecked(true);
+                    }
+                }
+            });
+        }
 
         ImageButton btnBack = root.findViewById(R.id.btn_back);
         if (btnBack != null) {
@@ -144,6 +173,7 @@ public class BannersView extends Fragment {
         setupFilterChips();
 
         ru.menshovanton.gachapoint.data.local.JsonDataLoader.addSyncResultListener(syncResultListener);
+        updateOfflineNotice();
 
         if (srlBanners != null) {
             srlBanners.setColorSchemeResources(R.color.check);
@@ -190,20 +220,44 @@ public class BannersView extends Fragment {
         }
     }
 
+    private void updateOfflineNotice() {
+        if (cardOfflineNotice == null || getContext() == null) return;
+        cardOfflineNotice.setVisibility(JsonDataLoader.isNetworkAvailable(requireContext()) ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateOfflineNotice();
+        updatePillsVisibility();
+    }
+
     private void updateEmptyState() {
         if (emptySearchState == null || rvContent == null) return;
         boolean hasQuery = viewModel != null && !viewModel.getSearchQuery().isEmpty();
+        boolean isFilterActive = false;
         boolean isEmpty = false;
         if (viewModel != null) {
             if (viewModel.getDisplayMode().getValue() == BannersViewModel.DisplayMode.SCHEDULE) {
                 List<BannerScheduleItem> list = viewModel.getBannersList().getValue();
                 isEmpty = list == null || list.isEmpty();
+                isFilterActive = viewModel.getScheduleFilter() != BannersViewModel.ScheduleFilter.ALL;
             } else {
                 List<CharacterRerunInfo> list = viewModel.getRerunList().getValue();
                 isEmpty = list == null || list.isEmpty();
+                isFilterActive = viewModel.getRerunFilter() != BannersViewModel.RerunFilter.ALL;
             }
         }
-        if (hasQuery && isEmpty) {
+        if (isEmpty) {
+            if (tvEmptyTitle != null) {
+                tvEmptyTitle.setText(hasQuery ? R.string.search_no_results_title : R.string.banners_empty_title);
+            }
+            if (tvEmptyDesc != null) {
+                tvEmptyDesc.setText(hasQuery ? R.string.search_no_results_desc : R.string.banners_empty_desc);
+            }
+            if (btnEmptyReset != null) {
+                btnEmptyReset.setVisibility((hasQuery || isFilterActive) ? View.VISIBLE : View.GONE);
+            }
             emptySearchState.setVisibility(View.VISIBLE);
             rvContent.setVisibility(View.GONE);
         } else {
@@ -240,7 +294,12 @@ public class BannersView extends Fragment {
     private void updatePillsVisibility() {
         if (rvGameTypes == null) return;
         List<GameType> enabled = getEnabledGames();
-        rvGameTypes.setVisibility(enabled.size() > 1 ? View.VISIBLE : View.GONE);
+        ViewGroup root = (getView() instanceof ViewGroup) ? (ViewGroup) getView() : null;
+        boolean isMultiGame = enabled.size() > 1;
+        CarouselAnimator.setCarouselVisibility(rvGameTypes, root, isMultiGame);
+        if (isMultiGame && pillsAdapter != null && viewModel != null) {
+            CarouselAnimator.alignSelectedGame(rvGameTypes, pillsAdapter, viewModel.getSelectedGameType().getValue(), false);
+        }
     }
 
     private void setupGamePills() {
@@ -261,6 +320,7 @@ public class BannersView extends Fragment {
                 current,
                 (gameType, position) -> {
                     HapticHelper.performClickHaptic(requireContext(), null);
+                    CarouselAnimator.alignPositionToStart(rvGameTypes, position, true);
                     viewModel.selectGameType(gameType);
                     ru.menshovanton.gachapoint.data.repository.BannerScheduleRepository.getInstance(requireContext())
                             .markBannersAsViewed(gameType);
@@ -271,6 +331,7 @@ public class BannersView extends Fragment {
                     if (mainActivity != null) mainActivity.refreshGamesConfig();
                 })
         );
+        CarouselAnimator.setupItemAnimator(rvGameTypes);
         rvGameTypes.setAdapter(pillsAdapter);
         updatePillsBadges();
         updatePillsVisibility();
@@ -384,6 +445,9 @@ public class BannersView extends Fragment {
         etSearch = null;
         btnClearSearch = null;
         emptySearchState = null;
+        tvEmptyTitle = null;
+        tvEmptyDesc = null;
+        btnEmptyReset = null;
         cardSearch = null;
         if (srlBanners != null) {
             srlBanners.setOnRefreshListener(null);

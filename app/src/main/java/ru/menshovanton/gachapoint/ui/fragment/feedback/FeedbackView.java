@@ -32,6 +32,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import ru.menshovanton.gachapoint.R;
 import ru.menshovanton.gachapoint.data.local.AppLogger;
+import ru.menshovanton.gachapoint.ui.common.ChromeCustomTabsHelper;
 
 public class FeedbackView extends Fragment {
 
@@ -62,7 +63,7 @@ public class FeedbackView extends Fragment {
     private MaterialButton btnSendEmail;
     private MaterialButton btnSendGithub;
     private MaterialButton btnCopyTelegram;
-    private MaterialButton btnShareDiagnosticLog;
+    private View rowShareDiagnosticLog;
 
     public FeedbackView() {}
 
@@ -118,7 +119,7 @@ public class FeedbackView extends Fragment {
         btnSendEmail = view.findViewById(R.id.btn_send_email);
         btnSendGithub = view.findViewById(R.id.btn_send_github);
         btnCopyTelegram = view.findViewById(R.id.btn_copy_telegram);
-        btnShareDiagnosticLog = view.findViewById(R.id.btn_share_diagnostic_log);
+        rowShareDiagnosticLog = view.findViewById(R.id.row_share_diagnostic_log);
 
         tvDeviceInfoPreview.setText(getDiagnosticInfo());
     }
@@ -196,8 +197,8 @@ public class FeedbackView extends Fragment {
             );
         });
 
-        if (btnShareDiagnosticLog != null) {
-            btnShareDiagnosticLog.setOnClickListener(v -> shareDiagnosticLog());
+        if (rowShareDiagnosticLog != null) {
+            rowShareDiagnosticLog.setOnClickListener(v -> shareDiagnosticLog());
         }
     }
 
@@ -232,8 +233,11 @@ public class FeedbackView extends Fragment {
 
         viewModel.getSendEmailEvent().observe(getViewLifecycleOwner(), data -> {
             if (data == null) return;
-            Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("mailto:" + data.email));
+            String mailtoUri = "mailto:" + Uri.encode(data.email)
+                    + "?subject=" + Uri.encode(data.subject)
+                    + "&body=" + Uri.encode(data.body);
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(mailtoUri));
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{data.email});
             intent.putExtra(Intent.EXTRA_SUBJECT, data.subject);
             intent.putExtra(Intent.EXTRA_TEXT, data.body);
             try {
@@ -253,7 +257,6 @@ public class FeedbackView extends Fragment {
                 clipboard.setPrimaryClip(clip);
             }
             Toast.makeText(requireContext(), R.string.feedback_copied_toast, Toast.LENGTH_SHORT).show();
-            openUrl(getString(R.string.feedback_telegram_url));
         });
 
         viewModel.getValidationErrorEvent().observe(getViewLifecycleOwner(), resId -> {
@@ -303,7 +306,7 @@ public class FeedbackView extends Fragment {
         String device = Build.MANUFACTURER + " " + Build.MODEL;
         String androidVersion = Build.VERSION.RELEASE;
         int apiLevel = Build.VERSION.SDK_INT;
-        String appVersion = "0.2.0";
+        String appVersion = "0.3.1";
         try {
             appVersion = requireContext().getPackageManager()
                     .getPackageInfo(requireContext().getPackageName(), 0).versionName;
@@ -313,13 +316,8 @@ public class FeedbackView extends Fragment {
     }
 
     private void openUrl(String url) {
-        if (url == null || url.isEmpty()) return;
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
-        } catch (Exception e) {
-            Toast.makeText(requireContext(), R.string.form_load_error, Toast.LENGTH_SHORT).show();
-        }
+        if (url == null || url.isEmpty() || getContext() == null) return;
+        ChromeCustomTabsHelper.openUrl(requireContext(), url);
     }
 
     private void shareDiagnosticLog() {
@@ -371,6 +369,6 @@ public class FeedbackView extends Fragment {
         btnSendEmail = null;
         btnSendGithub = null;
         btnCopyTelegram = null;
-        btnShareDiagnosticLog = null;
+        rowShareDiagnosticLog = null;
     }
 }

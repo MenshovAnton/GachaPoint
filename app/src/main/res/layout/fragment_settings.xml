@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:clipToPadding="false"
-        android:paddingBottom="32dp"
+        android:paddingBottom="@dimen/screen_padding_bottom"
         android:focusable="true"
         android:focusableInTouchMode="true"
         tools:ignore="UselessParent">
@@ -146,8 +146,8 @@
 
                         <ImageView
                             android:id="@+id/ic_games_chevron"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -680,8 +680,8 @@
 
                         <ImageView
                             android:id="@+id/ic_channels_chevron"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/icon_right_arrow"
                             app:layout_constraintBottom_toBottomOf="parent"

@@ -40,7 +40,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -331,10 +330,7 @@ public class TrackerView extends Fragment {
             GameType current = mainActivityView.getSubType();
             if (pillsAdapter != null) {
                 pillsAdapter.setSelectedGame(current);
-                int pos = pillsAdapter.getPositionForGame(current);
-                if (pos != -1) {
-                    centerPositionInstantly(pos);
-                }
+                CarouselAnimator.alignSelectedGame(rvGameTypes, pillsAdapter, current, false);
             }
             if (viewModel.getCurrentGameType() != current) {
                 viewModel.setGameType(current);
@@ -464,14 +460,7 @@ public class TrackerView extends Fragment {
             mainActivityView.getMainActivityViewModel().getSubTypeLiveData().observe(getViewLifecycleOwner(), game -> {
                 if (pillsAdapter != null) {
                     pillsAdapter.setSelectedGame(game);
-                    int pos = pillsAdapter.getPositionForGame(game);
-                    if (pos != -1) {
-                        if (rvGameTypes != null && rvGameTypes.isLaidOut()) {
-                            smoothScrollToCenter(pos);
-                        } else {
-                            centerPositionInstantly(pos);
-                        }
-                    }
+                    CarouselAnimator.alignSelectedGame(rvGameTypes, pillsAdapter, game, rvGameTypes != null && rvGameTypes.isLaidOut());
                 }
                 if (viewModel != null && viewModel.getCurrentGameType() != game) {
                     viewModel.setGameType(game);
@@ -666,7 +655,7 @@ public class TrackerView extends Fragment {
                 (selected, position) -> {
                     if (mainActivityView != null) mainActivityView.setSubType(selected);
                     viewModel.setGameType(selected);
-                    smoothScrollToCenter(position);
+                    CarouselAnimator.alignPositionToStart(rvGameTypes, position, true);
                 },
                 () -> GamesConfigBottomSheetDialog.show(requireContext(), () -> {
                     if (mainActivityView != null) mainActivityView.refreshGamesConfig();
@@ -699,10 +688,7 @@ public class TrackerView extends Fragment {
         if (pillsAdapter != null) {
             pillsAdapter.updateData(enabled, mainActivityView.getSubType());
             if (isMultiGame) {
-                int pos = pillsAdapter.getPositionForGame(mainActivityView.getSubType());
-                if (pos != -1) {
-                    centerPositionInstantly(pos);
-                }
+                CarouselAnimator.alignSelectedGame(rvGameTypes, pillsAdapter, mainActivityView.getSubType(), false);
             }
         }
     }
@@ -1104,55 +1090,6 @@ public class TrackerView extends Fragment {
         }
 
         dialog.show();
-    }
-
-    private void centerPositionInstantly(int position) {
-        if (layoutManager == null) return;
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int estimatedPillWidth = (int) (130 * getResources().getDisplayMetrics().density);
-        int centerOffsetPx = Math.max(0, (screenWidth - estimatedPillWidth) / 2);
-        layoutManager.scrollToPositionWithOffset(position, centerOffsetPx);
-    }
-
-    private void smoothScrollToCenter(int targetPosition) {
-        if (pillsAdapter == null || layoutManager == null) return;
-
-        RecyclerView recyclerView = getView() != null ? getView().findViewById(R.id.rv_game_types) : null;
-        if (recyclerView == null || getContext() == null) return;
-
-        if (!recyclerView.isLaidOut() || recyclerView.getWidth() == 0) {
-            centerPositionInstantly(targetPosition);
-            return;
-        }
-
-        View targetChild = layoutManager.findViewByPosition(targetPosition);
-        if (targetChild != null) {
-            int childCenter = (targetChild.getLeft() + targetChild.getRight()) / 2;
-            int rvCenter = (recyclerView.getPaddingStart() + (recyclerView.getWidth() - recyclerView.getPaddingEnd())) / 2;
-            int dx = childCenter - rvCenter;
-
-            if (Math.abs(dx) <= 3) {
-                return;
-            }
-            if (dx < 0 && !recyclerView.canScrollHorizontally(-1)) {
-                return;
-            }
-            if (dx > 0 && !recyclerView.canScrollHorizontally(1)) {
-                return;
-            }
-
-            recyclerView.smoothScrollBy(dx, 0);
-            return;
-        }
-
-        LinearSmoothScroller smoothScroller = new LinearSmoothScroller(requireContext()) {
-            @Override
-            public int calculateDtToFit(int viewStart, int viewEnd, int boxStart, int boxEnd, int snapPreference) {
-                return (boxStart + (boxEnd - boxStart) / 2) - (viewStart + (viewEnd - viewStart) / 2);
-            }
-        };
-        smoothScroller.setTargetPosition(targetPosition);
-        layoutManager.startSmoothScroll(smoothScroller);
     }
 
     private void showMoreMenu(View view) {

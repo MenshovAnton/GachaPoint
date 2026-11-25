@@ -873,4 +873,13 @@
     <string name="feedback_body_type_review">[Type: Review (%1$d/5)]</string>
     <string name="feedback_body_steps_header">Steps to reproduce:</string>
     <string name="feedback_body_diagnostics_header">Diagnostics:</string>
+    <string name="feedback_section_diagnostics">Diagnostics</string>
+    <string name="feedback_log_card_desc">Export app logs for bug reports</string>
+    <string name="feedback_btn_copy_text">Copy feedback text</string>
+    <string name="promocodes_empty_title">No promo codes</string>
+    <string name="promocodes_empty_desc">No promo codes match the selected game and filter</string>
+    <string name="promocodes_empty_reset_filter">Show all</string>
+    <string name="banners_empty_title">No banners found</string>
+    <string name="banners_empty_desc">Try choosing another category or changing the filter</string>
+    <string name="banners_empty_reset_filter">Reset filters</string>
 </resources>
