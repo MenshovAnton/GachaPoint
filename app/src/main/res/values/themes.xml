@@ -1,6 +1,6 @@
 <resources>
     <style name="Splash.Theme.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenBackground">@color/background_light</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.GachaPoint</item>
     </style>
@@ -9,10 +9,10 @@
         <item name="fontFamily">@font/genshin_font</item>
         <item name="android:fontFamily">@font/genshin_font</item>
 
-        <!-- Base Surface & Background (Crisp Pure White) -->
-        <item name="android:windowBackground">@color/white</item>
+        <!-- Base Surface & Background (Soft Light) -->
+        <item name="android:windowBackground">@color/background_light</item>
         <item name="android:textColor">@color/black</item>
-        <item name="colorSurface">@color/white</item>
+        <item name="colorSurface">@color/background_light</item>
         <item name="colorOnSurface">@color/black</item>
         <item name="colorSurfaceVariant">@color/card_background_light</item>
         <item name="colorOnSurfaceVariant">@color/black</item>

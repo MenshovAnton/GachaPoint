@@ -4,8 +4,8 @@
     <corners android:radius="@dimen/card_corner_radius" />
     <gradient
         android:angle="135"
-        android:startColor="#1600B0FF"
-        android:centerColor="#0640C4FF"
-        android:endColor="#00000000"
+        android:startColor="#5964B5F6"
+        android:centerColor="#20BBDEFB"
+        android:endColor="#00FFFFFF"
         android:type="linear" />
 </shape>

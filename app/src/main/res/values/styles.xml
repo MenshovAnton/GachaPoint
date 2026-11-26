@@ -39,7 +39,7 @@
         <item name="clockNumberTextColor">@color/white</item>
     </style>
     <style name="Navigation.GachaPoint.BottomNavBar" parent="Widget.Material3.BottomNavigationView">
-        <item name="backgroundTint">@color/card_background_light</item>
+        <item name="backgroundTint">@color/white</item>
         <item name="itemActiveIndicatorStyle">@style/NavMenuIndicator.GachaPoint.Indicator</item>
         <item name="itemPaddingTop">10dp</item>
         <item name="itemPaddingBottom">10dp</item>
@@ -55,8 +55,8 @@
         <item name="trackThickness">4dp</item>
     </style>
     <style name="ThemeOverlay.GachaPoint.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="colorSurface">@color/card_background_light</item>
-        <item name="colorSurfaceContainerLow">@color/card_background_light</item>
+        <item name="colorSurface">@color/background_light</item>
+        <item name="colorSurfaceContainerLow">@color/background_light</item>
         <item name="colorOnSurface">@color/black</item>
         <item name="bottomSheetStyle">@style/Widget.GachaPoint.BottomSheet.Modal</item>
     </style>
