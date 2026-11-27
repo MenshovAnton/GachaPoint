@@ -71,3 +71,10 @@
 - Badges & Notifications: filtered unviewed promo code and banner counts by enabled games, fixed inverted `isGameEnabled` check, replaced static `"NEW"` badges with exact `+N` counts, and refined `DataSyncWorker` reminder thresholds.
 - Localization & Data Sync: completed RU/EN localization for banner reruns, catalog pools, feedback emails, and Genshin redemption URLs; synced updated catalog, promo codes, and Honkai Impact 3rd v1.0–v6.7+ banner history.
 - Quality & Documentation: added unit test suites for `Preferences`, `CalendarRepository`, and `PiggyBankRepository`, and updated README screenshots.
+
+# v0.3.2
+- Search & Filtering: added in-content search and context-aware filtering across Journal (including a dedicated filter bottom sheet), Banners, and Promo Codes screens.
+- Banners & Journal: labeled Chronicled Wish banners in the schedule, fixed Chronicled Wish banner resolution and separated 4★ character chips in Journal, and synced updated banner, catalog, and promo code assets.
+- Tracker & Piggy Bank: pruned expired subscriptions from chains to allow replenishment up to the limit, resolved subscription overlaps and disappearing entries, fixed past-date recalculation, and prevented spent gem remainders from reappearing on sync.
+- Database & Performance: upgraded to Room schema v6 with optimized queries and faster startup synchronization across Home, Calendar, Journal, and Promo Codes.
+- UI & Theme Polish: refined the light theme palette and card glow gradients, unified game carousel alignment, improved empty states and offline notices, and refreshed layouts across Feedback, Help, Piggy Bank, and Settings.
