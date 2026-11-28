@@ -12,7 +12,7 @@ public final class DataSyncConfig {
     private DataSyncConfig() {}
 
     public static final String BASE_REMOTE_URL =
-            "https://raw.githubusercontent.com/menshovanton/GachaPoint-Data/main/";
+            "https://raw.githubusercontent.com/GachaPoint/GachaPoint-Data/main/";
 
     public static final String PROMOCODES_REMOTE_URL = BASE_REMOTE_URL + "promocodes.json";
     public static final String BANNERS_REMOTE_URL = BASE_REMOTE_URL + "banners_schedule.json";

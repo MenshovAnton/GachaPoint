@@ -22,6 +22,3 @@ local.properties
 *.db-wal
 *.db-shm
 
-# Standalone data automation repository
-/data-automation/
-

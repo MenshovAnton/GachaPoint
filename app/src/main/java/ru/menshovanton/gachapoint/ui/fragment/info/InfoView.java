@@ -52,10 +52,10 @@ public class InfoView extends Fragment {
 
         back.setOnClickListener(v -> viewModel.onBackToMenuClicked());
         if (rowGithub != null) {
-            rowGithub.setOnClickListener(v -> openUrl("https://github.com/MenshovAnton/GachaPoint/"));
+            rowGithub.setOnClickListener(v -> openUrl("https://github.com/GachaPoint/GachaPoint/"));
         }
         if (rowDataRepo != null) {
-            rowDataRepo.setOnClickListener(v -> openUrl("https://github.com/menshovanton/GachaPoint-Data"));
+            rowDataRepo.setOnClickListener(v -> openUrl("https://github.com/GachaPoint/GachaPoint-Data"));
         }
         if (rowTelegram != null) {
             rowTelegram.setOnClickListener(v -> openUrl("https://t.me/GachaPoint_official"));

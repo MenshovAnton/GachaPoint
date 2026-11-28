@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/MenshovAnton/GachaPoint/releases"><img src="https://img.shields.io/badge/version-v0.3.2-blue?style=flat-square" alt="Version"></a>
+  <a href="https://github.com/GachaPoint/GachaPoint/releases"><img src="https://img.shields.io/badge/version-v0.3.2-blue?style=flat-square" alt="Version"></a>
   <img src="https://img.shields.io/badge/Android-8.0%2B-green?style=flat-square&logo=android" alt="Android 8.0+">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat-square" alt="License"></a>
   <a href="https://t.me/GachaPoint_official"><img src="https://img.shields.io/badge/Telegram-@GachaPoint__official-2CA5E0?style=flat-square&logo=telegram&logoColor=white" alt="Telegram"></a>
@@ -73,7 +73,7 @@
 
 ## Установка
 
-Готовые установочные файлы (APK) доступны в разделе [GitHub Releases](https://github.com/MenshovAnton/GachaPoint/releases).
+Готовые установочные файлы (APK) доступны в разделе [GitHub Releases](https://github.com/GachaPoint/GachaPoint/releases).
 
 Требования:
 - Android 8.0 (API 26) или новее.
@@ -84,7 +84,7 @@
 
 1. Клонируйте репозиторий:
    ```bash
-   git clone https://github.com/MenshovAnton/GachaPoint.git
+   git clone https://github.com/GachaPoint/GachaPoint.git
    ```
 2. Откройте проект в Android Studio (рекомендуется Ladybug или новее, JDK 11+).
 3. Дождитесь синхронизации Gradle и выполните сборку:
@@ -108,7 +108,7 @@
 ## Сообщество и обратная связь
 
 - Telegram-канал: [@GachaPoint_official](https://t.me/GachaPoint_official)
-- Ошибки и предложения: [GitHub Issues](https://github.com/MenshovAnton/GachaPoint/issues)
+- Ошибки и предложения: [GitHub Issues](https://github.com/GachaPoint/GachaPoint/issues)
 - Автор проекта: [@MenshovAnton](https://github.com/MenshovAnton)
 
 ---

@@ -130,7 +130,7 @@ public class FeedbackViewModel extends AndroidViewModel {
         try {
             String encodedTitle = URLEncoder.encode(subject, "UTF-8").replace("+", "%20");
             String encodedBody = URLEncoder.encode(body, "UTF-8").replace("+", "%20");
-            String url = "https://github.com/MenshovAnton/GachaPoint/issues/new?title=" + encodedTitle + "&body=" + encodedBody;
+            String url = "https://github.com/GachaPoint/GachaPoint/issues/new?title=" + encodedTitle + "&body=" + encodedBody;
             openUrlEvent.setValue(url);
         } catch (UnsupportedEncodingException e) {
             openGithubIssues();

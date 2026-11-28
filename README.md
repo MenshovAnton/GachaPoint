@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/MenshovAnton/GachaPoint/releases"><img src="https://img.shields.io/badge/version-v0.3.2-blue?style=flat-square" alt="Version"></a>
+  <a href="https://github.com/GachaPoint/GachaPoint/releases"><img src="https://img.shields.io/badge/version-v0.3.2-blue?style=flat-square" alt="Version"></a>
   <img src="https://img.shields.io/badge/Android-8.0%2B-green?style=flat-square&logo=android" alt="Android 8.0+">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat-square" alt="License"></a>
   <a href="https://t.me/GachaPoint_official"><img src="https://img.shields.io/badge/Telegram-@GachaPoint__official-2CA5E0?style=flat-square&logo=telegram&logoColor=white" alt="Telegram"></a>
@@ -73,7 +73,7 @@
 
 ## Download & Installation
 
-Pre-built APK releases are available in the [GitHub Releases](https://github.com/MenshovAnton/GachaPoint/releases) section.
+Pre-built APK releases are available in the [GitHub Releases](https://github.com/GachaPoint/GachaPoint/releases) section.
 
 Requirements:
 - Android 8.0 (API 26) or higher.
@@ -84,7 +84,7 @@ Requirements:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/MenshovAnton/GachaPoint.git
+   git clone https://github.com/GachaPoint/GachaPoint.git
    ```
 2. Open the project in Android Studio (Ladybug or newer recommended, JDK 11+).
 3. Allow Gradle to sync dependencies and build:
@@ -108,7 +108,7 @@ Requirements:
 ## Community & Feedback
 
 - Telegram Channel: [@GachaPoint_official](https://t.me/GachaPoint_official)
-- Bug Reports & Feature Requests: [GitHub Issues](https://github.com/MenshovAnton/GachaPoint/issues)
+- Bug Reports & Feature Requests: [GitHub Issues](https://github.com/GachaPoint/GachaPoint/issues)
 - Developer: [@MenshovAnton](https://github.com/MenshovAnton)
 
 ---

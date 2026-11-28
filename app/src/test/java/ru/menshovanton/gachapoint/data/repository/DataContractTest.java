@@ -245,12 +245,9 @@ public class DataContractTest {
 
     @Test
     public void assetsMatchDataHubWhenPresent() throws Exception {
-        File hub = new File("../data-automation");
+        File hub = new File("../GachaPoint-Data");
         if (!hub.isDirectory()) {
-            hub = new File("data-automation");
-        }
-        if (!hub.isDirectory()) {
-            hub = new File("../../data-automation");
+            hub = new File("../../GachaPoint-Data");
         }
         Assume.assumeTrue(hub.isDirectory());
 
